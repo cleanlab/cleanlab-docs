@@ -423,14 +423,27 @@
 <span class="c1"># along with cleanlab.  If not, see &lt;https://www.gnu.org/licenses/&gt;.</span>
 
 <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">Methods for analysis of classification data labeled by multiple annotators, including computation of:</span>
+<span class="sd">Methods for analysis of classification data labeled by multiple annotators.</span>
 
-<span class="sd">* A consensus label for each example that aggregates the individual annotations more accurately than alternative aggregation via majority-vote or other algorithms used in crowdsourcing.</span>
+<span class="sd">To analyze a fixed dataset labeled by multiple annotators, use the</span>
+<span class="sd">:py:func:`get_label_quality_multiannotator &lt;cleanlab.multiannotator.get_label_quality_multiannotator&gt;` function which estimates:</span>
+
+<span class="sd">* A consensus label for each example that aggregates the individual annotations more accurately than alternative aggregation via majority-vote or other algorithms used in crowdsourcing like Dawid-Skene.</span>
 <span class="sd">* A quality score for each consensus label which measures our confidence that this label is correct.</span>
 <span class="sd">* An analogous label quality score for each individual label chosen by one annotator for a particular example.</span>
 <span class="sd">* An overall quality score for each annotator which measures our confidence in the overall correctness of labels obtained from this annotator.</span>
 
-<span class="sd">The underlying algorithms are described in `the CROWDLAB paper &lt;https://arxiv.org/abs/2210.06812&gt;`_.</span>
+<span class="sd">The underlying algorithms used to compute the statistics are described in `the CROWDLAB paper &lt;https://arxiv.org/abs/2210.06812&gt;`_.</span>
+
+<span class="sd">If you have some labeled and unlabeled data (with multiple annotators for some labeled examples) and want to decide what data to collect additional labels for,</span>
+<span class="sd">use the :py:func:`get_active_learning_score &lt;cleanlab.multiannotator.get_active_learning_score&gt;` function, which is intended for active learning. </span>
+<span class="sd">This function estimates an active learning quality score for each example,</span>
+<span class="sd">which can be used to prioritize which examples are most informative to collect additional labels for.</span>
+<span class="sd">This function is effective for settings where some examples have been labeled by one or more annotators and other examples can have no labels at all so far,</span>
+<span class="sd">as well as settings where new labels are collected either in batches of examples or one at a time.</span>
+
+<span class="sd">Each of the main functions in this module utilizes any trained classifier model.</span>
+<span class="sd">Variants of these functions are provided for settings where you have trained an ensemble of multiple models.</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
 <span class="kn">import</span> <span class="nn">warnings</span>
@@ -441,7 +454,13 @@
 
 <span class="kn">from</span> <span class="nn">cleanlab.rank</span> <span class="kn">import</span> <span class="n">get_label_quality_scores</span>
 <span class="kn">from</span> <span class="nn">cleanlab.internal.util</span> <span class="kn">import</span> <span class="n">get_num_classes</span><span class="p">,</span> <span class="n">value_counts</span>
-<span class="kn">from</span> <span class="nn">cleanlab.internal.multiannotator_utils</span> <span class="kn">import</span> <span class="n">assert_valid_inputs_multiannotator</span>
+<span class="kn">from</span> <span class="nn">cleanlab.internal.multiannotator_utils</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">assert_valid_inputs_multiannotator</span><span class="p">,</span>
+    <span class="n">assert_valid_pred_probs</span><span class="p">,</span>
+    <span class="n">check_consensus_label_classes</span><span class="p">,</span>
+    <span class="n">find_best_temp_scaler</span><span class="p">,</span>
+    <span class="n">temp_scale_pred_probs</span><span class="p">,</span>
+<span class="p">)</span>
 
 
 <div class="viewcode-block" id="get_label_quality_multiannotator"><a class="viewcode-back" href="../../cleanlab/multiannotator.html#cleanlab.multiannotator.get_label_quality_multiannotator">[docs]</a><span class="k">def</span> <span class="nf">get_label_quality_multiannotator</span><span class="p">(</span>
@@ -450,11 +469,13 @@
     <span class="o">*</span><span class="p">,</span>
     <span class="n">consensus_method</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="s2">&quot;best_quality&quot;</span><span class="p">,</span>
     <span class="n">quality_method</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;crowdlab&quot;</span><span class="p">,</span>
+    <span class="n">calibrate_probs</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
     <span class="n">return_detailed_quality</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
     <span class="n">return_annotator_stats</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+    <span class="n">return_weights</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
     <span class="n">verbose</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
     <span class="n">label_quality_score_kwargs</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">=</span> <span class="p">{},</span>
-<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">]:</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
     <span class="sd">&quot;&quot;&quot;Returns label quality scores for each example and for each annotator.</span>
 
 <span class="sd">    This function is for multiclass classification datasets where examples have been labeled by</span>
@@ -500,10 +521,16 @@
 
 <span class="sd">        * ``crowdlab``: an emsemble method that weighs both the annotators&#39; labels as well as the model&#39;s prediction.</span>
 <span class="sd">        * ``agreement``: the fraction of annotators that agree with the consensus label.</span>
+<span class="sd">    calibrate_probs : bool, default = False</span>
+<span class="sd">        Boolean value that specifies whether the provided `pred_probs` should be re-calibrated to better match the annotators&#39; empirical label distribution.</span>
+<span class="sd">        We recommend setting this to True in active learning applications, in order to prevent overconfident models from suggesting the wrong examples to collect labels for.</span>
 <span class="sd">    return_detailed_quality: bool, default = True</span>
 <span class="sd">        Boolean to specify if `detailed_label_quality` is returned.</span>
 <span class="sd">    return_annotator_stats : bool, default = True</span>
 <span class="sd">        Boolean to specify if `annotator_stats` is returned.</span>
+<span class="sd">    return_weights : bool, default = False</span>
+<span class="sd">        Boolean to specify if `model_weight` and `annotator_weight` is returned.</span>
+<span class="sd">        Model and annotator weights are applicable for ``quality_method == crowdlab``, will return ``None`` for any other quality methods.</span>
 <span class="sd">    verbose : bool, default = True</span>
 <span class="sd">        Important warnings and other printed statements may be suppressed if ``verbose`` is set to ``False``.</span>
 <span class="sd">    label_quality_score_kwargs : dict, optional</span>
@@ -512,7 +539,7 @@
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
 <span class="sd">    labels_info : dict</span>
-<span class="sd">        Dictionary containing up to 3 pandas DataFrame with keys as below:</span>
+<span class="sd">        Dictionary containing up to 5 pandas DataFrame with keys as below:</span>
 
 <span class="sd">        ``label_quality`` : pandas.DataFrame</span>
 <span class="sd">            pandas DataFrame in which each row corresponds to one example, with columns:</span>
@@ -522,11 +549,13 @@
 <span class="sd">            * ``annotator_agreement``: the fraction of annotators that agree with the consensus label (only consider the annotators that labeled that particular example).</span>
 <span class="sd">            * ``consensus_quality_score``: label quality score for consensus label, calculated by the method specified in ``quality_method``.</span>
 
-<span class="sd">        ``detailed_label_quality`` : pandas.DataFrame (returned if `return_detailed_quality=True`)</span>
+<span class="sd">        ``detailed_label_quality`` : pandas.DataFrame</span>
+<span class="sd">            Only returned if `return_detailed_quality=True`.</span>
 <span class="sd">            Returns a pandas DataFrame with columns `quality_annotator_1`, `quality_annotator_2`, ..., `quality_annotator_M` where each entry is</span>
 <span class="sd">            the label quality score for the labels provided by each annotator (is ``NaN`` for examples which this annotator did not label).</span>
 
-<span class="sd">        ``annotator_stats`` : pandas.DataFrame (returned if `return_annotator_stats=True`)</span>
+<span class="sd">        ``annotator_stats`` : pandas.DataFrame</span>
+<span class="sd">            Only returned if `return_annotator_stats=True`.</span>
 <span class="sd">            Returns overall statistics about each annotator, sorted by lowest annotator_quality first.</span>
 <span class="sd">            pandas DataFrame in which each row corresponds to one annotator (the row IDs correspond to annotator IDs), with columns:</span>
 
@@ -534,15 +563,37 @@
 <span class="sd">            * ``num_examples_labeled``: number of examples annotated by a given annotator.</span>
 <span class="sd">            * ``agreement_with_consensus``: fraction of examples where a given annotator agrees with the consensus label.</span>
 <span class="sd">            * ``worst_class``: the class that is most frequently mislabeled by a given annotator.</span>
+
+<span class="sd">        ``model_weight`` : float</span>
+<span class="sd">            Only returned if `return_weights=True`. It is only applicable for ``quality_method == crowdlab``.</span>
+<span class="sd">            The model weight specifies the weight of classifier model in weighted averages used to estimate label quality</span>
+<span class="sd">            This number is an estimate of how trustworthy the model is relative the annotators.</span>
+
+<span class="sd">        ``annotator_weight`` : np.ndarray</span>
+<span class="sd">            Only returned if `return_weights=True`. It is only applicable for ``quality_method == crowdlab``.</span>
+<span class="sd">            An array of shape ``(M,)`` where M is the number of annotators, specifying the weight of each annotator in weighted averages used to estimate label quality.</span>
+<span class="sd">            These weights are estimates of how trustworthy each annotator is relative to the other annotators.</span>
+
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">labels_multiannotator</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">):</span>
         <span class="n">labels_multiannotator</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">labels_multiannotator</span><span class="p">)</span>
 
+    <span class="k">if</span> <span class="n">return_weights</span> <span class="o">==</span> <span class="kc">True</span> <span class="ow">and</span> <span class="n">quality_method</span> <span class="o">!=</span> <span class="s2">&quot;crowdlab&quot;</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+            <span class="s2">&quot;Model and annotator weights are only applicable to the crowdlab quality method. &quot;</span>
+            <span class="s2">&quot;Either set return_weights=False or quality_method=&#39;crowdlab&#39;.&quot;</span>
+        <span class="p">)</span>
+
     <span class="n">assert_valid_inputs_multiannotator</span><span class="p">(</span><span class="n">labels_multiannotator</span><span class="p">,</span> <span class="n">pred_probs</span><span class="p">)</span>
 
     <span class="c1"># Count number of non-NaN values for each example</span>
     <span class="n">num_annotations</span> <span class="o">=</span> <span class="n">labels_multiannotator</span><span class="o">.</span><span class="n">count</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()</span>
+
+    <span class="c1"># calibrate pred_probs</span>
+    <span class="k">if</span> <span class="n">calibrate_probs</span><span class="p">:</span>
+        <span class="n">optimal_temp</span> <span class="o">=</span> <span class="n">find_best_temp_scaler</span><span class="p">(</span><span class="n">labels_multiannotator</span><span class="p">,</span> <span class="n">pred_probs</span><span class="p">)</span>
+        <span class="n">pred_probs</span> <span class="o">=</span> <span class="n">temp_scale_pred_probs</span><span class="p">(</span><span class="n">pred_probs</span><span class="p">,</span> <span class="n">optimal_temp</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">consensus_method</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
         <span class="n">consensus_method</span> <span class="o">=</span> <span class="p">[</span><span class="n">consensus_method</span><span class="p">]</span>
@@ -621,7 +672,7 @@
 
         <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
             <span class="c1"># check if any classes no longer appear in the set of consensus labels</span>
-            <span class="n">_check_consensus_label_classes</span><span class="p">(</span>
+            <span class="n">check_consensus_label_classes</span><span class="p">(</span>
                 <span class="n">labels_multiannotator</span><span class="o">=</span><span class="n">labels_multiannotator</span><span class="p">,</span>
                 <span class="n">consensus_label</span><span class="o">=</span><span class="n">consensus_label</span><span class="p">,</span>
                 <span class="n">consensus_method</span><span class="o">=</span><span class="n">curr_method</span><span class="p">,</span>
@@ -683,26 +734,459 @@
                 <span class="n">annotator_agreement</span><span class="p">,</span>
             <span class="p">)</span>
 
-    <span class="k">if</span> <span class="n">return_detailed_quality</span> <span class="ow">and</span> <span class="n">return_annotator_stats</span><span class="p">:</span>
-        <span class="k">return</span> <span class="p">{</span>
-            <span class="s2">&quot;label_quality&quot;</span><span class="p">:</span> <span class="n">label_quality</span><span class="p">,</span>
-            <span class="s2">&quot;detailed_label_quality&quot;</span><span class="p">:</span> <span class="n">detailed_label_quality</span><span class="p">,</span>
-            <span class="s2">&quot;annotator_stats&quot;</span><span class="p">:</span> <span class="n">annotator_stats</span><span class="p">,</span>
-        <span class="p">}</span>
-    <span class="k">elif</span> <span class="n">return_detailed_quality</span><span class="p">:</span>
-        <span class="k">return</span> <span class="p">{</span>
-            <span class="s2">&quot;label_quality&quot;</span><span class="p">:</span> <span class="n">label_quality</span><span class="p">,</span>
-            <span class="s2">&quot;detailed_label_quality&quot;</span><span class="p">:</span> <span class="n">detailed_label_quality</span><span class="p">,</span>
-        <span class="p">}</span>
-    <span class="k">elif</span> <span class="n">return_annotator_stats</span><span class="p">:</span>
-        <span class="k">return</span> <span class="p">{</span>
-            <span class="s2">&quot;label_quality&quot;</span><span class="p">:</span> <span class="n">label_quality</span><span class="p">,</span>
-            <span class="s2">&quot;annotator_stats&quot;</span><span class="p">:</span> <span class="n">annotator_stats</span><span class="p">,</span>
-        <span class="p">}</span>
+    <span class="n">labels_info</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;label_quality&quot;</span><span class="p">:</span> <span class="n">label_quality</span><span class="p">,</span>
+    <span class="p">}</span>
+
+    <span class="k">if</span> <span class="n">return_detailed_quality</span><span class="p">:</span>
+        <span class="n">labels_info</span><span class="p">[</span><span class="s2">&quot;detailed_label_quality&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">detailed_label_quality</span>
+    <span class="k">if</span> <span class="n">return_annotator_stats</span><span class="p">:</span>
+        <span class="n">labels_info</span><span class="p">[</span><span class="s2">&quot;annotator_stats&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">annotator_stats</span>
+    <span class="k">if</span> <span class="n">return_weights</span><span class="p">:</span>
+        <span class="n">labels_info</span><span class="p">[</span><span class="s2">&quot;model_weight&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">model_weight</span>
+        <span class="n">labels_info</span><span class="p">[</span><span class="s2">&quot;annotator_weight&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">annotator_weight</span>
+
+    <span class="k">return</span> <span class="n">labels_info</span></div>
+
+
+<div class="viewcode-block" id="get_label_quality_multiannotator_ensemble"><a class="viewcode-back" href="../../cleanlab/multiannotator.html#cleanlab.multiannotator.get_label_quality_multiannotator_ensemble">[docs]</a><span class="k">def</span> <span class="nf">get_label_quality_multiannotator_ensemble</span><span class="p">(</span>
+    <span class="n">labels_multiannotator</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">],</span>
+    <span class="n">pred_probs</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+    <span class="o">*</span><span class="p">,</span>
+    <span class="n">calibrate_probs</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="n">return_detailed_quality</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+    <span class="n">return_annotator_stats</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+    <span class="n">return_weights</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="n">verbose</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+    <span class="n">label_quality_score_kwargs</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">=</span> <span class="p">{},</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+    <span class="sd">&quot;&quot;&quot;Returns label quality scores for each example and for each annotator, based on predictions from an ensemble of models.</span>
+
+<span class="sd">    This function is similar to :py:func:`get_label_quality_multiannotator &lt;cleanlab.multiannotator.get_label_quality_multiannotator&gt;` but for settings where</span>
+<span class="sd">    you have trained an ensemble of multiple classifier models rather than a single model.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    labels_multiannotator : pd.DataFrame of np.ndarray</span>
+<span class="sd">        Multiannotator labels in the same format expected by :py:func:`get_label_quality_multiannotator &lt;cleanlab.multiannotator.get_label_quality_multiannotator&gt;`.</span>
+<span class="sd">    pred_probs : np.ndarray</span>
+<span class="sd">        An array of shape ``(P, N, K)`` where P is the number of models, consisting of predicted class probabilities from the ensemble models.</span>
+<span class="sd">        Each set of predicted probabilities with shape ``(N, K)`` is in the same format expected by the :py:func:`get_label_quality_scores &lt;cleanlab.rank.get_label_quality_scores&gt;`.</span>
+<span class="sd">    calibrate_probs : bool, default = False</span>
+<span class="sd">        Boolean value as expected by :py:func:`get_label_quality_multiannotator &lt;cleanlab.multiannotator.get_label_quality_multiannotator&gt;`.</span>
+<span class="sd">    return_detailed_quality: bool, default = True</span>
+<span class="sd">        Boolean value as expected by :py:func:`get_label_quality_multiannotator &lt;cleanlab.multiannotator.get_label_quality_multiannotator&gt;`.</span>
+<span class="sd">    return_annotator_stats : bool, default = True</span>
+<span class="sd">        Boolean value as expected by :py:func:`get_label_quality_multiannotator &lt;cleanlab.multiannotator.get_label_quality_multiannotator&gt;`.</span>
+<span class="sd">    return_weights : bool, default = False</span>
+<span class="sd">        Boolean value as expected by :py:func:`get_label_quality_multiannotator &lt;cleanlab.multiannotator.get_label_quality_multiannotator&gt;`.</span>
+<span class="sd">    verbose : bool, default = True</span>
+<span class="sd">        Boolean value as expected by :py:func:`get_label_quality_multiannotator &lt;cleanlab.multiannotator.get_label_quality_multiannotator&gt;`.</span>
+<span class="sd">    label_quality_score_kwargs : dict, optional</span>
+<span class="sd">        Keyword arguments in the same format expected by py:func:`get_label_quality_multiannotator &lt;cleanlab.multiannotator.get_label_quality_multiannotator&gt;`.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    labels_info : dict</span>
+<span class="sd">        Dictionary containing up to 5 pandas DataFrame with keys as below:</span>
+
+<span class="sd">        ``label_quality`` : pandas.DataFrame</span>
+<span class="sd">            Similar to output as :py:func:`get_label_quality_multiannotator &lt;cleanlab.multiannotator.get_label_quality_multiannotator&gt;`.</span>
+
+<span class="sd">        ``detailed_label_quality`` : pandas.DataFrame</span>
+<span class="sd">            Similar to output as :py:func:`get_label_quality_multiannotator &lt;cleanlab.multiannotator.get_label_quality_multiannotator&gt;`.</span>
+
+<span class="sd">        ``annotator_stats`` : pandas.DataFrame</span>
+<span class="sd">            Similar to output as :py:func:`get_label_quality_multiannotator &lt;cleanlab.multiannotator.get_label_quality_multiannotator&gt;`.</span>
+
+<span class="sd">        ``model_weight`` : np.ndarray</span>
+<span class="sd">            Only returned if `return_weights=True`.</span>
+<span class="sd">            An array of shape ``(P,)`` where is the number of models in the ensemble, specifying the weight of each classifier model in weighted averages used to estimate label quality.</span>
+<span class="sd">            These weigthts is an estimate of how trustworthy the model is relative the annotators.</span>
+<span class="sd">            An array of shape ``(P,)`` where is the number of models in the ensemble, specifying the model weight used in weighted averages.</span>
+
+<span class="sd">        ``annotator_weight`` : np.ndarray</span>
+<span class="sd">            Only returned if `return_weights=True`.</span>
+<span class="sd">            Similar to output as :py:func:`get_label_quality_multiannotator &lt;cleanlab.multiannotator.get_label_quality_multiannotator&gt;`.</span>
+
+<span class="sd">    See Also</span>
+<span class="sd">    --------</span>
+<span class="sd">    get_label_quality_multiannotator</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">labels_multiannotator</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">):</span>
+        <span class="n">labels_multiannotator</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">labels_multiannotator</span><span class="p">)</span>
+
+    <span class="n">assert_valid_inputs_multiannotator</span><span class="p">(</span><span class="n">labels_multiannotator</span><span class="p">,</span> <span class="n">pred_probs</span><span class="p">,</span> <span class="n">ensemble</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="c1"># Count number of non-NaN values for each example</span>
+    <span class="n">num_annotations</span> <span class="o">=</span> <span class="n">labels_multiannotator</span><span class="o">.</span><span class="n">count</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()</span>
+
+    <span class="c1"># temp scale pred_probs</span>
+    <span class="k">if</span> <span class="n">calibrate_probs</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">pred_probs</span><span class="p">)):</span>
+            <span class="n">curr_pred_probs</span> <span class="o">=</span> <span class="n">pred_probs</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+            <span class="n">optimal_temp</span> <span class="o">=</span> <span class="n">find_best_temp_scaler</span><span class="p">(</span><span class="n">labels_multiannotator</span><span class="p">,</span> <span class="n">curr_pred_probs</span><span class="p">)</span>
+            <span class="n">pred_probs</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">temp_scale_pred_probs</span><span class="p">(</span><span class="n">curr_pred_probs</span><span class="p">,</span> <span class="n">optimal_temp</span><span class="p">)</span>
+
+    <span class="n">label_quality</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s2">&quot;num_annotations&quot;</span><span class="p">:</span> <span class="n">num_annotations</span><span class="p">})</span>
+
+    <span class="c1"># get majority vote stats</span>
+    <span class="n">avg_pred_probs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">pred_probs</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">majority_vote_label</span> <span class="o">=</span> <span class="n">get_majority_vote_label</span><span class="p">(</span>
+        <span class="n">labels_multiannotator</span><span class="o">=</span><span class="n">labels_multiannotator</span><span class="p">,</span>
+        <span class="n">pred_probs</span><span class="o">=</span><span class="n">avg_pred_probs</span><span class="p">,</span>
+        <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="p">(</span>
+        <span class="n">MV_annotator_agreement</span><span class="p">,</span>
+        <span class="n">MV_consensus_quality_score</span><span class="p">,</span>
+        <span class="n">MV_post_pred_probs</span><span class="p">,</span>
+        <span class="n">MV_model_weight</span><span class="p">,</span>
+        <span class="n">MV_annotator_weight</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">=</span> <span class="n">_get_consensus_stats</span><span class="p">(</span>
+        <span class="n">labels_multiannotator</span><span class="o">=</span><span class="n">labels_multiannotator</span><span class="p">,</span>
+        <span class="n">pred_probs</span><span class="o">=</span><span class="n">pred_probs</span><span class="p">,</span>
+        <span class="n">num_annotations</span><span class="o">=</span><span class="n">num_annotations</span><span class="p">,</span>
+        <span class="n">consensus_label</span><span class="o">=</span><span class="n">majority_vote_label</span><span class="p">,</span>
+        <span class="n">verbose</span><span class="o">=</span><span class="n">verbose</span><span class="p">,</span>
+        <span class="n">ensemble</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="o">**</span><span class="n">label_quality_score_kwargs</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="c1"># get crowdlab stats</span>
+    <span class="n">consensus_label</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">full</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">majority_vote_label</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">consensus_label</span><span class="p">)):</span>
+        <span class="n">max_pred_probs_ind</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">MV_post_pred_probs</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">==</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">MV_post_pred_probs</span><span class="p">[</span><span class="n">i</span><span class="p">]))[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">max_pred_probs_ind</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">consensus_label</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">max_pred_probs_ind</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">consensus_label</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">majority_vote_label</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+    <span class="n">consensus_label</span> <span class="o">=</span> <span class="n">consensus_label</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s2">&quot;int64&quot;</span><span class="p">)</span>  <span class="c1"># convert all label types to int</span>
+
+    <span class="p">(</span>
+        <span class="n">annotator_agreement</span><span class="p">,</span>
+        <span class="n">consensus_quality_score</span><span class="p">,</span>
+        <span class="n">post_pred_probs</span><span class="p">,</span>
+        <span class="n">model_weight</span><span class="p">,</span>
+        <span class="n">annotator_weight</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">=</span> <span class="n">_get_consensus_stats</span><span class="p">(</span>
+        <span class="n">labels_multiannotator</span><span class="o">=</span><span class="n">labels_multiannotator</span><span class="p">,</span>
+        <span class="n">pred_probs</span><span class="o">=</span><span class="n">pred_probs</span><span class="p">,</span>
+        <span class="n">num_annotations</span><span class="o">=</span><span class="n">num_annotations</span><span class="p">,</span>
+        <span class="n">consensus_label</span><span class="o">=</span><span class="n">consensus_label</span><span class="p">,</span>
+        <span class="n">verbose</span><span class="o">=</span><span class="n">verbose</span><span class="p">,</span>
+        <span class="n">ensemble</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="o">**</span><span class="n">label_quality_score_kwargs</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+        <span class="c1"># check if any classes no longer appear in the set of consensus labels</span>
+        <span class="n">check_consensus_label_classes</span><span class="p">(</span>
+            <span class="n">labels_multiannotator</span><span class="o">=</span><span class="n">labels_multiannotator</span><span class="p">,</span>
+            <span class="n">consensus_label</span><span class="o">=</span><span class="n">consensus_label</span><span class="p">,</span>
+            <span class="n">consensus_method</span><span class="o">=</span><span class="s2">&quot;crowdlab&quot;</span><span class="p">,</span>
+        <span class="p">)</span>
+
+    <span class="p">(</span>
+        <span class="n">label_quality</span><span class="p">[</span><span class="s2">&quot;consensus_label&quot;</span><span class="p">],</span>
+        <span class="n">label_quality</span><span class="p">[</span><span class="s2">&quot;consensus_quality_score&quot;</span><span class="p">],</span>
+        <span class="n">label_quality</span><span class="p">[</span><span class="s2">&quot;annotator_agreement&quot;</span><span class="p">],</span>
+    <span class="p">)</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="n">consensus_label</span><span class="p">,</span>
+        <span class="n">consensus_quality_score</span><span class="p">,</span>
+        <span class="n">annotator_agreement</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="n">label_quality</span> <span class="o">=</span> <span class="n">label_quality</span><span class="o">.</span><span class="n">reindex</span><span class="p">(</span>
+        <span class="n">columns</span><span class="o">=</span><span class="p">[</span>
+            <span class="s2">&quot;consensus_label&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;consensus_quality_score&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;annotator_agreement&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;num_annotations&quot;</span><span class="p">,</span>
+        <span class="p">]</span>
+    <span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">return_detailed_quality</span><span class="p">:</span>
+        <span class="c1"># Compute the label quality scores for each annotators&#39; labels</span>
+        <span class="n">detailed_label_quality</span> <span class="o">=</span> <span class="n">labels_multiannotator</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span>
+            <span class="n">_get_annotator_label_quality_score</span><span class="p">,</span>
+            <span class="n">pred_probs</span><span class="o">=</span><span class="n">post_pred_probs</span><span class="p">,</span>
+            <span class="o">**</span><span class="n">label_quality_score_kwargs</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="n">detailed_label_quality</span> <span class="o">=</span> <span class="n">detailed_label_quality</span><span class="o">.</span><span class="n">add_prefix</span><span class="p">(</span><span class="s2">&quot;quality_annotator_&quot;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">return_annotator_stats</span><span class="p">:</span>
+        <span class="n">annotator_stats</span> <span class="o">=</span> <span class="n">_get_annotator_stats</span><span class="p">(</span>
+            <span class="n">labels_multiannotator</span><span class="o">=</span><span class="n">labels_multiannotator</span><span class="p">,</span>
+            <span class="n">pred_probs</span><span class="o">=</span><span class="n">post_pred_probs</span><span class="p">,</span>
+            <span class="n">consensus_label</span><span class="o">=</span><span class="n">consensus_label</span><span class="p">,</span>
+            <span class="n">num_annotations</span><span class="o">=</span><span class="n">num_annotations</span><span class="p">,</span>
+            <span class="n">annotator_agreement</span><span class="o">=</span><span class="n">annotator_agreement</span><span class="p">,</span>
+            <span class="n">model_weight</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">model_weight</span><span class="p">),</span>  <span class="c1"># use average model weight when scoring annotators</span>
+            <span class="n">annotator_weight</span><span class="o">=</span><span class="n">annotator_weight</span><span class="p">,</span>
+            <span class="n">consensus_quality_score</span><span class="o">=</span><span class="n">consensus_quality_score</span><span class="p">,</span>
+        <span class="p">)</span>
+
+    <span class="n">labels_info</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;label_quality&quot;</span><span class="p">:</span> <span class="n">label_quality</span><span class="p">,</span>
+    <span class="p">}</span>
+
+    <span class="k">if</span> <span class="n">return_detailed_quality</span><span class="p">:</span>
+        <span class="n">labels_info</span><span class="p">[</span><span class="s2">&quot;detailed_label_quality&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">detailed_label_quality</span>
+    <span class="k">if</span> <span class="n">return_annotator_stats</span><span class="p">:</span>
+        <span class="n">labels_info</span><span class="p">[</span><span class="s2">&quot;annotator_stats&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">annotator_stats</span>
+    <span class="k">if</span> <span class="n">return_weights</span><span class="p">:</span>
+        <span class="n">labels_info</span><span class="p">[</span><span class="s2">&quot;model_weight&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">model_weight</span>
+        <span class="n">labels_info</span><span class="p">[</span><span class="s2">&quot;annotator_weight&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">annotator_weight</span>
+
+    <span class="k">return</span> <span class="n">labels_info</span></div>
+
+
+<div class="viewcode-block" id="get_active_learning_scores"><a class="viewcode-back" href="../../cleanlab/multiannotator.html#cleanlab.multiannotator.get_active_learning_scores">[docs]</a><span class="k">def</span> <span class="nf">get_active_learning_scores</span><span class="p">(</span>
+    <span class="n">labels_multiannotator</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">],</span>
+    <span class="n">pred_probs</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+    <span class="n">pred_probs_unlabeled</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]:</span>
+    <span class="sd">&quot;&quot;&quot;Returns an active learning quality score for each example in the dataset.</span>
+
+<span class="sd">    We consider settings where one example can be labeled by multiple annotators and some examples have no labels at all so far.</span>
+
+<span class="sd">    The score is in between 0 and 1, and can be used to prioritize what data to collect additional labels for; lower scores indicate less confidence</span>
+<span class="sd">    on the examples and that additional labels should be collected for those examples.</span>
+<span class="sd">    For example:</span>
+
+<span class="sd">    * 1 - confident example, no additional labeling is required.</span>
+<span class="sd">    * 0 - unconfident example, want to collect more labels for this example (either because it is currently unlabeled and very different than other examples, it has only received few annotations from less reliable annotators, or the annotations it has received don&#39;t agree with each other).</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    labels_multiannotator : pd.DataFrame of np.ndarray</span>
+<span class="sd">        2D pandas DataFrame or array of multiple given labels for each example with shape ``(N, M)``,</span>
+<span class="sd">        where N is the number of examples and M is the number of annotators.</span>
+<span class="sd">        For more details, labels in the same format expected by the :py:func:`get_label_quality_multiannotator &lt;cleanlab.multiannotator.get_label_quality_multiannotator&gt;`.</span>
+<span class="sd">        Note that examples that have no annotator labels should not be included in this DataFrame/array.</span>
+<span class="sd">    pred_probs : np.ndarray</span>
+<span class="sd">        An array of shape ``(N, K)`` of predicted class probabilities from a trained classifier model.</span>
+<span class="sd">        Predicted probabilities in the same format expected by the :py:func:`get_label_quality_scores &lt;cleanlab.rank.get_label_quality_scores&gt;`.</span>
+<span class="sd">    pred_probs_unlabeled : np.ndarray, optional</span>
+<span class="sd">        An array of shape ``(N, K)`` of predicted class probabilities from a trained classifier model for examples that have no annotator labels.</span>
+<span class="sd">        Predicted probabilities in the same format expected by the :py:func:`get_label_quality_scores &lt;cleanlab.rank.get_label_quality_scores&gt;`.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    active_learning_scores : np.ndarray</span>
+<span class="sd">        Array of shape ``(N,)`` indicating the active learning quality scores for each example.</span>
+<span class="sd">        Examples with the lowest scores are those we should label next in order to maximally improve our classifier model.</span>
+
+<span class="sd">    active_learning_scores_unlabeled : np.ndarray</span>
+<span class="sd">        Array of shape ``(N,)`` indicating the active learning quality scores for each unlabeled example.</span>
+<span class="sd">        Returns an empty array if no unlabeled data is provided.</span>
+<span class="sd">        Examples with the lowest scores are those we should label next in order to maximally improve our classifier model</span>
+<span class="sd">        (scores for unlabeled data are directly comparable with the `active_learning_scores` for labeled data).</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">labels_multiannotator</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">):</span>
+        <span class="n">labels_multiannotator</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">labels_multiannotator</span><span class="p">)</span>
+
+    <span class="n">assert_valid_pred_probs</span><span class="p">(</span><span class="n">pred_probs</span><span class="o">=</span><span class="n">pred_probs</span><span class="p">,</span> <span class="n">pred_probs_unlabeled</span><span class="o">=</span><span class="n">pred_probs_unlabeled</span><span class="p">)</span>
+
+    <span class="n">num_classes</span> <span class="o">=</span> <span class="n">get_num_classes</span><span class="p">(</span><span class="n">pred_probs</span><span class="o">=</span><span class="n">pred_probs</span><span class="p">)</span>
+
+    <span class="n">optimal_temp</span> <span class="o">=</span> <span class="n">find_best_temp_scaler</span><span class="p">(</span><span class="n">labels_multiannotator</span><span class="p">,</span> <span class="n">pred_probs</span><span class="p">)</span>
+    <span class="n">pred_probs</span> <span class="o">=</span> <span class="n">temp_scale_pred_probs</span><span class="p">(</span><span class="n">pred_probs</span><span class="p">,</span> <span class="n">optimal_temp</span><span class="p">)</span>
+
+    <span class="c1"># if all examples are only labeled by a single annotator</span>
+    <span class="k">if</span> <span class="n">labels_multiannotator</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">s</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">s</span><span class="o">.</span><span class="n">dropna</span><span class="p">())</span> <span class="o">==</span> <span class="mi">1</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">all</span><span class="p">():</span>
+        <span class="n">assert_valid_inputs_multiannotator</span><span class="p">(</span>
+            <span class="n">labels_multiannotator</span><span class="p">,</span> <span class="n">pred_probs</span><span class="p">,</span> <span class="n">allow_single_label</span><span class="o">=</span><span class="kc">True</span>
+        <span class="p">)</span>
+
+        <span class="n">consensus_label</span> <span class="o">=</span> <span class="n">get_majority_vote_label</span><span class="p">(</span>
+            <span class="n">labels_multiannotator</span><span class="o">=</span><span class="n">labels_multiannotator</span><span class="p">,</span>
+            <span class="n">pred_probs</span><span class="o">=</span><span class="n">pred_probs</span><span class="p">,</span>
+            <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="n">quality_of_consensus_labeled</span> <span class="o">=</span> <span class="n">get_label_quality_scores</span><span class="p">(</span><span class="n">consensus_label</span><span class="p">,</span> <span class="n">pred_probs</span><span class="p">)</span>
+        <span class="n">model_weight</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="n">annotator_weight</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">full</span><span class="p">(</span><span class="n">labels_multiannotator</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="n">avg_annotator_weight</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">annotator_weight</span><span class="p">)</span>
+
     <span class="k">else</span><span class="p">:</span>
-        <span class="k">return</span> <span class="p">{</span>
-            <span class="s2">&quot;label_quality&quot;</span><span class="p">:</span> <span class="n">label_quality</span><span class="p">,</span>
-        <span class="p">}</span></div>
+        <span class="n">multiannotator_info</span> <span class="o">=</span> <span class="n">get_label_quality_multiannotator</span><span class="p">(</span>
+            <span class="n">labels_multiannotator</span><span class="p">,</span>
+            <span class="n">pred_probs</span><span class="p">,</span>
+            <span class="n">return_annotator_stats</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+            <span class="n">return_detailed_quality</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+            <span class="n">return_weights</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="n">quality_of_consensus_labeled</span> <span class="o">=</span> <span class="n">multiannotator_info</span><span class="p">[</span><span class="s2">&quot;label_quality&quot;</span><span class="p">][</span>
+            <span class="s2">&quot;consensus_quality_score&quot;</span>
+        <span class="p">]</span>
+        <span class="n">model_weight</span> <span class="o">=</span> <span class="n">multiannotator_info</span><span class="p">[</span><span class="s2">&quot;model_weight&quot;</span><span class="p">]</span>
+        <span class="n">annotator_weight</span> <span class="o">=</span> <span class="n">multiannotator_info</span><span class="p">[</span><span class="s2">&quot;annotator_weight&quot;</span><span class="p">]</span>
+        <span class="n">avg_annotator_weight</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">annotator_weight</span><span class="p">)</span>
+
+    <span class="c1"># compute scores for labeled data</span>
+    <span class="n">active_learning_scores</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">full</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">labels_multiannotator</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">active_learning_scores</span><span class="p">)):</span>
+        <span class="n">annotator_labels</span> <span class="o">=</span> <span class="n">labels_multiannotator</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+        <span class="n">active_learning_scores</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">average</span><span class="p">(</span>
+            <span class="p">(</span><span class="n">quality_of_consensus_labeled</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="mi">1</span> <span class="o">/</span> <span class="n">num_classes</span><span class="p">),</span>
+            <span class="n">weights</span><span class="o">=</span><span class="p">(</span>
+                <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">annotator_weight</span><span class="p">[</span><span class="n">annotator_labels</span><span class="o">.</span><span class="n">notna</span><span class="p">()])</span> <span class="o">+</span> <span class="n">model_weight</span><span class="p">,</span>
+                <span class="n">avg_annotator_weight</span><span class="p">,</span>
+            <span class="p">),</span>
+        <span class="p">)</span>
+
+    <span class="c1"># compute scores for unlabeled data</span>
+    <span class="k">if</span> <span class="n">pred_probs_unlabeled</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">pred_probs_unlabeled</span> <span class="o">=</span> <span class="n">temp_scale_pred_probs</span><span class="p">(</span><span class="n">pred_probs_unlabeled</span><span class="p">,</span> <span class="n">optimal_temp</span><span class="p">)</span>
+        <span class="n">quality_of_consensus_unlabeled</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">pred_probs_unlabeled</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+        <span class="n">active_learning_scores_unlabeled</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">average</span><span class="p">(</span>
+            <span class="n">np</span><span class="o">.</span><span class="n">stack</span><span class="p">(</span>
+                <span class="p">[</span>
+                    <span class="n">quality_of_consensus_unlabeled</span><span class="p">,</span>
+                    <span class="n">np</span><span class="o">.</span><span class="n">full</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">quality_of_consensus_unlabeled</span><span class="p">),</span> <span class="mi">1</span> <span class="o">/</span> <span class="n">num_classes</span><span class="p">),</span>
+                <span class="p">]</span>
+            <span class="p">),</span>
+            <span class="n">weights</span><span class="o">=</span><span class="p">[</span><span class="n">model_weight</span><span class="p">,</span> <span class="n">avg_annotator_weight</span><span class="p">],</span>
+            <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+        <span class="p">)</span>
+
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">active_learning_scores_unlabeled</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([])</span>
+
+    <span class="k">return</span> <span class="n">active_learning_scores</span><span class="p">,</span> <span class="n">active_learning_scores_unlabeled</span></div>
+
+
+<div class="viewcode-block" id="get_active_learning_scores_ensemble"><a class="viewcode-back" href="../../cleanlab/multiannotator.html#cleanlab.multiannotator.get_active_learning_scores_ensemble">[docs]</a><span class="k">def</span> <span class="nf">get_active_learning_scores_ensemble</span><span class="p">(</span>
+    <span class="n">labels_multiannotator</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">],</span>
+    <span class="n">pred_probs</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+    <span class="n">pred_probs_unlabeled</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]:</span>
+    <span class="sd">&quot;&quot;&quot;Returns an active learning quality score for each example in the dataset, based on predictions from an ensemble of models.</span>
+
+<span class="sd">    This function is similar to :py:func:`get_active_learning_scores &lt;cleanlab.multiannotator.get_active_learning_scores&gt;` but allows for an</span>
+<span class="sd">    ensemble of multiple classifier models to be trained and will aggregate predictions from the models to compute the active learning quality score.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    labels_multiannotator : pd.DataFrame or np.ndarray</span>
+<span class="sd">        Multiannotator labels in the same format expected by :py:func:`get_active_learning_scores &lt;cleanlab.multiannotator.get_active_learning_scores&gt;`.</span>
+<span class="sd">    pred_probs : np.ndarray</span>
+<span class="sd">        An array of shape ``(P, N, K)`` where P is the number of models, consisting of predicted class probabilities from the ensemble models.</span>
+<span class="sd">        Each set of predicted probabilities with shape ``(N, K)`` is in the same format expected by the :py:func:`get_label_quality_scores &lt;cleanlab.rank.get_label_quality_scores&gt;`.</span>
+<span class="sd">    pred_probs_unlabeled : np.ndarray, optional</span>
+<span class="sd">        An array of shape ``(P, N, K)`` where P is the number of models, consisting of predicted class probabilities from a trained classifier model</span>
+<span class="sd">        for examples that have no annotated labels so far (but which we may want to label in the future, and hence compute active learning quality scores for).</span>
+<span class="sd">        Each set of predicted probabilities with shape ``(N, K)`` is in the same format expected by the :py:func:`get_label_quality_scores &lt;cleanlab.rank.get_label_quality_scores&gt;`.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    active_learning_scores : np.ndarray</span>
+<span class="sd">        Similar to output as :py:func:`get_label_quality_scores &lt;cleanlab.multiannotator.get_label_quality_scores&gt;`.</span>
+<span class="sd">    active_learning_scores_unlabeled : np.ndarray</span>
+<span class="sd">        Similar to output as :py:func:`get_label_quality_scores &lt;cleanlab.multiannotator.get_label_quality_scores&gt;`.</span>
+
+<span class="sd">    See Also</span>
+<span class="sd">    --------</span>
+<span class="sd">    get_active_learning_scores</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">labels_multiannotator</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">):</span>
+        <span class="n">labels_multiannotator</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">labels_multiannotator</span><span class="p">)</span>
+
+    <span class="n">assert_valid_pred_probs</span><span class="p">(</span>
+        <span class="n">pred_probs</span><span class="o">=</span><span class="n">pred_probs</span><span class="p">,</span> <span class="n">pred_probs_unlabeled</span><span class="o">=</span><span class="n">pred_probs_unlabeled</span><span class="p">,</span> <span class="n">ensemble</span><span class="o">=</span><span class="kc">True</span>
+    <span class="p">)</span>
+
+    <span class="n">num_classes</span> <span class="o">=</span> <span class="n">get_num_classes</span><span class="p">(</span><span class="n">pred_probs</span><span class="o">=</span><span class="n">pred_probs</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+
+    <span class="c1"># temp scale pred_probs</span>
+    <span class="n">optimal_temp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">full</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">pred_probs</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">NaN</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">pred_probs</span><span class="p">)):</span>
+        <span class="n">curr_pred_probs</span> <span class="o">=</span> <span class="n">pred_probs</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+        <span class="n">curr_optimal_temp</span> <span class="o">=</span> <span class="n">find_best_temp_scaler</span><span class="p">(</span><span class="n">labels_multiannotator</span><span class="p">,</span> <span class="n">curr_pred_probs</span><span class="p">)</span>
+        <span class="n">pred_probs</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">temp_scale_pred_probs</span><span class="p">(</span><span class="n">curr_pred_probs</span><span class="p">,</span> <span class="n">curr_optimal_temp</span><span class="p">)</span>
+        <span class="n">optimal_temp</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">curr_optimal_temp</span>
+
+    <span class="c1"># if all examples are only labeled by a single annotator</span>
+    <span class="k">if</span> <span class="n">labels_multiannotator</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">s</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">s</span><span class="o">.</span><span class="n">dropna</span><span class="p">())</span> <span class="o">==</span> <span class="mi">1</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">all</span><span class="p">():</span>
+        <span class="n">assert_valid_inputs_multiannotator</span><span class="p">(</span>
+            <span class="n">labels_multiannotator</span><span class="p">,</span> <span class="n">pred_probs</span><span class="p">,</span> <span class="n">ensemble</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">allow_single_label</span><span class="o">=</span><span class="kc">True</span>
+        <span class="p">)</span>
+
+        <span class="n">avg_pred_probs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">pred_probs</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+        <span class="n">consensus_label</span> <span class="o">=</span> <span class="n">get_majority_vote_label</span><span class="p">(</span>
+            <span class="n">labels_multiannotator</span><span class="o">=</span><span class="n">labels_multiannotator</span><span class="p">,</span>
+            <span class="n">pred_probs</span><span class="o">=</span><span class="n">avg_pred_probs</span><span class="p">,</span>
+            <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="n">quality_of_consensus_labeled</span> <span class="o">=</span> <span class="n">get_label_quality_scores</span><span class="p">(</span><span class="n">consensus_label</span><span class="p">,</span> <span class="n">avg_pred_probs</span><span class="p">)</span>
+        <span class="n">model_weight</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">full</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">pred_probs</span><span class="p">),</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="n">annotator_weight</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">full</span><span class="p">(</span><span class="n">labels_multiannotator</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="n">avg_annotator_weight</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">annotator_weight</span><span class="p">)</span>
+
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">multiannotator_info</span> <span class="o">=</span> <span class="n">get_label_quality_multiannotator_ensemble</span><span class="p">(</span>
+            <span class="n">labels_multiannotator</span><span class="p">,</span>
+            <span class="n">pred_probs</span><span class="p">,</span>
+            <span class="n">return_annotator_stats</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+            <span class="n">return_detailed_quality</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+            <span class="n">return_weights</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="n">quality_of_consensus_labeled</span> <span class="o">=</span> <span class="n">multiannotator_info</span><span class="p">[</span><span class="s2">&quot;label_quality&quot;</span><span class="p">][</span>
+            <span class="s2">&quot;consensus_quality_score&quot;</span>
+        <span class="p">]</span>
+        <span class="n">model_weight</span> <span class="o">=</span> <span class="n">multiannotator_info</span><span class="p">[</span><span class="s2">&quot;model_weight&quot;</span><span class="p">]</span>
+        <span class="n">annotator_weight</span> <span class="o">=</span> <span class="n">multiannotator_info</span><span class="p">[</span><span class="s2">&quot;annotator_weight&quot;</span><span class="p">]</span>
+        <span class="n">avg_annotator_weight</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">annotator_weight</span><span class="p">)</span>
+
+    <span class="c1"># compute scores for labeled data</span>
+    <span class="n">active_learning_scores</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">full</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">labels_multiannotator</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">active_learning_scores</span><span class="p">)):</span>
+        <span class="n">annotator_labels</span> <span class="o">=</span> <span class="n">labels_multiannotator</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+        <span class="n">active_learning_scores</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">average</span><span class="p">(</span>
+            <span class="p">(</span><span class="n">quality_of_consensus_labeled</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="mi">1</span> <span class="o">/</span> <span class="n">num_classes</span><span class="p">),</span>
+            <span class="n">weights</span><span class="o">=</span><span class="p">(</span>
+                <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">annotator_weight</span><span class="p">[</span><span class="n">annotator_labels</span><span class="o">.</span><span class="n">notna</span><span class="p">()])</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">model_weight</span><span class="p">),</span>
+                <span class="n">avg_annotator_weight</span><span class="p">,</span>
+            <span class="p">),</span>
+        <span class="p">)</span>
+
+    <span class="c1"># compute scores for unlabeled data</span>
+    <span class="k">if</span> <span class="n">pred_probs_unlabeled</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">pred_probs_unlabeled</span><span class="p">)):</span>
+            <span class="n">pred_probs_unlabeled</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">temp_scale_pred_probs</span><span class="p">(</span>
+                <span class="n">pred_probs_unlabeled</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">optimal_temp</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+            <span class="p">)</span>
+
+        <span class="n">avg_pred_probs_unlabeled</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">pred_probs_unlabeled</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+        <span class="n">consensus_label_unlabeled</span> <span class="o">=</span> <span class="n">get_majority_vote_label</span><span class="p">(</span>
+            <span class="n">np</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">pred_probs_unlabeled</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">T</span><span class="p">,</span>
+            <span class="n">avg_pred_probs_unlabeled</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="n">modified_pred_probs_unlabeled</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">average</span><span class="p">(</span>
+            <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">(</span>
+                <span class="p">(</span>
+                    <span class="n">pred_probs_unlabeled</span><span class="p">,</span>
+                    <span class="n">np</span><span class="o">.</span><span class="n">full</span><span class="p">(</span><span class="n">pred_probs_unlabeled</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">:],</span> <span class="mi">1</span> <span class="o">/</span> <span class="n">num_classes</span><span class="p">)[</span><span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">,</span> <span class="p">:,</span> <span class="p">:],</span>
+                <span class="p">)</span>
+            <span class="p">),</span>
+            <span class="n">weights</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">((</span><span class="n">model_weight</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">avg_annotator_weight</span><span class="p">]))),</span>
+            <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="n">active_learning_scores_unlabeled</span> <span class="o">=</span> <span class="n">get_label_quality_scores</span><span class="p">(</span>
+            <span class="n">consensus_label_unlabeled</span><span class="p">,</span> <span class="n">modified_pred_probs_unlabeled</span>
+        <span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">active_learning_scores_unlabeled</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([])</span>
+
+    <span class="k">return</span> <span class="n">active_learning_scores</span><span class="p">,</span> <span class="n">active_learning_scores_unlabeled</span></div>
 
 
 <div class="viewcode-block" id="get_majority_vote_label"><a class="viewcode-back" href="../../cleanlab/multiannotator.html#cleanlab.multiannotator.get_majority_vote_label">[docs]</a><span class="k">def</span> <span class="nf">get_majority_vote_label</span><span class="p">(</span>
@@ -720,7 +1204,7 @@
 <span class="sd">        For more details, labels in the same format expected by the :py:func:`get_label_quality_multiannotator &lt;cleanlab.multiannotator.get_label_quality_multiannotator&gt;`.</span>
 <span class="sd">    pred_probs : np.ndarray, optional</span>
 <span class="sd">        An array of shape ``(N, K)`` of model-predicted probabilities, ``P(label=k|x)``.</span>
-<span class="sd">        For details, predicted probabilities in the same format expected by the :py:func:`get_label_quality_multiannotator &lt;cleanlab.multiannotator.get_label_quality_multiannotator&gt;`.</span>
+<span class="sd">        For details, predicted probabilities in the same format expected by :py:func:`get_label_quality_multiannotator &lt;cleanlab.multiannotator.get_label_quality_multiannotator&gt;`.</span>
 <span class="sd">    verbose : bool, optional</span>
 <span class="sd">        Important warnings and other printed statements may be suppressed if ``verbose`` is set to ``False``.</span>
 <span class="sd">    Returns</span>
@@ -738,7 +1222,10 @@
     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">labels_multiannotator</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">):</span>
         <span class="n">labels_multiannotator</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">labels_multiannotator</span><span class="p">)</span>
 
-    <span class="n">assert_valid_inputs_multiannotator</span><span class="p">(</span><span class="n">labels_multiannotator</span><span class="p">,</span> <span class="n">pred_probs</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+        <span class="n">assert_valid_inputs_multiannotator</span><span class="p">(</span>
+            <span class="n">labels_multiannotator</span><span class="p">,</span> <span class="n">pred_probs</span><span class="p">,</span> <span class="n">allow_single_label</span><span class="o">=</span><span class="kc">True</span>
+        <span class="p">)</span>
 
     <span class="n">majority_vote_label</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">full</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">labels_multiannotator</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">)</span>
     <span class="n">mode_labels_multiannotator</span> <span class="o">=</span> <span class="n">labels_multiannotator</span><span class="o">.</span><span class="n">mode</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
@@ -826,7 +1313,7 @@
 
     <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
         <span class="c1"># check if any classes no longer appear in the set of consensus labels</span>
-        <span class="n">_check_consensus_label_classes</span><span class="p">(</span>
+        <span class="n">check_consensus_label_classes</span><span class="p">(</span>
             <span class="n">labels_multiannotator</span><span class="o">=</span><span class="n">labels_multiannotator</span><span class="p">,</span>
             <span class="n">consensus_label</span><span class="o">=</span><span class="n">majority_vote_label</span><span class="p">,</span>
             <span class="n">consensus_method</span><span class="o">=</span><span class="s2">&quot;majority_vote&quot;</span><span class="p">,</span>
@@ -872,6 +1359,7 @@
     <span class="n">consensus_label</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
     <span class="n">quality_method</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;crowdlab&quot;</span><span class="p">,</span>
     <span class="n">verbose</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+    <span class="n">ensemble</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
     <span class="n">label_quality_score_kwargs</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">=</span> <span class="p">{},</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;Returns a tuple containing the consensus labels, annotator agreement scores, and quality of consensus</span>
@@ -896,6 +1384,8 @@
 <span class="sd">        Keyword arguments to pass into ``get_label_quality_scores()``.</span>
 <span class="sd">    verbose : bool, default = True</span>
 <span class="sd">        Certain warnings and notes will be printed if ``verbose`` is set to ``True``.</span>
+<span class="sd">    ensemble : bool, default = False</span>
+<span class="sd">        Boolean flag to indicate whether the pred_probs passed are from ensemble models.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    ------</span>
@@ -909,16 +1399,27 @@
         <span class="n">consensus_label</span><span class="o">=</span><span class="n">consensus_label</span><span class="p">,</span>
     <span class="p">)</span>
 
-    <span class="c1"># compute posterior predicted probabilities</span>
-    <span class="n">post_pred_probs</span><span class="p">,</span> <span class="n">model_weight</span><span class="p">,</span> <span class="n">annotator_weight</span> <span class="o">=</span> <span class="n">_get_post_pred_probs_and_weights</span><span class="p">(</span>
-        <span class="n">labels_multiannotator</span><span class="o">=</span><span class="n">labels_multiannotator</span><span class="p">,</span>
-        <span class="n">consensus_label</span><span class="o">=</span><span class="n">consensus_label</span><span class="p">,</span>
-        <span class="n">prior_pred_probs</span><span class="o">=</span><span class="n">pred_probs</span><span class="p">,</span>
-        <span class="n">num_annotations</span><span class="o">=</span><span class="n">num_annotations</span><span class="p">,</span>
-        <span class="n">annotator_agreement</span><span class="o">=</span><span class="n">annotator_agreement</span><span class="p">,</span>
-        <span class="n">quality_method</span><span class="o">=</span><span class="n">quality_method</span><span class="p">,</span>
-        <span class="n">verbose</span><span class="o">=</span><span class="n">verbose</span><span class="p">,</span>
-    <span class="p">)</span>
+    <span class="c1"># compute posterior predicted probabilites</span>
+    <span class="k">if</span> <span class="n">ensemble</span><span class="p">:</span>
+        <span class="n">post_pred_probs</span><span class="p">,</span> <span class="n">model_weight</span><span class="p">,</span> <span class="n">annotator_weight</span> <span class="o">=</span> <span class="n">_get_post_pred_probs_and_weights_ensemble</span><span class="p">(</span>
+            <span class="n">labels_multiannotator</span><span class="o">=</span><span class="n">labels_multiannotator</span><span class="p">,</span>
+            <span class="n">consensus_label</span><span class="o">=</span><span class="n">consensus_label</span><span class="p">,</span>
+            <span class="n">prior_pred_probs</span><span class="o">=</span><span class="n">pred_probs</span><span class="p">,</span>
+            <span class="n">num_annotations</span><span class="o">=</span><span class="n">num_annotations</span><span class="p">,</span>
+            <span class="n">annotator_agreement</span><span class="o">=</span><span class="n">annotator_agreement</span><span class="p">,</span>
+            <span class="n">quality_method</span><span class="o">=</span><span class="n">quality_method</span><span class="p">,</span>
+            <span class="n">verbose</span><span class="o">=</span><span class="n">verbose</span><span class="p">,</span>
+        <span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">post_pred_probs</span><span class="p">,</span> <span class="n">model_weight</span><span class="p">,</span> <span class="n">annotator_weight</span> <span class="o">=</span> <span class="n">_get_post_pred_probs_and_weights</span><span class="p">(</span>
+            <span class="n">labels_multiannotator</span><span class="o">=</span><span class="n">labels_multiannotator</span><span class="p">,</span>
+            <span class="n">consensus_label</span><span class="o">=</span><span class="n">consensus_label</span><span class="p">,</span>
+            <span class="n">prior_pred_probs</span><span class="o">=</span><span class="n">pred_probs</span><span class="p">,</span>
+            <span class="n">num_annotations</span><span class="o">=</span><span class="n">num_annotations</span><span class="p">,</span>
+            <span class="n">annotator_agreement</span><span class="o">=</span><span class="n">annotator_agreement</span><span class="p">,</span>
+            <span class="n">quality_method</span><span class="o">=</span><span class="n">quality_method</span><span class="p">,</span>
+            <span class="n">verbose</span><span class="o">=</span><span class="n">verbose</span><span class="p">,</span>
+        <span class="p">)</span>
 
     <span class="c1"># compute quality of the consensus labels</span>
     <span class="n">consensus_quality_score</span> <span class="o">=</span> <span class="n">_get_consensus_quality_score</span><span class="p">(</span>
@@ -1127,6 +1628,7 @@
     <span class="n">quality_method</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;crowdlab&quot;</span><span class="p">,</span>
     <span class="n">verbose</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+
     <span class="sd">&quot;&quot;&quot;Return the posterior predicted probabilities of each example given a specified quality method.</span>
 
 <span class="sd">    Parameters</span>
@@ -1239,7 +1741,7 @@
         <span class="n">label_counts</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">full</span><span class="p">((</span><span class="nb">len</span><span class="p">(</span><span class="n">labels_multiannotator</span><span class="p">),</span> <span class="n">num_classes</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">NaN</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">labels_multiannotator</span><span class="p">)):</span>
             <span class="n">s</span> <span class="o">=</span> <span class="n">labels_multiannotator</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
-            <span class="n">label_counts</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">value_counts</span><span class="p">(</span><span class="n">s</span><span class="p">[</span><span class="n">s</span><span class="o">.</span><span class="n">notna</span><span class="p">()],</span> <span class="n">num_classes</span><span class="o">=</span><span class="n">num_classes</span><span class="p">)</span>
+            <span class="n">label_counts</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">value_counts</span><span class="p">(</span><span class="n">s</span><span class="o">.</span><span class="n">dropna</span><span class="p">(),</span> <span class="n">num_classes</span><span class="o">=</span><span class="n">num_classes</span><span class="p">)</span>
         <span class="n">post_pred_probs</span> <span class="o">=</span> <span class="n">label_counts</span> <span class="o">/</span> <span class="n">num_annotations</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
 
     <span class="k">else</span><span class="p">:</span>
@@ -1249,6 +1751,118 @@
 <span class="s2">            Please choose a valid quality_method: </span><span class="si">{</span><span class="n">valid_methods</span><span class="si">}</span><span class="s2"></span>
 <span class="s2">            &quot;&quot;&quot;</span>
         <span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">post_pred_probs</span><span class="p">,</span> <span class="n">return_model_weight</span><span class="p">,</span> <span class="n">return_annotator_weight</span>
+
+
+<span class="k">def</span> <span class="nf">_get_post_pred_probs_and_weights_ensemble</span><span class="p">(</span>
+    <span class="n">labels_multiannotator</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span>
+    <span class="n">consensus_label</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+    <span class="n">prior_pred_probs</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+    <span class="n">num_annotations</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+    <span class="n">annotator_agreement</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+    <span class="n">quality_method</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;crowdlab&quot;</span><span class="p">,</span>
+    <span class="n">verbose</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+    <span class="sd">&quot;&quot;&quot;Return the posterior predicted class probabilites of each example given a specified quality method and prior predicted class probabilities from an ensemble of multiple classifier models.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    labels_multiannotator : pd.DataFrame</span>
+<span class="sd">        2D pandas DataFrame of multiple given labels for each example with shape ``(N, M)``,</span>
+<span class="sd">        where N is the number of examples and M is the number of annotators.</span>
+<span class="sd">        For more details, labels in the same format expected by the :py:func:`get_label_quality_multiannotator &lt;cleanlab.multiannotator.get_label_quality_multiannotator&gt;`.</span>
+<span class="sd">    consensus_label : np.ndarray</span>
+<span class="sd">        An array of shape ``(P, N, K)`` where P is the number of models, consisting of predicted class probabilities from the ensemble models.</span>
+<span class="sd">        Each set of predicted probabilities with shape ``(N, K)`` is in the same format expected by the :py:func:`get_label_quality_scores &lt;cleanlab.rank.get_label_quality_scores&gt;`.</span>
+<span class="sd">    prior_pred_probs : np.ndarray</span>
+<span class="sd">        An array of shape ``(N, K)`` of prior predicted probabilities, ``P(label=k|x)``, usually the out-of-sample predicted probability computed by a model.</span>
+<span class="sd">        For details, predicted probabilities in the same format expected by the :py:func:`get_label_quality_multiannotator &lt;cleanlab.multiannotator.get_label_quality_multiannotator&gt;`.</span>
+<span class="sd">    num_annotations : np.ndarray</span>
+<span class="sd">        An array of shape ``(N,)`` with the number of annotators that have labeled each example.</span>
+<span class="sd">    annotator_agreement : np.ndarray</span>
+<span class="sd">        An array of shape ``(N,)`` with the fraction of annotators that agree with each consensus label.</span>
+<span class="sd">    quality_method : str, default = &quot;crowdlab&quot; (Options: [&quot;crowdlab&quot;, &quot;agreement&quot;])</span>
+<span class="sd">        Specifies the method used to calculate the quality of the consensus label.</span>
+<span class="sd">        For valid quality methods, view :py:func:`get_label_quality_multiannotator &lt;cleanlab.multiannotator.get_label_quality_multiannotator&gt;`</span>
+<span class="sd">    verbose : bool, default = True</span>
+<span class="sd">        Certain warnings and notes will be printed if ``verbose`` is set to ``True``.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    post_pred_probs : np.ndarray</span>
+<span class="sd">        An array of shape ``(N, K)`` with the posterior predicted probabilities.</span>
+
+<span class="sd">    model_weight : np.ndarray</span>
+<span class="sd">        An array of shape ``(P,)`` where P is the number of models in this ensemble, specifying the model weight used in weighted averages,</span>
+<span class="sd">        ``None`` if model weight is not used to compute quality scores</span>
+
+<span class="sd">    annotator_weight : np.ndarray</span>
+<span class="sd">        An array of shape ``(M,)`` where M is the number of annotators, specifying the annotator weights used in weighted averages,</span>
+<span class="sd">        ``None`` if annotator weights are not used to compute quality scores</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">num_classes</span> <span class="o">=</span> <span class="n">get_num_classes</span><span class="p">(</span><span class="n">pred_probs</span><span class="o">=</span><span class="n">prior_pred_probs</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+
+    <span class="n">likelihood</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span>
+        <span class="n">annotator_agreement</span><span class="p">[</span><span class="n">num_annotations</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">]</span>
+    <span class="p">)</span>  <span class="c1"># likelihood that any annotator will annotate the consensus label for any example</span>
+
+    <span class="c1"># subsetting the dataset to only includes examples with more than one annotation</span>
+    <span class="n">mask</span> <span class="o">=</span> <span class="n">num_annotations</span> <span class="o">!=</span> <span class="mi">1</span>
+    <span class="n">consensus_label_subset</span> <span class="o">=</span> <span class="n">consensus_label</span><span class="p">[</span><span class="n">mask</span><span class="p">]</span>
+
+    <span class="c1"># compute most likely class error</span>
+    <span class="n">most_likely_class_error</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">clip</span><span class="p">(</span>
+        <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span>
+            <span class="n">consensus_label_subset</span>
+            <span class="o">!=</span> <span class="n">np</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">bincount</span><span class="p">(</span><span class="n">consensus_label_subset</span><span class="p">,</span> <span class="n">minlength</span><span class="o">=</span><span class="n">num_classes</span><span class="p">))</span>
+        <span class="p">),</span>
+        <span class="n">a_min</span><span class="o">=</span><span class="mf">1e-6</span><span class="p">,</span>
+        <span class="n">a_max</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="c1"># compute adjusted annotator agreement (used as annotator weights)</span>
+    <span class="n">annotator_agreement_with_annotators</span> <span class="o">=</span> <span class="n">_get_annotator_agreement_with_annotators</span><span class="p">(</span>
+        <span class="n">labels_multiannotator</span><span class="p">,</span> <span class="n">num_annotations</span><span class="p">,</span> <span class="n">verbose</span>
+    <span class="p">)</span>
+    <span class="n">annotator_error</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">annotator_agreement_with_annotators</span>
+    <span class="n">adjusted_annotator_agreement</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">clip</span><span class="p">(</span>
+        <span class="mi">1</span> <span class="o">-</span> <span class="p">(</span><span class="n">annotator_error</span> <span class="o">/</span> <span class="n">most_likely_class_error</span><span class="p">),</span> <span class="n">a_min</span><span class="o">=</span><span class="mf">1e-6</span><span class="p">,</span> <span class="n">a_max</span><span class="o">=</span><span class="kc">None</span>
+    <span class="p">)</span>
+
+    <span class="c1"># compute model weight</span>
+    <span class="n">model_weight</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">full</span><span class="p">(</span><span class="n">prior_pred_probs</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">idx</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">prior_pred_probs</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]):</span>
+        <span class="n">prior_pred_probs_subset</span> <span class="o">=</span> <span class="n">prior_pred_probs</span><span class="p">[</span><span class="n">idx</span><span class="p">][</span><span class="n">mask</span><span class="p">]</span>
+
+        <span class="n">model_error</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">prior_pred_probs_subset</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="n">consensus_label_subset</span><span class="p">)</span>
+        <span class="n">model_weight</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">([(</span><span class="mi">1</span> <span class="o">-</span> <span class="p">(</span><span class="n">model_error</span> <span class="o">/</span> <span class="n">most_likely_class_error</span><span class="p">)),</span> <span class="mf">1e-6</span><span class="p">])</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span>
+            <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">num_annotations</span><span class="p">)</span>
+        <span class="p">)</span>
+
+    <span class="c1"># compute weighted average</span>
+    <span class="n">post_pred_probs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">full</span><span class="p">(</span><span class="n">prior_pred_probs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">labels_multiannotator</span><span class="p">)):</span>
+        <span class="n">example_mask</span> <span class="o">=</span> <span class="n">labels_multiannotator</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">notna</span><span class="p">()</span>
+        <span class="n">example</span> <span class="o">=</span> <span class="n">labels_multiannotator</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">example_mask</span><span class="p">]</span>
+        <span class="n">post_pred_probs</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="n">np</span><span class="o">.</span><span class="n">average</span><span class="p">(</span>
+                <span class="p">[</span><span class="n">prior_pred_probs</span><span class="p">[</span><span class="n">ind</span><span class="p">][</span><span class="n">i</span><span class="p">,</span> <span class="n">true_label</span><span class="p">]</span> <span class="k">for</span> <span class="n">ind</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">prior_pred_probs</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])]</span>
+                <span class="o">+</span> <span class="p">[</span>
+                    <span class="n">likelihood</span>
+                    <span class="k">if</span> <span class="n">annotator_label</span> <span class="o">==</span> <span class="n">true_label</span>
+                    <span class="k">else</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">likelihood</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">num_classes</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+                    <span class="k">for</span> <span class="n">annotator_label</span> <span class="ow">in</span> <span class="n">example</span>
+                <span class="p">],</span>
+                <span class="n">weights</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">((</span><span class="n">model_weight</span><span class="p">,</span> <span class="n">adjusted_annotator_agreement</span><span class="p">[</span><span class="n">example_mask</span><span class="p">])),</span>
+            <span class="p">)</span>
+            <span class="k">for</span> <span class="n">true_label</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_classes</span><span class="p">)</span>
+        <span class="p">]</span>
+
+    <span class="n">return_model_weight</span> <span class="o">=</span> <span class="n">model_weight</span>
+    <span class="n">return_annotator_weight</span> <span class="o">=</span> <span class="n">adjusted_annotator_agreement</span>
 
     <span class="k">return</span> <span class="n">post_pred_probs</span><span class="p">,</span> <span class="n">return_model_weight</span><span class="p">,</span> <span class="n">return_annotator_weight</span>
 
@@ -1362,11 +1976,11 @@
 <span class="sd">    annotator_agreement : np.ndarray</span>
 <span class="sd">        An array of shape ``(N,)`` with the fraction of annotators that agree with each consensus label.</span>
 <span class="sd">    model_weight : float</span>
-<span class="sd">        float specifying the model weight used in weighted averages,</span>
-<span class="sd">        None if model weight is not used to compute quality scores</span>
+<span class="sd">        An array of shape ``(P,)`` where P is the number of models in this ensemble, specifying the model weight used in weighted averages,</span>
+<span class="sd">        ``None`` if model weight is not used to compute quality scores</span>
 <span class="sd">    annotator_weight : np.ndarray</span>
 <span class="sd">        An array of shape ``(M,)`` where M is the number of annotators, specifying the annotator weights used in weighted averages,</span>
-<span class="sd">        None if annotator weights are not used to compute quality scores</span>
+<span class="sd">        ``None`` if annotator weights are not used to compute quality scores</span>
 <span class="sd">    quality_method : str, default = &quot;crowdlab&quot; (Options: [&quot;crowdlab&quot;, &quot;agreement&quot;])</span>
 <span class="sd">        Specifies the method used to calculate the quality of the annotators.</span>
 <span class="sd">        For valid quality methods, view :py:func:`get_label_quality_multiannotator &lt;cleanlab.multiannotator.get_label_quality_multiannotator&gt;`</span>
@@ -1488,26 +2102,6 @@
     <span class="p">)</span>
 
     <span class="k">return</span> <span class="n">worst_class</span>
-
-
-<span class="k">def</span> <span class="nf">_check_consensus_label_classes</span><span class="p">(</span>
-    <span class="n">labels_multiannotator</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span>
-    <span class="n">consensus_label</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
-    <span class="n">consensus_method</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
-<span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;Check if any classes no longer appear in the set of consensus labels (established using the consensus_method stated)&quot;&quot;&quot;</span>
-    <span class="n">unique_ma_labels</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">labels_multiannotator</span><span class="o">.</span><span class="n">replace</span><span class="p">({</span><span class="n">pd</span><span class="o">.</span><span class="n">NA</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">NaN</span><span class="p">})</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">float</span><span class="p">))</span>
-    <span class="n">unique_ma_labels</span> <span class="o">=</span> <span class="n">unique_ma_labels</span><span class="p">[</span><span class="o">~</span><span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">unique_ma_labels</span><span class="p">)]</span>
-    <span class="n">labels_set_difference</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">unique_ma_labels</span><span class="p">)</span> <span class="o">-</span> <span class="nb">set</span><span class="p">(</span><span class="n">consensus_label</span><span class="p">)</span>
-
-    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">labels_set_difference</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
-        <span class="nb">print</span><span class="p">(</span>
-            <span class="sa">f</span><span class="s2">&quot;&quot;&quot;CAUTION: Number of unique classes has been reduced from the original data when establishing consensus labels</span>
-<span class="s2">            using consensus method &quot;</span><span class="si">{</span><span class="n">consensus_method</span><span class="si">}</span><span class="s2">&quot;, likely due to some classes being rarely annotated.</span>
-<span class="s2">            If training a classifier on these consensus labels, it will never see any of the omitted classes unless you</span>
-<span class="s2">            manually replace some of the consensus labels.</span>
-<span class="s2">            Classes in the original data but not in consensus labels: </span><span class="si">{</span><span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="n">labels_set_difference</span><span class="p">))</span><span class="si">}</span><span class="s2">&quot;&quot;&quot;</span>
-        <span class="p">)</span>
 </pre></div> 
         </article>
       </div>

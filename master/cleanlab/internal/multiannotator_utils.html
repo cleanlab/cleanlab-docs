@@ -416,19 +416,74 @@
 <tr class="row-odd"><td><p><a class="reference internal" href="#cleanlab.internal.multiannotator_utils.assert_valid_inputs_multiannotator" title="cleanlab.internal.multiannotator_utils.assert_valid_inputs_multiannotator"><code class="xref py py-obj docutils literal notranslate"><span class="pre">assert_valid_inputs_multiannotator</span></code></a>(...[, ...])</p></td>
 <td><p>Validate format of multi-annotator labels</p></td>
 </tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#cleanlab.internal.multiannotator_utils.assert_valid_pred_probs" title="cleanlab.internal.multiannotator_utils.assert_valid_pred_probs"><code class="xref py py-obj docutils literal notranslate"><span class="pre">assert_valid_pred_probs</span></code></a>(pred_probs[, ...])</p></td>
+<td><p>Validate format of pred_probs for multiannotator functions</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#cleanlab.internal.multiannotator_utils.check_consensus_label_classes" title="cleanlab.internal.multiannotator_utils.check_consensus_label_classes"><code class="xref py py-obj docutils literal notranslate"><span class="pre">check_consensus_label_classes</span></code></a>(...)</p></td>
+<td><p>Check if any classes no longer appear in the set of consensus labels (established using the consensus_method stated)</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#cleanlab.internal.multiannotator_utils.compute_soft_cross_entropy" title="cleanlab.internal.multiannotator_utils.compute_soft_cross_entropy"><code class="xref py py-obj docutils literal notranslate"><span class="pre">compute_soft_cross_entropy</span></code></a>(...)</p></td>
+<td><p>Compute soft cross entropy between the annotators' empirical label distribution and model pred_probs</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#cleanlab.internal.multiannotator_utils.find_best_temp_scaler" title="cleanlab.internal.multiannotator_utils.find_best_temp_scaler"><code class="xref py py-obj docutils literal notranslate"><span class="pre">find_best_temp_scaler</span></code></a>(labels_multiannotator, ...)</p></td>
+<td><p>Find the best temperature scaling factor that minimizes the soft cross entropy between the annotators' empirical label distribution and model pred_probs</p></td>
+</tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#cleanlab.internal.multiannotator_utils.format_multiannotator_labels" title="cleanlab.internal.multiannotator_utils.format_multiannotator_labels"><code class="xref py py-obj docutils literal notranslate"><span class="pre">format_multiannotator_labels</span></code></a>(labels)</p></td>
 <td><p>Takes an array of labels and formats it such that labels are in the set <code class="docutils literal notranslate"><span class="pre">0,</span> <span class="pre">1,</span> <span class="pre">...,</span> <span class="pre">K-1</span></code>, where <code class="docutils literal notranslate"><span class="pre">K</span></code> is the number of classes.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#cleanlab.internal.multiannotator_utils.temp_scale_pred_probs" title="cleanlab.internal.multiannotator_utils.temp_scale_pred_probs"><code class="xref py py-obj docutils literal notranslate"><span class="pre">temp_scale_pred_probs</span></code></a>(pred_probs, temp)</p></td>
+<td><p>Scales pred_probs by the given temperature factor.</p></td>
 </tr>
 </tbody>
 </table>
 </div>
 <dl class="py function">
 <dt class="sig sig-object py" id="cleanlab.internal.multiannotator_utils.assert_valid_inputs_multiannotator">
-<span class="sig-prename descclassname"><span class="pre">cleanlab.internal.multiannotator_utils.</span></span><span class="sig-name descname"><span class="pre">assert_valid_inputs_multiannotator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">labels_multiannotator</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pred_probs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/cleanlab/internal/multiannotator_utils.html#assert_valid_inputs_multiannotator"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cleanlab.internal.multiannotator_utils.assert_valid_inputs_multiannotator" title="Permalink to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">cleanlab.internal.multiannotator_utils.</span></span><span class="sig-name descname"><span class="pre">assert_valid_inputs_multiannotator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">labels_multiannotator</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pred_probs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ensemble</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">allow_single_label</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/cleanlab/internal/multiannotator_utils.html#assert_valid_inputs_multiannotator"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cleanlab.internal.multiannotator_utils.assert_valid_inputs_multiannotator" title="Permalink to this definition">#</a></dt>
 <dd><p>Validate format of multi-annotator labels</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="cleanlab.internal.multiannotator_utils.assert_valid_pred_probs">
+<span class="sig-prename descclassname"><span class="pre">cleanlab.internal.multiannotator_utils.</span></span><span class="sig-name descname"><span class="pre">assert_valid_pred_probs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pred_probs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pred_probs_unlabeled</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ensemble</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/cleanlab/internal/multiannotator_utils.html#assert_valid_pred_probs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cleanlab.internal.multiannotator_utils.assert_valid_pred_probs" title="Permalink to this definition">#</a></dt>
+<dd><p>Validate format of pred_probs for multiannotator functions</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="cleanlab.internal.multiannotator_utils.check_consensus_label_classes">
+<span class="sig-prename descclassname"><span class="pre">cleanlab.internal.multiannotator_utils.</span></span><span class="sig-name descname"><span class="pre">check_consensus_label_classes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">labels_multiannotator</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">consensus_label</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">consensus_method</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/cleanlab/internal/multiannotator_utils.html#check_consensus_label_classes"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cleanlab.internal.multiannotator_utils.check_consensus_label_classes" title="Permalink to this definition">#</a></dt>
+<dd><p>Check if any classes no longer appear in the set of consensus labels (established using the consensus_method stated)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="cleanlab.internal.multiannotator_utils.compute_soft_cross_entropy">
+<span class="sig-prename descclassname"><span class="pre">cleanlab.internal.multiannotator_utils.</span></span><span class="sig-name descname"><span class="pre">compute_soft_cross_entropy</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">labels_multiannotator</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pred_probs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/cleanlab/internal/multiannotator_utils.html#compute_soft_cross_entropy"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cleanlab.internal.multiannotator_utils.compute_soft_cross_entropy" title="Permalink to this definition">#</a></dt>
+<dd><p>Compute soft cross entropy between the annotators’ empirical label distribution and model pred_probs</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="cleanlab.internal.multiannotator_utils.find_best_temp_scaler">
+<span class="sig-prename descclassname"><span class="pre">cleanlab.internal.multiannotator_utils.</span></span><span class="sig-name descname"><span class="pre">find_best_temp_scaler</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">labels_multiannotator</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pred_probs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">coarse_search_range</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[0.1,</span> <span class="pre">0.2,</span> <span class="pre">0.5,</span> <span class="pre">0.8,</span> <span class="pre">1,</span> <span class="pre">2,</span> <span class="pre">3,</span> <span class="pre">5,</span> <span class="pre">8]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fine_search_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">4</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/cleanlab/internal/multiannotator_utils.html#find_best_temp_scaler"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cleanlab.internal.multiannotator_utils.find_best_temp_scaler" title="Permalink to this definition">#</a></dt>
+<dd><p>Find the best temperature scaling factor that minimizes the soft cross entropy between the annotators’ empirical label distribution
+and model pred_probs</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></p>
 </dd>
 </dl>
 </dd></dl>
@@ -449,6 +504,17 @@ cleanlab.multiannotator functions.</p></li>
 <li><p><code class="xref py py-class docutils literal notranslate"><span class="pre">mapping</span></code> – A dictionary showing the mapping of new to old labels, such that <code class="docutils literal notranslate"><span class="pre">mapping[k]</span></code> returns the name of the k-th class.</p></li>
 </ul>
 </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="cleanlab.internal.multiannotator_utils.temp_scale_pred_probs">
+<span class="sig-prename descclassname"><span class="pre">cleanlab.internal.multiannotator_utils.</span></span><span class="sig-name descname"><span class="pre">temp_scale_pred_probs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pred_probs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">temp</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/cleanlab/internal/multiannotator_utils.html#temp_scale_pred_probs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cleanlab.internal.multiannotator_utils.temp_scale_pred_probs" title="Permalink to this definition">#</a></dt>
+<dd><p>Scales pred_probs by the given temperature factor. Temperature of &lt;1 will sharpen the pred_probs while temperatures of &gt;1 will smoothen it.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></p>
 </dd>
 </dl>
 </dd></dl>
