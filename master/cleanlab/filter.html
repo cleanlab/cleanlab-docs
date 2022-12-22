@@ -422,11 +422,11 @@ This module considers two types of datasets:</p>
 <tr class="row-odd"><td><p><a class="reference internal" href="#cleanlab.filter.find_label_issues" title="cleanlab.filter.find_label_issues"><code class="xref py py-obj docutils literal notranslate"><span class="pre">find_label_issues</span></code></a>(labels, pred_probs, *[, ...])</p></td>
 <td><p>Identifies potentially bad labels in a classification dataset using confident learning.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#cleanlab.filter.find_label_issues_using_argmax_confusion_matrix" title="cleanlab.filter.find_label_issues_using_argmax_confusion_matrix"><code class="xref py py-obj docutils literal notranslate"><span class="pre">find_label_issues_using_argmax_confusion_matrix</span></code></a>(...)</p></td>
-<td><p>A baseline approach that uses the confusion matrix of <code class="docutils literal notranslate"><span class="pre">argmax(pred_probs)</span></code> and labels as the confident joint and then uses cleanlab (confident learning) to find the label issues using this matrix.</p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#cleanlab.filter.find_predicted_neq_given" title="cleanlab.filter.find_predicted_neq_given"><code class="xref py py-obj docutils literal notranslate"><span class="pre">find_predicted_neq_given</span></code></a>(labels, pred_probs, *)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#cleanlab.filter.find_predicted_neq_given" title="cleanlab.filter.find_predicted_neq_given"><code class="xref py py-obj docutils literal notranslate"><span class="pre">find_predicted_neq_given</span></code></a>(labels, pred_probs, *)</p></td>
 <td><p>A simple baseline approach that considers <code class="docutils literal notranslate"><span class="pre">argmax(pred_probs)</span> <span class="pre">!=</span> <span class="pre">labels</span></code> as the examples with label issues.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#cleanlab.filter.find_label_issues_using_argmax_confusion_matrix" title="cleanlab.filter.find_label_issues_using_argmax_confusion_matrix"><code class="xref py py-obj docutils literal notranslate"><span class="pre">find_label_issues_using_argmax_confusion_matrix</span></code></a>(...)</p></td>
+<td><p>A baseline approach that uses the confusion matrix of <code class="docutils literal notranslate"><span class="pre">argmax(pred_probs)</span></code> and labels as the confident joint and then uses cleanlab (confident learning) to find the label issues using this matrix.</p></td>
 </tr>
 </tbody>
 </table>
@@ -549,6 +549,29 @@ label issues (i.e. those indices where the mask would be <code class="docutils l
 </dd></dl>
 
 <dl class="py function">
+<dt class="sig sig-object py" id="cleanlab.filter.find_predicted_neq_given">
+<span class="sig-prename descclassname"><span class="pre">cleanlab.filter.</span></span><span class="sig-name descname"><span class="pre">find_predicted_neq_given</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">labels</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pred_probs</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">multi_label</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/cleanlab/filter.html#find_predicted_neq_given"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cleanlab.filter.find_predicted_neq_given" title="Permalink to this definition">#</a></dt>
+<dd><p>A simple baseline approach that considers <code class="docutils literal notranslate"><span class="pre">argmax(pred_probs)</span> <span class="pre">!=</span> <span class="pre">labels</span></code> as the examples with label issues.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>labels</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">np.ndarray</span></code> or <code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code>) – Labels in the same format expected by the <a class="reference internal" href="#cleanlab.filter.find_label_issues" title="cleanlab.filter.find_label_issues"><code class="xref py py-func docutils literal notranslate"><span class="pre">find_label_issues</span></code></a> function.</p></li>
+<li><p><strong>pred_probs</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">np.ndarray</span></code>) – Predicted-probabilities in the same format expected by the <a class="reference internal" href="#cleanlab.filter.find_label_issues" title="cleanlab.filter.find_label_issues"><code class="xref py py-func docutils literal notranslate"><span class="pre">find_label_issues</span></code></a> function.</p></li>
+<li><p><strong>multi_label</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code>, <em>optional</em>) – Whether each example may have multiple labels or not (see documentation for the <a class="reference internal" href="#cleanlab.filter.find_label_issues" title="cleanlab.filter.find_label_issues"><code class="xref py py-func docutils literal notranslate"><span class="pre">find_label_issues</span></code></a> function).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>label_issues_mask</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">np.ndarray</span></code>) – A boolean mask for the entire dataset where <code class="docutils literal notranslate"><span class="pre">True</span></code> represents a
+label issue and <code class="docutils literal notranslate"><span class="pre">False</span></code> represents an example that is accurately
+labeled with high confidence.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
 <dt class="sig sig-object py" id="cleanlab.filter.find_label_issues_using_argmax_confusion_matrix">
 <span class="sig-prename descclassname"><span class="pre">cleanlab.filter.</span></span><span class="sig-name descname"><span class="pre">find_label_issues_using_argmax_confusion_matrix</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">labels</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pred_probs</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">calibrate</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filter_by</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'prune_by_noise_rate'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/cleanlab/filter.html#find_label_issues_using_argmax_confusion_matrix"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cleanlab.filter.find_label_issues_using_argmax_confusion_matrix" title="Permalink to this definition">#</a></dt>
 <dd><p>A baseline approach that uses the confusion matrix
@@ -588,29 +611,6 @@ labeled with high confidence.</p>
 <p class="admonition-title">Note</p>
 <p>Multi-label classification is not supported in this method.</p>
 </div>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="cleanlab.filter.find_predicted_neq_given">
-<span class="sig-prename descclassname"><span class="pre">cleanlab.filter.</span></span><span class="sig-name descname"><span class="pre">find_predicted_neq_given</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">labels</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pred_probs</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">multi_label</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/cleanlab/filter.html#find_predicted_neq_given"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cleanlab.filter.find_predicted_neq_given" title="Permalink to this definition">#</a></dt>
-<dd><p>A simple baseline approach that considers <code class="docutils literal notranslate"><span class="pre">argmax(pred_probs)</span> <span class="pre">!=</span> <span class="pre">labels</span></code> as the examples with label issues.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>labels</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">np.ndarray</span></code> or <code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code>) – Labels in the same format expected by the <a class="reference internal" href="#cleanlab.filter.find_label_issues" title="cleanlab.filter.find_label_issues"><code class="xref py py-func docutils literal notranslate"><span class="pre">find_label_issues</span></code></a> function.</p></li>
-<li><p><strong>pred_probs</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">np.ndarray</span></code>) – Predicted-probabilities in the same format expected by the <a class="reference internal" href="#cleanlab.filter.find_label_issues" title="cleanlab.filter.find_label_issues"><code class="xref py py-func docutils literal notranslate"><span class="pre">find_label_issues</span></code></a> function.</p></li>
-<li><p><strong>multi_label</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code>, <em>optional</em>) – Whether each example may have multiple labels or not (see documentation for the <a class="reference internal" href="#cleanlab.filter.find_label_issues" title="cleanlab.filter.find_label_issues"><code class="xref py py-func docutils literal notranslate"><span class="pre">find_label_issues</span></code></a> function).</p></li>
-</ul>
-</dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></p>
-</dd>
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>label_issues_mask</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">np.ndarray</span></code>) – A boolean mask for the entire dataset where <code class="docutils literal notranslate"><span class="pre">True</span></code> represents a
-label issue and <code class="docutils literal notranslate"><span class="pre">False</span></code> represents an example that is accurately
-labeled with high confidence.</p>
-</dd>
-</dl>
 </dd></dl>
 
 </section>

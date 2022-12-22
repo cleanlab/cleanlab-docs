@@ -502,11 +502,11 @@ for the i-th particular example, its OOD score can either be:</p>
 <div class="table-wrapper autosummary longtable docutils container">
 <table class="autosummary longtable docutils align-default">
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#cleanlab.outlier.OutOfDistribution.fit" title="cleanlab.outlier.OutOfDistribution.fit"><code class="xref py py-obj docutils literal notranslate"><span class="pre">fit</span></code></a>(*[, features, pred_probs, labels, verbose])</p></td>
-<td><p>Fits this estimator to a given dataset.</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#cleanlab.outlier.OutOfDistribution.fit_score" title="cleanlab.outlier.OutOfDistribution.fit_score"><code class="xref py py-obj docutils literal notranslate"><span class="pre">fit_score</span></code></a>(*[, features, pred_probs, labels, ...])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#cleanlab.outlier.OutOfDistribution.fit_score" title="cleanlab.outlier.OutOfDistribution.fit_score"><code class="xref py py-obj docutils literal notranslate"><span class="pre">fit_score</span></code></a>(*[, features, pred_probs, labels, ...])</p></td>
 <td><p>Fits this estimator to a given dataset and returns out-of-distribution scores for the same dataset.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#cleanlab.outlier.OutOfDistribution.fit" title="cleanlab.outlier.OutOfDistribution.fit"><code class="xref py py-obj docutils literal notranslate"><span class="pre">fit</span></code></a>(*[, features, pred_probs, labels, verbose])</p></td>
+<td><p>Fits this estimator to a given dataset.</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="#cleanlab.outlier.OutOfDistribution.score" title="cleanlab.outlier.OutOfDistribution.score"><code class="xref py py-obj docutils literal notranslate"><span class="pre">score</span></code></a>(*[, features, pred_probs])</p></td>
 <td><p>Uses fitted estimator and passed in <cite>features</cite> or <cite>pred_probs</cite> to calculate out-of-distribution scores for a dataset.</p></td>
@@ -514,37 +514,6 @@ for the i-th particular example, its OOD score can either be:</p>
 </tbody>
 </table>
 </div>
-<dl class="py method">
-<dt class="sig sig-object py" id="cleanlab.outlier.OutOfDistribution.fit">
-<span class="sig-name descname"><span class="pre">fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">features</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pred_probs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">labels</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/cleanlab/outlier.html#OutOfDistribution.fit"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cleanlab.outlier.OutOfDistribution.fit" title="Permalink to this definition">#</a></dt>
-<dd><p>Fits this estimator to a given dataset.
-One of <cite>features</cite> or <cite>pred_probs</cite> must be specified.</p>
-<p>If <cite>features</cite> are passed in, a <code class="docutils literal notranslate"><span class="pre">NearestNeighbors</span></code> object is fit.
-If <cite>pred_probs</cite> and ‘labels’ are passed in, a <cite>confident_thresholds</cite> <code class="docutils literal notranslate"><span class="pre">np.ndarray</span></code> is fit.
-For details see <a class="reference internal" href="#cleanlab.outlier.OutOfDistribution" title="cleanlab.outlier.OutOfDistribution"><code class="xref py py-class docutils literal notranslate"><span class="pre">OutOfDistribution</span></code></a> documentation.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>features</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">np.ndarray</span></code>, <em>optional</em>) – Feature array of shape <code class="docutils literal notranslate"><span class="pre">(N,</span> <span class="pre">M)</span></code>, where N is the number of examples and M is the number of features used to represent each example.
-All features should be <strong>numeric</strong>. For less structured data (eg. images, text, categorical values, …), you should provide
-vector embeddings to represent each example (eg. extracted from some pretrained neural network).</p></li>
-<li><p><strong>pred_probs</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">np.ndarray</span></code>, <em>optional</em>) – An array of shape <code class="docutils literal notranslate"><span class="pre">(N,</span> <span class="pre">K)</span></code> of model-predicted probabilities,
-<code class="docutils literal notranslate"><span class="pre">P(label=k|x)</span></code>. Each row of this matrix corresponds
-to an example <cite>x</cite> and contains the model-predicted probabilities that
-<cite>x</cite> belongs to each possible class, for each of the K classes. The
-columns must be ordered such that these probabilities correspond to
-class 0, 1, …, K-1.</p></li>
-<li><p><strong>labels</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">array_like</span></code>, <em>optional</em>) – A discrete vector of given labels for the data of shape <code class="docutils literal notranslate"><span class="pre">(N,)</span></code>. Supported <cite>array_like</cite> types include: <code class="docutils literal notranslate"><span class="pre">np.ndarray</span></code> or <code class="docutils literal notranslate"><span class="pre">list</span></code>.
-<em>Format requirements</em>: for dataset with K classes, labels must be in 0, 1, …, K-1.
-All the classes (0, 1, …, and K-1) MUST be present in <code class="docutils literal notranslate"><span class="pre">labels</span></code>, such that: <code class="docutils literal notranslate"><span class="pre">len(set(labels))</span> <span class="pre">==</span> <span class="pre">pred_probs.shape[1]</span></code>
-If <code class="docutils literal notranslate"><span class="pre">params[&quot;adjust_confident_thresholds&quot;]</span></code> was previously set to <code class="docutils literal notranslate"><span class="pre">False</span></code>, you do not have to pass in <cite>labels</cite>.
-Note: multi-label classification is not supported by this method, each example must belong to a single class, e.g. <code class="docutils literal notranslate"><span class="pre">labels</span> <span class="pre">=</span> <span class="pre">np.ndarray([1,0,2,1,1,0...])</span></code>.</p></li>
-<li><p><strong>verbose</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code>, <em>default</em> <code class="xref py py-class docutils literal notranslate"><span class="pre">=</span> <span class="pre">True</span></code>) – Set to <code class="docutils literal notranslate"><span class="pre">False</span></code> to suppress all print statements.</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
 <dl class="py method">
 <dt class="sig sig-object py" id="cleanlab.outlier.OutOfDistribution.fit_score">
 <span class="sig-name descname"><span class="pre">fit_score</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">features</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pred_probs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">labels</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/cleanlab/outlier.html#OutOfDistribution.fit_score"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cleanlab.outlier.OutOfDistribution.fit_score" title="Permalink to this definition">#</a></dt>
@@ -573,6 +542,37 @@ For details, <cite>labels</cite> in the same format expected by the <a class="re
 <dd class="field-odd"><p><strong>scores</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">np.ndarray</span></code>) – If <cite>features</cite> are passed in, <cite>ood_features_scores</cite> are returned.
 If <cite>pred_probs</cite> are passed in, <cite>ood_predictions_scores</cite> are returned.
 For details see return of <code class="xref py py-func docutils literal notranslate"><span class="pre">score</span></code> function.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cleanlab.outlier.OutOfDistribution.fit">
+<span class="sig-name descname"><span class="pre">fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">features</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pred_probs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">labels</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/cleanlab/outlier.html#OutOfDistribution.fit"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cleanlab.outlier.OutOfDistribution.fit" title="Permalink to this definition">#</a></dt>
+<dd><p>Fits this estimator to a given dataset.
+One of <cite>features</cite> or <cite>pred_probs</cite> must be specified.</p>
+<p>If <cite>features</cite> are passed in, a <code class="docutils literal notranslate"><span class="pre">NearestNeighbors</span></code> object is fit.
+If <cite>pred_probs</cite> and ‘labels’ are passed in, a <cite>confident_thresholds</cite> <code class="docutils literal notranslate"><span class="pre">np.ndarray</span></code> is fit.
+For details see <a class="reference internal" href="#cleanlab.outlier.OutOfDistribution" title="cleanlab.outlier.OutOfDistribution"><code class="xref py py-class docutils literal notranslate"><span class="pre">OutOfDistribution</span></code></a> documentation.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>features</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">np.ndarray</span></code>, <em>optional</em>) – Feature array of shape <code class="docutils literal notranslate"><span class="pre">(N,</span> <span class="pre">M)</span></code>, where N is the number of examples and M is the number of features used to represent each example.
+All features should be <strong>numeric</strong>. For less structured data (eg. images, text, categorical values, …), you should provide
+vector embeddings to represent each example (eg. extracted from some pretrained neural network).</p></li>
+<li><p><strong>pred_probs</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">np.ndarray</span></code>, <em>optional</em>) – An array of shape <code class="docutils literal notranslate"><span class="pre">(N,</span> <span class="pre">K)</span></code> of model-predicted probabilities,
+<code class="docutils literal notranslate"><span class="pre">P(label=k|x)</span></code>. Each row of this matrix corresponds
+to an example <cite>x</cite> and contains the model-predicted probabilities that
+<cite>x</cite> belongs to each possible class, for each of the K classes. The
+columns must be ordered such that these probabilities correspond to
+class 0, 1, …, K-1.</p></li>
+<li><p><strong>labels</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">array_like</span></code>, <em>optional</em>) – A discrete vector of given labels for the data of shape <code class="docutils literal notranslate"><span class="pre">(N,)</span></code>. Supported <cite>array_like</cite> types include: <code class="docutils literal notranslate"><span class="pre">np.ndarray</span></code> or <code class="docutils literal notranslate"><span class="pre">list</span></code>.
+<em>Format requirements</em>: for dataset with K classes, labels must be in 0, 1, …, K-1.
+All the classes (0, 1, …, and K-1) MUST be present in <code class="docutils literal notranslate"><span class="pre">labels</span></code>, such that: <code class="docutils literal notranslate"><span class="pre">len(set(labels))</span> <span class="pre">==</span> <span class="pre">pred_probs.shape[1]</span></code>
+If <code class="docutils literal notranslate"><span class="pre">params[&quot;adjust_confident_thresholds&quot;]</span></code> was previously set to <code class="docutils literal notranslate"><span class="pre">False</span></code>, you do not have to pass in <cite>labels</cite>.
+Note: multi-label classification is not supported by this method, each example must belong to a single class, e.g. <code class="docutils literal notranslate"><span class="pre">labels</span> <span class="pre">=</span> <span class="pre">np.ndarray([1,0,2,1,1,0...])</span></code>.</p></li>
+<li><p><strong>verbose</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code>, <em>default</em> <code class="xref py py-class docutils literal notranslate"><span class="pre">=</span> <span class="pre">True</span></code>) – Set to <code class="docutils literal notranslate"><span class="pre">False</span></code> to suppress all print statements.</p></li>
+</ul>
 </dd>
 </dl>
 </dd></dl>

@@ -416,17 +416,17 @@ generating noisy labels given a noise matrix, generating valid noise matrices wi
 <div class="table-wrapper autosummary longtable docutils container">
 <table class="autosummary longtable docutils align-default">
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#cleanlab.benchmarking.noise_generation.generate_n_rand_probabilities_that_sum_to_m" title="cleanlab.benchmarking.noise_generation.generate_n_rand_probabilities_that_sum_to_m"><code class="xref py py-obj docutils literal notranslate"><span class="pre">generate_n_rand_probabilities_that_sum_to_m</span></code></a>(n, m, *)</p></td>
-<td><p>Generates <cite>n</cite> random probabilities that sum to <cite>m</cite>.</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#cleanlab.benchmarking.noise_generation.noise_matrix_is_valid" title="cleanlab.benchmarking.noise_generation.noise_matrix_is_valid"><code class="xref py py-obj docutils literal notranslate"><span class="pre">noise_matrix_is_valid</span></code></a>(noise_matrix, py, *[, ...])</p></td>
+<td><p>Given a prior <cite>py</cite> representing <code class="docutils literal notranslate"><span class="pre">p(true_label=k)</span></code>, checks if the given <cite>noise_matrix</cite> is a learnable matrix.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#cleanlab.benchmarking.noise_generation.generate_noise_matrix_from_trace" title="cleanlab.benchmarking.noise_generation.generate_noise_matrix_from_trace"><code class="xref py py-obj docutils literal notranslate"><span class="pre">generate_noise_matrix_from_trace</span></code></a>(K, trace, *)</p></td>
-<td><p>Generates a <code class="docutils literal notranslate"><span class="pre">K</span> <span class="pre">x</span> <span class="pre">K</span></code> noise matrix <code class="docutils literal notranslate"><span class="pre">P(label=k_s|true_label=k_y)</span></code> with <code class="docutils literal notranslate"><span class="pre">np.sum(np.diagonal(noise_matrix))</span></code> equal to the given <cite>trace</cite>.</p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#cleanlab.benchmarking.noise_generation.generate_noisy_labels" title="cleanlab.benchmarking.noise_generation.generate_noisy_labels"><code class="xref py py-obj docutils literal notranslate"><span class="pre">generate_noisy_labels</span></code></a>(true_labels, noise_matrix)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#cleanlab.benchmarking.noise_generation.generate_noisy_labels" title="cleanlab.benchmarking.noise_generation.generate_noisy_labels"><code class="xref py py-obj docutils literal notranslate"><span class="pre">generate_noisy_labels</span></code></a>(true_labels, noise_matrix)</p></td>
 <td><p>Generates noisy <cite>labels</cite> from perfect labels <cite>true_labels</cite>, &quot;exactly&quot; yielding the provided <cite>noise_matrix</cite> between <cite>labels</cite> and <cite>true_labels</cite>.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#cleanlab.benchmarking.noise_generation.noise_matrix_is_valid" title="cleanlab.benchmarking.noise_generation.noise_matrix_is_valid"><code class="xref py py-obj docutils literal notranslate"><span class="pre">noise_matrix_is_valid</span></code></a>(noise_matrix, py, *[, ...])</p></td>
-<td><p>Given a prior <cite>py</cite> representing <code class="docutils literal notranslate"><span class="pre">p(true_label=k)</span></code>, checks if the given <cite>noise_matrix</cite> is a learnable matrix.</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#cleanlab.benchmarking.noise_generation.generate_noise_matrix_from_trace" title="cleanlab.benchmarking.noise_generation.generate_noise_matrix_from_trace"><code class="xref py py-obj docutils literal notranslate"><span class="pre">generate_noise_matrix_from_trace</span></code></a>(K, trace, *)</p></td>
+<td><p>Generates a <code class="docutils literal notranslate"><span class="pre">K</span> <span class="pre">x</span> <span class="pre">K</span></code> noise matrix <code class="docutils literal notranslate"><span class="pre">P(label=k_s|true_label=k_y)</span></code> with <code class="docutils literal notranslate"><span class="pre">np.sum(np.diagonal(noise_matrix))</span></code> equal to the given <cite>trace</cite>.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#cleanlab.benchmarking.noise_generation.generate_n_rand_probabilities_that_sum_to_m" title="cleanlab.benchmarking.noise_generation.generate_n_rand_probabilities_that_sum_to_m"><code class="xref py py-obj docutils literal notranslate"><span class="pre">generate_n_rand_probabilities_that_sum_to_m</span></code></a>(n, m, *)</p></td>
+<td><p>Generates <cite>n</cite> random probabilities that sum to <cite>m</cite>.</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="#cleanlab.benchmarking.noise_generation.randomly_distribute_N_balls_into_K_bins" title="cleanlab.benchmarking.noise_generation.randomly_distribute_N_balls_into_K_bins"><code class="xref py py-obj docutils literal notranslate"><span class="pre">randomly_distribute_N_balls_into_K_bins</span></code></a>(N, K, *)</p></td>
 <td><p>Returns a uniformly random numpy integer array of length <cite>N</cite> that sums to <cite>K</cite>.</p></td>
@@ -435,66 +435,28 @@ generating noisy labels given a noise matrix, generating valid noise matrices wi
 </table>
 </div>
 <dl class="py function">
-<dt class="sig sig-object py" id="cleanlab.benchmarking.noise_generation.generate_n_rand_probabilities_that_sum_to_m">
-<span class="sig-prename descclassname"><span class="pre">cleanlab.benchmarking.noise_generation.</span></span><span class="sig-name descname"><span class="pre">generate_n_rand_probabilities_that_sum_to_m</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">m</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_prob</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_prob</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/cleanlab/benchmarking/noise_generation.html#generate_n_rand_probabilities_that_sum_to_m"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cleanlab.benchmarking.noise_generation.generate_n_rand_probabilities_that_sum_to_m" title="Permalink to this definition">#</a></dt>
-<dd><p>Generates <cite>n</cite> random probabilities that sum to <cite>m</cite>.</p>
-<p>When <code class="docutils literal notranslate"><span class="pre">min_prob=0</span></code> and <code class="docutils literal notranslate"><span class="pre">max_prob</span> <span class="pre">=</span> <span class="pre">1.0</span></code>, use
-<code class="docutils literal notranslate"><span class="pre">np.random.dirichlet(np.ones(n))*m</span></code> instead.</p>
+<dt class="sig sig-object py" id="cleanlab.benchmarking.noise_generation.noise_matrix_is_valid">
+<span class="sig-prename descclassname"><span class="pre">cleanlab.benchmarking.noise_generation.</span></span><span class="sig-name descname"><span class="pre">noise_matrix_is_valid</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">noise_matrix</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">py</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/cleanlab/benchmarking/noise_generation.html#noise_matrix_is_valid"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cleanlab.benchmarking.noise_generation.noise_matrix_is_valid" title="Permalink to this definition">#</a></dt>
+<dd><p>Given a prior <cite>py</cite> representing <code class="docutils literal notranslate"><span class="pre">p(true_label=k)</span></code>, checks if the given <cite>noise_matrix</cite> is a
+learnable matrix. Learnability means that it is possible to achieve
+better than random performance, on average, for the amount of noise in
+<cite>noise_matrix</cite>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>n</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>) – Length of array of random probabilities to be returned.</p></li>
-<li><p><strong>m</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>) – Sum of array of random probabilities that is returned.</p></li>
-<li><p><strong>max_prob</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>, <em>default</em> <code class="docutils literal notranslate"><span class="pre">1.0</span></code>) – Maximum probability of any entry in the returned array. Must be between 0 and 1.</p></li>
-<li><p><strong>min_prob</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>, <em>default</em> <code class="docutils literal notranslate"><span class="pre">0.0</span></code>) – Minimum probability of any entry in the returned array. Must be between 0 and 1.</p></li>
+<li><p><strong>noise_matrix</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">np.ndarray</span></code>) – An array of shape <code class="docutils literal notranslate"><span class="pre">(K,</span> <span class="pre">K)</span></code> representing the conditional probability
+matrix <code class="docutils literal notranslate"><span class="pre">P(label=k_s|true_label=k_y)</span></code> containing the fraction of
+examples in every class, labeled as every other class. Assumes columns of
+<cite>noise_matrix</cite> sum to 1.</p></li>
+<li><p><strong>py</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">np.ndarray</span></code>) – An array of shape <code class="docutils literal notranslate"><span class="pre">(K,)</span></code> representing the fraction (prior probability)
+of each true class label, <code class="docutils literal notranslate"><span class="pre">P(true_label</span> <span class="pre">=</span> <span class="pre">k)</span></code>.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></p>
+<dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></p>
 </dd>
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>probabilities</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">np.ndarray</span></code>) – An array of probabilities.</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="cleanlab.benchmarking.noise_generation.generate_noise_matrix_from_trace">
-<span class="sig-prename descclassname"><span class="pre">cleanlab.benchmarking.noise_generation.</span></span><span class="sig-name descname"><span class="pre">generate_noise_matrix_from_trace</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">K</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">trace</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_trace_prob</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_trace_prob</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1e-05</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_noise_rate</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.99999</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_noise_rate</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">valid_noise_matrix</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">py</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">frac_zero_noise_rates</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_iter</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10000</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/cleanlab/benchmarking/noise_generation.html#generate_noise_matrix_from_trace"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cleanlab.benchmarking.noise_generation.generate_noise_matrix_from_trace" title="Permalink to this definition">#</a></dt>
-<dd><p>Generates a <code class="docutils literal notranslate"><span class="pre">K</span> <span class="pre">x</span> <span class="pre">K</span></code> noise matrix <code class="docutils literal notranslate"><span class="pre">P(label=k_s|true_label=k_y)</span></code> with
-<code class="docutils literal notranslate"><span class="pre">np.sum(np.diagonal(noise_matrix))</span></code> equal to the given <cite>trace</cite>.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>K</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>) – Creates a noise matrix of shape <code class="docutils literal notranslate"><span class="pre">(K,</span> <span class="pre">K)</span></code>. Implies there are
-K classes for learning with noisy labels.</p></li>
-<li><p><strong>trace</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>) – Sum of diagonal entries of array of random probabilities returned.</p></li>
-<li><p><strong>max_trace_prob</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>) – Maximum probability of any entry in the trace of the return matrix.</p></li>
-<li><p><strong>min_trace_prob</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>) – Minimum probability of any entry in the trace of the return matrix.</p></li>
-<li><p><strong>max_noise_rate</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>) – Maximum noise_rate (non-diagonal entry) in the returned np.ndarray.</p></li>
-<li><p><strong>min_noise_rate</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>) – Minimum noise_rate (non-diagonal entry) in the returned np.ndarray.</p></li>
-<li><p><strong>valid_noise_matrix</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code>, <em>default</em> <code class="xref py py-obj docutils literal notranslate"><span class="pre">True</span></code>) – If <code class="docutils literal notranslate"><span class="pre">True</span></code>, returns a matrix having all necessary conditions for
-learning with noisy labels. In particular, <code class="docutils literal notranslate"><span class="pre">p(true_label=k)p(label=k)</span> <span class="pre">&lt;</span> <span class="pre">p(true_label=k,label=k)</span></code>
-is satisfied. This requires that <code class="docutils literal notranslate"><span class="pre">trace</span> <span class="pre">&gt;</span> <span class="pre">1</span></code>.</p></li>
-<li><p><strong>py</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">np.ndarray</span></code>) – An array of shape <code class="docutils literal notranslate"><span class="pre">(K,)</span></code> representing the fraction (prior probability) of each true class label, <code class="docutils literal notranslate"><span class="pre">P(true_label</span> <span class="pre">=</span> <span class="pre">k)</span></code>.
-This argument is <strong>required</strong> when <code class="docutils literal notranslate"><span class="pre">valid_noise_matrix=True</span></code>.</p></li>
-<li><p><strong>frac_zero_noise_rates</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>) – The fraction of the <code class="docutils literal notranslate"><span class="pre">n*(n-1)</span></code> noise rates
-that will be set to 0. Note that if you set a high trace, it may be
-impossible to also have a low fraction of zero noise rates without
-forcing all non-1 diagonal values. Instead, when this happens we only
-guarantee to produce a noise matrix with <cite>frac_zero_noise_rates</cite> <em>or
-higher</em>. The opposite occurs with a small trace.</p></li>
-<li><p><strong>seed</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>) – Seeds the random number generator for numpy.</p></li>
-<li><p><strong>max_iter</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>, <em>default</em> <code class="docutils literal notranslate"><span class="pre">10000</span></code>) – The max number of tries to produce a valid matrix before returning <code class="docutils literal notranslate"><span class="pre">None</span></code>.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>]</p>
-</dd>
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>noise_matrix</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">np.ndarray</span></code> or <code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code>) – An array of shape <code class="docutils literal notranslate"><span class="pre">(K,</span> <span class="pre">K)</span></code> representing the noise matrix <code class="docutils literal notranslate"><span class="pre">P(label=k_s|true_label=k_y)</span></code> with <cite>trace</cite>
-equal to <code class="docutils literal notranslate"><span class="pre">np.sum(np.diagonal(noise_matrix))</span></code>. This a conditional probability matrix and a
-left stochastic matrix. Returns <code class="docutils literal notranslate"><span class="pre">None</span></code> if <cite>max_iter</cite> is exceeded.</p>
+<dd class="field-odd"><p><strong>is_valid</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code>) – Whether the noise matrix is a learnable matrix.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -544,28 +506,66 @@ examples in every class, labeled as every other class. Assumes columns of
 </dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="cleanlab.benchmarking.noise_generation.noise_matrix_is_valid">
-<span class="sig-prename descclassname"><span class="pre">cleanlab.benchmarking.noise_generation.</span></span><span class="sig-name descname"><span class="pre">noise_matrix_is_valid</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">noise_matrix</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">py</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/cleanlab/benchmarking/noise_generation.html#noise_matrix_is_valid"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cleanlab.benchmarking.noise_generation.noise_matrix_is_valid" title="Permalink to this definition">#</a></dt>
-<dd><p>Given a prior <cite>py</cite> representing <code class="docutils literal notranslate"><span class="pre">p(true_label=k)</span></code>, checks if the given <cite>noise_matrix</cite> is a
-learnable matrix. Learnability means that it is possible to achieve
-better than random performance, on average, for the amount of noise in
-<cite>noise_matrix</cite>.</p>
+<dt class="sig sig-object py" id="cleanlab.benchmarking.noise_generation.generate_noise_matrix_from_trace">
+<span class="sig-prename descclassname"><span class="pre">cleanlab.benchmarking.noise_generation.</span></span><span class="sig-name descname"><span class="pre">generate_noise_matrix_from_trace</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">K</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">trace</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_trace_prob</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_trace_prob</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1e-05</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_noise_rate</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.99999</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_noise_rate</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">valid_noise_matrix</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">py</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">frac_zero_noise_rates</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_iter</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10000</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/cleanlab/benchmarking/noise_generation.html#generate_noise_matrix_from_trace"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cleanlab.benchmarking.noise_generation.generate_noise_matrix_from_trace" title="Permalink to this definition">#</a></dt>
+<dd><p>Generates a <code class="docutils literal notranslate"><span class="pre">K</span> <span class="pre">x</span> <span class="pre">K</span></code> noise matrix <code class="docutils literal notranslate"><span class="pre">P(label=k_s|true_label=k_y)</span></code> with
+<code class="docutils literal notranslate"><span class="pre">np.sum(np.diagonal(noise_matrix))</span></code> equal to the given <cite>trace</cite>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>noise_matrix</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">np.ndarray</span></code>) – An array of shape <code class="docutils literal notranslate"><span class="pre">(K,</span> <span class="pre">K)</span></code> representing the conditional probability
-matrix <code class="docutils literal notranslate"><span class="pre">P(label=k_s|true_label=k_y)</span></code> containing the fraction of
-examples in every class, labeled as every other class. Assumes columns of
-<cite>noise_matrix</cite> sum to 1.</p></li>
-<li><p><strong>py</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">np.ndarray</span></code>) – An array of shape <code class="docutils literal notranslate"><span class="pre">(K,)</span></code> representing the fraction (prior probability)
-of each true class label, <code class="docutils literal notranslate"><span class="pre">P(true_label</span> <span class="pre">=</span> <span class="pre">k)</span></code>.</p></li>
+<li><p><strong>K</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>) – Creates a noise matrix of shape <code class="docutils literal notranslate"><span class="pre">(K,</span> <span class="pre">K)</span></code>. Implies there are
+K classes for learning with noisy labels.</p></li>
+<li><p><strong>trace</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>) – Sum of diagonal entries of array of random probabilities returned.</p></li>
+<li><p><strong>max_trace_prob</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>) – Maximum probability of any entry in the trace of the return matrix.</p></li>
+<li><p><strong>min_trace_prob</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>) – Minimum probability of any entry in the trace of the return matrix.</p></li>
+<li><p><strong>max_noise_rate</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>) – Maximum noise_rate (non-diagonal entry) in the returned np.ndarray.</p></li>
+<li><p><strong>min_noise_rate</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>) – Minimum noise_rate (non-diagonal entry) in the returned np.ndarray.</p></li>
+<li><p><strong>valid_noise_matrix</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code>, <em>default</em> <code class="xref py py-obj docutils literal notranslate"><span class="pre">True</span></code>) – If <code class="docutils literal notranslate"><span class="pre">True</span></code>, returns a matrix having all necessary conditions for
+learning with noisy labels. In particular, <code class="docutils literal notranslate"><span class="pre">p(true_label=k)p(label=k)</span> <span class="pre">&lt;</span> <span class="pre">p(true_label=k,label=k)</span></code>
+is satisfied. This requires that <code class="docutils literal notranslate"><span class="pre">trace</span> <span class="pre">&gt;</span> <span class="pre">1</span></code>.</p></li>
+<li><p><strong>py</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">np.ndarray</span></code>) – An array of shape <code class="docutils literal notranslate"><span class="pre">(K,)</span></code> representing the fraction (prior probability) of each true class label, <code class="docutils literal notranslate"><span class="pre">P(true_label</span> <span class="pre">=</span> <span class="pre">k)</span></code>.
+This argument is <strong>required</strong> when <code class="docutils literal notranslate"><span class="pre">valid_noise_matrix=True</span></code>.</p></li>
+<li><p><strong>frac_zero_noise_rates</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>) – The fraction of the <code class="docutils literal notranslate"><span class="pre">n*(n-1)</span></code> noise rates
+that will be set to 0. Note that if you set a high trace, it may be
+impossible to also have a low fraction of zero noise rates without
+forcing all non-1 diagonal values. Instead, when this happens we only
+guarantee to produce a noise matrix with <cite>frac_zero_noise_rates</cite> <em>or
+higher</em>. The opposite occurs with a small trace.</p></li>
+<li><p><strong>seed</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>) – Seeds the random number generator for numpy.</p></li>
+<li><p><strong>max_iter</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>, <em>default</em> <code class="docutils literal notranslate"><span class="pre">10000</span></code>) – The max number of tries to produce a valid matrix before returning <code class="docutils literal notranslate"><span class="pre">None</span></code>.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></p>
+<dd class="field-even"><p><code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>]</p>
 </dd>
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>is_valid</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code>) – Whether the noise matrix is a learnable matrix.</p>
+<dd class="field-odd"><p><strong>noise_matrix</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">np.ndarray</span></code> or <code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code>) – An array of shape <code class="docutils literal notranslate"><span class="pre">(K,</span> <span class="pre">K)</span></code> representing the noise matrix <code class="docutils literal notranslate"><span class="pre">P(label=k_s|true_label=k_y)</span></code> with <cite>trace</cite>
+equal to <code class="docutils literal notranslate"><span class="pre">np.sum(np.diagonal(noise_matrix))</span></code>. This a conditional probability matrix and a
+left stochastic matrix. Returns <code class="docutils literal notranslate"><span class="pre">None</span></code> if <cite>max_iter</cite> is exceeded.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="cleanlab.benchmarking.noise_generation.generate_n_rand_probabilities_that_sum_to_m">
+<span class="sig-prename descclassname"><span class="pre">cleanlab.benchmarking.noise_generation.</span></span><span class="sig-name descname"><span class="pre">generate_n_rand_probabilities_that_sum_to_m</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">m</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_prob</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_prob</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/cleanlab/benchmarking/noise_generation.html#generate_n_rand_probabilities_that_sum_to_m"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cleanlab.benchmarking.noise_generation.generate_n_rand_probabilities_that_sum_to_m" title="Permalink to this definition">#</a></dt>
+<dd><p>Generates <cite>n</cite> random probabilities that sum to <cite>m</cite>.</p>
+<p>When <code class="docutils literal notranslate"><span class="pre">min_prob=0</span></code> and <code class="docutils literal notranslate"><span class="pre">max_prob</span> <span class="pre">=</span> <span class="pre">1.0</span></code>, use
+<code class="docutils literal notranslate"><span class="pre">np.random.dirichlet(np.ones(n))*m</span></code> instead.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>n</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>) – Length of array of random probabilities to be returned.</p></li>
+<li><p><strong>m</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>) – Sum of array of random probabilities that is returned.</p></li>
+<li><p><strong>max_prob</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>, <em>default</em> <code class="docutils literal notranslate"><span class="pre">1.0</span></code>) – Maximum probability of any entry in the returned array. Must be between 0 and 1.</p></li>
+<li><p><strong>min_prob</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>, <em>default</em> <code class="docutils literal notranslate"><span class="pre">0.0</span></code>) – Minimum probability of any entry in the returned array. Must be between 0 and 1.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>probabilities</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">np.ndarray</span></code>) – An array of probabilities.</p>
 </dd>
 </dl>
 </dd></dl>

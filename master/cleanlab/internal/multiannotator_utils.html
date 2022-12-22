@@ -419,17 +419,17 @@
 <tr class="row-even"><td><p><a class="reference internal" href="#cleanlab.internal.multiannotator_utils.assert_valid_pred_probs" title="cleanlab.internal.multiannotator_utils.assert_valid_pred_probs"><code class="xref py py-obj docutils literal notranslate"><span class="pre">assert_valid_pred_probs</span></code></a>(pred_probs[, ...])</p></td>
 <td><p>Validate format of pred_probs for multiannotator functions</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#cleanlab.internal.multiannotator_utils.check_consensus_label_classes" title="cleanlab.internal.multiannotator_utils.check_consensus_label_classes"><code class="xref py py-obj docutils literal notranslate"><span class="pre">check_consensus_label_classes</span></code></a>(...)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#cleanlab.internal.multiannotator_utils.format_multiannotator_labels" title="cleanlab.internal.multiannotator_utils.format_multiannotator_labels"><code class="xref py py-obj docutils literal notranslate"><span class="pre">format_multiannotator_labels</span></code></a>(labels)</p></td>
+<td><p>Takes an array of labels and formats it such that labels are in the set <code class="docutils literal notranslate"><span class="pre">0,</span> <span class="pre">1,</span> <span class="pre">...,</span> <span class="pre">K-1</span></code>, where <code class="docutils literal notranslate"><span class="pre">K</span></code> is the number of classes.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#cleanlab.internal.multiannotator_utils.check_consensus_label_classes" title="cleanlab.internal.multiannotator_utils.check_consensus_label_classes"><code class="xref py py-obj docutils literal notranslate"><span class="pre">check_consensus_label_classes</span></code></a>(...)</p></td>
 <td><p>Check if any classes no longer appear in the set of consensus labels (established using the consensus_method stated)</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#cleanlab.internal.multiannotator_utils.compute_soft_cross_entropy" title="cleanlab.internal.multiannotator_utils.compute_soft_cross_entropy"><code class="xref py py-obj docutils literal notranslate"><span class="pre">compute_soft_cross_entropy</span></code></a>(...)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#cleanlab.internal.multiannotator_utils.compute_soft_cross_entropy" title="cleanlab.internal.multiannotator_utils.compute_soft_cross_entropy"><code class="xref py py-obj docutils literal notranslate"><span class="pre">compute_soft_cross_entropy</span></code></a>(...)</p></td>
 <td><p>Compute soft cross entropy between the annotators' empirical label distribution and model pred_probs</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#cleanlab.internal.multiannotator_utils.find_best_temp_scaler" title="cleanlab.internal.multiannotator_utils.find_best_temp_scaler"><code class="xref py py-obj docutils literal notranslate"><span class="pre">find_best_temp_scaler</span></code></a>(labels_multiannotator, ...)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#cleanlab.internal.multiannotator_utils.find_best_temp_scaler" title="cleanlab.internal.multiannotator_utils.find_best_temp_scaler"><code class="xref py py-obj docutils literal notranslate"><span class="pre">find_best_temp_scaler</span></code></a>(labels_multiannotator, ...)</p></td>
 <td><p>Find the best temperature scaling factor that minimizes the soft cross entropy between the annotators' empirical label distribution and model pred_probs</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#cleanlab.internal.multiannotator_utils.format_multiannotator_labels" title="cleanlab.internal.multiannotator_utils.format_multiannotator_labels"><code class="xref py py-obj docutils literal notranslate"><span class="pre">format_multiannotator_labels</span></code></a>(labels)</p></td>
-<td><p>Takes an array of labels and formats it such that labels are in the set <code class="docutils literal notranslate"><span class="pre">0,</span> <span class="pre">1,</span> <span class="pre">...,</span> <span class="pre">K-1</span></code>, where <code class="docutils literal notranslate"><span class="pre">K</span></code> is the number of classes.</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="#cleanlab.internal.multiannotator_utils.temp_scale_pred_probs" title="cleanlab.internal.multiannotator_utils.temp_scale_pred_probs"><code class="xref py py-obj docutils literal notranslate"><span class="pre">temp_scale_pred_probs</span></code></a>(pred_probs, temp)</p></td>
 <td><p>Scales pred_probs by the given temperature factor.</p></td>
@@ -452,6 +452,26 @@
 <dt class="sig sig-object py" id="cleanlab.internal.multiannotator_utils.assert_valid_pred_probs">
 <span class="sig-prename descclassname"><span class="pre">cleanlab.internal.multiannotator_utils.</span></span><span class="sig-name descname"><span class="pre">assert_valid_pred_probs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pred_probs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pred_probs_unlabeled</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ensemble</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/cleanlab/internal/multiannotator_utils.html#assert_valid_pred_probs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cleanlab.internal.multiannotator_utils.assert_valid_pred_probs" title="Permalink to this definition">#</a></dt>
 <dd><p>Validate format of pred_probs for multiannotator functions</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="cleanlab.internal.multiannotator_utils.format_multiannotator_labels">
+<span class="sig-prename descclassname"><span class="pre">cleanlab.internal.multiannotator_utils.</span></span><span class="sig-name descname"><span class="pre">format_multiannotator_labels</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">labels</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/cleanlab/internal/multiannotator_utils.html#format_multiannotator_labels"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cleanlab.internal.multiannotator_utils.format_multiannotator_labels" title="Permalink to this definition">#</a></dt>
+<dd><p>Takes an array of labels and formats it such that labels are in the set <code class="docutils literal notranslate"><span class="pre">0,</span> <span class="pre">1,</span> <span class="pre">...,</span> <span class="pre">K-1</span></code>,
+where <code class="docutils literal notranslate"><span class="pre">K</span></code> is the number of classes. The labels are assigned based on lexicographic order.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><code class="xref py py-data docutils literal notranslate"><span class="pre">Tuple</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code>]</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><code class="xref py py-class docutils literal notranslate"><span class="pre">formatted_labels</span></code> – Returns pd.DataFrame of shape <code class="docutils literal notranslate"><span class="pre">(N,M)</span></code>. The return labels will be properly formatted and can be passed to
+cleanlab.multiannotator functions.</p></li>
+<li><p><code class="xref py py-class docutils literal notranslate"><span class="pre">mapping</span></code> – A dictionary showing the mapping of new to old labels, such that <code class="docutils literal notranslate"><span class="pre">mapping[k]</span></code> returns the name of the k-th class.</p></li>
+</ul>
+</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
@@ -484,26 +504,6 @@ and model pred_probs</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="cleanlab.internal.multiannotator_utils.format_multiannotator_labels">
-<span class="sig-prename descclassname"><span class="pre">cleanlab.internal.multiannotator_utils.</span></span><span class="sig-name descname"><span class="pre">format_multiannotator_labels</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">labels</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/cleanlab/internal/multiannotator_utils.html#format_multiannotator_labels"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cleanlab.internal.multiannotator_utils.format_multiannotator_labels" title="Permalink to this definition">#</a></dt>
-<dd><p>Takes an array of labels and formats it such that labels are in the set <code class="docutils literal notranslate"><span class="pre">0,</span> <span class="pre">1,</span> <span class="pre">...,</span> <span class="pre">K-1</span></code>,
-where <code class="docutils literal notranslate"><span class="pre">K</span></code> is the number of classes. The labels are assigned based on lexicographic order.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><code class="xref py py-data docutils literal notranslate"><span class="pre">Tuple</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code>]</p>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p><ul class="simple">
-<li><p><code class="xref py py-class docutils literal notranslate"><span class="pre">formatted_labels</span></code> – Returns pd.DataFrame of shape <code class="docutils literal notranslate"><span class="pre">(N,M)</span></code>. The return labels will be properly formatted and can be passed to
-cleanlab.multiannotator functions.</p></li>
-<li><p><code class="xref py py-class docutils literal notranslate"><span class="pre">mapping</span></code> – A dictionary showing the mapping of new to old labels, such that <code class="docutils literal notranslate"><span class="pre">mapping[k]</span></code> returns the name of the k-th class.</p></li>
-</ul>
-</p>
 </dd>
 </dl>
 </dd></dl>

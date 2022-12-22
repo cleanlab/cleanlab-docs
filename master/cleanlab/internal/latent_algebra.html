@@ -418,20 +418,20 @@ Throughout <cite>K</cite> denotes the number of classes in the classification ta
 <div class="table-wrapper autosummary longtable docutils container">
 <table class="autosummary longtable docutils align-default">
 <tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#cleanlab.internal.latent_algebra.compute_ps_py_inv_noise_matrix" title="cleanlab.internal.latent_algebra.compute_ps_py_inv_noise_matrix"><code class="xref py py-obj docutils literal notranslate"><span class="pre">compute_ps_py_inv_noise_matrix</span></code></a>(labels, ...)</p></td>
+<td><p>Compute <code class="docutils literal notranslate"><span class="pre">ps</span> <span class="pre">:=</span> <span class="pre">P(labels=k),</span> <span class="pre">py</span> <span class="pre">:=</span> <span class="pre">P(true_labels=k)</span></code>, and the inverse noise matrix.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#cleanlab.internal.latent_algebra.compute_py_inv_noise_matrix" title="cleanlab.internal.latent_algebra.compute_py_inv_noise_matrix"><code class="xref py py-obj docutils literal notranslate"><span class="pre">compute_py_inv_noise_matrix</span></code></a>(ps, noise_matrix)</p></td>
+<td><p>Compute py := P(true_label=k), and the inverse noise matrix.</p></td>
+</tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="#cleanlab.internal.latent_algebra.compute_inv_noise_matrix" title="cleanlab.internal.latent_algebra.compute_inv_noise_matrix"><code class="xref py py-obj docutils literal notranslate"><span class="pre">compute_inv_noise_matrix</span></code></a>(py, noise_matrix, *)</p></td>
 <td><p>Compute the inverse noise matrix if py := P(true_label=k) is given.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#cleanlab.internal.latent_algebra.compute_noise_matrix_from_inverse" title="cleanlab.internal.latent_algebra.compute_noise_matrix_from_inverse"><code class="xref py py-obj docutils literal notranslate"><span class="pre">compute_noise_matrix_from_inverse</span></code></a>(ps, ...[, py])</p></td>
 <td><p>Compute the noise matrix <code class="docutils literal notranslate"><span class="pre">P(label=k_s|true_label=k_y)</span></code>.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#cleanlab.internal.latent_algebra.compute_ps_py_inv_noise_matrix" title="cleanlab.internal.latent_algebra.compute_ps_py_inv_noise_matrix"><code class="xref py py-obj docutils literal notranslate"><span class="pre">compute_ps_py_inv_noise_matrix</span></code></a>(labels, ...)</p></td>
-<td><p>Compute <code class="docutils literal notranslate"><span class="pre">ps</span> <span class="pre">:=</span> <span class="pre">P(labels=k),</span> <span class="pre">py</span> <span class="pre">:=</span> <span class="pre">P(true_labels=k)</span></code>, and the inverse noise matrix.</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#cleanlab.internal.latent_algebra.compute_py" title="cleanlab.internal.latent_algebra.compute_py"><code class="xref py py-obj docutils literal notranslate"><span class="pre">compute_py</span></code></a>(ps, noise_matrix, ...[, ...])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#cleanlab.internal.latent_algebra.compute_py" title="cleanlab.internal.latent_algebra.compute_py"><code class="xref py py-obj docutils literal notranslate"><span class="pre">compute_py</span></code></a>(ps, noise_matrix, ...[, ...])</p></td>
 <td><p>Compute <code class="docutils literal notranslate"><span class="pre">py</span> <span class="pre">:=</span> <span class="pre">P(true_labels=k)</span></code> from <code class="docutils literal notranslate"><span class="pre">ps</span> <span class="pre">:=</span> <span class="pre">P(labels=k)</span></code>, <cite>noise_matrix</cite>, and <cite>inverse_noise_matrix</cite>.</p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#cleanlab.internal.latent_algebra.compute_py_inv_noise_matrix" title="cleanlab.internal.latent_algebra.compute_py_inv_noise_matrix"><code class="xref py py-obj docutils literal notranslate"><span class="pre">compute_py_inv_noise_matrix</span></code></a>(ps, noise_matrix)</p></td>
-<td><p>Compute py := P(true_label=k), and the inverse noise matrix.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#cleanlab.internal.latent_algebra.compute_pyx" title="cleanlab.internal.latent_algebra.compute_pyx"><code class="xref py py-obj docutils literal notranslate"><span class="pre">compute_pyx</span></code></a>(pred_probs, noise_matrix, ...)</p></td>
 <td><p>Compute <code class="docutils literal notranslate"><span class="pre">pyx</span> <span class="pre">:=</span> <span class="pre">P(true_label=k|x)</span></code> from <code class="docutils literal notranslate"><span class="pre">pred_probs</span> <span class="pre">:=</span> <span class="pre">P(label=k|x)</span></code>, <cite>noise_matrix</cite> and <cite>inverse_noise_matrix</cite>.</p></td>
@@ -439,6 +439,46 @@ Throughout <cite>K</cite> denotes the number of classes in the classification ta
 </tbody>
 </table>
 </div>
+<dl class="py function">
+<dt class="sig sig-object py" id="cleanlab.internal.latent_algebra.compute_ps_py_inv_noise_matrix">
+<span class="sig-prename descclassname"><span class="pre">cleanlab.internal.latent_algebra.</span></span><span class="sig-name descname"><span class="pre">compute_ps_py_inv_noise_matrix</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">labels</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">noise_matrix</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/cleanlab/internal/latent_algebra.html#compute_ps_py_inv_noise_matrix"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cleanlab.internal.latent_algebra.compute_ps_py_inv_noise_matrix" title="Permalink to this definition">#</a></dt>
+<dd><p>Compute <code class="docutils literal notranslate"><span class="pre">ps</span> <span class="pre">:=</span> <span class="pre">P(labels=k),</span> <span class="pre">py</span> <span class="pre">:=</span> <span class="pre">P(true_labels=k)</span></code>, and the inverse noise matrix.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>labels</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">np.ndarray</span></code>) – A discrete vector of noisy labels, i.e. some labels may be erroneous.
+<em>Format requirements</em>: for dataset with <cite>K</cite> classes, labels must be in <code class="docutils literal notranslate"><span class="pre">{0,1,...,K-1}</span></code>.</p></li>
+<li><p><strong>noise_matrix</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">np.ndarray</span></code>) – A conditional probability matrix (of shape <code class="docutils literal notranslate"><span class="pre">(K,</span> <span class="pre">K)</span></code>) of the form <code class="docutils literal notranslate"><span class="pre">P(label=k_s|true_label=k_y)</span></code> containing
+the fraction of examples in every class, labeled as every other class.
+Assumes columns of noise_matrix sum to 1.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><code class="xref py py-data docutils literal notranslate"><span class="pre">Tuple</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="cleanlab.internal.latent_algebra.compute_py_inv_noise_matrix">
+<span class="sig-prename descclassname"><span class="pre">cleanlab.internal.latent_algebra.</span></span><span class="sig-name descname"><span class="pre">compute_py_inv_noise_matrix</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ps</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">noise_matrix</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/cleanlab/internal/latent_algebra.html#compute_py_inv_noise_matrix"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cleanlab.internal.latent_algebra.compute_py_inv_noise_matrix" title="Permalink to this definition">#</a></dt>
+<dd><p>Compute py := P(true_label=k), and the inverse noise matrix.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>ps</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">np.ndarray</span></code>) – Array of shape <code class="docutils literal notranslate"><span class="pre">(K,</span> <span class="pre">)</span></code> or <code class="docutils literal notranslate"><span class="pre">(1,</span> <span class="pre">K)</span></code>.
+The fraction (prior probability) of each observed, NOISY class <code class="docutils literal notranslate"><span class="pre">P(labels</span> <span class="pre">=</span> <span class="pre">k)</span></code>.</p></li>
+<li><p><strong>noise_matrix</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">np.ndarray</span></code>) – A conditional probability matrix (of shape <code class="docutils literal notranslate"><span class="pre">(K,</span> <span class="pre">K)</span></code>) of the form <code class="docutils literal notranslate"><span class="pre">P(label=k_s|true_label=k_y)</span></code> containing
+the fraction of examples in every class, labeled as every other class.
+Assumes columns of noise_matrix sum to 1.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><code class="xref py py-data docutils literal notranslate"><span class="pre">Tuple</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>]</p>
+</dd>
+</dl>
+</dd></dl>
+
 <dl class="py function">
 <dt class="sig sig-object py" id="cleanlab.internal.latent_algebra.compute_inv_noise_matrix">
 <span class="sig-prename descclassname"><span class="pre">cleanlab.internal.latent_algebra.</span></span><span class="sig-name descname"><span class="pre">compute_inv_noise_matrix</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">py</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">noise_matrix</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ps</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/cleanlab/internal/latent_algebra.html#compute_inv_noise_matrix"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cleanlab.internal.latent_algebra.compute_inv_noise_matrix" title="Permalink to this definition">#</a></dt>
@@ -531,26 +571,6 @@ the fraction of examples in every class, labeled as every other class.</p>
 </dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="cleanlab.internal.latent_algebra.compute_ps_py_inv_noise_matrix">
-<span class="sig-prename descclassname"><span class="pre">cleanlab.internal.latent_algebra.</span></span><span class="sig-name descname"><span class="pre">compute_ps_py_inv_noise_matrix</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">labels</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">noise_matrix</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/cleanlab/internal/latent_algebra.html#compute_ps_py_inv_noise_matrix"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cleanlab.internal.latent_algebra.compute_ps_py_inv_noise_matrix" title="Permalink to this definition">#</a></dt>
-<dd><p>Compute <code class="docutils literal notranslate"><span class="pre">ps</span> <span class="pre">:=</span> <span class="pre">P(labels=k),</span> <span class="pre">py</span> <span class="pre">:=</span> <span class="pre">P(true_labels=k)</span></code>, and the inverse noise matrix.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>labels</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">np.ndarray</span></code>) – A discrete vector of noisy labels, i.e. some labels may be erroneous.
-<em>Format requirements</em>: for dataset with <cite>K</cite> classes, labels must be in <code class="docutils literal notranslate"><span class="pre">{0,1,...,K-1}</span></code>.</p></li>
-<li><p><strong>noise_matrix</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">np.ndarray</span></code>) – A conditional probability matrix (of shape <code class="docutils literal notranslate"><span class="pre">(K,</span> <span class="pre">K)</span></code>) of the form <code class="docutils literal notranslate"><span class="pre">P(label=k_s|true_label=k_y)</span></code> containing
-the fraction of examples in every class, labeled as every other class.
-Assumes columns of noise_matrix sum to 1.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><code class="xref py py-data docutils literal notranslate"><span class="pre">Tuple</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>]</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
 <dt class="sig sig-object py" id="cleanlab.internal.latent_algebra.compute_py">
 <span class="sig-prename descclassname"><span class="pre">cleanlab.internal.latent_algebra.</span></span><span class="sig-name descname"><span class="pre">compute_py</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ps</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">noise_matrix</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">inverse_noise_matrix</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">py_method</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'cnt'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">true_labels_class_counts</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/cleanlab/internal/latent_algebra.html#compute_py"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cleanlab.internal.latent_algebra.compute_py" title="Permalink to this definition">#</a></dt>
 <dd><p>Compute <code class="docutils literal notranslate"><span class="pre">py</span> <span class="pre">:=</span> <span class="pre">P(true_labels=k)</span></code> from <code class="docutils literal notranslate"><span class="pre">ps</span> <span class="pre">:=</span> <span class="pre">P(labels=k)</span></code>, <cite>noise_matrix</cite>, and
@@ -584,26 +604,6 @@ the matrix diagonals instead of all the probabilities.</p></li>
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>py</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">np.ndarray</span></code>) – Array of shape <code class="docutils literal notranslate"><span class="pre">(K,</span> <span class="pre">)</span></code> or <code class="docutils literal notranslate"><span class="pre">(1,</span> <span class="pre">K)</span></code>.
 The fraction (prior probability) of each TRUE class label, <code class="docutils literal notranslate"><span class="pre">P(true_label</span> <span class="pre">=</span> <span class="pre">k)</span></code>.</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="cleanlab.internal.latent_algebra.compute_py_inv_noise_matrix">
-<span class="sig-prename descclassname"><span class="pre">cleanlab.internal.latent_algebra.</span></span><span class="sig-name descname"><span class="pre">compute_py_inv_noise_matrix</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ps</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">noise_matrix</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/cleanlab/internal/latent_algebra.html#compute_py_inv_noise_matrix"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cleanlab.internal.latent_algebra.compute_py_inv_noise_matrix" title="Permalink to this definition">#</a></dt>
-<dd><p>Compute py := P(true_label=k), and the inverse noise matrix.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>ps</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">np.ndarray</span></code>) – Array of shape <code class="docutils literal notranslate"><span class="pre">(K,</span> <span class="pre">)</span></code> or <code class="docutils literal notranslate"><span class="pre">(1,</span> <span class="pre">K)</span></code>.
-The fraction (prior probability) of each observed, NOISY class <code class="docutils literal notranslate"><span class="pre">P(labels</span> <span class="pre">=</span> <span class="pre">k)</span></code>.</p></li>
-<li><p><strong>noise_matrix</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">np.ndarray</span></code>) – A conditional probability matrix (of shape <code class="docutils literal notranslate"><span class="pre">(K,</span> <span class="pre">K)</span></code>) of the form <code class="docutils literal notranslate"><span class="pre">P(label=k_s|true_label=k_y)</span></code> containing
-the fraction of examples in every class, labeled as every other class.
-Assumes columns of noise_matrix sum to 1.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><code class="xref py py-data docutils literal notranslate"><span class="pre">Tuple</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>]</p>
 </dd>
 </dl>
 </dd></dl>

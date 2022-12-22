@@ -413,14 +413,14 @@
 <div class="table-wrapper autosummary longtable docutils container">
 <table class="autosummary longtable docutils align-default">
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#cleanlab.internal.token_classification_utils.color_sentence" title="cleanlab.internal.token_classification_utils.color_sentence"><code class="xref py py-obj docutils literal notranslate"><span class="pre">color_sentence</span></code></a>(sentence, word)</p></td>
-<td><p>Searches for a given token in the sentence and returns the sentence where the given token is colored red</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#cleanlab.internal.token_classification_utils.get_sentence" title="cleanlab.internal.token_classification_utils.get_sentence"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_sentence</span></code></a>(words)</p></td>
+<td><p>Get sentence formed by a list of words with minor processing for readability</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#cleanlab.internal.token_classification_utils.filter_sentence" title="cleanlab.internal.token_classification_utils.filter_sentence"><code class="xref py py-obj docutils literal notranslate"><span class="pre">filter_sentence</span></code></a>(sentences[, condition])</p></td>
 <td><p>Filter sentence based on some condition, and returns filter mask</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#cleanlab.internal.token_classification_utils.get_sentence" title="cleanlab.internal.token_classification_utils.get_sentence"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_sentence</span></code></a>(words)</p></td>
-<td><p>Get sentence formed by a list of words with minor processing for readability</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#cleanlab.internal.token_classification_utils.process_token" title="cleanlab.internal.token_classification_utils.process_token"><code class="xref py py-obj docutils literal notranslate"><span class="pre">process_token</span></code></a>(token[, replace])</p></td>
+<td><p>Replaces special characters in the tokens</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#cleanlab.internal.token_classification_utils.mapping" title="cleanlab.internal.token_classification_utils.mapping"><code class="xref py py-obj docutils literal notranslate"><span class="pre">mapping</span></code></a>(entities, maps)</p></td>
 <td><p>Map a list of entities to its corresponding entities</p></td>
@@ -428,43 +428,32 @@
 <tr class="row-odd"><td><p><a class="reference internal" href="#cleanlab.internal.token_classification_utils.merge_probs" title="cleanlab.internal.token_classification_utils.merge_probs"><code class="xref py py-obj docutils literal notranslate"><span class="pre">merge_probs</span></code></a>(probs, maps)</p></td>
 <td><p>Merges model-predictive probabilities with desired mapping</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#cleanlab.internal.token_classification_utils.process_token" title="cleanlab.internal.token_classification_utils.process_token"><code class="xref py py-obj docutils literal notranslate"><span class="pre">process_token</span></code></a>(token[, replace])</p></td>
-<td><p>Replaces special characters in the tokens</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#cleanlab.internal.token_classification_utils.color_sentence" title="cleanlab.internal.token_classification_utils.color_sentence"><code class="xref py py-obj docutils literal notranslate"><span class="pre">color_sentence</span></code></a>(sentence, word)</p></td>
+<td><p>Searches for a given token in the sentence and returns the sentence where the given token is colored red</p></td>
 </tr>
 </tbody>
 </table>
 </div>
 <dl class="py function">
-<dt class="sig sig-object py" id="cleanlab.internal.token_classification_utils.color_sentence">
-<span class="sig-prename descclassname"><span class="pre">cleanlab.internal.token_classification_utils.</span></span><span class="sig-name descname"><span class="pre">color_sentence</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sentence</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">word</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/cleanlab/internal/token_classification_utils.html#color_sentence"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cleanlab.internal.token_classification_utils.color_sentence" title="Permalink to this definition">#</a></dt>
-<dd><p>Searches for a given token in the sentence and returns the sentence where the given token is colored red</p>
+<dt class="sig sig-object py" id="cleanlab.internal.token_classification_utils.get_sentence">
+<span class="sig-prename descclassname"><span class="pre">cleanlab.internal.token_classification_utils.</span></span><span class="sig-name descname"><span class="pre">get_sentence</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">words</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/cleanlab/internal/token_classification_utils.html#get_sentence"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cleanlab.internal.token_classification_utils.get_sentence" title="Permalink to this definition">#</a></dt>
+<dd><p>Get sentence formed by a list of words with minor processing for readability</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>sentence</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>) – a sentence where the word is searched</p></li>
-<li><p><strong>word</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>) – keyword to find in <cite>sentence</cite>. Assumes the word exists in the sentence.</p></li>
-</ul>
+<dd class="field-odd"><p><strong>words</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]) – list of word-level tokens</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></p>
 </dd>
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">colored_sentence</span></code> – <cite>sentence</cite> where the every occurrence of the word is colored red, using <code class="docutils literal notranslate"><span class="pre">termcolor.colored</span></code></p>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">sentence</span></code> – sentence formed by list of word-level tokens</p>
 </dd>
 </dl>
 <p class="rubric">Examples</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">cleanlab.internal.token_classification_utils</span> <span class="kn">import</span> <span class="n">color_sentence</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">sentence</span> <span class="o">=</span> <span class="s2">&quot;This is a sentence.&quot;</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">word</span> <span class="o">=</span> <span class="s2">&quot;sentence&quot;</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">color_sentence</span><span class="p">(</span><span class="n">sentence</span><span class="p">,</span> <span class="n">word</span><span class="p">)</span>
-<span class="go">&#39;This is a [31msentence[0m.&#39;</span>
-</pre></div>
-</div>
-<p>Also works for multiple occurrences of the word</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">document</span> <span class="o">=</span> <span class="s2">&quot;This is a sentence. This is another sentence.&quot;</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">word</span> <span class="o">=</span> <span class="s2">&quot;sentence&quot;</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">color_sentence</span><span class="p">(</span><span class="n">document</span><span class="p">,</span> <span class="n">word</span><span class="p">)</span>
-<span class="go">&#39;This is a [31msentence[0m. This is another [31msentence[0m.&#39;</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">cleanlab.internal.token_classification_utils</span> <span class="kn">import</span> <span class="n">get_sentence</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">words</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;This&quot;</span><span class="p">,</span> <span class="s2">&quot;is&quot;</span><span class="p">,</span> <span class="s2">&quot;a&quot;</span><span class="p">,</span> <span class="s2">&quot;sentence&quot;</span><span class="p">,</span> <span class="s2">&quot;.&quot;</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">get_sentence</span><span class="p">(</span><span class="n">words</span><span class="p">)</span>
+<span class="go">&#39;This is a sentence.&#39;</span>
 </pre></div>
 </div>
 </dd></dl>
@@ -508,25 +497,38 @@ filtered sentence, otherwise <cite>mask[i] == False</cite></p></li>
 </dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="cleanlab.internal.token_classification_utils.get_sentence">
-<span class="sig-prename descclassname"><span class="pre">cleanlab.internal.token_classification_utils.</span></span><span class="sig-name descname"><span class="pre">get_sentence</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">words</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/cleanlab/internal/token_classification_utils.html#get_sentence"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cleanlab.internal.token_classification_utils.get_sentence" title="Permalink to this definition">#</a></dt>
-<dd><p>Get sentence formed by a list of words with minor processing for readability</p>
+<dt class="sig sig-object py" id="cleanlab.internal.token_classification_utils.process_token">
+<span class="sig-prename descclassname"><span class="pre">cleanlab.internal.token_classification_utils.</span></span><span class="sig-name descname"><span class="pre">process_token</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">token</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">replace</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[('#',</span> <span class="pre">'')]</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/cleanlab/internal/token_classification_utils.html#process_token"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cleanlab.internal.token_classification_utils.process_token" title="Permalink to this definition">#</a></dt>
+<dd><p>Replaces special characters in the tokens</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>words</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]) – list of word-level tokens</p>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>token</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>) – token which potentially contains special characters</p></li>
+<li><p><strong>replace</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-data docutils literal notranslate"><span class="pre">Tuple</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]]) – list of tuples <cite>(s1, s2)</cite>, where all occurances of s1 are replaced by s2</p></li>
+</ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></p>
 </dd>
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">sentence</span></code> – sentence formed by list of word-level tokens</p>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">processed_token</span></code> – processed token whose special character has been replaced</p>
 </dd>
 </dl>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Only applies to characters in the original input token.</p>
+</div>
 <p class="rubric">Examples</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">cleanlab.internal.token_classification_utils</span> <span class="kn">import</span> <span class="n">get_sentence</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">words</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;This&quot;</span><span class="p">,</span> <span class="s2">&quot;is&quot;</span><span class="p">,</span> <span class="s2">&quot;a&quot;</span><span class="p">,</span> <span class="s2">&quot;sentence&quot;</span><span class="p">,</span> <span class="s2">&quot;.&quot;</span><span class="p">]</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">get_sentence</span><span class="p">(</span><span class="n">words</span><span class="p">)</span>
-<span class="go">&#39;This is a sentence.&#39;</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">cleanlab.internal.token_classification_utils</span> <span class="kn">import</span> <span class="n">process_token</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">token</span> <span class="o">=</span> <span class="s2">&quot;#Comment&quot;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">process_token</span><span class="p">(</span><span class="s2">&quot;#Comment&quot;</span><span class="p">)</span>
+<span class="go">&#39;Comment&#39;</span>
+</pre></div>
+</div>
+<p>Specify custom replacement rules</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">replace</span> <span class="o">=</span> <span class="p">[(</span><span class="s2">&quot;C&quot;</span><span class="p">,</span> <span class="s2">&quot;a&quot;</span><span class="p">),</span> <span class="p">(</span><span class="s2">&quot;a&quot;</span><span class="p">,</span> <span class="s2">&quot;C&quot;</span><span class="p">)]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">process_token</span><span class="p">(</span><span class="s2">&quot;Cleanlab&quot;</span><span class="p">,</span> <span class="n">replace</span><span class="p">)</span>
+<span class="go">&#39;aleCnlCb&#39;</span>
 </pre></div>
 </div>
 </dd></dl>
@@ -597,38 +599,36 @@ re-normalized if necessary.</p>
 </dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="cleanlab.internal.token_classification_utils.process_token">
-<span class="sig-prename descclassname"><span class="pre">cleanlab.internal.token_classification_utils.</span></span><span class="sig-name descname"><span class="pre">process_token</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">token</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">replace</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[('#',</span> <span class="pre">'')]</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/cleanlab/internal/token_classification_utils.html#process_token"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cleanlab.internal.token_classification_utils.process_token" title="Permalink to this definition">#</a></dt>
-<dd><p>Replaces special characters in the tokens</p>
+<dt class="sig sig-object py" id="cleanlab.internal.token_classification_utils.color_sentence">
+<span class="sig-prename descclassname"><span class="pre">cleanlab.internal.token_classification_utils.</span></span><span class="sig-name descname"><span class="pre">color_sentence</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sentence</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">word</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/cleanlab/internal/token_classification_utils.html#color_sentence"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cleanlab.internal.token_classification_utils.color_sentence" title="Permalink to this definition">#</a></dt>
+<dd><p>Searches for a given token in the sentence and returns the sentence where the given token is colored red</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>token</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>) – token which potentially contains special characters</p></li>
-<li><p><strong>replace</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-data docutils literal notranslate"><span class="pre">Tuple</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]]) – list of tuples <cite>(s1, s2)</cite>, where all occurances of s1 are replaced by s2</p></li>
+<li><p><strong>sentence</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>) – a sentence where the word is searched</p></li>
+<li><p><strong>word</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>) – keyword to find in <cite>sentence</cite>. Assumes the word exists in the sentence.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></p>
 </dd>
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">processed_token</span></code> – processed token whose special character has been replaced</p>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">colored_sentence</span></code> – <cite>sentence</cite> where the every occurrence of the word is colored red, using <code class="docutils literal notranslate"><span class="pre">termcolor.colored</span></code></p>
 </dd>
 </dl>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>Only applies to characters in the original input token.</p>
-</div>
 <p class="rubric">Examples</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">cleanlab.internal.token_classification_utils</span> <span class="kn">import</span> <span class="n">process_token</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">token</span> <span class="o">=</span> <span class="s2">&quot;#Comment&quot;</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">process_token</span><span class="p">(</span><span class="s2">&quot;#Comment&quot;</span><span class="p">)</span>
-<span class="go">&#39;Comment&#39;</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">cleanlab.internal.token_classification_utils</span> <span class="kn">import</span> <span class="n">color_sentence</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">sentence</span> <span class="o">=</span> <span class="s2">&quot;This is a sentence.&quot;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">word</span> <span class="o">=</span> <span class="s2">&quot;sentence&quot;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">color_sentence</span><span class="p">(</span><span class="n">sentence</span><span class="p">,</span> <span class="n">word</span><span class="p">)</span>
+<span class="go">&#39;This is a [31msentence[0m.&#39;</span>
 </pre></div>
 </div>
-<p>Specify custom replacement rules</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">replace</span> <span class="o">=</span> <span class="p">[(</span><span class="s2">&quot;C&quot;</span><span class="p">,</span> <span class="s2">&quot;a&quot;</span><span class="p">),</span> <span class="p">(</span><span class="s2">&quot;a&quot;</span><span class="p">,</span> <span class="s2">&quot;C&quot;</span><span class="p">)]</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">process_token</span><span class="p">(</span><span class="s2">&quot;Cleanlab&quot;</span><span class="p">,</span> <span class="n">replace</span><span class="p">)</span>
-<span class="go">&#39;aleCnlCb&#39;</span>
+<p>Also works for multiple occurrences of the word</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">document</span> <span class="o">=</span> <span class="s2">&quot;This is a sentence. This is another sentence.&quot;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">word</span> <span class="o">=</span> <span class="s2">&quot;sentence&quot;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">color_sentence</span><span class="p">(</span><span class="n">document</span><span class="p">,</span> <span class="n">word</span><span class="p">)</span>
+<span class="go">&#39;This is a [31msentence[0m. This is another [31msentence[0m.&#39;</span>
 </pre></div>
 </div>
 </dd></dl>

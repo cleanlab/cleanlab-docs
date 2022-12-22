@@ -422,132 +422,30 @@ To obtain out-of-sample predicted probabilities for every datapoint in your data
 <div class="table-wrapper autosummary longtable docutils container">
 <table class="autosummary longtable docutils align-default">
 <tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#cleanlab.rank.get_label_quality_scores" title="cleanlab.rank.get_label_quality_scores"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_label_quality_scores</span></code></a>(labels, pred_probs, *)</p></td>
+<td><p>Returns a label quality score for each datapoint.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#cleanlab.rank.get_label_quality_ensemble_scores" title="cleanlab.rank.get_label_quality_ensemble_scores"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_label_quality_ensemble_scores</span></code></a>(labels, ...)</p></td>
+<td><p>Returns label quality scores based on predictions from an ensemble of models.</p></td>
+</tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="#cleanlab.rank.find_top_issues" title="cleanlab.rank.find_top_issues"><code class="xref py py-obj docutils literal notranslate"><span class="pre">find_top_issues</span></code></a>(quality_scores, *[, top])</p></td>
 <td><p>Returns the sorted indices of the <cite>top</cite> issues in <cite>quality_scores</cite>, ordered from smallest to largest quality score (i.e., from most to least likely to be an issue).</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#cleanlab.rank.get_confidence_weighted_entropy_for_each_label" title="cleanlab.rank.get_confidence_weighted_entropy_for_each_label"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_confidence_weighted_entropy_for_each_label</span></code></a>(...)</p></td>
-<td><p>Returns the &quot;confidence weighted entropy&quot; label-quality score for each datapoint.</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#cleanlab.rank.order_label_issues" title="cleanlab.rank.order_label_issues"><code class="xref py py-obj docutils literal notranslate"><span class="pre">order_label_issues</span></code></a>(label_issues_mask, ...[, ...])</p></td>
+<td><p>Sorts label issues by label quality score.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#cleanlab.rank.get_label_quality_ensemble_scores" title="cleanlab.rank.get_label_quality_ensemble_scores"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_label_quality_ensemble_scores</span></code></a>(labels, ...)</p></td>
-<td><p>Returns label quality scores based on predictions from an ensemble of models.</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#cleanlab.rank.get_label_quality_scores" title="cleanlab.rank.get_label_quality_scores"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_label_quality_scores</span></code></a>(labels, pred_probs, *)</p></td>
-<td><p>Returns a label quality score for each datapoint.</p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#cleanlab.rank.get_normalized_margin_for_each_label" title="cleanlab.rank.get_normalized_margin_for_each_label"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_normalized_margin_for_each_label</span></code></a>(labels, ...)</p></td>
-<td><p>Returns the &quot;normalized margin&quot; label-quality score for each datapoint.</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#cleanlab.rank.get_self_confidence_for_each_label" title="cleanlab.rank.get_self_confidence_for_each_label"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_self_confidence_for_each_label</span></code></a>(labels, ...)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#cleanlab.rank.get_self_confidence_for_each_label" title="cleanlab.rank.get_self_confidence_for_each_label"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_self_confidence_for_each_label</span></code></a>(labels, ...)</p></td>
 <td><p>Returns the self-confidence label-quality score for each datapoint.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#cleanlab.rank.order_label_issues" title="cleanlab.rank.order_label_issues"><code class="xref py py-obj docutils literal notranslate"><span class="pre">order_label_issues</span></code></a>(label_issues_mask, ...[, ...])</p></td>
-<td><p>Sorts label issues by label quality score.</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#cleanlab.rank.get_normalized_margin_for_each_label" title="cleanlab.rank.get_normalized_margin_for_each_label"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_normalized_margin_for_each_label</span></code></a>(labels, ...)</p></td>
+<td><p>Returns the &quot;normalized margin&quot; label-quality score for each datapoint.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#cleanlab.rank.get_confidence_weighted_entropy_for_each_label" title="cleanlab.rank.get_confidence_weighted_entropy_for_each_label"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_confidence_weighted_entropy_for_each_label</span></code></a>(...)</p></td>
+<td><p>Returns the &quot;confidence weighted entropy&quot; label-quality score for each datapoint.</p></td>
 </tr>
 </tbody>
 </table>
 </div>
-<dl class="py function">
-<dt class="sig sig-object py" id="cleanlab.rank.find_top_issues">
-<span class="sig-prename descclassname"><span class="pre">cleanlab.rank.</span></span><span class="sig-name descname"><span class="pre">find_top_issues</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">quality_scores</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">top</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/cleanlab/rank.html#find_top_issues"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cleanlab.rank.find_top_issues" title="Permalink to this definition">#</a></dt>
-<dd><p>Returns the sorted indices of the <cite>top</cite> issues in <cite>quality_scores</cite>, ordered from smallest to largest quality score
-(i.e., from most to least likely to be an issue). For example, the first value returned is the index corresponding
-to the smallest value in <cite>quality_scores</cite> (most likely to be an issue). The second value in the returned array is
-the index corresponding to the second smallest value in <cite>quality-scores</cite> (second-most likely to be an issue), and so forth.</p>
-<p>This method assumes that <cite>quality_scores</cite> shares an index with some dataset such that the indices returned by this method
-map to the examples in that dataset.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>quality_scores</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>) – Array of shape <code class="docutils literal notranslate"><span class="pre">(N,)</span></code>, where N is the number of examples, containing one quality score for each example in the dataset.</p></li>
-<li><p><strong>top</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>) – The number of indices to return.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></p>
-</dd>
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">top_issue_indices</span></code> – Indices of top examples most likely to suffer from an issue (ranked by issue severity).</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="cleanlab.rank.get_confidence_weighted_entropy_for_each_label">
-<span class="sig-prename descclassname"><span class="pre">cleanlab.rank.</span></span><span class="sig-name descname"><span class="pre">get_confidence_weighted_entropy_for_each_label</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">labels</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pred_probs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/cleanlab/rank.html#get_confidence_weighted_entropy_for_each_label"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cleanlab.rank.get_confidence_weighted_entropy_for_each_label" title="Permalink to this definition">#</a></dt>
-<dd><p>Returns the “confidence weighted entropy” label-quality score for each datapoint.</p>
-<p>This is a function to compute label-quality scores for classification datasets,
-where lower scores indicate labels less likely to be correct.</p>
-<p>“confidence weighted entropy” is the normalized entropy divided by “self-confidence”.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>labels</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">np.ndarray</span></code>) – Labels in the same format expected by the <a class="reference internal" href="#cleanlab.rank.get_label_quality_scores" title="cleanlab.rank.get_label_quality_scores"><code class="xref py py-func docutils literal notranslate"><span class="pre">get_label_quality_scores</span></code></a> function.</p></li>
-<li><p><strong>pred_probs</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">np.ndarray</span></code>) – Predicted-probabilities in the same format expected by the <a class="reference internal" href="#cleanlab.rank.get_label_quality_scores" title="cleanlab.rank.get_label_quality_scores"><code class="xref py py-func docutils literal notranslate"><span class="pre">get_label_quality_scores</span></code></a> function.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></p>
-</dd>
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>label_quality_scores</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">np.ndarray</span></code>) – Contains one score (between 0 and 1) per example.
-Lower scores indicate more likely mislabeled examples.</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="cleanlab.rank.get_label_quality_ensemble_scores">
-<span class="sig-prename descclassname"><span class="pre">cleanlab.rank.</span></span><span class="sig-name descname"><span class="pre">get_label_quality_ensemble_scores</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">labels</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pred_probs_list</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">method</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'self_confidence'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">adjust_pred_probs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">weight_ensemble_members_by</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'accuracy'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">custom_weights</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">log_loss_search_T_values</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[0.0001,</span> <span class="pre">0.001,</span> <span class="pre">0.01,</span> <span class="pre">0.1,</span> <span class="pre">1.0,</span> <span class="pre">10.0,</span> <span class="pre">100.0,</span> <span class="pre">200.0]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/cleanlab/rank.html#get_label_quality_ensemble_scores"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cleanlab.rank.get_label_quality_ensemble_scores" title="Permalink to this definition">#</a></dt>
-<dd><p>Returns label quality scores based on predictions from an ensemble of models.</p>
-<p>This is a function to compute label-quality scores for classification datasets,
-where lower scores indicate labels less likely to be correct.</p>
-<p>Ensemble scoring requires a list of pred_probs from each model in the ensemble.</p>
-<p>For each pred_probs in list, compute label quality score.
-Take the average of the scores with the chosen weighting scheme determined by <cite>weight_ensemble_members_by</cite>.</p>
-<p>Score is between 0 and 1:</p>
-<ul class="simple">
-<li><p>1 — clean label (given label is likely correct).</p></li>
-<li><p>0 — dirty label (given label is likely incorrect).</p></li>
-</ul>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>labels</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">np.ndarray</span></code>) – Labels in the same format expected by the <a class="reference internal" href="#cleanlab.rank.get_label_quality_scores" title="cleanlab.rank.get_label_quality_scores"><code class="xref py py-func docutils literal notranslate"><span class="pre">get_label_quality_scores</span></code></a> function.</p></li>
-<li><p><strong>pred_probs_list</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">List[np.ndarray]</span></code>) – Each element in this list should be an array of pred_probs in the same format
-expected by the <a class="reference internal" href="#cleanlab.rank.get_label_quality_scores" title="cleanlab.rank.get_label_quality_scores"><code class="xref py py-func docutils literal notranslate"><span class="pre">get_label_quality_scores</span></code></a> function.
-Each element of <cite>pred_probs_list</cite> corresponds to the predictions from one model for all examples.</p></li>
-<li><p><strong>method</strong> (<code class="docutils literal notranslate"><span class="pre">{&quot;self_confidence&quot;,</span> <span class="pre">&quot;normalized_margin&quot;,</span> <span class="pre">&quot;confidence_weighted_entropy&quot;}</span></code>, <em>default</em> <code class="docutils literal notranslate"><span class="pre">&quot;self_confidence&quot;</span></code>) – Label quality scoring method. See <a class="reference internal" href="#cleanlab.rank.get_label_quality_scores" title="cleanlab.rank.get_label_quality_scores"><code class="xref py py-func docutils literal notranslate"><span class="pre">get_label_quality_scores</span></code></a>
-for scenarios on when to use each method.</p></li>
-<li><p><strong>adjust_pred_probs</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code>, <em>optional</em>) – <cite>adjust_pred_probs</cite> in the same format expected by the <a class="reference internal" href="#cleanlab.rank.get_label_quality_scores" title="cleanlab.rank.get_label_quality_scores"><code class="xref py py-func docutils literal notranslate"><span class="pre">get_label_quality_scores</span></code></a> function.</p></li>
-<li><p><strong>weight_ensemble_members_by</strong> (<code class="docutils literal notranslate"><span class="pre">{&quot;uniform&quot;,</span> <span class="pre">&quot;accuracy&quot;,</span> <span class="pre">&quot;log_loss_search&quot;,</span> <span class="pre">&quot;custom&quot;}</span></code>, <em>default</em> <code class="docutils literal notranslate"><span class="pre">&quot;accuracy&quot;</span></code>) – <p>Weighting scheme used to aggregate scores from each model:</p>
-<ul>
-<li><p>”uniform”: Take the simple average of scores.</p></li>
-<li><p>”accuracy”: Take weighted average of scores, weighted by model accuracy.</p></li>
-<li><p>”log_loss_search”: Take weighted average of scores, weighted by exp(t * -log_loss) where t is selected from log_loss_search_T_values parameter and log_loss is the log-loss between a model’s pred_probs and the given labels.</p></li>
-<li><p>”custom”: Take weighted average of scores using custom weights that the user passes to the custom_weights parameter.</p></li>
-</ul>
-</p></li>
-<li><p><strong>custom_weights</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">np.ndarray</span></code>, <em>default</em> <code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code>) – Weights used to aggregate scores from each model if weight_ensemble_members_by=”custom”.
-Length of this array must match the number of models: len(pred_probs_list).</p></li>
-<li><p><strong>log_loss_search_T_values</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>, <em>default</em> <code class="xref py py-class docutils literal notranslate"><span class="pre">[1e-4</span></code>, <code class="docutils literal notranslate"><span class="pre">1e-3</span></code>, <code class="docutils literal notranslate"><span class="pre">1e-2</span></code>, <code class="docutils literal notranslate"><span class="pre">1e-1</span></code>, <code class="docutils literal notranslate"><span class="pre">1e0</span></code>, <code class="docutils literal notranslate"><span class="pre">1e1</span></code>, <code class="docutils literal notranslate"><span class="pre">1e2</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">2e2]</span></code>) – List of t values considered if weight_ensemble_members_by=”log_loss_search”.
-We will choose the value of t that leads to weights which produce the best log-loss when used to form a weighted average of pred_probs from the models.</p></li>
-<li><p><strong>verbose</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code>, <em>default</em> <code class="xref py py-obj docutils literal notranslate"><span class="pre">True</span></code>) – Set to <code class="docutils literal notranslate"><span class="pre">False</span></code> to suppress all print statements.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></p>
-</dd>
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>label_quality_scores</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">np.ndarray</span></code>) – Contains one score (between 0 and 1) per example.
-Lower scores indicate more likely mislabeled examples.</p>
-</dd>
-</dl>
-<div class="admonition seealso">
-<p class="admonition-title">See also</p>
-<p><a class="reference internal" href="#cleanlab.rank.get_label_quality_scores" title="cleanlab.rank.get_label_quality_scores"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_label_quality_scores</span></code></a></p>
-</div>
-</dd></dl>
-
 <dl class="py function">
 <dt class="sig sig-object py" id="cleanlab.rank.get_label_quality_scores">
 <span class="sig-prename descclassname"><span class="pre">cleanlab.rank.</span></span><span class="sig-name descname"><span class="pre">get_label_quality_scores</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">labels</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pred_probs</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">method</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'self_confidence'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">adjust_pred_probs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/cleanlab/rank.html#get_label_quality_scores"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cleanlab.rank.get_label_quality_scores" title="Permalink to this definition">#</a></dt>
@@ -609,24 +507,42 @@ Lower scores indicate more likely mislabeled examples.</p>
 </dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="cleanlab.rank.get_normalized_margin_for_each_label">
-<span class="sig-prename descclassname"><span class="pre">cleanlab.rank.</span></span><span class="sig-name descname"><span class="pre">get_normalized_margin_for_each_label</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">labels</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pred_probs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/cleanlab/rank.html#get_normalized_margin_for_each_label"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cleanlab.rank.get_normalized_margin_for_each_label" title="Permalink to this definition">#</a></dt>
-<dd><p>Returns the “normalized margin” label-quality score for each datapoint.</p>
+<dt class="sig sig-object py" id="cleanlab.rank.get_label_quality_ensemble_scores">
+<span class="sig-prename descclassname"><span class="pre">cleanlab.rank.</span></span><span class="sig-name descname"><span class="pre">get_label_quality_ensemble_scores</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">labels</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pred_probs_list</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">method</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'self_confidence'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">adjust_pred_probs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">weight_ensemble_members_by</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'accuracy'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">custom_weights</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">log_loss_search_T_values</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[0.0001,</span> <span class="pre">0.001,</span> <span class="pre">0.01,</span> <span class="pre">0.1,</span> <span class="pre">1.0,</span> <span class="pre">10.0,</span> <span class="pre">100.0,</span> <span class="pre">200.0]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/cleanlab/rank.html#get_label_quality_ensemble_scores"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cleanlab.rank.get_label_quality_ensemble_scores" title="Permalink to this definition">#</a></dt>
+<dd><p>Returns label quality scores based on predictions from an ensemble of models.</p>
 <p>This is a function to compute label-quality scores for classification datasets,
 where lower scores indicate labels less likely to be correct.</p>
-<p>Letting k denote the given label for a datapoint, the normalized margin is
-<code class="docutils literal notranslate"><span class="pre">(p(label</span> <span class="pre">=</span> <span class="pre">k)</span> <span class="pre">-</span> <span class="pre">max(p(label</span> <span class="pre">!=</span> <span class="pre">k)))</span></code>, i.e. the probability
-of the given label minus the probability of the argmax label that is not
-the given label (<code class="docutils literal notranslate"><span class="pre">normalized_margin</span> <span class="pre">=</span> <span class="pre">prob_label</span> <span class="pre">-</span> <span class="pre">max_prob_not_label</span></code>).
-This gives you an idea of how likely an example is BOTH its given label AND not another label,
-and therefore, scores its likelihood of being a good label or a label error.</p>
-<p>Normalized margin works better for finding class conditional label errors where
-there is another label in the set of classes that is clearly better than the given label.</p>
+<p>Ensemble scoring requires a list of pred_probs from each model in the ensemble.</p>
+<p>For each pred_probs in list, compute label quality score.
+Take the average of the scores with the chosen weighting scheme determined by <cite>weight_ensemble_members_by</cite>.</p>
+<p>Score is between 0 and 1:</p>
+<ul class="simple">
+<li><p>1 — clean label (given label is likely correct).</p></li>
+<li><p>0 — dirty label (given label is likely incorrect).</p></li>
+</ul>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>labels</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">np.ndarray</span></code>) – Labels in the same format expected by the <a class="reference internal" href="#cleanlab.rank.get_label_quality_scores" title="cleanlab.rank.get_label_quality_scores"><code class="xref py py-func docutils literal notranslate"><span class="pre">get_label_quality_scores</span></code></a> function.</p></li>
-<li><p><strong>pred_probs</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">np.ndarray</span></code>) – Predicted-probabilities in the same format expected by the <a class="reference internal" href="#cleanlab.rank.get_label_quality_scores" title="cleanlab.rank.get_label_quality_scores"><code class="xref py py-func docutils literal notranslate"><span class="pre">get_label_quality_scores</span></code></a> function.</p></li>
+<li><p><strong>pred_probs_list</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">List[np.ndarray]</span></code>) – Each element in this list should be an array of pred_probs in the same format
+expected by the <a class="reference internal" href="#cleanlab.rank.get_label_quality_scores" title="cleanlab.rank.get_label_quality_scores"><code class="xref py py-func docutils literal notranslate"><span class="pre">get_label_quality_scores</span></code></a> function.
+Each element of <cite>pred_probs_list</cite> corresponds to the predictions from one model for all examples.</p></li>
+<li><p><strong>method</strong> (<code class="docutils literal notranslate"><span class="pre">{&quot;self_confidence&quot;,</span> <span class="pre">&quot;normalized_margin&quot;,</span> <span class="pre">&quot;confidence_weighted_entropy&quot;}</span></code>, <em>default</em> <code class="docutils literal notranslate"><span class="pre">&quot;self_confidence&quot;</span></code>) – Label quality scoring method. See <a class="reference internal" href="#cleanlab.rank.get_label_quality_scores" title="cleanlab.rank.get_label_quality_scores"><code class="xref py py-func docutils literal notranslate"><span class="pre">get_label_quality_scores</span></code></a>
+for scenarios on when to use each method.</p></li>
+<li><p><strong>adjust_pred_probs</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code>, <em>optional</em>) – <cite>adjust_pred_probs</cite> in the same format expected by the <a class="reference internal" href="#cleanlab.rank.get_label_quality_scores" title="cleanlab.rank.get_label_quality_scores"><code class="xref py py-func docutils literal notranslate"><span class="pre">get_label_quality_scores</span></code></a> function.</p></li>
+<li><p><strong>weight_ensemble_members_by</strong> (<code class="docutils literal notranslate"><span class="pre">{&quot;uniform&quot;,</span> <span class="pre">&quot;accuracy&quot;,</span> <span class="pre">&quot;log_loss_search&quot;,</span> <span class="pre">&quot;custom&quot;}</span></code>, <em>default</em> <code class="docutils literal notranslate"><span class="pre">&quot;accuracy&quot;</span></code>) – <p>Weighting scheme used to aggregate scores from each model:</p>
+<ul>
+<li><p>”uniform”: Take the simple average of scores.</p></li>
+<li><p>”accuracy”: Take weighted average of scores, weighted by model accuracy.</p></li>
+<li><p>”log_loss_search”: Take weighted average of scores, weighted by exp(t * -log_loss) where t is selected from log_loss_search_T_values parameter and log_loss is the log-loss between a model’s pred_probs and the given labels.</p></li>
+<li><p>”custom”: Take weighted average of scores using custom weights that the user passes to the custom_weights parameter.</p></li>
+</ul>
+</p></li>
+<li><p><strong>custom_weights</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">np.ndarray</span></code>, <em>default</em> <code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code>) – Weights used to aggregate scores from each model if weight_ensemble_members_by=”custom”.
+Length of this array must match the number of models: len(pred_probs_list).</p></li>
+<li><p><strong>log_loss_search_T_values</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>, <em>default</em> <code class="xref py py-class docutils literal notranslate"><span class="pre">[1e-4</span></code>, <code class="docutils literal notranslate"><span class="pre">1e-3</span></code>, <code class="docutils literal notranslate"><span class="pre">1e-2</span></code>, <code class="docutils literal notranslate"><span class="pre">1e-1</span></code>, <code class="docutils literal notranslate"><span class="pre">1e0</span></code>, <code class="docutils literal notranslate"><span class="pre">1e1</span></code>, <code class="docutils literal notranslate"><span class="pre">1e2</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">2e2]</span></code>) – List of t values considered if weight_ensemble_members_by=”log_loss_search”.
+We will choose the value of t that leads to weights which produce the best log-loss when used to form a weighted average of pred_probs from the models.</p></li>
+<li><p><strong>verbose</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code>, <em>default</em> <code class="xref py py-obj docutils literal notranslate"><span class="pre">True</span></code>) – Set to <code class="docutils literal notranslate"><span class="pre">False</span></code> to suppress all print statements.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
@@ -635,6 +551,64 @@ there is another label in the set of classes that is clearly better than the giv
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>label_quality_scores</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">np.ndarray</span></code>) – Contains one score (between 0 and 1) per example.
 Lower scores indicate more likely mislabeled examples.</p>
+</dd>
+</dl>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<p><a class="reference internal" href="#cleanlab.rank.get_label_quality_scores" title="cleanlab.rank.get_label_quality_scores"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_label_quality_scores</span></code></a></p>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="cleanlab.rank.find_top_issues">
+<span class="sig-prename descclassname"><span class="pre">cleanlab.rank.</span></span><span class="sig-name descname"><span class="pre">find_top_issues</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">quality_scores</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">top</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/cleanlab/rank.html#find_top_issues"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cleanlab.rank.find_top_issues" title="Permalink to this definition">#</a></dt>
+<dd><p>Returns the sorted indices of the <cite>top</cite> issues in <cite>quality_scores</cite>, ordered from smallest to largest quality score
+(i.e., from most to least likely to be an issue). For example, the first value returned is the index corresponding
+to the smallest value in <cite>quality_scores</cite> (most likely to be an issue). The second value in the returned array is
+the index corresponding to the second smallest value in <cite>quality-scores</cite> (second-most likely to be an issue), and so forth.</p>
+<p>This method assumes that <cite>quality_scores</cite> shares an index with some dataset such that the indices returned by this method
+map to the examples in that dataset.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>quality_scores</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>) – Array of shape <code class="docutils literal notranslate"><span class="pre">(N,)</span></code>, where N is the number of examples, containing one quality score for each example in the dataset.</p></li>
+<li><p><strong>top</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>) – The number of indices to return.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">top_issue_indices</span></code> – Indices of top examples most likely to suffer from an issue (ranked by issue severity).</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="cleanlab.rank.order_label_issues">
+<span class="sig-prename descclassname"><span class="pre">cleanlab.rank.</span></span><span class="sig-name descname"><span class="pre">order_label_issues</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">label_issues_mask</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">labels</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pred_probs</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rank_by</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'self_confidence'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rank_by_kwargs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{}</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/cleanlab/rank.html#order_label_issues"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cleanlab.rank.order_label_issues" title="Permalink to this definition">#</a></dt>
+<dd><p>Sorts label issues by label quality score.</p>
+<p>Default label quality score is “self_confidence”.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>label_issues_mask</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">np.ndarray</span></code>) – A boolean mask for the entire dataset where <code class="docutils literal notranslate"><span class="pre">True</span></code> represents a label
+issue and <code class="docutils literal notranslate"><span class="pre">False</span></code> represents an example that is accurately labeled with
+high confidence.</p></li>
+<li><p><strong>labels</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">np.ndarray</span></code>) – Labels in the same format expected by the <a class="reference internal" href="#cleanlab.rank.get_label_quality_scores" title="cleanlab.rank.get_label_quality_scores"><code class="xref py py-func docutils literal notranslate"><span class="pre">get_label_quality_scores</span></code></a> function.</p></li>
+<li><p><strong>pred_probs</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">np.ndarray</span> <span class="pre">(shape</span> <span class="pre">(N</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">K))</span></code>) – Predicted-probabilities in the same format expected by the <a class="reference internal" href="#cleanlab.rank.get_label_quality_scores" title="cleanlab.rank.get_label_quality_scores"><code class="xref py py-func docutils literal notranslate"><span class="pre">get_label_quality_scores</span></code></a> function.</p></li>
+<li><p><strong>rank_by</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <em>optional</em>) – Score by which to order label error indices (in increasing order). See
+the <cite>method</cite> argument of <a class="reference internal" href="#cleanlab.rank.get_label_quality_scores" title="cleanlab.rank.get_label_quality_scores"><code class="xref py py-func docutils literal notranslate"><span class="pre">get_label_quality_scores</span></code></a>.</p></li>
+<li><p><strong>rank_by_kwargs</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code>, <em>optional</em>) – Optional keyword arguments to pass into <a class="reference internal" href="#cleanlab.rank.get_label_quality_scores" title="cleanlab.rank.get_label_quality_scores"><code class="xref py py-func docutils literal notranslate"><span class="pre">get_label_quality_scores</span></code></a> function.
+Accepted args include <cite>adjust_pred_probs</cite>.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>label_issues_idx</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">np.ndarray</span></code>) – Return an array of the indices of the examples with label issues,
+ordered by the label-quality scoring method passed to <cite>rank_by</cite>.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -667,30 +641,56 @@ Lower scores indicate more likely mislabeled examples.</p>
 </dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="cleanlab.rank.order_label_issues">
-<span class="sig-prename descclassname"><span class="pre">cleanlab.rank.</span></span><span class="sig-name descname"><span class="pre">order_label_issues</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">label_issues_mask</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">labels</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pred_probs</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rank_by</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'self_confidence'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rank_by_kwargs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{}</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/cleanlab/rank.html#order_label_issues"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cleanlab.rank.order_label_issues" title="Permalink to this definition">#</a></dt>
-<dd><p>Sorts label issues by label quality score.</p>
-<p>Default label quality score is “self_confidence”.</p>
+<dt class="sig sig-object py" id="cleanlab.rank.get_normalized_margin_for_each_label">
+<span class="sig-prename descclassname"><span class="pre">cleanlab.rank.</span></span><span class="sig-name descname"><span class="pre">get_normalized_margin_for_each_label</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">labels</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pred_probs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/cleanlab/rank.html#get_normalized_margin_for_each_label"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cleanlab.rank.get_normalized_margin_for_each_label" title="Permalink to this definition">#</a></dt>
+<dd><p>Returns the “normalized margin” label-quality score for each datapoint.</p>
+<p>This is a function to compute label-quality scores for classification datasets,
+where lower scores indicate labels less likely to be correct.</p>
+<p>Letting k denote the given label for a datapoint, the normalized margin is
+<code class="docutils literal notranslate"><span class="pre">(p(label</span> <span class="pre">=</span> <span class="pre">k)</span> <span class="pre">-</span> <span class="pre">max(p(label</span> <span class="pre">!=</span> <span class="pre">k)))</span></code>, i.e. the probability
+of the given label minus the probability of the argmax label that is not
+the given label (<code class="docutils literal notranslate"><span class="pre">normalized_margin</span> <span class="pre">=</span> <span class="pre">prob_label</span> <span class="pre">-</span> <span class="pre">max_prob_not_label</span></code>).
+This gives you an idea of how likely an example is BOTH its given label AND not another label,
+and therefore, scores its likelihood of being a good label or a label error.</p>
+<p>Normalized margin works better for finding class conditional label errors where
+there is another label in the set of classes that is clearly better than the given label.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>label_issues_mask</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">np.ndarray</span></code>) – A boolean mask for the entire dataset where <code class="docutils literal notranslate"><span class="pre">True</span></code> represents a label
-issue and <code class="docutils literal notranslate"><span class="pre">False</span></code> represents an example that is accurately labeled with
-high confidence.</p></li>
 <li><p><strong>labels</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">np.ndarray</span></code>) – Labels in the same format expected by the <a class="reference internal" href="#cleanlab.rank.get_label_quality_scores" title="cleanlab.rank.get_label_quality_scores"><code class="xref py py-func docutils literal notranslate"><span class="pre">get_label_quality_scores</span></code></a> function.</p></li>
-<li><p><strong>pred_probs</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">np.ndarray</span> <span class="pre">(shape</span> <span class="pre">(N</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">K))</span></code>) – Predicted-probabilities in the same format expected by the <a class="reference internal" href="#cleanlab.rank.get_label_quality_scores" title="cleanlab.rank.get_label_quality_scores"><code class="xref py py-func docutils literal notranslate"><span class="pre">get_label_quality_scores</span></code></a> function.</p></li>
-<li><p><strong>rank_by</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <em>optional</em>) – Score by which to order label error indices (in increasing order). See
-the <cite>method</cite> argument of <a class="reference internal" href="#cleanlab.rank.get_label_quality_scores" title="cleanlab.rank.get_label_quality_scores"><code class="xref py py-func docutils literal notranslate"><span class="pre">get_label_quality_scores</span></code></a>.</p></li>
-<li><p><strong>rank_by_kwargs</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code>, <em>optional</em>) – Optional keyword arguments to pass into <a class="reference internal" href="#cleanlab.rank.get_label_quality_scores" title="cleanlab.rank.get_label_quality_scores"><code class="xref py py-func docutils literal notranslate"><span class="pre">get_label_quality_scores</span></code></a> function.
-Accepted args include <cite>adjust_pred_probs</cite>.</p></li>
+<li><p><strong>pred_probs</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">np.ndarray</span></code>) – Predicted-probabilities in the same format expected by the <a class="reference internal" href="#cleanlab.rank.get_label_quality_scores" title="cleanlab.rank.get_label_quality_scores"><code class="xref py py-func docutils literal notranslate"><span class="pre">get_label_quality_scores</span></code></a> function.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></p>
 </dd>
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>label_issues_idx</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">np.ndarray</span></code>) – Return an array of the indices of the examples with label issues,
-ordered by the label-quality scoring method passed to <cite>rank_by</cite>.</p>
+<dd class="field-odd"><p><strong>label_quality_scores</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">np.ndarray</span></code>) – Contains one score (between 0 and 1) per example.
+Lower scores indicate more likely mislabeled examples.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="cleanlab.rank.get_confidence_weighted_entropy_for_each_label">
+<span class="sig-prename descclassname"><span class="pre">cleanlab.rank.</span></span><span class="sig-name descname"><span class="pre">get_confidence_weighted_entropy_for_each_label</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">labels</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pred_probs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/cleanlab/rank.html#get_confidence_weighted_entropy_for_each_label"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cleanlab.rank.get_confidence_weighted_entropy_for_each_label" title="Permalink to this definition">#</a></dt>
+<dd><p>Returns the “confidence weighted entropy” label-quality score for each datapoint.</p>
+<p>This is a function to compute label-quality scores for classification datasets,
+where lower scores indicate labels less likely to be correct.</p>
+<p>“confidence weighted entropy” is the normalized entropy divided by “self-confidence”.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>labels</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">np.ndarray</span></code>) – Labels in the same format expected by the <a class="reference internal" href="#cleanlab.rank.get_label_quality_scores" title="cleanlab.rank.get_label_quality_scores"><code class="xref py py-func docutils literal notranslate"><span class="pre">get_label_quality_scores</span></code></a> function.</p></li>
+<li><p><strong>pred_probs</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">np.ndarray</span></code>) – Predicted-probabilities in the same format expected by the <a class="reference internal" href="#cleanlab.rank.get_label_quality_scores" title="cleanlab.rank.get_label_quality_scores"><code class="xref py py-func docutils literal notranslate"><span class="pre">get_label_quality_scores</span></code></a> function.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>label_quality_scores</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">np.ndarray</span></code>) – Contains one score (between 0 and 1) per example.
+Lower scores indicate more likely mislabeled examples.</p>
 </dd>
 </dl>
 </dd></dl>

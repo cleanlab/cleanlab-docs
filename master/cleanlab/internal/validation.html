@@ -413,17 +413,17 @@
 <div class="table-wrapper autosummary longtable docutils container">
 <table class="autosummary longtable docutils align-default">
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#cleanlab.internal.validation.assert_indexing_works" title="cleanlab.internal.validation.assert_indexing_works"><code class="xref py py-obj docutils literal notranslate"><span class="pre">assert_indexing_works</span></code></a>(X[, idx, length_X])</p></td>
-<td><p>Ensures we can do list-based indexing into <code class="docutils literal notranslate"><span class="pre">X</span></code> and <code class="docutils literal notranslate"><span class="pre">y</span></code>.</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#cleanlab.internal.validation.assert_valid_inputs" title="cleanlab.internal.validation.assert_valid_inputs"><code class="xref py py-obj docutils literal notranslate"><span class="pre">assert_valid_inputs</span></code></a>(X, y[, pred_probs, ...])</p></td>
+<td><p>Checks that <code class="docutils literal notranslate"><span class="pre">X</span></code>, <code class="docutils literal notranslate"><span class="pre">labels</span></code>, <code class="docutils literal notranslate"><span class="pre">pred_probs</span></code> are correctly formatted.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#cleanlab.internal.validation.assert_nonempty_input" title="cleanlab.internal.validation.assert_nonempty_input"><code class="xref py py-obj docutils literal notranslate"><span class="pre">assert_nonempty_input</span></code></a>(X)</p></td>
-<td><p>Ensures input is not None.</p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#cleanlab.internal.validation.assert_valid_class_labels" title="cleanlab.internal.validation.assert_valid_class_labels"><code class="xref py py-obj docutils literal notranslate"><span class="pre">assert_valid_class_labels</span></code></a>(y[, ...])</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#cleanlab.internal.validation.assert_valid_class_labels" title="cleanlab.internal.validation.assert_valid_class_labels"><code class="xref py py-obj docutils literal notranslate"><span class="pre">assert_valid_class_labels</span></code></a>(y[, ...])</p></td>
 <td><p>Checks that <code class="docutils literal notranslate"><span class="pre">labels</span></code> is properly formatted, i.e. a 1D numpy array where labels are zero-based integers (not multi-label).</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#cleanlab.internal.validation.assert_valid_inputs" title="cleanlab.internal.validation.assert_valid_inputs"><code class="xref py py-obj docutils literal notranslate"><span class="pre">assert_valid_inputs</span></code></a>(X, y[, pred_probs, ...])</p></td>
-<td><p>Checks that <code class="docutils literal notranslate"><span class="pre">X</span></code>, <code class="docutils literal notranslate"><span class="pre">labels</span></code>, <code class="docutils literal notranslate"><span class="pre">pred_probs</span></code> are correctly formatted.</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#cleanlab.internal.validation.assert_nonempty_input" title="cleanlab.internal.validation.assert_nonempty_input"><code class="xref py py-obj docutils literal notranslate"><span class="pre">assert_nonempty_input</span></code></a>(X)</p></td>
+<td><p>Ensures input is not None.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#cleanlab.internal.validation.assert_indexing_works" title="cleanlab.internal.validation.assert_indexing_works"><code class="xref py py-obj docutils literal notranslate"><span class="pre">assert_indexing_works</span></code></a>(X[, idx, length_X])</p></td>
+<td><p>Ensures we can do list-based indexing into <code class="docutils literal notranslate"><span class="pre">X</span></code> and <code class="docutils literal notranslate"><span class="pre">y</span></code>.</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="#cleanlab.internal.validation.labels_to_array" title="cleanlab.internal.validation.labels_to_array"><code class="xref py py-obj docutils literal notranslate"><span class="pre">labels_to_array</span></code></a>(y)</p></td>
 <td><p>Converts different types of label objects to 1D numpy array and checks their validity.</p></td>
@@ -432,23 +432,9 @@
 </table>
 </div>
 <dl class="py function">
-<dt class="sig sig-object py" id="cleanlab.internal.validation.assert_indexing_works">
-<span class="sig-prename descclassname"><span class="pre">cleanlab.internal.validation.</span></span><span class="sig-name descname"><span class="pre">assert_indexing_works</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">idx</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">length_X</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/cleanlab/internal/validation.html#assert_indexing_works"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cleanlab.internal.validation.assert_indexing_works" title="Permalink to this definition">#</a></dt>
-<dd><p>Ensures we can do list-based indexing into <code class="docutils literal notranslate"><span class="pre">X</span></code> and <code class="docutils literal notranslate"><span class="pre">y</span></code>.
-<code class="docutils literal notranslate"><span class="pre">length_X</span></code> is an optional argument since sparse matrix <code class="docutils literal notranslate"><span class="pre">X</span></code>
-does not support: <code class="docutils literal notranslate"><span class="pre">len(X)</span></code> and we want this method to work for sparse <code class="docutils literal notranslate"><span class="pre">X</span></code>
-(in addition to many other types of <code class="docutils literal notranslate"><span class="pre">X</span></code>).</p>
-<dl class="field-list simple">
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="cleanlab.internal.validation.assert_nonempty_input">
-<span class="sig-prename descclassname"><span class="pre">cleanlab.internal.validation.</span></span><span class="sig-name descname"><span class="pre">assert_nonempty_input</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/cleanlab/internal/validation.html#assert_nonempty_input"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cleanlab.internal.validation.assert_nonempty_input" title="Permalink to this definition">#</a></dt>
-<dd><p>Ensures input is not None.</p>
+<dt class="sig sig-object py" id="cleanlab.internal.validation.assert_valid_inputs">
+<span class="sig-prename descclassname"><span class="pre">cleanlab.internal.validation.</span></span><span class="sig-name descname"><span class="pre">assert_valid_inputs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pred_probs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">multi_label</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">allow_missing_classes</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">allow_one_class</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/cleanlab/internal/validation.html#assert_valid_inputs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cleanlab.internal.validation.assert_valid_inputs" title="Permalink to this definition">#</a></dt>
+<dd><p>Checks that <code class="docutils literal notranslate"><span class="pre">X</span></code>, <code class="docutils literal notranslate"><span class="pre">labels</span></code>, <code class="docutils literal notranslate"><span class="pre">pred_probs</span></code> are correctly formatted.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></p>
@@ -469,9 +455,23 @@ integers (not multi-label).</p>
 </dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="cleanlab.internal.validation.assert_valid_inputs">
-<span class="sig-prename descclassname"><span class="pre">cleanlab.internal.validation.</span></span><span class="sig-name descname"><span class="pre">assert_valid_inputs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pred_probs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">multi_label</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">allow_missing_classes</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">allow_one_class</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/cleanlab/internal/validation.html#assert_valid_inputs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cleanlab.internal.validation.assert_valid_inputs" title="Permalink to this definition">#</a></dt>
-<dd><p>Checks that <code class="docutils literal notranslate"><span class="pre">X</span></code>, <code class="docutils literal notranslate"><span class="pre">labels</span></code>, <code class="docutils literal notranslate"><span class="pre">pred_probs</span></code> are correctly formatted.</p>
+<dt class="sig sig-object py" id="cleanlab.internal.validation.assert_nonempty_input">
+<span class="sig-prename descclassname"><span class="pre">cleanlab.internal.validation.</span></span><span class="sig-name descname"><span class="pre">assert_nonempty_input</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/cleanlab/internal/validation.html#assert_nonempty_input"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cleanlab.internal.validation.assert_nonempty_input" title="Permalink to this definition">#</a></dt>
+<dd><p>Ensures input is not None.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="cleanlab.internal.validation.assert_indexing_works">
+<span class="sig-prename descclassname"><span class="pre">cleanlab.internal.validation.</span></span><span class="sig-name descname"><span class="pre">assert_indexing_works</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">idx</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">length_X</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/cleanlab/internal/validation.html#assert_indexing_works"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cleanlab.internal.validation.assert_indexing_works" title="Permalink to this definition">#</a></dt>
+<dd><p>Ensures we can do list-based indexing into <code class="docutils literal notranslate"><span class="pre">X</span></code> and <code class="docutils literal notranslate"><span class="pre">y</span></code>.
+<code class="docutils literal notranslate"><span class="pre">length_X</span></code> is an optional argument since sparse matrix <code class="docutils literal notranslate"><span class="pre">X</span></code>
+does not support: <code class="docutils literal notranslate"><span class="pre">len(X)</span></code> and we want this method to work for sparse <code class="docutils literal notranslate"><span class="pre">X</span></code>
+(in addition to many other types of <code class="docutils literal notranslate"><span class="pre">X</span></code>).</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></p>

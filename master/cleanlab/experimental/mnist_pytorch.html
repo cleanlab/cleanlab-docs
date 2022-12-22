@@ -412,19 +412,6 @@
 label issues in image data.
 This is a good example to reference for making your own bespoke model compatible with cleanlab.</p>
 <p>You must have PyTorch installed: <a class="reference external" href="https://pytorch.org/get-started/locally/">https://pytorch.org/get-started/locally/</a></p>
-<p><strong>Classes:</strong></p>
-<div class="table-wrapper autosummary longtable docutils container">
-<table class="autosummary longtable docutils align-default">
-<tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#cleanlab.experimental.mnist_pytorch.CNN" title="cleanlab.experimental.mnist_pytorch.CNN"><code class="xref py py-obj docutils literal notranslate"><span class="pre">CNN</span></code></a>([batch_size, epochs, log_interval, lr, ...])</p></td>
-<td><p>Wraps a PyTorch CNN for the MNIST dataset within an sklearn template</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#cleanlab.experimental.mnist_pytorch.SimpleNet" title="cleanlab.experimental.mnist_pytorch.SimpleNet"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SimpleNet</span></code></a>()</p></td>
-<td><p>Basic Pytorch CNN for MNIST-like data.</p></td>
-</tr>
-</tbody>
-</table>
-</div>
 <p><strong>Functions:</strong></p>
 <div class="table-wrapper autosummary longtable docutils container">
 <table class="autosummary longtable docutils align-default">
@@ -438,236 +425,41 @@ This is a good example to reference for making your own bespoke model compatible
 </tbody>
 </table>
 </div>
-<dl class="py class">
-<dt class="sig sig-object py" id="cleanlab.experimental.mnist_pytorch.CNN">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">cleanlab.experimental.mnist_pytorch.</span></span><span class="sig-name descname"><span class="pre">CNN</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">batch_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">64</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">epochs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">6</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">log_interval</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">50</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lr</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.01</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">momentum</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">no_cuda</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">test_batch_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dataset</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'mnist'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">loader</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/cleanlab/experimental/mnist_pytorch.html#CNN"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cleanlab.experimental.mnist_pytorch.CNN" title="Permalink to this definition">#</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">BaseEstimator</span></code></p>
-<p>Wraps a PyTorch CNN for the MNIST dataset within an sklearn template</p>
-<p>Defines <code class="docutils literal notranslate"><span class="pre">.fit()</span></code>, <code class="docutils literal notranslate"><span class="pre">.predict()</span></code>, and <code class="docutils literal notranslate"><span class="pre">.predict_proba()</span></code> functions. This
-template enables the PyTorch CNN to flexibly be used within the sklearn
-architecture – meaning it can be passed into functions like
-cross_val_predict as if it were an sklearn model. The cleanlab library
-requires that all models adhere to this basic sklearn template and thus,
-this class allows a PyTorch CNN to be used in for learning with noisy
-labels among other things.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>batch_size</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>) – </p></li>
-<li><p><strong>epochs</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>) – </p></li>
-<li><p><strong>log_interval</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>) – </p></li>
-<li><p><strong>lr</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>) – </p></li>
-<li><p><strong>momentum</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>) – </p></li>
-<li><p><strong>no_cuda</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code>) – </p></li>
-<li><p><strong>seed</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>) – </p></li>
-<li><p><strong>test_batch_size</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>, <em>default</em> <code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code>) – </p></li>
-<li><p><strong>dataset</strong> (<code class="docutils literal notranslate"><span class="pre">{'mnist',</span> <span class="pre">'sklearn-digits'}</span></code>) – </p></li>
-<li><p><strong>loader</strong> (<code class="docutils literal notranslate"><span class="pre">{'train',</span> <span class="pre">'test'}</span></code>) – Set to ‘test’ to force fit() and predict_proba() on test_set</p></li>
-</ul>
-</dd>
-</dl>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>Be careful setting the <code class="docutils literal notranslate"><span class="pre">loader</span></code> param, it will override every other loader
-If you set this to ‘test’, but call .predict(loader = ‘train’)
-then .predict() will still predict on test!</p>
-</div>
-<dl class="py attribute">
-<dt class="sig sig-object py" id="cleanlab.experimental.mnist_pytorch.CNN.batch_size">
-<span class="sig-name descname"><span class="pre">batch_size</span></span><a class="headerlink" href="#cleanlab.experimental.mnist_pytorch.CNN.batch_size" title="Permalink to this definition">#</a></dt>
-<dd><dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="cleanlab.experimental.mnist_pytorch.CNN.epochs">
-<span class="sig-name descname"><span class="pre">epochs</span></span><a class="headerlink" href="#cleanlab.experimental.mnist_pytorch.CNN.epochs" title="Permalink to this definition">#</a></dt>
-<dd><dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="cleanlab.experimental.mnist_pytorch.CNN.log_interval">
-<span class="sig-name descname"><span class="pre">log_interval</span></span><a class="headerlink" href="#cleanlab.experimental.mnist_pytorch.CNN.log_interval" title="Permalink to this definition">#</a></dt>
-<dd><dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="cleanlab.experimental.mnist_pytorch.CNN.lr">
-<span class="sig-name descname"><span class="pre">lr</span></span><a class="headerlink" href="#cleanlab.experimental.mnist_pytorch.CNN.lr" title="Permalink to this definition">#</a></dt>
-<dd><dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="cleanlab.experimental.mnist_pytorch.CNN.momentum">
-<span class="sig-name descname"><span class="pre">momentum</span></span><a class="headerlink" href="#cleanlab.experimental.mnist_pytorch.CNN.momentum" title="Permalink to this definition">#</a></dt>
-<dd><dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="cleanlab.experimental.mnist_pytorch.CNN.no_cuda">
-<span class="sig-name descname"><span class="pre">no_cuda</span></span><a class="headerlink" href="#cleanlab.experimental.mnist_pytorch.CNN.no_cuda" title="Permalink to this definition">#</a></dt>
-<dd><dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="cleanlab.experimental.mnist_pytorch.CNN.seed">
-<span class="sig-name descname"><span class="pre">seed</span></span><a class="headerlink" href="#cleanlab.experimental.mnist_pytorch.CNN.seed" title="Permalink to this definition">#</a></dt>
-<dd><dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="cleanlab.experimental.mnist_pytorch.CNN.test_batch_size">
-<span class="sig-name descname"><span class="pre">test_batch_size</span></span><a class="headerlink" href="#cleanlab.experimental.mnist_pytorch.CNN.test_batch_size" title="Permalink to this definition">#</a></dt>
-<dd><dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>, <em>default</em> <code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="cleanlab.experimental.mnist_pytorch.CNN.dataset">
-<span class="sig-name descname"><span class="pre">dataset</span></span><a class="headerlink" href="#cleanlab.experimental.mnist_pytorch.CNN.dataset" title="Permalink to this definition">#</a></dt>
-<dd><dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><code class="docutils literal notranslate"><span class="pre">{'mnist',</span> <span class="pre">'sklearn-digits'}</span></code></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="cleanlab.experimental.mnist_pytorch.CNN.loader">
-<span class="sig-name descname"><span class="pre">loader</span></span><a class="headerlink" href="#cleanlab.experimental.mnist_pytorch.CNN.loader" title="Permalink to this definition">#</a></dt>
-<dd><p>Set to ‘test’ to force fit() and predict_proba() on test_set</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><code class="docutils literal notranslate"><span class="pre">{'train',</span> <span class="pre">'test'}</span></code></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="cleanlab.experimental.mnist_pytorch.CNN.fit">
-<span class="sig-name descname"><span class="pre">fit</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/cleanlab/experimental/mnist_pytorch.html#CNN.fit"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cleanlab.experimental.mnist_pytorch.CNN.fit" title="Permalink to this definition">#</a></dt>
-<dd><p>fits the model to data.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="cleanlab.experimental.mnist_pytorch.CNN.predict">
-<span class="sig-name descname"><span class="pre">predict</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/cleanlab/experimental/mnist_pytorch.html#CNN.predict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cleanlab.experimental.mnist_pytorch.CNN.predict" title="Permalink to this definition">#</a></dt>
-<dd><p>get the fitted model’s prediction on test data</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="cleanlab.experimental.mnist_pytorch.CNN.predict_proba">
-<span class="sig-name descname"><span class="pre">predict_proba</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/cleanlab/experimental/mnist_pytorch.html#CNN.predict_proba"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cleanlab.experimental.mnist_pytorch.CNN.predict_proba" title="Permalink to this definition">#</a></dt>
-<dd><p>get the fitted model’s probability distribution over classes for test data</p>
-</dd></dl>
-
-<p><strong>Methods:</strong></p>
+<p><strong>Classes:</strong></p>
 <div class="table-wrapper autosummary longtable docutils container">
 <table class="autosummary longtable docutils align-default">
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#id0" title="cleanlab.experimental.mnist_pytorch.CNN.fit"><code class="xref py py-obj docutils literal notranslate"><span class="pre">fit</span></code></a>(train_idx[, train_labels, ...])</p></td>
-<td><p>This function adheres to sklearn's &quot;fit(X, y)&quot; format for compatibility with scikit-learn.</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#cleanlab.experimental.mnist_pytorch.SimpleNet" title="cleanlab.experimental.mnist_pytorch.SimpleNet"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SimpleNet</span></code></a>()</p></td>
+<td><p>Basic Pytorch CNN for MNIST-like data.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#cleanlab.experimental.mnist_pytorch.CNN.get_params" title="cleanlab.experimental.mnist_pytorch.CNN.get_params"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_params</span></code></a>([deep])</p></td>
-<td><p>Get parameters for this estimator.</p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#id1" title="cleanlab.experimental.mnist_pytorch.CNN.predict"><code class="xref py py-obj docutils literal notranslate"><span class="pre">predict</span></code></a>([idx, loader])</p></td>
-<td><p>Get predicted labels from trained model.</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#id2" title="cleanlab.experimental.mnist_pytorch.CNN.predict_proba"><code class="xref py py-obj docutils literal notranslate"><span class="pre">predict_proba</span></code></a>([idx, loader])</p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#cleanlab.experimental.mnist_pytorch.CNN.set_params" title="cleanlab.experimental.mnist_pytorch.CNN.set_params"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_params</span></code></a>(**parameters)</p></td>
-<td><p>Set the parameters of this estimator.</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#cleanlab.experimental.mnist_pytorch.CNN" title="cleanlab.experimental.mnist_pytorch.CNN"><code class="xref py py-obj docutils literal notranslate"><span class="pre">CNN</span></code></a>([batch_size, epochs, log_interval, lr, ...])</p></td>
+<td><p>Wraps a PyTorch CNN for the MNIST dataset within an sklearn template</p></td>
 </tr>
 </tbody>
 </table>
 </div>
-<dl class="py method">
-<dt class="sig sig-object py" id="id0">
-<span class="sig-name descname"><span class="pre">fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">train_idx</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">train_labels</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sample_weight</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">loader</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'train'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/cleanlab/experimental/mnist_pytorch.html#CNN.fit"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id0" title="Permalink to this definition">#</a></dt>
-<dd><p>This function adheres to sklearn’s “fit(X, y)” format for
-compatibility with scikit-learn. ** All inputs should be numpy
-arrays, not pyTorch Tensors train_idx is not X, but instead a list of
-indices for X (and y if train_labels is None). This function is a
-member of the cnn class which will handle creation of X, y from the
-train_idx via the train_loader.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="cleanlab.experimental.mnist_pytorch.CNN.get_params">
-<span class="sig-name descname"><span class="pre">get_params</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">deep</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/cleanlab/experimental/mnist_pytorch.html#CNN.get_params"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cleanlab.experimental.mnist_pytorch.CNN.get_params" title="Permalink to this definition">#</a></dt>
-<dd><p>Get parameters for this estimator.</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="cleanlab.experimental.mnist_pytorch.get_mnist_dataset">
+<span class="sig-prename descclassname"><span class="pre">cleanlab.experimental.mnist_pytorch.</span></span><span class="sig-name descname"><span class="pre">get_mnist_dataset</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">loader</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/cleanlab/experimental/mnist_pytorch.html#get_mnist_dataset"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cleanlab.experimental.mnist_pytorch.get_mnist_dataset" title="Permalink to this definition">#</a></dt>
+<dd><p>Downloads MNIST as PyTorch dataset.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>deep</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code>, <em>default</em> <code class="xref py py-obj docutils literal notranslate"><span class="pre">True</span></code>) – If True, will return the parameters for this estimator and
-contained subobjects that are estimators.</p>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p><strong>params</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code>) – Parameter names mapped to their values.</p>
+<dd class="field-odd"><p><strong>loader</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span> <span class="pre">(values</span></code>: <code class="docutils literal notranslate"><span class="pre">'train'</span></code> or <code class="docutils literal notranslate"><span class="pre">'test'</span></code><code class="xref py py-class docutils literal notranslate"><span class="pre">).</span></code>) – </p>
 </dd>
 </dl>
 </dd></dl>
 
-<dl class="py method">
-<dt class="sig sig-object py" id="id1">
-<span class="sig-name descname"><span class="pre">predict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">idx</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">loader</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/cleanlab/experimental/mnist_pytorch.html#CNN.predict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id1" title="Permalink to this definition">#</a></dt>
-<dd><p>Get predicted labels from trained model.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="id2">
-<span class="sig-name descname"><span class="pre">predict_proba</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">idx</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">loader</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/cleanlab/experimental/mnist_pytorch.html#CNN.predict_proba"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id2" title="Permalink to this definition">#</a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="cleanlab.experimental.mnist_pytorch.CNN.set_params">
-<span class="sig-name descname"><span class="pre">set_params</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">parameters</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/cleanlab/experimental/mnist_pytorch.html#CNN.set_params"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cleanlab.experimental.mnist_pytorch.CNN.set_params" title="Permalink to this definition">#</a></dt>
-<dd><p>Set the parameters of this estimator.</p>
-<p>The method works on simple estimators as well as on nested objects
-(such as <code class="xref py py-class docutils literal notranslate"><span class="pre">Pipeline</span></code>). The latter have
-parameters of the form <code class="docutils literal notranslate"><span class="pre">&lt;component&gt;__&lt;parameter&gt;</span></code> so that it’s
-possible to update each component of a nested object.</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="cleanlab.experimental.mnist_pytorch.get_sklearn_digits_dataset">
+<span class="sig-prename descclassname"><span class="pre">cleanlab.experimental.mnist_pytorch.</span></span><span class="sig-name descname"><span class="pre">get_sklearn_digits_dataset</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">loader</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/cleanlab/experimental/mnist_pytorch.html#get_sklearn_digits_dataset"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cleanlab.experimental.mnist_pytorch.get_sklearn_digits_dataset" title="Permalink to this definition">#</a></dt>
+<dd><p>Downloads Sklearn handwritten digits dataset.
+Uses the last SKLEARN_DIGITS_TEST_SIZE examples as the test
+This is (hard-coded) – do not change.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>**params</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code>) – Estimator parameters.</p>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p><strong>self</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">estimator</span> <span class="pre">instance</span></code>) – Estimator instance.</p>
+<dd class="field-odd"><p><strong>loader</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span> <span class="pre">(values</span></code>: <code class="docutils literal notranslate"><span class="pre">'train'</span></code> or <code class="docutils literal notranslate"><span class="pre">'test'</span></code><code class="xref py py-class docutils literal notranslate"><span class="pre">).</span></code>) – </p>
 </dd>
 </dl>
-</dd></dl>
-
 </dd></dl>
 
 <dl class="py class">
@@ -675,61 +467,48 @@ possible to update each component of a nested object.</p>
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">cleanlab.experimental.mnist_pytorch.</span></span><span class="sig-name descname"><span class="pre">SimpleNet</span></span><a class="reference internal" href="../../_modules/cleanlab/experimental/mnist_pytorch.html#SimpleNet"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cleanlab.experimental.mnist_pytorch.SimpleNet" title="Permalink to this definition">#</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Module</span></code></p>
 <p>Basic Pytorch CNN for MNIST-like data.</p>
-<p><strong>Attributes:</strong></p>
-<div class="table-wrapper autosummary longtable docutils container">
-<table class="autosummary longtable docutils align-default">
-<tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#cleanlab.experimental.mnist_pytorch.SimpleNet.T_destination" title="cleanlab.experimental.mnist_pytorch.SimpleNet.T_destination"><code class="xref py py-obj docutils literal notranslate"><span class="pre">T_destination</span></code></a></p></td>
-<td><p>alias of TypeVar('T_destination', bound=<code class="xref py py-class docutils literal notranslate"><span class="pre">Mapping</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">Tensor</span></code>])</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#cleanlab.experimental.mnist_pytorch.SimpleNet.dump_patches" title="cleanlab.experimental.mnist_pytorch.SimpleNet.dump_patches"><code class="xref py py-obj docutils literal notranslate"><span class="pre">dump_patches</span></code></a></p></td>
-<td><p>This allows better BC support for <a class="reference internal" href="#cleanlab.experimental.mnist_pytorch.SimpleNet.load_state_dict" title="cleanlab.experimental.mnist_pytorch.SimpleNet.load_state_dict"><code class="xref py py-meth docutils literal notranslate"><span class="pre">load_state_dict()</span></code></a>.</p></td>
-</tr>
-</tbody>
-</table>
-</div>
 <p><strong>Methods:</strong></p>
 <div class="table-wrapper autosummary longtable docutils container">
 <table class="autosummary longtable docutils align-default">
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#cleanlab.experimental.mnist_pytorch.SimpleNet.__call__" title="cleanlab.experimental.mnist_pytorch.SimpleNet.__call__"><code class="xref py py-obj docutils literal notranslate"><span class="pre">__call__</span></code></a>(*input, **kwargs)</p></td>
-<td><p>Call self as a function.</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#cleanlab.experimental.mnist_pytorch.SimpleNet.add_module" title="cleanlab.experimental.mnist_pytorch.SimpleNet.add_module"><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_module</span></code></a>(name, module)</p></td>
-<td><p>Adds a child module to the current module.</p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#cleanlab.experimental.mnist_pytorch.SimpleNet.apply" title="cleanlab.experimental.mnist_pytorch.SimpleNet.apply"><code class="xref py py-obj docutils literal notranslate"><span class="pre">apply</span></code></a>(fn)</p></td>
-<td><p>Applies <code class="docutils literal notranslate"><span class="pre">fn</span></code> recursively to every submodule (as returned by <code class="docutils literal notranslate"><span class="pre">.children()</span></code>) as well as self.</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#cleanlab.experimental.mnist_pytorch.SimpleNet.bfloat16" title="cleanlab.experimental.mnist_pytorch.SimpleNet.bfloat16"><code class="xref py py-obj docutils literal notranslate"><span class="pre">bfloat16</span></code></a>()</p></td>
-<td><p>Casts all floating point parameters and buffers to <code class="docutils literal notranslate"><span class="pre">bfloat16</span></code> datatype.</p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#cleanlab.experimental.mnist_pytorch.SimpleNet.buffers" title="cleanlab.experimental.mnist_pytorch.SimpleNet.buffers"><code class="xref py py-obj docutils literal notranslate"><span class="pre">buffers</span></code></a>([recurse])</p></td>
-<td><p>Returns an iterator over module buffers.</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#cleanlab.experimental.mnist_pytorch.SimpleNet.children" title="cleanlab.experimental.mnist_pytorch.SimpleNet.children"><code class="xref py py-obj docutils literal notranslate"><span class="pre">children</span></code></a>()</p></td>
-<td><p>Returns an iterator over immediate children modules.</p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#cleanlab.experimental.mnist_pytorch.SimpleNet.cpu" title="cleanlab.experimental.mnist_pytorch.SimpleNet.cpu"><code class="xref py py-obj docutils literal notranslate"><span class="pre">cpu</span></code></a>()</p></td>
-<td><p>Moves all model parameters and buffers to the CPU.</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#cleanlab.experimental.mnist_pytorch.SimpleNet.cuda" title="cleanlab.experimental.mnist_pytorch.SimpleNet.cuda"><code class="xref py py-obj docutils literal notranslate"><span class="pre">cuda</span></code></a>([device])</p></td>
-<td><p>Moves all model parameters and buffers to the GPU.</p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#cleanlab.experimental.mnist_pytorch.SimpleNet.double" title="cleanlab.experimental.mnist_pytorch.SimpleNet.double"><code class="xref py py-obj docutils literal notranslate"><span class="pre">double</span></code></a>()</p></td>
-<td><p>Casts all floating point parameters and buffers to <code class="docutils literal notranslate"><span class="pre">double</span></code> datatype.</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#cleanlab.experimental.mnist_pytorch.SimpleNet.eval" title="cleanlab.experimental.mnist_pytorch.SimpleNet.eval"><code class="xref py py-obj docutils literal notranslate"><span class="pre">eval</span></code></a>()</p></td>
-<td><p>Sets the module in evaluation mode.</p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#cleanlab.experimental.mnist_pytorch.SimpleNet.extra_repr" title="cleanlab.experimental.mnist_pytorch.SimpleNet.extra_repr"><code class="xref py py-obj docutils literal notranslate"><span class="pre">extra_repr</span></code></a>()</p></td>
-<td><p>Set the extra representation of the module</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#cleanlab.experimental.mnist_pytorch.SimpleNet.float" title="cleanlab.experimental.mnist_pytorch.SimpleNet.float"><code class="xref py py-obj docutils literal notranslate"><span class="pre">float</span></code></a>()</p></td>
-<td><p>Casts all floating point parameters and buffers to <code class="docutils literal notranslate"><span class="pre">float</span></code> datatype.</p></td>
-</tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="#cleanlab.experimental.mnist_pytorch.SimpleNet.forward" title="cleanlab.experimental.mnist_pytorch.SimpleNet.forward"><code class="xref py py-obj docutils literal notranslate"><span class="pre">forward</span></code></a>(x[, T])</p></td>
 <td><p>Defines the computation performed at every call.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#cleanlab.experimental.mnist_pytorch.SimpleNet.__call__" title="cleanlab.experimental.mnist_pytorch.SimpleNet.__call__"><code class="xref py py-obj docutils literal notranslate"><span class="pre">__call__</span></code></a>(*input, **kwargs)</p></td>
+<td><p>Call self as a function.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#cleanlab.experimental.mnist_pytorch.SimpleNet.add_module" title="cleanlab.experimental.mnist_pytorch.SimpleNet.add_module"><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_module</span></code></a>(name, module)</p></td>
+<td><p>Adds a child module to the current module.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#cleanlab.experimental.mnist_pytorch.SimpleNet.apply" title="cleanlab.experimental.mnist_pytorch.SimpleNet.apply"><code class="xref py py-obj docutils literal notranslate"><span class="pre">apply</span></code></a>(fn)</p></td>
+<td><p>Applies <code class="docutils literal notranslate"><span class="pre">fn</span></code> recursively to every submodule (as returned by <code class="docutils literal notranslate"><span class="pre">.children()</span></code>) as well as self.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#cleanlab.experimental.mnist_pytorch.SimpleNet.bfloat16" title="cleanlab.experimental.mnist_pytorch.SimpleNet.bfloat16"><code class="xref py py-obj docutils literal notranslate"><span class="pre">bfloat16</span></code></a>()</p></td>
+<td><p>Casts all floating point parameters and buffers to <code class="docutils literal notranslate"><span class="pre">bfloat16</span></code> datatype.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#cleanlab.experimental.mnist_pytorch.SimpleNet.buffers" title="cleanlab.experimental.mnist_pytorch.SimpleNet.buffers"><code class="xref py py-obj docutils literal notranslate"><span class="pre">buffers</span></code></a>([recurse])</p></td>
+<td><p>Returns an iterator over module buffers.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#cleanlab.experimental.mnist_pytorch.SimpleNet.children" title="cleanlab.experimental.mnist_pytorch.SimpleNet.children"><code class="xref py py-obj docutils literal notranslate"><span class="pre">children</span></code></a>()</p></td>
+<td><p>Returns an iterator over immediate children modules.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#cleanlab.experimental.mnist_pytorch.SimpleNet.cpu" title="cleanlab.experimental.mnist_pytorch.SimpleNet.cpu"><code class="xref py py-obj docutils literal notranslate"><span class="pre">cpu</span></code></a>()</p></td>
+<td><p>Moves all model parameters and buffers to the CPU.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#cleanlab.experimental.mnist_pytorch.SimpleNet.cuda" title="cleanlab.experimental.mnist_pytorch.SimpleNet.cuda"><code class="xref py py-obj docutils literal notranslate"><span class="pre">cuda</span></code></a>([device])</p></td>
+<td><p>Moves all model parameters and buffers to the GPU.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#cleanlab.experimental.mnist_pytorch.SimpleNet.double" title="cleanlab.experimental.mnist_pytorch.SimpleNet.double"><code class="xref py py-obj docutils literal notranslate"><span class="pre">double</span></code></a>()</p></td>
+<td><p>Casts all floating point parameters and buffers to <code class="docutils literal notranslate"><span class="pre">double</span></code> datatype.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#cleanlab.experimental.mnist_pytorch.SimpleNet.eval" title="cleanlab.experimental.mnist_pytorch.SimpleNet.eval"><code class="xref py py-obj docutils literal notranslate"><span class="pre">eval</span></code></a>()</p></td>
+<td><p>Sets the module in evaluation mode.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#cleanlab.experimental.mnist_pytorch.SimpleNet.extra_repr" title="cleanlab.experimental.mnist_pytorch.SimpleNet.extra_repr"><code class="xref py py-obj docutils literal notranslate"><span class="pre">extra_repr</span></code></a>()</p></td>
+<td><p>Set the extra representation of the module</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#cleanlab.experimental.mnist_pytorch.SimpleNet.float" title="cleanlab.experimental.mnist_pytorch.SimpleNet.float"><code class="xref py py-obj docutils literal notranslate"><span class="pre">float</span></code></a>()</p></td>
+<td><p>Casts all floating point parameters and buffers to <code class="docutils literal notranslate"><span class="pre">float</span></code> datatype.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#cleanlab.experimental.mnist_pytorch.SimpleNet.get_buffer" title="cleanlab.experimental.mnist_pytorch.SimpleNet.get_buffer"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_buffer</span></code></a>(target)</p></td>
 <td><p>Returns the buffer given by <code class="docutils literal notranslate"><span class="pre">target</span></code> if it exists, otherwise throws an error.</p></td>
@@ -821,6 +600,33 @@ possible to update each component of a nested object.</p>
 </tbody>
 </table>
 </div>
+<p><strong>Attributes:</strong></p>
+<div class="table-wrapper autosummary longtable docutils container">
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#cleanlab.experimental.mnist_pytorch.SimpleNet.T_destination" title="cleanlab.experimental.mnist_pytorch.SimpleNet.T_destination"><code class="xref py py-obj docutils literal notranslate"><span class="pre">T_destination</span></code></a></p></td>
+<td><p>alias of TypeVar('T_destination', bound=<code class="xref py py-class docutils literal notranslate"><span class="pre">Mapping</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">Tensor</span></code>])</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#cleanlab.experimental.mnist_pytorch.SimpleNet.dump_patches" title="cleanlab.experimental.mnist_pytorch.SimpleNet.dump_patches"><code class="xref py py-obj docutils literal notranslate"><span class="pre">dump_patches</span></code></a></p></td>
+<td><p>This allows better BC support for <a class="reference internal" href="#cleanlab.experimental.mnist_pytorch.SimpleNet.load_state_dict" title="cleanlab.experimental.mnist_pytorch.SimpleNet.load_state_dict"><code class="xref py py-meth docutils literal notranslate"><span class="pre">load_state_dict()</span></code></a>.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<dl class="py method">
+<dt class="sig sig-object py" id="cleanlab.experimental.mnist_pytorch.SimpleNet.forward">
+<span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">T</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/cleanlab/experimental/mnist_pytorch.html#SimpleNet.forward"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cleanlab.experimental.mnist_pytorch.SimpleNet.forward" title="Permalink to this definition">#</a></dt>
+<dd><p>Defines the computation performed at every call.</p>
+<p>Should be overridden by all subclasses.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Although the recipe for forward pass needs to be defined within
+this function, one should call the <code class="xref py py-class docutils literal notranslate"><span class="pre">Module</span></code> instance afterwards
+instead of this since the former takes care of running the
+registered hooks while the latter silently ignores them.</p>
+</div>
+</dd></dl>
+
 <dl class="py attribute">
 <dt class="sig sig-object py" id="cleanlab.experimental.mnist_pytorch.SimpleNet.T_destination">
 <span class="sig-name descname"><span class="pre">T_destination</span></span><a class="headerlink" href="#cleanlab.experimental.mnist_pytorch.SimpleNet.T_destination" title="Permalink to this definition">#</a></dt>
@@ -1093,20 +899,6 @@ strings are acceptable.</p>
 <dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">TypeVar</span></code>(<code class="docutils literal notranslate"><span class="pre">T</span></code>, bound= Module)</p>
 </dd>
 </dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="cleanlab.experimental.mnist_pytorch.SimpleNet.forward">
-<span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">T</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/cleanlab/experimental/mnist_pytorch.html#SimpleNet.forward"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cleanlab.experimental.mnist_pytorch.SimpleNet.forward" title="Permalink to this definition">#</a></dt>
-<dd><p>Defines the computation performed at every call.</p>
-<p>Should be overridden by all subclasses.</p>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>Although the recipe for forward pass needs to be defined within
-this function, one should call the <code class="xref py py-class docutils literal notranslate"><span class="pre">Module</span></code> instance afterwards
-instead of this since the former takes care of running the
-registered hooks while the latter silently ignores them.</p>
-</div>
 </dd></dl>
 
 <dl class="py method">
@@ -1859,11 +1651,6 @@ etc.</p>
 </dl>
 </dd></dl>
 
-<dl class="py attribute">
-<dt class="sig sig-object py" id="cleanlab.experimental.mnist_pytorch.SimpleNet.training">
-<span class="sig-name descname"><span class="pre">training</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><a class="headerlink" href="#cleanlab.experimental.mnist_pytorch.SimpleNet.training" title="Permalink to this definition">#</a></dt>
-<dd></dd></dl>
-
 <dl class="py method">
 <dt class="sig sig-object py" id="cleanlab.experimental.mnist_pytorch.SimpleNet.type">
 <span class="sig-name descname"><span class="pre">type</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dst_type</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#cleanlab.experimental.mnist_pytorch.SimpleNet.type" title="Permalink to this definition">#</a></dt>
@@ -1931,30 +1718,243 @@ under <code class="xref py py-class docutils literal notranslate"><span class="p
 </dl>
 </dd></dl>
 
+<dl class="py attribute">
+<dt class="sig sig-object py" id="cleanlab.experimental.mnist_pytorch.SimpleNet.training">
+<span class="sig-name descname"><span class="pre">training</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><a class="headerlink" href="#cleanlab.experimental.mnist_pytorch.SimpleNet.training" title="Permalink to this definition">#</a></dt>
+<dd></dd></dl>
+
 </dd></dl>
 
-<dl class="py function">
-<dt class="sig sig-object py" id="cleanlab.experimental.mnist_pytorch.get_mnist_dataset">
-<span class="sig-prename descclassname"><span class="pre">cleanlab.experimental.mnist_pytorch.</span></span><span class="sig-name descname"><span class="pre">get_mnist_dataset</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">loader</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/cleanlab/experimental/mnist_pytorch.html#get_mnist_dataset"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cleanlab.experimental.mnist_pytorch.get_mnist_dataset" title="Permalink to this definition">#</a></dt>
-<dd><p>Downloads MNIST as PyTorch dataset.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="cleanlab.experimental.mnist_pytorch.CNN">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">cleanlab.experimental.mnist_pytorch.</span></span><span class="sig-name descname"><span class="pre">CNN</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">batch_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">64</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">epochs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">6</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">log_interval</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">50</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lr</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.01</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">momentum</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">no_cuda</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">test_batch_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dataset</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'mnist'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">loader</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/cleanlab/experimental/mnist_pytorch.html#CNN"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cleanlab.experimental.mnist_pytorch.CNN" title="Permalink to this definition">#</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">BaseEstimator</span></code></p>
+<p>Wraps a PyTorch CNN for the MNIST dataset within an sklearn template</p>
+<p>Defines <code class="docutils literal notranslate"><span class="pre">.fit()</span></code>, <code class="docutils literal notranslate"><span class="pre">.predict()</span></code>, and <code class="docutils literal notranslate"><span class="pre">.predict_proba()</span></code> functions. This
+template enables the PyTorch CNN to flexibly be used within the sklearn
+architecture – meaning it can be passed into functions like
+cross_val_predict as if it were an sklearn model. The cleanlab library
+requires that all models adhere to this basic sklearn template and thus,
+this class allows a PyTorch CNN to be used in for learning with noisy
+labels among other things.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>loader</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span> <span class="pre">(values</span></code>: <code class="docutils literal notranslate"><span class="pre">'train'</span></code> or <code class="docutils literal notranslate"><span class="pre">'test'</span></code><code class="xref py py-class docutils literal notranslate"><span class="pre">).</span></code>) – </p>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>batch_size</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>) – </p></li>
+<li><p><strong>epochs</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>) – </p></li>
+<li><p><strong>log_interval</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>) – </p></li>
+<li><p><strong>lr</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>) – </p></li>
+<li><p><strong>momentum</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>) – </p></li>
+<li><p><strong>no_cuda</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code>) – </p></li>
+<li><p><strong>seed</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>) – </p></li>
+<li><p><strong>test_batch_size</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>, <em>default</em> <code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code>) – </p></li>
+<li><p><strong>dataset</strong> (<code class="docutils literal notranslate"><span class="pre">{'mnist',</span> <span class="pre">'sklearn-digits'}</span></code>) – </p></li>
+<li><p><strong>loader</strong> (<code class="docutils literal notranslate"><span class="pre">{'train',</span> <span class="pre">'test'}</span></code>) – Set to ‘test’ to force fit() and predict_proba() on test_set</p></li>
+</ul>
+</dd>
+</dl>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Be careful setting the <code class="docutils literal notranslate"><span class="pre">loader</span></code> param, it will override every other loader
+If you set this to ‘test’, but call .predict(loader = ‘train’)
+then .predict() will still predict on test!</p>
+</div>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="cleanlab.experimental.mnist_pytorch.CNN.batch_size">
+<span class="sig-name descname"><span class="pre">batch_size</span></span><a class="headerlink" href="#cleanlab.experimental.mnist_pytorch.CNN.batch_size" title="Permalink to this definition">#</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></p>
 </dd>
 </dl>
 </dd></dl>
 
-<dl class="py function">
-<dt class="sig sig-object py" id="cleanlab.experimental.mnist_pytorch.get_sklearn_digits_dataset">
-<span class="sig-prename descclassname"><span class="pre">cleanlab.experimental.mnist_pytorch.</span></span><span class="sig-name descname"><span class="pre">get_sklearn_digits_dataset</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">loader</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/cleanlab/experimental/mnist_pytorch.html#get_sklearn_digits_dataset"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cleanlab.experimental.mnist_pytorch.get_sklearn_digits_dataset" title="Permalink to this definition">#</a></dt>
-<dd><p>Downloads Sklearn handwritten digits dataset.
-Uses the last SKLEARN_DIGITS_TEST_SIZE examples as the test
-This is (hard-coded) – do not change.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>loader</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span> <span class="pre">(values</span></code>: <code class="docutils literal notranslate"><span class="pre">'train'</span></code> or <code class="docutils literal notranslate"><span class="pre">'test'</span></code><code class="xref py py-class docutils literal notranslate"><span class="pre">).</span></code>) – </p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="cleanlab.experimental.mnist_pytorch.CNN.epochs">
+<span class="sig-name descname"><span class="pre">epochs</span></span><a class="headerlink" href="#cleanlab.experimental.mnist_pytorch.CNN.epochs" title="Permalink to this definition">#</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></p>
 </dd>
 </dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="cleanlab.experimental.mnist_pytorch.CNN.log_interval">
+<span class="sig-name descname"><span class="pre">log_interval</span></span><a class="headerlink" href="#cleanlab.experimental.mnist_pytorch.CNN.log_interval" title="Permalink to this definition">#</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="cleanlab.experimental.mnist_pytorch.CNN.lr">
+<span class="sig-name descname"><span class="pre">lr</span></span><a class="headerlink" href="#cleanlab.experimental.mnist_pytorch.CNN.lr" title="Permalink to this definition">#</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="cleanlab.experimental.mnist_pytorch.CNN.momentum">
+<span class="sig-name descname"><span class="pre">momentum</span></span><a class="headerlink" href="#cleanlab.experimental.mnist_pytorch.CNN.momentum" title="Permalink to this definition">#</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="cleanlab.experimental.mnist_pytorch.CNN.no_cuda">
+<span class="sig-name descname"><span class="pre">no_cuda</span></span><a class="headerlink" href="#cleanlab.experimental.mnist_pytorch.CNN.no_cuda" title="Permalink to this definition">#</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="cleanlab.experimental.mnist_pytorch.CNN.seed">
+<span class="sig-name descname"><span class="pre">seed</span></span><a class="headerlink" href="#cleanlab.experimental.mnist_pytorch.CNN.seed" title="Permalink to this definition">#</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="cleanlab.experimental.mnist_pytorch.CNN.test_batch_size">
+<span class="sig-name descname"><span class="pre">test_batch_size</span></span><a class="headerlink" href="#cleanlab.experimental.mnist_pytorch.CNN.test_batch_size" title="Permalink to this definition">#</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>, <em>default</em> <code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="cleanlab.experimental.mnist_pytorch.CNN.dataset">
+<span class="sig-name descname"><span class="pre">dataset</span></span><a class="headerlink" href="#cleanlab.experimental.mnist_pytorch.CNN.dataset" title="Permalink to this definition">#</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><code class="docutils literal notranslate"><span class="pre">{'mnist',</span> <span class="pre">'sklearn-digits'}</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="cleanlab.experimental.mnist_pytorch.CNN.loader">
+<span class="sig-name descname"><span class="pre">loader</span></span><a class="headerlink" href="#cleanlab.experimental.mnist_pytorch.CNN.loader" title="Permalink to this definition">#</a></dt>
+<dd><p>Set to ‘test’ to force fit() and predict_proba() on test_set</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><code class="docutils literal notranslate"><span class="pre">{'train',</span> <span class="pre">'test'}</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cleanlab.experimental.mnist_pytorch.CNN.fit">
+<span class="sig-name descname"><span class="pre">fit</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/cleanlab/experimental/mnist_pytorch.html#CNN.fit"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cleanlab.experimental.mnist_pytorch.CNN.fit" title="Permalink to this definition">#</a></dt>
+<dd><p>fits the model to data.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cleanlab.experimental.mnist_pytorch.CNN.predict">
+<span class="sig-name descname"><span class="pre">predict</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/cleanlab/experimental/mnist_pytorch.html#CNN.predict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cleanlab.experimental.mnist_pytorch.CNN.predict" title="Permalink to this definition">#</a></dt>
+<dd><p>get the fitted model’s prediction on test data</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cleanlab.experimental.mnist_pytorch.CNN.predict_proba">
+<span class="sig-name descname"><span class="pre">predict_proba</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/cleanlab/experimental/mnist_pytorch.html#CNN.predict_proba"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cleanlab.experimental.mnist_pytorch.CNN.predict_proba" title="Permalink to this definition">#</a></dt>
+<dd><p>get the fitted model’s probability distribution over classes for test data</p>
+</dd></dl>
+
+<p><strong>Methods:</strong></p>
+<div class="table-wrapper autosummary longtable docutils container">
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#cleanlab.experimental.mnist_pytorch.CNN.get_params" title="cleanlab.experimental.mnist_pytorch.CNN.get_params"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_params</span></code></a>([deep])</p></td>
+<td><p>Get parameters for this estimator.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#cleanlab.experimental.mnist_pytorch.CNN.set_params" title="cleanlab.experimental.mnist_pytorch.CNN.set_params"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_params</span></code></a>(**parameters)</p></td>
+<td><p>Set the parameters of this estimator.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#id0" title="cleanlab.experimental.mnist_pytorch.CNN.fit"><code class="xref py py-obj docutils literal notranslate"><span class="pre">fit</span></code></a>(train_idx[, train_labels, ...])</p></td>
+<td><p>This function adheres to sklearn's &quot;fit(X, y)&quot; format for compatibility with scikit-learn.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#id1" title="cleanlab.experimental.mnist_pytorch.CNN.predict"><code class="xref py py-obj docutils literal notranslate"><span class="pre">predict</span></code></a>([idx, loader])</p></td>
+<td><p>Get predicted labels from trained model.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#id2" title="cleanlab.experimental.mnist_pytorch.CNN.predict_proba"><code class="xref py py-obj docutils literal notranslate"><span class="pre">predict_proba</span></code></a>([idx, loader])</p></td>
+<td><p></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<dl class="py method">
+<dt class="sig sig-object py" id="cleanlab.experimental.mnist_pytorch.CNN.get_params">
+<span class="sig-name descname"><span class="pre">get_params</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">deep</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/cleanlab/experimental/mnist_pytorch.html#CNN.get_params"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cleanlab.experimental.mnist_pytorch.CNN.get_params" title="Permalink to this definition">#</a></dt>
+<dd><p>Get parameters for this estimator.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>deep</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code>, <em>default</em> <code class="xref py py-obj docutils literal notranslate"><span class="pre">True</span></code>) – If True, will return the parameters for this estimator and
+contained subobjects that are estimators.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>params</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code>) – Parameter names mapped to their values.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cleanlab.experimental.mnist_pytorch.CNN.set_params">
+<span class="sig-name descname"><span class="pre">set_params</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">parameters</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/cleanlab/experimental/mnist_pytorch.html#CNN.set_params"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cleanlab.experimental.mnist_pytorch.CNN.set_params" title="Permalink to this definition">#</a></dt>
+<dd><p>Set the parameters of this estimator.</p>
+<p>The method works on simple estimators as well as on nested objects
+(such as <code class="xref py py-class docutils literal notranslate"><span class="pre">Pipeline</span></code>). The latter have
+parameters of the form <code class="docutils literal notranslate"><span class="pre">&lt;component&gt;__&lt;parameter&gt;</span></code> so that it’s
+possible to update each component of a nested object.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>**params</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code>) – Estimator parameters.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>self</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">estimator</span> <span class="pre">instance</span></code>) – Estimator instance.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="id0">
+<span class="sig-name descname"><span class="pre">fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">train_idx</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">train_labels</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sample_weight</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">loader</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'train'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/cleanlab/experimental/mnist_pytorch.html#CNN.fit"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id0" title="Permalink to this definition">#</a></dt>
+<dd><p>This function adheres to sklearn’s “fit(X, y)” format for
+compatibility with scikit-learn. ** All inputs should be numpy
+arrays, not pyTorch Tensors train_idx is not X, but instead a list of
+indices for X (and y if train_labels is None). This function is a
+member of the cnn class which will handle creation of X, y from the
+train_idx via the train_loader.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="id1">
+<span class="sig-name descname"><span class="pre">predict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">idx</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">loader</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/cleanlab/experimental/mnist_pytorch.html#CNN.predict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id1" title="Permalink to this definition">#</a></dt>
+<dd><p>Get predicted labels from trained model.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="id2">
+<span class="sig-name descname"><span class="pre">predict_proba</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">idx</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">loader</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/cleanlab/experimental/mnist_pytorch.html#CNN.predict_proba"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id2" title="Permalink to this definition">#</a></dt>
+<dd></dd></dl>
+
 </dd></dl>
 
 </section>

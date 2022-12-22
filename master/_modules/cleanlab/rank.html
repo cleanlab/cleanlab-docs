@@ -450,73 +450,6 @@
 <span class="p">)</span>
 
 
-<div class="viewcode-block" id="order_label_issues"><a class="viewcode-back" href="../../cleanlab/rank.html#cleanlab.rank.order_label_issues">[docs]</a><span class="k">def</span> <span class="nf">order_label_issues</span><span class="p">(</span>
-    <span class="n">label_issues_mask</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
-    <span class="n">labels</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
-    <span class="n">pred_probs</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
-    <span class="o">*</span><span class="p">,</span>
-    <span class="n">rank_by</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;self_confidence&quot;</span><span class="p">,</span>
-    <span class="n">rank_by_kwargs</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">=</span> <span class="p">{},</span>
-<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;Sorts label issues by label quality score.</span>
-
-<span class="sd">    Default label quality score is &quot;self_confidence&quot;.</span>
-
-<span class="sd">    Parameters</span>
-<span class="sd">    ----------</span>
-<span class="sd">    label_issues_mask : np.ndarray</span>
-<span class="sd">      A boolean mask for the entire dataset where ``True`` represents a label</span>
-<span class="sd">      issue and ``False`` represents an example that is accurately labeled with</span>
-<span class="sd">      high confidence.</span>
-
-<span class="sd">    labels : np.ndarray</span>
-<span class="sd">      Labels in the same format expected by the :py:func:`get_label_quality_scores &lt;cleanlab.rank.get_label_quality_scores&gt;` function.</span>
-
-<span class="sd">    pred_probs : np.ndarray (shape (N, K))</span>
-<span class="sd">      Predicted-probabilities in the same format expected by the :py:func:`get_label_quality_scores &lt;cleanlab.rank.get_label_quality_scores&gt;` function.</span>
-
-<span class="sd">    rank_by : str, optional</span>
-<span class="sd">      Score by which to order label error indices (in increasing order). See</span>
-<span class="sd">      the `method` argument of :py:func:`get_label_quality_scores</span>
-<span class="sd">      &lt;cleanlab.rank.get_label_quality_scores&gt;`.</span>
-
-<span class="sd">    rank_by_kwargs : dict, optional</span>
-<span class="sd">      Optional keyword arguments to pass into :py:func:`get_label_quality_scores &lt;cleanlab.rank.get_label_quality_scores&gt;` function.</span>
-<span class="sd">      Accepted args include `adjust_pred_probs`.</span>
-
-<span class="sd">    Returns</span>
-<span class="sd">    -------</span>
-<span class="sd">    label_issues_idx : np.ndarray</span>
-<span class="sd">      Return an array of the indices of the examples with label issues,</span>
-<span class="sd">      ordered by the label-quality scoring method passed to `rank_by`.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-
-    <span class="n">allow_one_class</span> <span class="o">=</span> <span class="kc">False</span>
-    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">labels</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="ow">or</span> <span class="nb">all</span><span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">lab</span><span class="p">,</span> <span class="nb">int</span><span class="p">)</span> <span class="k">for</span> <span class="n">lab</span> <span class="ow">in</span> <span class="n">labels</span><span class="p">):</span>
-        <span class="k">if</span> <span class="nb">set</span><span class="p">(</span><span class="n">labels</span><span class="p">)</span> <span class="o">==</span> <span class="p">{</span><span class="mi">0</span><span class="p">}:</span>  <span class="c1"># occurs with missing classes in multi-label settings</span>
-            <span class="n">allow_one_class</span> <span class="o">=</span> <span class="kc">True</span>
-    <span class="n">assert_valid_inputs</span><span class="p">(</span>
-        <span class="n">X</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-        <span class="n">y</span><span class="o">=</span><span class="n">labels</span><span class="p">,</span>
-        <span class="n">pred_probs</span><span class="o">=</span><span class="n">pred_probs</span><span class="p">,</span>
-        <span class="n">multi_label</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-        <span class="n">allow_one_class</span><span class="o">=</span><span class="n">allow_one_class</span><span class="p">,</span>
-    <span class="p">)</span>
-
-    <span class="c1"># Convert bool mask to index mask</span>
-    <span class="n">label_issues_idx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">labels</span><span class="p">))[</span><span class="n">label_issues_mask</span><span class="p">]</span>
-
-    <span class="c1"># Calculate label quality scores</span>
-    <span class="n">label_quality_scores</span> <span class="o">=</span> <span class="n">get_label_quality_scores</span><span class="p">(</span>
-        <span class="n">labels</span><span class="p">,</span> <span class="n">pred_probs</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="n">rank_by</span><span class="p">,</span> <span class="o">**</span><span class="n">rank_by_kwargs</span>
-    <span class="p">)</span>
-
-    <span class="c1"># Get label quality scores for label issues</span>
-    <span class="n">label_quality_scores_issues</span> <span class="o">=</span> <span class="n">label_quality_scores</span><span class="p">[</span><span class="n">label_issues_mask</span><span class="p">]</span>
-
-    <span class="k">return</span> <span class="n">label_issues_idx</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">argsort</span><span class="p">(</span><span class="n">label_quality_scores_issues</span><span class="p">)]</span></div>
-
-
 <div class="viewcode-block" id="get_label_quality_scores"><a class="viewcode-back" href="../../cleanlab/rank.html#cleanlab.rank.get_label_quality_scores">[docs]</a><span class="k">def</span> <span class="nf">get_label_quality_scores</span><span class="p">(</span>
     <span class="n">labels</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
     <span class="n">pred_probs</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
@@ -848,6 +781,102 @@
     <span class="k">return</span> <span class="n">label_quality_scores</span></div>
 
 
+<div class="viewcode-block" id="find_top_issues"><a class="viewcode-back" href="../../cleanlab/rank.html#cleanlab.rank.find_top_issues">[docs]</a><span class="k">def</span> <span class="nf">find_top_issues</span><span class="p">(</span><span class="n">quality_scores</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">top</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">10</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;Returns the sorted indices of the `top` issues in `quality_scores`, ordered from smallest to largest quality score</span>
+<span class="sd">    (i.e., from most to least likely to be an issue). For example, the first value returned is the index corresponding</span>
+<span class="sd">    to the smallest value in `quality_scores` (most likely to be an issue). The second value in the returned array is</span>
+<span class="sd">    the index corresponding to the second smallest value in `quality-scores` (second-most likely to be an issue), and so forth.</span>
+
+<span class="sd">    This method assumes that `quality_scores` shares an index with some dataset such that the indices returned by this method</span>
+<span class="sd">    map to the examples in that dataset.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    quality_scores :</span>
+<span class="sd">      Array of shape ``(N,)``, where N is the number of examples, containing one quality score for each example in the dataset.</span>
+
+<span class="sd">    top :</span>
+<span class="sd">      The number of indices to return.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    top_issue_indices :</span>
+<span class="sd">      Indices of top examples most likely to suffer from an issue (ranked by issue severity).&quot;&quot;&quot;</span>
+
+    <span class="k">if</span> <span class="n">top</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">top</span> <span class="o">&gt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">quality_scores</span><span class="p">):</span>
+        <span class="n">top</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">quality_scores</span><span class="p">)</span>
+
+    <span class="n">top_outlier_indices</span> <span class="o">=</span> <span class="n">quality_scores</span><span class="o">.</span><span class="n">argsort</span><span class="p">()[:</span><span class="n">top</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">top_outlier_indices</span></div>
+
+
+<div class="viewcode-block" id="order_label_issues"><a class="viewcode-back" href="../../cleanlab/rank.html#cleanlab.rank.order_label_issues">[docs]</a><span class="k">def</span> <span class="nf">order_label_issues</span><span class="p">(</span>
+    <span class="n">label_issues_mask</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+    <span class="n">labels</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+    <span class="n">pred_probs</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+    <span class="o">*</span><span class="p">,</span>
+    <span class="n">rank_by</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;self_confidence&quot;</span><span class="p">,</span>
+    <span class="n">rank_by_kwargs</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">=</span> <span class="p">{},</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;Sorts label issues by label quality score.</span>
+
+<span class="sd">    Default label quality score is &quot;self_confidence&quot;.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    label_issues_mask : np.ndarray</span>
+<span class="sd">      A boolean mask for the entire dataset where ``True`` represents a label</span>
+<span class="sd">      issue and ``False`` represents an example that is accurately labeled with</span>
+<span class="sd">      high confidence.</span>
+
+<span class="sd">    labels : np.ndarray</span>
+<span class="sd">      Labels in the same format expected by the :py:func:`get_label_quality_scores &lt;cleanlab.rank.get_label_quality_scores&gt;` function.</span>
+
+<span class="sd">    pred_probs : np.ndarray (shape (N, K))</span>
+<span class="sd">      Predicted-probabilities in the same format expected by the :py:func:`get_label_quality_scores &lt;cleanlab.rank.get_label_quality_scores&gt;` function.</span>
+
+<span class="sd">    rank_by : str, optional</span>
+<span class="sd">      Score by which to order label error indices (in increasing order). See</span>
+<span class="sd">      the `method` argument of :py:func:`get_label_quality_scores</span>
+<span class="sd">      &lt;cleanlab.rank.get_label_quality_scores&gt;`.</span>
+
+<span class="sd">    rank_by_kwargs : dict, optional</span>
+<span class="sd">      Optional keyword arguments to pass into :py:func:`get_label_quality_scores &lt;cleanlab.rank.get_label_quality_scores&gt;` function.</span>
+<span class="sd">      Accepted args include `adjust_pred_probs`.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    label_issues_idx : np.ndarray</span>
+<span class="sd">      Return an array of the indices of the examples with label issues,</span>
+<span class="sd">      ordered by the label-quality scoring method passed to `rank_by`.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">allow_one_class</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">labels</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="ow">or</span> <span class="nb">all</span><span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">lab</span><span class="p">,</span> <span class="nb">int</span><span class="p">)</span> <span class="k">for</span> <span class="n">lab</span> <span class="ow">in</span> <span class="n">labels</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">set</span><span class="p">(</span><span class="n">labels</span><span class="p">)</span> <span class="o">==</span> <span class="p">{</span><span class="mi">0</span><span class="p">}:</span>  <span class="c1"># occurs with missing classes in multi-label settings</span>
+            <span class="n">allow_one_class</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="n">assert_valid_inputs</span><span class="p">(</span>
+        <span class="n">X</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">y</span><span class="o">=</span><span class="n">labels</span><span class="p">,</span>
+        <span class="n">pred_probs</span><span class="o">=</span><span class="n">pred_probs</span><span class="p">,</span>
+        <span class="n">multi_label</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="n">allow_one_class</span><span class="o">=</span><span class="n">allow_one_class</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="c1"># Convert bool mask to index mask</span>
+    <span class="n">label_issues_idx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">labels</span><span class="p">))[</span><span class="n">label_issues_mask</span><span class="p">]</span>
+
+    <span class="c1"># Calculate label quality scores</span>
+    <span class="n">label_quality_scores</span> <span class="o">=</span> <span class="n">get_label_quality_scores</span><span class="p">(</span>
+        <span class="n">labels</span><span class="p">,</span> <span class="n">pred_probs</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="n">rank_by</span><span class="p">,</span> <span class="o">**</span><span class="n">rank_by_kwargs</span>
+    <span class="p">)</span>
+
+    <span class="c1"># Get label quality scores for label issues</span>
+    <span class="n">label_quality_scores_issues</span> <span class="o">=</span> <span class="n">label_quality_scores</span><span class="p">[</span><span class="n">label_issues_mask</span><span class="p">]</span>
+
+    <span class="k">return</span> <span class="n">label_issues_idx</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">argsort</span><span class="p">(</span><span class="n">label_quality_scores_issues</span><span class="p">)]</span></div>
+
+
 <div class="viewcode-block" id="get_self_confidence_for_each_label"><a class="viewcode-back" href="../../cleanlab/rank.html#cleanlab.rank.get_self_confidence_for_each_label">[docs]</a><span class="k">def</span> <span class="nf">get_self_confidence_for_each_label</span><span class="p">(</span>
     <span class="n">labels</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
     <span class="n">pred_probs</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
@@ -962,35 +991,6 @@
     <span class="n">label_quality_scores</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">label_quality_scores</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">/</span> <span class="n">clipped_scores</span>
 
     <span class="k">return</span> <span class="n">label_quality_scores</span></div>
-
-
-<div class="viewcode-block" id="find_top_issues"><a class="viewcode-back" href="../../cleanlab/rank.html#cleanlab.rank.find_top_issues">[docs]</a><span class="k">def</span> <span class="nf">find_top_issues</span><span class="p">(</span><span class="n">quality_scores</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">top</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">10</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;Returns the sorted indices of the `top` issues in `quality_scores`, ordered from smallest to largest quality score</span>
-<span class="sd">    (i.e., from most to least likely to be an issue). For example, the first value returned is the index corresponding</span>
-<span class="sd">    to the smallest value in `quality_scores` (most likely to be an issue). The second value in the returned array is</span>
-<span class="sd">    the index corresponding to the second smallest value in `quality-scores` (second-most likely to be an issue), and so forth.</span>
-
-<span class="sd">    This method assumes that `quality_scores` shares an index with some dataset such that the indices returned by this method</span>
-<span class="sd">    map to the examples in that dataset.</span>
-
-<span class="sd">    Parameters</span>
-<span class="sd">    ----------</span>
-<span class="sd">    quality_scores :</span>
-<span class="sd">      Array of shape ``(N,)``, where N is the number of examples, containing one quality score for each example in the dataset.</span>
-
-<span class="sd">    top :</span>
-<span class="sd">      The number of indices to return.</span>
-
-<span class="sd">    Returns</span>
-<span class="sd">    -------</span>
-<span class="sd">    top_issue_indices :</span>
-<span class="sd">      Indices of top examples most likely to suffer from an issue (ranked by issue severity).&quot;&quot;&quot;</span>
-
-    <span class="k">if</span> <span class="n">top</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">top</span> <span class="o">&gt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">quality_scores</span><span class="p">):</span>
-        <span class="n">top</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">quality_scores</span><span class="p">)</span>
-
-    <span class="n">top_outlier_indices</span> <span class="o">=</span> <span class="n">quality_scores</span><span class="o">.</span><span class="n">argsort</span><span class="p">()[:</span><span class="n">top</span><span class="p">]</span>
-    <span class="k">return</span> <span class="n">top_outlier_indices</span></div>
 </pre></div> 
         </article>
       </div>
