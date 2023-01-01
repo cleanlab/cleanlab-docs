@@ -451,7 +451,7 @@
     <span class="n">forget_rate</span><span class="p">,</span>
     <span class="n">class_weights</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
 <span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Co-Teaching Loss function.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Co-Teaching Loss function.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -496,7 +496,7 @@
 
 
 <div class="viewcode-block" id="initialize_lr_scheduler"><a class="viewcode-back" href="../../../cleanlab/experimental/coteaching.html#cleanlab.experimental.coteaching.initialize_lr_scheduler">[docs]</a><span class="k">def</span> <span class="nf">initialize_lr_scheduler</span><span class="p">(</span><span class="n">lr</span><span class="o">=</span><span class="mf">0.001</span><span class="p">,</span> <span class="n">epochs</span><span class="o">=</span><span class="mi">250</span><span class="p">,</span> <span class="n">epoch_decay_start</span><span class="o">=</span><span class="mi">80</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Scheduler to adjust learning rate and betas for Adam Optimizer&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Scheduler to adjust learning rate and betas for Adam Optimizer&quot;&quot;&quot;</span>
     <span class="n">mom1</span> <span class="o">=</span> <span class="mf">0.9</span>
     <span class="n">mom2</span> <span class="o">=</span> <span class="mf">0.9</span>  <span class="c1"># Original author had this set to 0.1</span>
     <span class="n">alpha_plan</span> <span class="o">=</span> <span class="p">[</span><span class="n">lr</span><span class="p">]</span> <span class="o">*</span> <span class="n">epochs</span>
@@ -508,14 +508,14 @@
 
 
 <div class="viewcode-block" id="adjust_learning_rate"><a class="viewcode-back" href="../../../cleanlab/experimental/coteaching.html#cleanlab.experimental.coteaching.adjust_learning_rate">[docs]</a><span class="k">def</span> <span class="nf">adjust_learning_rate</span><span class="p">(</span><span class="n">optimizer</span><span class="p">,</span> <span class="n">epoch</span><span class="p">,</span> <span class="n">alpha_plan</span><span class="p">,</span> <span class="n">beta1_plan</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Scheduler to adjust learning rate and betas for Adam Optimizer&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Scheduler to adjust learning rate and betas for Adam Optimizer&quot;&quot;&quot;</span>
     <span class="k">for</span> <span class="n">param_group</span> <span class="ow">in</span> <span class="n">optimizer</span><span class="o">.</span><span class="n">param_groups</span><span class="p">:</span>
         <span class="n">param_group</span><span class="p">[</span><span class="s2">&quot;lr&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">alpha_plan</span><span class="p">[</span><span class="n">epoch</span><span class="p">]</span>
         <span class="n">param_group</span><span class="p">[</span><span class="s2">&quot;betas&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">beta1_plan</span><span class="p">[</span><span class="n">epoch</span><span class="p">],</span> <span class="mf">0.999</span><span class="p">)</span>  <span class="c1"># Only change beta1</span></div>
 
 
 <div class="viewcode-block" id="forget_rate_scheduler"><a class="viewcode-back" href="../../../cleanlab/experimental/coteaching.html#cleanlab.experimental.coteaching.forget_rate_scheduler">[docs]</a><span class="k">def</span> <span class="nf">forget_rate_scheduler</span><span class="p">(</span><span class="n">epochs</span><span class="p">,</span> <span class="n">forget_rate</span><span class="p">,</span> <span class="n">num_gradual</span><span class="p">,</span> <span class="n">exponent</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Tells Co-Teaching what fraction of examples to forget at each epoch.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Tells Co-Teaching what fraction of examples to forget at each epoch.&quot;&quot;&quot;</span>
     <span class="c1"># define how many things to forget at each rate schedule</span>
     <span class="n">forget_rate_schedule</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">epochs</span><span class="p">)</span> <span class="o">*</span> <span class="n">forget_rate</span>
     <span class="n">forget_rate_schedule</span><span class="p">[:</span><span class="n">num_gradual</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">forget_rate</span><span class="o">**</span><span class="n">exponent</span><span class="p">,</span> <span class="n">num_gradual</span><span class="p">)</span>
@@ -535,7 +535,7 @@
     <span class="n">class_weights</span><span class="p">,</span>
     <span class="n">accuracy</span><span class="p">,</span>
 <span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;PyTorch training function.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;PyTorch training function.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -663,7 +663,7 @@
         <div class="bottom-of-page">
           <div class="left-details">
             <div class="copyright">
-                Copyright &#169; 2022, Cleanlab Inc.
+                Copyright &#169; 2023, Cleanlab Inc.
             </div>
             Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
             

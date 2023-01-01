@@ -448,7 +448,7 @@
 
 
 <div class="viewcode-block" id="get_mnist_dataset"><a class="viewcode-back" href="../../../cleanlab/experimental/mnist_pytorch.html#cleanlab.experimental.mnist_pytorch.get_mnist_dataset">[docs]</a><span class="k">def</span> <span class="nf">get_mnist_dataset</span><span class="p">(</span><span class="n">loader</span><span class="p">):</span>  <span class="c1"># pragma: no cover</span>
-    <span class="sd">&quot;&quot;&quot;Downloads MNIST as PyTorch dataset.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Downloads MNIST as PyTorch dataset.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -465,7 +465,7 @@
 
 
 <div class="viewcode-block" id="get_sklearn_digits_dataset"><a class="viewcode-back" href="../../../cleanlab/experimental/mnist_pytorch.html#cleanlab.experimental.mnist_pytorch.get_sklearn_digits_dataset">[docs]</a><span class="k">def</span> <span class="nf">get_sklearn_digits_dataset</span><span class="p">(</span><span class="n">loader</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Downloads Sklearn handwritten digits dataset.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Downloads Sklearn handwritten digits dataset.</span>
 <span class="sd">    Uses the last SKLEARN_DIGITS_TEST_SIZE examples as the test</span>
 <span class="sd">    This is (hard-coded) -- do not change.</span>
 
@@ -476,7 +476,7 @@
     <span class="kn">from</span> <span class="nn">sklearn.datasets</span> <span class="kn">import</span> <span class="n">load_digits</span>
 
     <span class="k">class</span> <span class="nc">TorchDataset</span><span class="p">(</span><span class="n">Dataset</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Abstracts a numpy array as a PyTorch dataset.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Abstracts a numpy array as a PyTorch dataset.&quot;&quot;&quot;</span>
 
         <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">targets</span><span class="p">,</span> <span class="n">transform</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">data</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">from_numpy</span><span class="p">(</span><span class="n">data</span><span class="p">)</span><span class="o">.</span><span class="n">float</span><span class="p">()</span>
@@ -517,7 +517,7 @@
 
 
 <div class="viewcode-block" id="SimpleNet"><a class="viewcode-back" href="../../../cleanlab/experimental/mnist_pytorch.html#cleanlab.experimental.mnist_pytorch.SimpleNet">[docs]</a><span class="k">class</span> <span class="nc">SimpleNet</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Basic Pytorch CNN for MNIST-like data.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Basic Pytorch CNN for MNIST-like data.&quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">SimpleNet</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
@@ -539,7 +539,7 @@
 
 
 <div class="viewcode-block" id="CNN"><a class="viewcode-back" href="../../../cleanlab/experimental/mnist_pytorch.html#cleanlab.experimental.mnist_pytorch.CNN">[docs]</a><span class="k">class</span> <span class="nc">CNN</span><span class="p">(</span><span class="n">BaseEstimator</span><span class="p">):</span>  <span class="c1"># Inherits sklearn classifier</span>
-    <span class="sd">&quot;&quot;&quot;Wraps a PyTorch CNN for the MNIST dataset within an sklearn template</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Wraps a PyTorch CNN for the MNIST dataset within an sklearn template</span>
 
 <span class="sd">    Defines ``.fit()``, ``.predict()``, and ``.predict_proba()`` functions. This</span>
 <span class="sd">    template enables the PyTorch CNN to flexibly be used within the sklearn</span>
@@ -670,7 +670,7 @@
         <span class="k">return</span> <span class="bp">self</span></div>
 
 <div class="viewcode-block" id="CNN.fit"><a class="viewcode-back" href="../../../cleanlab/experimental/mnist_pytorch.html#cleanlab.experimental.mnist_pytorch.CNN.fit">[docs]</a>    <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">train_idx</span><span class="p">,</span> <span class="n">train_labels</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">sample_weight</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">loader</span><span class="o">=</span><span class="s2">&quot;train&quot;</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;This function adheres to sklearn&#39;s &quot;fit(X, y)&quot; format for</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;This function adheres to sklearn&#39;s &quot;fit(X, y)&quot; format for</span>
 <span class="sd">        compatibility with scikit-learn. ** All inputs should be numpy</span>
 <span class="sd">        arrays, not pyTorch Tensors train_idx is not X, but instead a list of</span>
 <span class="sd">        indices for X (and y if train_labels is None). This function is a</span>
@@ -743,7 +743,7 @@
                     <span class="p">)</span></div>
 
 <div class="viewcode-block" id="CNN.predict"><a class="viewcode-back" href="../../../cleanlab/experimental/mnist_pytorch.html#cleanlab.experimental.mnist_pytorch.CNN.predict">[docs]</a>    <span class="k">def</span> <span class="nf">predict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">idx</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">loader</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Get predicted labels from trained model.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get predicted labels from trained model.&quot;&quot;&quot;</span>
         <span class="c1"># get the index of the max probability</span>
         <span class="n">probs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">predict_proba</span><span class="p">(</span><span class="n">idx</span><span class="p">,</span> <span class="n">loader</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">probs</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span></div>
@@ -804,7 +804,7 @@
         <div class="bottom-of-page">
           <div class="left-details">
             <div class="copyright">
-                Copyright &#169; 2022, Cleanlab Inc.
+                Copyright &#169; 2023, Cleanlab Inc.
             </div>
             Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
             
