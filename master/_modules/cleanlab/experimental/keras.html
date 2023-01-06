@@ -445,7 +445,9 @@
 
 <span class="kn">import</span> <span class="nn">tensorflow</span> <span class="k">as</span> <span class="nn">tf</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 <span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Optional</span>
+<span class="kn">from</span> <span class="nn">cleanlab.internal.validation</span> <span class="kn">import</span> <span class="n">assert_valid_inputs</span>
 
 
 <div class="viewcode-block" id="KerasWrapperModel"><a class="viewcode-back" href="../../../cleanlab/experimental/keras.html#cleanlab.experimental.keras.KerasWrapperModel">[docs]</a><span class="k">class</span> <span class="nc">KerasWrapperModel</span><span class="p">:</span>
@@ -495,11 +497,26 @@
         <span class="p">}</span></div>
 
 <div class="viewcode-block" id="KerasWrapperModel.fit"><a class="viewcode-back" href="../../../cleanlab/experimental/keras.html#cleanlab.experimental.keras.KerasWrapperModel.fit">[docs]</a>    <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Note that `X` dataset object must already contain the labels as is required for standard Keras fit.</span>
-<span class="sd">        You can optionally provide the labels again here as argument `y` to be compatible with sklearn, but they are ignored.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Trains a Keras classifier.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        X : tf.Dataset or np.array or pd.DataFrame</span>
+<span class="sd">            If `X` is a tensorflow dataset object, it must already contain the labels as is required for standard Keras fit.</span>
+
+<span class="sd">        y : np.array or pd.DataFrame, default = None</span>
+<span class="sd">            If `X` is a tensorflow dataset object, you can optionally provide the labels again here as argument `y` to be compatible with sklearn,</span>
+<span class="sd">            but they are ignored.</span>
+<span class="sd">            If `X` is a numpy array or pandas dataframe, the labels have to be passed in using this argument.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
+
         <span class="bp">self</span><span class="o">.</span><span class="n">net</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">(</span><span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">model_kwargs</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">net</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">compile_kwargs</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">)):</span>
+            <span class="n">assert_valid_inputs</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+            <span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;y&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">y</span>
+
         <span class="bp">self</span><span class="o">.</span><span class="n">net</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="KerasWrapperModel.predict_proba"><a class="viewcode-back" href="../../../cleanlab/experimental/keras.html#cleanlab.experimental.keras.KerasWrapperModel.predict_proba">[docs]</a>    <span class="k">def</span> <span class="nf">predict_proba</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">apply_softmax</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
@@ -559,11 +576,25 @@
         <span class="p">}</span></div>
 
 <div class="viewcode-block" id="KerasWrapperSequential.fit"><a class="viewcode-back" href="../../../cleanlab/experimental/keras.html#cleanlab.experimental.keras.KerasWrapperSequential.fit">[docs]</a>    <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Note that `X` dataset object must already contain the labels as is required for standard Keras fit.</span>
-<span class="sd">        You can optionally provide the labels again here as argument `y` to be compatible with sklearn, but they are ignored.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Trains a Sequential Keras classifier.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        X : tf.Dataset or np.array or pd.DataFrame</span>
+<span class="sd">            If `X` is a tensorflow dataset object, it must already contain the labels as is required for standard Keras fit.</span>
+
+<span class="sd">        y : np.array or pd.DataFrame, default = None</span>
+<span class="sd">            If `X` is a tensorflow dataset object, you can optionally provide the labels again here as argument `y` to be compatible with sklearn,</span>
+<span class="sd">            but they are ignored.</span>
+<span class="sd">            If `X` is a numpy array or pandas dataframe, the labels have to be passed in using this argument.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">net</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">Sequential</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">layers</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">net</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">compile_kwargs</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">)):</span>
+            <span class="n">assert_valid_inputs</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+            <span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;y&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">y</span>
+
         <span class="bp">self</span><span class="o">.</span><span class="n">net</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="KerasWrapperSequential.predict_proba"><a class="viewcode-back" href="../../../cleanlab/experimental/keras.html#cleanlab.experimental.keras.KerasWrapperSequential.predict_proba">[docs]</a>    <span class="k">def</span> <span class="nf">predict_proba</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">apply_softmax</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
