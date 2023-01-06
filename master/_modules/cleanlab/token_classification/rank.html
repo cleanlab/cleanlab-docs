@@ -562,9 +562,15 @@
 <span class="sd">    Converts scores output by :py:func:`token_classification.rank.get_label_quality_scores &lt;cleanlab.token_classification.rank.get_label_quality_scores&gt;`</span>
 <span class="sd">    to a list of issues of similar format as output by :py:func:`token_classification.filter.find_label_issues &lt;cleanlab.token_classification.filter.find_label_issues&gt;`.</span>
 
-<span class="sd">    Only considers as issues those tokens with label quality score lower than `threshold`.</span>
+<span class="sd">    Issues are sorted by label quality score, from most to least severe.</span>
 
-<span class="sd">    Issues are sorted by label quality score, from most severe to least.</span>
+<span class="sd">    Only considers as issues those tokens with label quality score lower than `threshold`,</span>
+<span class="sd">    so this parameter determines the number of issues that are returned.</span>
+<span class="sd">    This method is intended for converting the most severely mislabeled examples to a format compatible with</span>
+<span class="sd">    ``summary`` methods like :py:func:`token_classification.summary.display_issues &lt;cleanlab.token_classification.summary.display_issues&gt;`.</span>
+<span class="sd">    This method does not estimate the number of label errors since the `threshold` is arbitrary,</span>
+<span class="sd">    for that instead use :py:func:`token_classification.filter.find_label_issues &lt;cleanlab.token_classification.filter.find_label_issues&gt;`,</span>
+<span class="sd">    which estimates the label errors via Confident Learning rather than score thresholding.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
