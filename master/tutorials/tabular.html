@@ -749,7 +749,7 @@ label errors (due to annotator mistakes), edge cases, and otherwise ambiguous ex
 <section id="2.-Load-and-process-the-data">
 <h2>2. Load and process the data<a class="headerlink" href="#2.-Load-and-process-the-data" title="Permalink to this heading">#</a></h2>
 <p>We first load the data features and labels.</p>
-<div class="nbinput nblast docutils container">
+<div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
 </pre></div>
 </div>
@@ -760,6 +760,15 @@ label errors (due to annotator mistakes), edge cases, and otherwise ambiguous ex
 <span class="n">labels_raw</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">target</span>  <span class="c1"># labels (pandas Series)</span>
 </pre></div>
 </div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area stderr docutils container">
+<div class="highlight"><pre>
+/opt/hostedtoolcache/Python/3.10.9/x64/lib/python3.10/site-packages/sklearn/datasets/_openml.py:932: FutureWarning: The default value of `parser` will change from `&#39;liac-arff&#39;` to `&#39;auto&#39;` in 1.4. You can set `parser=&#39;auto&#39;` to silence this warning. Therefore, an `ImportError` will be raised from 1.4 if the dataset is dense and pandas is not installed. Note that the pandas parser may return different data types. See the Notes Section in fetch_openml&#39;s API doc for details.
+  warn(
+</pre></div></div>
 </div>
 <p>Next we preprocess the data. Here we apply one-hot encoding to features with categorical data, and standardize features with numeric data. We also perform label encoding on the labels — “bad” is encoded as 0 and “good” is encoded as 1.</p>
 <div class="nbinput nblast docutils container">
@@ -847,7 +856,7 @@ prediction.</p>
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-Cleanlab found 198 potential label errors.
+Cleanlab found 195 potential label errors.
 </pre></div></div>
 </div>
 <p>Let’s review some of the most likely label errors:</p>
@@ -931,98 +940,98 @@ Cleanlab found 198 potential label errors.
       <td>bad</td>
     </tr>
     <tr>
-      <th>505</th>
+      <th>175</th>
       <td>no checking</td>
-      <td>10.0</td>
-      <td>existing paid</td>
-      <td>new car</td>
-      <td>1309.0</td>
+      <td>30.0</td>
+      <td>all paid</td>
+      <td>used car</td>
+      <td>7485.0</td>
       <td>no known savings</td>
-      <td>1&lt;=X&lt;4</td>
+      <td>unemployed</td>
       <td>4.0</td>
-      <td>male single</td>
-      <td>guarantor</td>
-      <td>...</td>
-      <td>life insurance</td>
-      <td>27.0</td>
-      <td>none</td>
-      <td>own</td>
-      <td>1.0</td>
-      <td>unskilled resident</td>
-      <td>1.0</td>
-      <td>none</td>
-      <td>yes</td>
-      <td>bad</td>
-    </tr>
-    <tr>
-      <th>963</th>
-      <td>no checking</td>
-      <td>24.0</td>
-      <td>existing paid</td>
-      <td>radio/tv</td>
-      <td>2397.0</td>
-      <td>500&lt;=X&lt;1000</td>
-      <td>&gt;=7</td>
-      <td>3.0</td>
-      <td>male single</td>
+      <td>female div/dep/mar</td>
       <td>none</td>
       <td>...</td>
-      <td>car</td>
-      <td>35.0</td>
+      <td>real estate</td>
+      <td>53.0</td>
       <td>bank</td>
       <td>own</td>
-      <td>2.0</td>
-      <td>skilled</td>
+      <td>1.0</td>
+      <td>high qualif/self emp/mgmt</td>
       <td>1.0</td>
       <td>yes</td>
       <td>yes</td>
       <td>bad</td>
     </tr>
     <tr>
-      <th>978</th>
+      <th>647</th>
       <td>no checking</td>
-      <td>24.0</td>
-      <td>delayed previously</td>
-      <td>new car</td>
-      <td>2538.0</td>
-      <td>&lt;100</td>
-      <td>&gt;=7</td>
-      <td>4.0</td>
-      <td>male single</td>
-      <td>none</td>
-      <td>...</td>
-      <td>car</td>
-      <td>47.0</td>
-      <td>none</td>
-      <td>own</td>
-      <td>2.0</td>
-      <td>unskilled resident</td>
-      <td>2.0</td>
-      <td>none</td>
-      <td>yes</td>
-      <td>bad</td>
-    </tr>
-    <tr>
-      <th>228</th>
-      <td>no checking</td>
-      <td>9.0</td>
+      <td>12.0</td>
       <td>existing paid</td>
-      <td>radio/tv</td>
-      <td>1478.0</td>
-      <td>&lt;100</td>
-      <td>4&lt;=X&lt;7</td>
-      <td>4.0</td>
-      <td>male single</td>
+      <td>new car</td>
+      <td>1386.0</td>
+      <td>500&lt;=X&lt;1000</td>
+      <td>1&lt;=X&lt;4</td>
+      <td>2.0</td>
+      <td>female div/dep/mar</td>
       <td>none</td>
       <td>...</td>
-      <td>car</td>
-      <td>22.0</td>
+      <td>life insurance</td>
+      <td>26.0</td>
       <td>none</td>
       <td>own</td>
       <td>1.0</td>
       <td>skilled</td>
       <td>1.0</td>
       <td>none</td>
+      <td>yes</td>
+      <td>bad</td>
+    </tr>
+    <tr>
+      <th>278</th>
+      <td>no checking</td>
+      <td>6.0</td>
+      <td>existing paid</td>
+      <td>furniture/equipment</td>
+      <td>4611.0</td>
+      <td>&lt;100</td>
+      <td>&lt;1</td>
+      <td>1.0</td>
+      <td>female div/dep/mar</td>
+      <td>none</td>
+      <td>...</td>
+      <td>life insurance</td>
+      <td>32.0</td>
+      <td>none</td>
+      <td>own</td>
+      <td>1.0</td>
+      <td>skilled</td>
+      <td>1.0</td>
+      <td>none</td>
+      <td>yes</td>
+      <td>bad</td>
+    </tr>
+    <tr>
+      <th>424</th>
+      <td>0&lt;=X&lt;200</td>
+      <td>12.0</td>
+      <td>existing paid</td>
+      <td>furniture/equipment</td>
+      <td>2762.0</td>
+      <td>no known savings</td>
+      <td>&gt;=7</td>
+      <td>1.0</td>
+      <td>female div/dep/mar</td>
+      <td>none</td>
+      <td>...</td>
+      <td>life insurance</td>
+      <td>25.0</td>
+      <td>bank</td>
+      <td>own</td>
+      <td>1.0</td>
+      <td>skilled</td>
+      <td>1.0</td>
+      <td>yes</td>
       <td>yes</td>
       <td>bad</td>
     </tr>
@@ -1085,7 +1094,7 @@ Cleanlab found 198 potential label errors.
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-Test accuracy of original model: 0.724
+Test accuracy of original model: 0.748
 </pre></div></div>
 </div>
 <p>cleanlab provides a wrapper class that can be easily applied to any scikit-learn compatible model. Once wrapped, the resulting model can still be used in the exact same manner, but it will now train more robustly if the data have noisy labels.</p>
@@ -1125,7 +1134,7 @@ Test accuracy of original model: 0.724
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-Test accuracy of cleanlab-trained model: 0.74
+Test accuracy of cleanlab-trained model: 0.752
 </pre></div></div>
 </div>
 <p>We can see that the test set accuracy slightly improved as a result of the data cleaning. Note that this will not always be the case, especially when we evaluate on test data that are themselves noisy. The best practice is to run cleanlab to identify potential label issues and then manually review them, before blindly trusting any accuracy metrics. In particular, the most effort should be made to ensure high-quality test data, which is supposed to reflect the expected performance of our model
