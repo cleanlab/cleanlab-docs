@@ -428,8 +428,9 @@
 <span class="sd">Unlike in standard multi-class classification, predicted class probabilities from model need not sum to 1 for each row in multi-label classification.</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>  <span class="c1"># noqa: F401: Imported for type annotations</span>
+<span class="kn">import</span> <span class="nn">numpy.typing</span> <span class="k">as</span> <span class="nn">npt</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">TypeVar</span>
 
 <span class="kn">from</span> <span class="nn">cleanlab.internal.validation</span> <span class="kn">import</span> <span class="n">assert_valid_inputs</span>
 <span class="kn">from</span> <span class="nn">cleanlab.internal.util</span> <span class="kn">import</span> <span class="n">get_num_classes</span>
@@ -437,14 +438,17 @@
 <span class="kn">from</span> <span class="nn">cleanlab.internal.multilabel_utils</span> <span class="kn">import</span> <span class="n">int2onehot</span>
 
 
+<span class="n">T</span> <span class="o">=</span> <span class="n">TypeVar</span><span class="p">(</span><span class="s2">&quot;T&quot;</span><span class="p">,</span> <span class="n">bound</span><span class="o">=</span><span class="n">npt</span><span class="o">.</span><span class="n">NBitBase</span><span class="p">)</span>
+
+
 <div class="viewcode-block" id="get_label_quality_scores"><a class="viewcode-back" href="../../cleanlab/multilabel_classification.html#cleanlab.multilabel_classification.get_label_quality_scores">[docs]</a><span class="k">def</span> <span class="nf">get_label_quality_scores</span><span class="p">(</span>
     <span class="n">labels</span><span class="p">:</span> <span class="n">List</span><span class="p">,</span>
-    <span class="n">pred_probs</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+    <span class="n">pred_probs</span><span class="p">:</span> <span class="n">npt</span><span class="o">.</span><span class="n">NDArray</span><span class="p">[</span><span class="s2">&quot;np.floating[T]&quot;</span><span class="p">],</span>
     <span class="o">*</span><span class="p">,</span>
     <span class="n">method</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;self_confidence&quot;</span><span class="p">,</span>
     <span class="n">adjust_pred_probs</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
     <span class="n">aggregator_kwargs</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;method&quot;</span><span class="p">:</span> <span class="s2">&quot;exponential_moving_average&quot;</span><span class="p">,</span> <span class="s2">&quot;alpha&quot;</span><span class="p">:</span> <span class="mf">0.8</span><span class="p">}</span>
-<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">npt</span><span class="o">.</span><span class="n">NDArray</span><span class="p">[</span><span class="s2">&quot;np.floating[T]&quot;</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Computes a label quality score each example in a multi-label classification dataset.</span>
 
 <span class="sd">    Scores are between 0 and 1 with lower scores indicating examples whose label more likely contains an error.</span>
@@ -465,12 +469,11 @@
 <span class="sd">      *Format requirements*: For dataset with K classes, individual class labels must be integers in 0, 1, ..., K-1.</span>
 
 <span class="sd">    pred_probs : np.ndarray</span>
-<span class="sd">      An array of shape ``(N, K)`` of model-predicted probabilities,</span>
-<span class="sd">      ``P(label=k|x)``. Each row of this matrix corresponds</span>
-<span class="sd">      to an example `x` and contains the model-predicted probabilities that</span>
-<span class="sd">      `x` belongs to each possible class, for each of the K classes. The</span>
-<span class="sd">      columns must be ordered such that these probabilities correspond to</span>
-<span class="sd">      class 0, 1, ..., K-1. In multi-label classification, the rows of `pred_probs` need not sum to 1.</span>
+<span class="sd">      A 2D array of shape ``(N, K)`` of model-predicted class probabilities ``P(label=k|x)``.</span>
+<span class="sd">      Each row of this matrix corresponds to an example `x` and contains the predicted probabilities</span>
+<span class="sd">      that `x` belongs to each possible class, for each of the K classes.</span>
+<span class="sd">      The columns of this array must be ordered such that these probabilities correspond to class 0, 1, ..., K-1.</span>
+<span class="sd">      In multi-label classification (where classes are not mutually exclusive), the rows of `pred_probs` need not sum to 1.</span>
 
 <span class="sd">      Note</span>
 <span class="sd">      ----</span>

@@ -440,12 +440,11 @@ The i-th element of <cite>labels</cite> corresponds to list of classes that i-th
 <p><em>Format requirements</em>: For dataset with K classes, individual class labels must be integers in 0, 1, …, K-1.</p>
 </div>
 </p></li>
-<li><p><strong>pred_probs</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">np.ndarray</span></code>) – <p>An array of shape <code class="docutils literal notranslate"><span class="pre">(N,</span> <span class="pre">K)</span></code> of model-predicted probabilities,
-<code class="docutils literal notranslate"><span class="pre">P(label=k|x)</span></code>. Each row of this matrix corresponds
-to an example <cite>x</cite> and contains the model-predicted probabilities that
-<cite>x</cite> belongs to each possible class, for each of the K classes. The
-columns must be ordered such that these probabilities correspond to
-class 0, 1, …, K-1. In multi-label classification, the rows of <cite>pred_probs</cite> need not sum to 1.</p>
+<li><p><strong>pred_probs</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">np.ndarray</span></code>) – <p>A 2D array of shape <code class="docutils literal notranslate"><span class="pre">(N,</span> <span class="pre">K)</span></code> of model-predicted class probabilities <code class="docutils literal notranslate"><span class="pre">P(label=k|x)</span></code>.
+Each row of this matrix corresponds to an example <cite>x</cite> and contains the predicted probabilities
+that <cite>x</cite> belongs to each possible class, for each of the K classes.
+The columns of this array must be ordered such that these probabilities correspond to class 0, 1, …, K-1.
+In multi-label classification (where classes are not mutually exclusive), the rows of <cite>pred_probs</cite> need not sum to 1.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>Estimated label quality scores are most accurate when they are computed based on out-of-sample <code class="docutils literal notranslate"><span class="pre">pred_probs</span></code> from your model.
@@ -471,7 +470,7 @@ See <a class="reference internal" href="internal/multilabel_scorer.html#cleanlab
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></p>
+<dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>[<code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">dtype</span></code>[np.floating[T]]]</p>
 </dd>
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>label_quality_scores</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">np.ndarray</span></code>) – A 1D array of shape <code class="docutils literal notranslate"><span class="pre">(N,)</span></code> with a label quality score (between 0 and 1) for each example in the dataset.
