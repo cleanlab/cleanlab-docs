@@ -1108,15 +1108,12 @@
     <span class="n">num_classes</span> <span class="o">=</span> <span class="n">get_num_classes</span><span class="p">(</span><span class="n">pred_probs</span><span class="o">=</span><span class="n">pred_probs</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
 
     <span class="c1"># temp scale pred_probs</span>
-    <span class="n">optimal_temp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">full</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">pred_probs</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">NaN</span><span class="p">)</span>
-    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">pred_probs</span><span class="p">)):</span>
-        <span class="n">curr_pred_probs</span> <span class="o">=</span> <span class="n">pred_probs</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
-        <span class="n">curr_optimal_temp</span> <span class="o">=</span> <span class="n">find_best_temp_scaler</span><span class="p">(</span><span class="n">labels_multiannotator</span><span class="p">,</span> <span class="n">curr_pred_probs</span><span class="p">)</span>
-        <span class="n">pred_probs</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">temp_scale_pred_probs</span><span class="p">(</span><span class="n">curr_pred_probs</span><span class="p">,</span> <span class="n">curr_optimal_temp</span><span class="p">)</span>
-        <span class="n">optimal_temp</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">curr_optimal_temp</span>
 
     <span class="c1"># if all examples are only labeled by a single annotator</span>
     <span class="k">if</span> <span class="n">labels_multiannotator</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">s</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">s</span><span class="o">.</span><span class="n">dropna</span><span class="p">())</span> <span class="o">==</span> <span class="mi">1</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">all</span><span class="p">():</span>
+        <span class="c1"># do not temp scale for single annotator case, temperature is defined here for later use</span>
+        <span class="n">optimal_temp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">full</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">pred_probs</span><span class="p">),</span> <span class="mf">1.0</span><span class="p">)</span>
+
         <span class="n">assert_valid_inputs_multiannotator</span><span class="p">(</span>
             <span class="n">labels_multiannotator</span><span class="p">,</span> <span class="n">pred_probs</span><span class="p">,</span> <span class="n">ensemble</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">allow_single_label</span><span class="o">=</span><span class="kc">True</span>
         <span class="p">)</span>
@@ -1133,6 +1130,13 @@
         <span class="n">avg_annotator_weight</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">annotator_weight</span><span class="p">)</span>
 
     <span class="k">else</span><span class="p">:</span>
+        <span class="n">optimal_temp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">full</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">pred_probs</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">NaN</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">pred_probs</span><span class="p">)):</span>
+            <span class="n">curr_pred_probs</span> <span class="o">=</span> <span class="n">pred_probs</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+            <span class="n">curr_optimal_temp</span> <span class="o">=</span> <span class="n">find_best_temp_scaler</span><span class="p">(</span><span class="n">labels_multiannotator</span><span class="p">,</span> <span class="n">curr_pred_probs</span><span class="p">)</span>
+            <span class="n">pred_probs</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">temp_scale_pred_probs</span><span class="p">(</span><span class="n">curr_pred_probs</span><span class="p">,</span> <span class="n">curr_optimal_temp</span><span class="p">)</span>
+            <span class="n">optimal_temp</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">curr_optimal_temp</span>
+
         <span class="n">multiannotator_info</span> <span class="o">=</span> <span class="n">get_label_quality_multiannotator_ensemble</span><span class="p">(</span>
             <span class="n">labels_multiannotator</span><span class="p">,</span>
             <span class="n">pred_probs</span><span class="p">,</span>
