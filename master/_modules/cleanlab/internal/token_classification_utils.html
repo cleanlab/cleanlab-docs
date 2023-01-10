@@ -430,7 +430,11 @@
 <span class="kn">import</span> <span class="nn">string</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">from</span> <span class="nn">termcolor</span> <span class="kn">import</span> <span class="n">colored</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Tuple</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">TypeVar</span>
+<span class="kn">import</span> <span class="nn">numpy.typing</span> <span class="k">as</span> <span class="nn">npt</span>
+
+
+<span class="n">T</span> <span class="o">=</span> <span class="n">TypeVar</span><span class="p">(</span><span class="s2">&quot;T&quot;</span><span class="p">,</span> <span class="n">bound</span><span class="o">=</span><span class="n">npt</span><span class="o">.</span><span class="n">NBitBase</span><span class="p">)</span>
 
 
 <div class="viewcode-block" id="get_sentence"><a class="viewcode-back" href="../../../cleanlab/internal/token_classification_utils.html#cleanlab.internal.token_classification_utils.get_sentence">[docs]</a><span class="k">def</span> <span class="nf">get_sentence</span><span class="p">(</span><span class="n">words</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
@@ -579,14 +583,16 @@
     <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">entities</span><span class="p">))</span></div>
 
 
-<div class="viewcode-block" id="merge_probs"><a class="viewcode-back" href="../../../cleanlab/internal/token_classification_utils.html#cleanlab.internal.token_classification_utils.merge_probs">[docs]</a><span class="k">def</span> <span class="nf">merge_probs</span><span class="p">(</span><span class="n">probs</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">maps</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<div class="viewcode-block" id="merge_probs"><a class="viewcode-back" href="../../../cleanlab/internal/token_classification_utils.html#cleanlab.internal.token_classification_utils.merge_probs">[docs]</a><span class="k">def</span> <span class="nf">merge_probs</span><span class="p">(</span>
+    <span class="n">probs</span><span class="p">:</span> <span class="n">npt</span><span class="o">.</span><span class="n">NDArray</span><span class="p">[</span><span class="s2">&quot;np.floating[T]&quot;</span><span class="p">],</span> <span class="n">maps</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">npt</span><span class="o">.</span><span class="n">NDArray</span><span class="p">[</span><span class="s2">&quot;np.floating[T]&quot;</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Merges model-predictive probabilities with desired mapping</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 <span class="sd">    probs:</span>
-<span class="sd">        np.array of shape `(N, K)`, where N is the number of tokens, and K is the number of classes for the model</span>
+<span class="sd">        A 2D np.array of shape `(N, K)`, where N is the number of tokens, and K is the number of classes for the model</span>
 
 <span class="sd">    maps:</span>
 <span class="sd">        a list of mapped index, such that the probability of the token being in the i&#39;th class is mapped to the</span>
@@ -596,7 +602,7 @@
 <span class="sd">    Returns</span>
 <span class="sd">    ---------</span>
 <span class="sd">    probs_merged:</span>
-<span class="sd">        np.array of shape ``(N, K&#39;)``, where `K` is the number of new classes. Probabilities are merged and</span>
+<span class="sd">        A 2D np.array of shape ``(N, K&#39;)``, where `K&#39;` is the number of new classes. Probabilities are merged and</span>
 <span class="sd">        re-normalized if necessary.</span>
 
 <span class="sd">    Examples</span>
