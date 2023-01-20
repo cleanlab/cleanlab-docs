@@ -434,11 +434,11 @@
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">from</span> <span class="nn">sklearn.metrics</span> <span class="kn">import</span> <span class="n">confusion_matrix</span>
 <span class="kn">import</span> <span class="nn">multiprocessing</span>
-<span class="kn">from</span> <span class="nn">multiprocessing.sharedctypes</span> <span class="kn">import</span> <span class="n">RawArray</span>
 <span class="kn">import</span> <span class="nn">sys</span>
 <span class="kn">import</span> <span class="nn">warnings</span>
 <span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Union</span>
 <span class="kn">from</span> <span class="nn">functools</span> <span class="kn">import</span> <span class="n">reduce</span>
+<span class="kn">import</span> <span class="nn">platform</span>
 
 <span class="kn">from</span> <span class="nn">cleanlab.count</span> <span class="kn">import</span> <span class="n">calibrate_confident_joint</span>
 <span class="kn">from</span> <span class="nn">cleanlab.rank</span> <span class="kn">import</span> <span class="p">(</span>
@@ -454,9 +454,8 @@
 <span class="kn">from</span> <span class="nn">cleanlab.internal.multilabel_utils</span> <span class="kn">import</span> <span class="n">stack_complement</span><span class="p">,</span> <span class="n">get_onehot_num_classes</span><span class="p">,</span> <span class="n">int2onehot</span>
 <span class="kn">from</span> <span class="nn">cleanlab.typing</span> <span class="kn">import</span> <span class="n">LabelLike</span>
 
-<span class="c1"># tqdm is a module used to print time-to-complete when multiprocessing is used.</span>
-<span class="c1"># This module is not necessary, and therefore is not a package dependency, but</span>
-<span class="c1"># when installed it improves user experience for large datasets.</span>
+<span class="c1"># tqdm is a package to print time-to-complete when multiprocessing is used.</span>
+<span class="c1"># This package is not necessary, but when installed improves user experience for large datasets.</span>
 <span class="k">try</span><span class="p">:</span>
     <span class="kn">import</span> <span class="nn">tqdm</span>
 
@@ -466,6 +465,19 @@
 
     <span class="n">w</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;To see estimated completion times for methods in cleanlab.filter, &quot;pip install tqdm&quot;.&quot;&quot;&quot;</span>
     <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="n">w</span><span class="p">)</span>
+
+<span class="c1"># psutil is a package used to count physical cores for multiprocessing</span>
+<span class="c1"># This package is not necessary, because we can always fall back to logical cores as the default</span>
+<span class="k">try</span><span class="p">:</span>
+    <span class="kn">import</span> <span class="nn">psutil</span>
+
+    <span class="n">psutil_exists</span> <span class="o">=</span> <span class="kc">True</span>
+<span class="k">except</span> <span class="ne">ImportError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>  <span class="c1"># pragma: no cover</span>
+    <span class="n">psutil_exists</span> <span class="o">=</span> <span class="kc">False</span>
+
+<span class="c1"># global variable for find_label_issues multiprocessing</span>
+<span class="n">pred_probs_by_class</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]</span>
+<span class="n">prune_count_matrix_cols</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]</span>
 
 
 <div class="viewcode-block" id="find_label_issues"><a class="viewcode-back" href="../../cleanlab/filter.html#cleanlab.filter.find_label_issues">[docs]</a><span class="k">def</span> <span class="nf">find_label_issues</span><span class="p">(</span>
@@ -595,7 +607,7 @@
 
 <span class="sd">    n_jobs : optional</span>
 <span class="sd">      Number of processing threads used by multiprocessing. Default ``None``</span>
-<span class="sd">      sets to the number of cores on your CPU.</span>
+<span class="sd">      sets to the number of cores on your CPU (physical cores if you have ``psutil`` package installed, otherwise logical cores).</span>
 <span class="sd">      Set this to 1 to *disable* parallel processing (if its causing issues).</span>
 <span class="sd">      Windows users may see a speed-up with ``n_jobs=1``.</span>
 
@@ -655,9 +667,34 @@
             <span class="s2">&quot;filter_by &#39;confident_learning&#39; or &#39;predicted_neq_given&#39; is not supported (yet) when setting &#39;num_to_remove_per_class&#39;&quot;</span>
         <span class="p">)</span>
 
+    <span class="n">K</span> <span class="o">=</span> <span class="n">get_num_classes</span><span class="p">(</span>
+        <span class="n">labels</span><span class="o">=</span><span class="n">labels</span><span class="p">,</span> <span class="n">pred_probs</span><span class="o">=</span><span class="n">pred_probs</span><span class="p">,</span> <span class="n">label_matrix</span><span class="o">=</span><span class="n">confident_joint</span><span class="p">,</span> <span class="n">multi_label</span><span class="o">=</span><span class="n">multi_label</span>
+    <span class="p">)</span>
+    <span class="c1"># Boolean set to true if dataset is large</span>
+    <span class="n">big_dataset</span> <span class="o">=</span> <span class="n">K</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">labels</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mf">1e8</span>
+
     <span class="c1"># Set-up number of multiprocessing threads</span>
+    <span class="c1"># On Windows/macOS, when multi_label is True, multiprocessing is much slower</span>
+    <span class="c1"># even for faily large input arrays, so we default to n_jobs=1 in this case</span>
+    <span class="n">os_name</span> <span class="o">=</span> <span class="n">platform</span><span class="o">.</span><span class="n">system</span><span class="p">()</span>
     <span class="k">if</span> <span class="n">n_jobs</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">n_jobs</span> <span class="o">=</span> <span class="n">multiprocessing</span><span class="o">.</span><span class="n">cpu_count</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">multi_label</span> <span class="ow">and</span> <span class="n">os_name</span> <span class="o">!=</span> <span class="s2">&quot;Linux&quot;</span><span class="p">:</span>
+            <span class="n">n_jobs</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">psutil_exists</span><span class="p">:</span>
+                <span class="n">n_jobs</span> <span class="o">=</span> <span class="n">psutil</span><span class="o">.</span><span class="n">cpu_count</span><span class="p">(</span><span class="n">logical</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>  <span class="c1"># physical cores</span>
+            <span class="k">elif</span> <span class="n">big_dataset</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span>
+                    <span class="s2">&quot;To default `n_jobs` to the number of physical cores for multiprocessing in find_label_issues(), please: `pip install psutil`.</span><span class="se">\n</span><span class="s2">&quot;</span>
+                    <span class="s2">&quot;Note: You can safely ignore this message. `n_jobs` only affects runtimes, results will be the same no matter its value.</span><span class="se">\n</span><span class="s2">&quot;</span>
+                    <span class="s2">&quot;Since psutil is not installed, `n_jobs` was set to the number of logical cores by default.</span><span class="se">\n</span><span class="s2">&quot;</span>
+                    <span class="s2">&quot;Disable this message by either installing psutil or specifying the `n_jobs` argument.&quot;</span>
+                <span class="p">)</span>  <span class="c1"># pragma: no cover</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">n_jobs</span><span class="p">:</span>
+                <span class="c1"># either psutil does not exist</span>
+                <span class="c1"># or psutil can return None when physical cores cannot be determined</span>
+                <span class="c1"># switch to logical cores</span>
+                <span class="n">n_jobs</span> <span class="o">=</span> <span class="n">multiprocessing</span><span class="o">.</span><span class="n">cpu_count</span><span class="p">()</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="k">assert</span> <span class="n">n_jobs</span> <span class="o">&gt;=</span> <span class="mi">1</span>
 
@@ -680,13 +717,8 @@
         <span class="p">)</span>
 
     <span class="c1"># Else this is standard multi-class classification</span>
-    <span class="n">K</span> <span class="o">=</span> <span class="n">get_num_classes</span><span class="p">(</span>
-        <span class="n">labels</span><span class="o">=</span><span class="n">labels</span><span class="p">,</span> <span class="n">pred_probs</span><span class="o">=</span><span class="n">pred_probs</span><span class="p">,</span> <span class="n">label_matrix</span><span class="o">=</span><span class="n">confident_joint</span><span class="p">,</span> <span class="n">multi_label</span><span class="o">=</span><span class="n">multi_label</span>
-    <span class="p">)</span>
     <span class="c1"># Number of examples in each class of labels</span>
     <span class="n">label_counts</span> <span class="o">=</span> <span class="n">value_counts_fill_missing_classes</span><span class="p">(</span><span class="n">labels</span><span class="p">,</span> <span class="n">K</span><span class="p">,</span> <span class="n">multi_label</span><span class="o">=</span><span class="n">multi_label</span><span class="p">)</span>
-    <span class="c1"># Boolean set to true if dataset is large</span>
-    <span class="n">big_dataset</span> <span class="o">=</span> <span class="n">K</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">labels</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mf">1e8</span>
     <span class="c1"># Ensure labels are of type np.ndarray()</span>
     <span class="n">labels</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">labels</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">confident_joint</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">filter_by</span> <span class="o">==</span> <span class="s2">&quot;confident_learning&quot;</span><span class="p">:</span>
@@ -718,83 +750,66 @@
             <span class="n">prune_count_matrix</span> <span class="o">=</span> <span class="n">round_preserving_row_totals</span><span class="p">(</span><span class="n">tmp</span><span class="p">)</span>
 
         <span class="c1"># Prepare multiprocessing shared data</span>
-        <span class="k">if</span> <span class="n">n_jobs</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
-            <span class="n">_labels</span> <span class="o">=</span> <span class="n">RawArray</span><span class="p">(</span><span class="s2">&quot;I&quot;</span><span class="p">,</span> <span class="n">labels</span><span class="p">)</span>  <span class="c1"># type: ignore</span>
-            <span class="n">_label_counts</span> <span class="o">=</span> <span class="n">RawArray</span><span class="p">(</span><span class="s2">&quot;I&quot;</span><span class="p">,</span> <span class="n">label_counts</span><span class="p">)</span>  <span class="c1"># type: ignore</span>
-            <span class="n">_prune_count_matrix</span> <span class="o">=</span> <span class="n">RawArray</span><span class="p">(</span><span class="s2">&quot;I&quot;</span><span class="p">,</span> <span class="n">prune_count_matrix</span><span class="o">.</span><span class="n">flatten</span><span class="p">())</span>  <span class="c1"># type: ignore</span>
-            <span class="n">_pred_probs</span> <span class="o">=</span> <span class="n">RawArray</span><span class="p">(</span><span class="s2">&quot;f&quot;</span><span class="p">,</span> <span class="n">pred_probs</span><span class="o">.</span><span class="n">flatten</span><span class="p">())</span>  <span class="c1"># type: ignore</span>
-        <span class="k">else</span><span class="p">:</span>  <span class="c1"># Multiprocessing is turned off. Create tuple with all parameters</span>
-            <span class="n">args</span> <span class="o">=</span> <span class="p">(</span>
-                <span class="n">labels</span><span class="p">,</span>
-                <span class="n">label_counts</span><span class="p">,</span>
-                <span class="n">prune_count_matrix</span><span class="p">,</span>
-                <span class="n">pred_probs</span><span class="p">,</span>
-                <span class="n">multi_label</span><span class="p">,</span>
-                <span class="n">min_examples_per_class</span><span class="p">,</span>
-            <span class="p">)</span>
+        <span class="c1"># On Linux, multiprocessing is started with fork,</span>
+        <span class="c1"># so data can be shared with global vairables + COW</span>
+        <span class="c1"># On Window/macOS, processes are started with spawn,</span>
+        <span class="c1"># so data will need to be pickled to the subprocesses through input args</span>
+        <span class="n">chunksize</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">K</span> <span class="o">//</span> <span class="n">n_jobs</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">n_jobs</span> <span class="o">==</span> <span class="mi">1</span> <span class="ow">or</span> <span class="n">os_name</span> <span class="o">==</span> <span class="s2">&quot;Linux&quot;</span><span class="p">:</span>
+            <span class="k">global</span> <span class="n">pred_probs_by_class</span><span class="p">,</span> <span class="n">prune_count_matrix_cols</span>
+            <span class="n">pred_probs_by_class</span> <span class="o">=</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="n">pred_probs</span><span class="p">[</span><span class="n">labels</span> <span class="o">==</span> <span class="n">k</span><span class="p">]</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">K</span><span class="p">)}</span>
+            <span class="n">prune_count_matrix_cols</span> <span class="o">=</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="n">prune_count_matrix</span><span class="p">[:,</span> <span class="n">k</span><span class="p">]</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">K</span><span class="p">)}</span>
+            <span class="n">args</span> <span class="o">=</span> <span class="p">[[</span><span class="n">k</span><span class="p">,</span> <span class="n">min_examples_per_class</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">K</span><span class="p">)]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">args</span> <span class="o">=</span> <span class="p">[</span>
+                <span class="p">[</span><span class="n">k</span><span class="p">,</span> <span class="n">min_examples_per_class</span><span class="p">,</span> <span class="p">[</span><span class="n">pred_probs</span><span class="p">[</span><span class="n">labels</span> <span class="o">==</span> <span class="n">k</span><span class="p">],</span> <span class="n">prune_count_matrix</span><span class="p">[:,</span> <span class="n">k</span><span class="p">]]]</span>
+                <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">K</span><span class="p">)</span>
+            <span class="p">]</span>
 
     <span class="c1"># Perform Pruning with threshold probabilities from BFPRT algorithm in O(n)</span>
     <span class="c1"># Operations are parallelized across all CPU processes</span>
     <span class="k">if</span> <span class="n">filter_by</span> <span class="o">==</span> <span class="s2">&quot;prune_by_class&quot;</span> <span class="ow">or</span> <span class="n">filter_by</span> <span class="o">==</span> <span class="s2">&quot;both&quot;</span><span class="p">:</span>
-        <span class="k">if</span> <span class="n">n_jobs</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>  <span class="c1"># parallelize</span>
-            <span class="k">with</span> <span class="n">multiprocessing</span><span class="o">.</span><span class="n">Pool</span><span class="p">(</span>
-                <span class="n">n_jobs</span><span class="p">,</span>
-                <span class="n">initializer</span><span class="o">=</span><span class="n">_init</span><span class="p">,</span>
-                <span class="n">initargs</span><span class="o">=</span><span class="p">(</span>
-                    <span class="n">_labels</span><span class="p">,</span>
-                    <span class="n">_label_counts</span><span class="p">,</span>
-                    <span class="n">_prune_count_matrix</span><span class="p">,</span>
-                    <span class="n">prune_count_matrix</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span>
-                    <span class="n">_pred_probs</span><span class="p">,</span>
-                    <span class="n">pred_probs</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span>
-                    <span class="n">multi_label</span><span class="p">,</span>
-                    <span class="n">min_examples_per_class</span><span class="p">,</span>
-                <span class="p">),</span>
-            <span class="p">)</span> <span class="k">as</span> <span class="n">p</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">n_jobs</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="k">with</span> <span class="n">multiprocessing</span><span class="o">.</span><span class="n">Pool</span><span class="p">(</span><span class="n">n_jobs</span><span class="p">)</span> <span class="k">as</span> <span class="n">p</span><span class="p">:</span>
                 <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>  <span class="c1"># pragma: no cover</span>
                     <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Parallel processing label issues by class.&quot;</span><span class="p">)</span>
                 <span class="n">sys</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">flush</span><span class="p">()</span>
                 <span class="k">if</span> <span class="n">big_dataset</span> <span class="ow">and</span> <span class="n">tqdm_exists</span><span class="p">:</span>
                     <span class="n">label_issues_masks_per_class</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span>
-                        <span class="n">tqdm</span><span class="o">.</span><span class="n">tqdm</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">imap</span><span class="p">(</span><span class="n">_prune_by_class</span><span class="p">,</span> <span class="nb">range</span><span class="p">(</span><span class="n">K</span><span class="p">)),</span> <span class="n">total</span><span class="o">=</span><span class="n">K</span><span class="p">),</span>
+                        <span class="n">tqdm</span><span class="o">.</span><span class="n">tqdm</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">imap</span><span class="p">(</span><span class="n">_prune_by_class</span><span class="p">,</span> <span class="n">args</span><span class="p">,</span> <span class="n">chunksize</span><span class="o">=</span><span class="n">chunksize</span><span class="p">),</span> <span class="n">total</span><span class="o">=</span><span class="n">K</span><span class="p">)</span>
                     <span class="p">)</span>
                 <span class="k">else</span><span class="p">:</span>
-                    <span class="n">label_issues_masks_per_class</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">_prune_by_class</span><span class="p">,</span> <span class="nb">range</span><span class="p">(</span><span class="n">K</span><span class="p">))</span>
-        <span class="k">else</span><span class="p">:</span>  <span class="c1"># n_jobs = 1, so no parallelization</span>
-            <span class="n">label_issues_masks_per_class</span> <span class="o">=</span> <span class="p">[</span><span class="n">_prune_by_class</span><span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="n">args</span><span class="p">)</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">K</span><span class="p">)]</span>
-        <span class="n">label_issues_mask</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">stack</span><span class="p">(</span><span class="n">label_issues_masks_per_class</span><span class="p">)</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+                    <span class="n">label_issues_masks_per_class</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">_prune_by_class</span><span class="p">,</span> <span class="n">args</span><span class="p">,</span> <span class="n">chunksize</span><span class="o">=</span><span class="n">chunksize</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">label_issues_masks_per_class</span> <span class="o">=</span> <span class="p">[</span><span class="n">_prune_by_class</span><span class="p">(</span><span class="n">arg</span><span class="p">)</span> <span class="k">for</span> <span class="n">arg</span> <span class="ow">in</span> <span class="n">args</span><span class="p">]</span>
+
+        <span class="n">label_issues_mask</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">labels</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">bool</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">mask</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">label_issues_masks_per_class</span><span class="p">):</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">mask</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="n">label_issues_mask</span><span class="p">[</span><span class="n">labels</span> <span class="o">==</span> <span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">mask</span>
 
     <span class="k">if</span> <span class="n">filter_by</span> <span class="o">==</span> <span class="s2">&quot;both&quot;</span><span class="p">:</span>
         <span class="n">label_issues_mask_by_class</span> <span class="o">=</span> <span class="n">label_issues_mask</span>
 
     <span class="k">if</span> <span class="n">filter_by</span> <span class="o">==</span> <span class="s2">&quot;prune_by_noise_rate&quot;</span> <span class="ow">or</span> <span class="n">filter_by</span> <span class="o">==</span> <span class="s2">&quot;both&quot;</span><span class="p">:</span>
-        <span class="k">if</span> <span class="n">n_jobs</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>  <span class="c1"># parallelize</span>
-            <span class="k">with</span> <span class="n">multiprocessing</span><span class="o">.</span><span class="n">Pool</span><span class="p">(</span>
-                <span class="n">n_jobs</span><span class="p">,</span>
-                <span class="n">initializer</span><span class="o">=</span><span class="n">_init</span><span class="p">,</span>
-                <span class="n">initargs</span><span class="o">=</span><span class="p">(</span>
-                    <span class="n">_labels</span><span class="p">,</span>
-                    <span class="n">_label_counts</span><span class="p">,</span>
-                    <span class="n">_prune_count_matrix</span><span class="p">,</span>
-                    <span class="n">prune_count_matrix</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span>
-                    <span class="n">_pred_probs</span><span class="p">,</span>
-                    <span class="n">pred_probs</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span>
-                    <span class="n">multi_label</span><span class="p">,</span>
-                    <span class="n">min_examples_per_class</span><span class="p">,</span>
-                <span class="p">),</span>
-            <span class="p">)</span> <span class="k">as</span> <span class="n">p</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">n_jobs</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="k">with</span> <span class="n">multiprocessing</span><span class="o">.</span><span class="n">Pool</span><span class="p">(</span><span class="n">n_jobs</span><span class="p">)</span> <span class="k">as</span> <span class="n">p</span><span class="p">:</span>
                 <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>  <span class="c1"># pragma: no cover</span>
                     <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Parallel processing label issues by noise rate.&quot;</span><span class="p">)</span>
                 <span class="n">sys</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">flush</span><span class="p">()</span>
                 <span class="k">if</span> <span class="n">big_dataset</span> <span class="ow">and</span> <span class="n">tqdm_exists</span><span class="p">:</span>
                     <span class="n">label_issues_masks_per_class</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span>
-                        <span class="n">tqdm</span><span class="o">.</span><span class="n">tqdm</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">imap</span><span class="p">(</span><span class="n">_prune_by_count</span><span class="p">,</span> <span class="nb">range</span><span class="p">(</span><span class="n">K</span><span class="p">)),</span> <span class="n">total</span><span class="o">=</span><span class="n">K</span><span class="p">)</span>
+                        <span class="n">tqdm</span><span class="o">.</span><span class="n">tqdm</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">imap</span><span class="p">(</span><span class="n">_prune_by_count</span><span class="p">,</span> <span class="n">args</span><span class="p">,</span> <span class="n">chunksize</span><span class="o">=</span><span class="n">chunksize</span><span class="p">),</span> <span class="n">total</span><span class="o">=</span><span class="n">K</span><span class="p">)</span>
                     <span class="p">)</span>
                 <span class="k">else</span><span class="p">:</span>
-                    <span class="n">label_issues_masks_per_class</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">_prune_by_count</span><span class="p">,</span> <span class="nb">range</span><span class="p">(</span><span class="n">K</span><span class="p">))</span>
-        <span class="k">else</span><span class="p">:</span>  <span class="c1"># n_jobs = 1, so no parallelization</span>
-            <span class="n">label_issues_masks_per_class</span> <span class="o">=</span> <span class="p">[</span><span class="n">_prune_by_count</span><span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="n">args</span><span class="p">)</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">K</span><span class="p">)]</span>
-        <span class="n">label_issues_mask</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">stack</span><span class="p">(</span><span class="n">label_issues_masks_per_class</span><span class="p">)</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+                    <span class="n">label_issues_masks_per_class</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">_prune_by_count</span><span class="p">,</span> <span class="n">args</span><span class="p">,</span> <span class="n">chunksize</span><span class="o">=</span><span class="n">chunksize</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">label_issues_masks_per_class</span> <span class="o">=</span> <span class="p">[</span><span class="n">_prune_by_count</span><span class="p">(</span><span class="n">arg</span><span class="p">)</span> <span class="k">for</span> <span class="n">arg</span> <span class="ow">in</span> <span class="n">args</span><span class="p">]</span>
+
+        <span class="n">label_issues_mask</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">labels</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">bool</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">mask</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">label_issues_masks_per_class</span><span class="p">):</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">mask</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="n">label_issues_mask</span><span class="p">[</span><span class="n">labels</span> <span class="o">==</span> <span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">mask</span>
 
     <span class="k">if</span> <span class="n">filter_by</span> <span class="o">==</span> <span class="s2">&quot;both&quot;</span><span class="p">:</span>
         <span class="n">label_issues_mask</span> <span class="o">=</span> <span class="n">label_issues_mask</span> <span class="o">&amp;</span> <span class="n">label_issues_mask_by_class</span>
@@ -1299,7 +1314,7 @@
 
 
 <span class="c1"># TODO figure out what the types inside args are.</span>
-<span class="k">def</span> <span class="nf">_prune_by_class</span><span class="p">(</span><span class="n">k</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<span class="k">def</span> <span class="nf">_prune_by_class</span><span class="p">(</span><span class="n">args</span><span class="p">:</span> <span class="nb">list</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;multiprocessing Helper function for find_label_issues()</span>
 <span class="sd">    that assumes globals and produces a mask for class k for each example by</span>
 <span class="sd">    removing the examples with *smallest probability* of</span>
@@ -1310,41 +1325,34 @@
 <span class="sd">    k : int (between 0 and num classes - 1)</span>
 <span class="sd">      The class of interest.&quot;&quot;&quot;</span>
 
-    <span class="k">if</span> <span class="n">args</span><span class="p">:</span>  <span class="c1"># Single processing - params are passed in</span>
-        <span class="p">(</span>
-            <span class="n">labels</span><span class="p">,</span>
-            <span class="n">label_counts</span><span class="p">,</span>
-            <span class="n">prune_count_matrix</span><span class="p">,</span>
-            <span class="n">pred_probs</span><span class="p">,</span>
-            <span class="n">multi_label</span><span class="p">,</span>
-            <span class="n">min_examples_per_class</span><span class="p">,</span>
-        <span class="p">)</span> <span class="o">=</span> <span class="n">args</span>
-    <span class="k">else</span><span class="p">:</span>  <span class="c1"># Multiprocessing - data is shared across sub-processes</span>
-        <span class="p">(</span>
-            <span class="n">labels</span><span class="p">,</span>
-            <span class="n">label_counts</span><span class="p">,</span>
-            <span class="n">prune_count_matrix</span><span class="p">,</span>
-            <span class="n">pred_probs</span><span class="p">,</span>
-            <span class="n">multi_label</span><span class="p">,</span>
-            <span class="n">min_examples_per_class</span><span class="p">,</span>
-        <span class="p">)</span> <span class="o">=</span> <span class="n">_get_shared_data</span><span class="p">()</span>
-
-    <span class="k">if</span> <span class="n">label_counts</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">min_examples_per_class</span><span class="p">:</span>  <span class="c1"># No prune if not at least min_examples_per_class</span>
-        <span class="n">num_issues</span> <span class="o">=</span> <span class="n">label_counts</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">-</span> <span class="n">prune_count_matrix</span><span class="p">[</span><span class="n">k</span><span class="p">][</span><span class="n">k</span><span class="p">]</span>
-        <span class="c1"># Get return_indices_ranked_by of the smallest prob of class k for examples with noisy label k</span>
-        <span class="n">label_filter</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">k</span> <span class="ow">in</span> <span class="n">lst</span> <span class="k">for</span> <span class="n">lst</span> <span class="ow">in</span> <span class="n">labels</span><span class="p">])</span> <span class="k">if</span> <span class="n">multi_label</span> <span class="k">else</span> <span class="n">labels</span> <span class="o">==</span> <span class="n">k</span>
-        <span class="n">class_probs</span> <span class="o">=</span> <span class="n">pred_probs</span><span class="p">[:,</span> <span class="n">k</span><span class="p">]</span>
-        <span class="n">rank</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">partition</span><span class="p">(</span><span class="n">class_probs</span><span class="p">[</span><span class="n">label_filter</span><span class="p">],</span> <span class="n">num_issues</span><span class="p">)[</span><span class="n">num_issues</span><span class="p">]</span>
-        <span class="k">return</span> <span class="n">label_filter</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">class_probs</span> <span class="o">&lt;</span> <span class="n">rank</span><span class="p">)</span>
+    <span class="n">k</span><span class="p">,</span> <span class="n">min_examples_per_class</span><span class="p">,</span> <span class="n">arrays</span> <span class="o">=</span> <span class="n">args</span>
+    <span class="k">if</span> <span class="n">arrays</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">pred_probs</span> <span class="o">=</span> <span class="n">pred_probs_by_class</span><span class="p">[</span><span class="n">k</span><span class="p">]</span>
+        <span class="n">prune_count_matrix</span> <span class="o">=</span> <span class="n">prune_count_matrix_cols</span><span class="p">[</span><span class="n">k</span><span class="p">]</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
-            <span class="sa">f</span><span class="s2">&quot;May not flag all label issues in class: </span><span class="si">{</span><span class="n">k</span><span class="si">}</span><span class="s2">, it has too few examples (see argument: `min_examples_per_class`)&quot;</span>
-        <span class="p">)</span>
-        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">labels</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">bool</span><span class="p">)</span>
+        <span class="n">pred_probs</span> <span class="o">=</span> <span class="n">arrays</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">prune_count_matrix</span> <span class="o">=</span> <span class="n">arrays</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+
+    <span class="n">label_counts</span> <span class="o">=</span> <span class="n">pred_probs</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">label_issues</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">label_counts</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">bool</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">label_counts</span> <span class="o">&gt;</span> <span class="n">min_examples_per_class</span><span class="p">:</span>  <span class="c1"># No prune if not at least min_examples_per_class</span>
+        <span class="n">num_issues</span> <span class="o">=</span> <span class="n">label_counts</span> <span class="o">-</span> <span class="n">prune_count_matrix</span><span class="p">[</span><span class="n">k</span><span class="p">]</span>
+        <span class="c1"># Get return_indices_ranked_by of the smallest prob of class k for examples with noisy label k</span>
+        <span class="c1"># rank = np.partition(class_probs, num_issues)[num_issues]</span>
+        <span class="k">if</span> <span class="n">num_issues</span> <span class="o">&gt;=</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">class_probs</span> <span class="o">=</span> <span class="n">pred_probs</span><span class="p">[:,</span> <span class="n">k</span><span class="p">]</span>
+            <span class="n">order</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argsort</span><span class="p">(</span><span class="n">class_probs</span><span class="p">)</span>
+            <span class="n">label_issues</span><span class="p">[</span><span class="n">order</span><span class="p">[:</span><span class="n">num_issues</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="k">return</span> <span class="n">label_issues</span>
+
+    <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
+        <span class="sa">f</span><span class="s2">&quot;May not flag all label issues in class: </span><span class="si">{</span><span class="n">k</span><span class="si">}</span><span class="s2">, it has too few examples (see argument: `min_examples_per_class`)&quot;</span>
+    <span class="p">)</span>
+    <span class="k">return</span> <span class="n">label_issues</span>
 
 
 <span class="c1"># TODO figure out what the types inside args are.</span>
-<span class="k">def</span> <span class="nf">_prune_by_count</span><span class="p">(</span><span class="n">k</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<span class="k">def</span> <span class="nf">_prune_by_count</span><span class="p">(</span><span class="n">args</span><span class="p">:</span> <span class="nb">list</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;multiprocessing Helper function for find_label_issues() that assumes</span>
 <span class="sd">    globals and produces a mask for class k for each example by</span>
 <span class="sd">    removing the example with noisy label k having *largest margin*,</span>
@@ -1356,43 +1364,34 @@
 <span class="sd">    k : int (between 0 and num classes - 1)</span>
 <span class="sd">      The true_label class of interest.&quot;&quot;&quot;</span>
 
-    <span class="k">if</span> <span class="n">args</span><span class="p">:</span>  <span class="c1"># Single processing - params are passed in</span>
-        <span class="p">(</span>
-            <span class="n">labels</span><span class="p">,</span>
-            <span class="n">label_counts</span><span class="p">,</span>
-            <span class="n">prune_count_matrix</span><span class="p">,</span>
-            <span class="n">pred_probs</span><span class="p">,</span>
-            <span class="n">multi_label</span><span class="p">,</span>
-            <span class="n">min_examples_per_class</span><span class="p">,</span>
-        <span class="p">)</span> <span class="o">=</span> <span class="n">args</span>
-    <span class="k">else</span><span class="p">:</span>  <span class="c1"># Multiprocessing - data is shared across sub-processes</span>
-        <span class="p">(</span>
-            <span class="n">labels</span><span class="p">,</span>
-            <span class="n">label_counts</span><span class="p">,</span>
-            <span class="n">prune_count_matrix</span><span class="p">,</span>
-            <span class="n">pred_probs</span><span class="p">,</span>
-            <span class="n">multi_label</span><span class="p">,</span>
-            <span class="n">min_examples_per_class</span><span class="p">,</span>
-        <span class="p">)</span> <span class="o">=</span> <span class="n">_get_shared_data</span><span class="p">()</span>
+    <span class="n">k</span><span class="p">,</span> <span class="n">min_examples_per_class</span><span class="p">,</span> <span class="n">arrays</span> <span class="o">=</span> <span class="n">args</span>
+    <span class="k">if</span> <span class="n">arrays</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">pred_probs</span> <span class="o">=</span> <span class="n">pred_probs_by_class</span><span class="p">[</span><span class="n">k</span><span class="p">]</span>
+        <span class="n">prune_count_matrix</span> <span class="o">=</span> <span class="n">prune_count_matrix_cols</span><span class="p">[</span><span class="n">k</span><span class="p">]</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">pred_probs</span> <span class="o">=</span> <span class="n">arrays</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">prune_count_matrix</span> <span class="o">=</span> <span class="n">arrays</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
 
-    <span class="n">label_issues_mask</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">pred_probs</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">bool</span><span class="p">)</span>
-    <span class="n">pred_probs_k</span> <span class="o">=</span> <span class="n">pred_probs</span><span class="p">[:,</span> <span class="n">k</span><span class="p">]</span>
-    <span class="n">K</span> <span class="o">=</span> <span class="n">get_num_classes</span><span class="p">(</span><span class="n">labels</span><span class="p">,</span> <span class="n">pred_probs</span><span class="p">,</span> <span class="n">multi_label</span><span class="o">=</span><span class="n">multi_label</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">label_counts</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="n">min_examples_per_class</span><span class="p">:</span>  <span class="c1"># No prune if not at least min_examples_per_class</span>
+    <span class="n">label_counts</span> <span class="o">=</span> <span class="n">pred_probs</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">label_issues_mask</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">label_counts</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">bool</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">label_counts</span> <span class="o">&lt;=</span> <span class="n">min_examples_per_class</span><span class="p">:</span>
         <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
             <span class="sa">f</span><span class="s2">&quot;May not flag all label issues in class: </span><span class="si">{</span><span class="n">k</span><span class="si">}</span><span class="s2">, it has too few examples (see `min_examples_per_class` argument)&quot;</span>
         <span class="p">)</span>
-        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">labels</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">bool</span><span class="p">)</span>
-    <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">K</span><span class="p">):</span>  <span class="c1"># j is true label index (k is noisy label index)</span>
-        <span class="n">num2prune</span> <span class="o">=</span> <span class="n">prune_count_matrix</span><span class="p">[</span><span class="n">j</span><span class="p">][</span><span class="n">k</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">label_issues_mask</span>
+
+    <span class="n">K</span> <span class="o">=</span> <span class="n">pred_probs</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+    <span class="k">if</span> <span class="n">K</span> <span class="o">&lt;</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Must have at least 1 class.&quot;</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">K</span><span class="p">):</span>
+        <span class="n">num2prune</span> <span class="o">=</span> <span class="n">prune_count_matrix</span><span class="p">[</span><span class="n">j</span><span class="p">]</span>
         <span class="c1"># Only prune for noise rates, not diagonal entries</span>
         <span class="k">if</span> <span class="n">k</span> <span class="o">!=</span> <span class="n">j</span> <span class="ow">and</span> <span class="n">num2prune</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
             <span class="c1"># num2prune&#39;s largest p(true class k) - p(noisy class k)</span>
             <span class="c1"># for x with true label j</span>
-            <span class="n">margin</span> <span class="o">=</span> <span class="n">pred_probs</span><span class="p">[:,</span> <span class="n">j</span><span class="p">]</span> <span class="o">-</span> <span class="n">pred_probs_k</span>
-            <span class="n">label_filter</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">k</span> <span class="ow">in</span> <span class="n">lst</span> <span class="k">for</span> <span class="n">lst</span> <span class="ow">in</span> <span class="n">labels</span><span class="p">])</span> <span class="k">if</span> <span class="n">multi_label</span> <span class="k">else</span> <span class="n">labels</span> <span class="o">==</span> <span class="n">k</span>
-            <span class="n">cut</span> <span class="o">=</span> <span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">partition</span><span class="p">(</span><span class="o">-</span><span class="n">margin</span><span class="p">[</span><span class="n">label_filter</span><span class="p">],</span> <span class="n">num2prune</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)[</span><span class="n">num2prune</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span>
-            <span class="n">label_issues_mask</span> <span class="o">=</span> <span class="n">label_issues_mask</span> <span class="o">|</span> <span class="p">(</span><span class="n">label_filter</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">margin</span> <span class="o">&gt;=</span> <span class="n">cut</span><span class="p">))</span>
+            <span class="n">margin</span> <span class="o">=</span> <span class="n">pred_probs</span><span class="p">[:,</span> <span class="n">j</span><span class="p">]</span> <span class="o">-</span> <span class="n">pred_probs</span><span class="p">[:,</span> <span class="n">k</span><span class="p">]</span>
+            <span class="n">order</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argsort</span><span class="p">(</span><span class="o">-</span><span class="n">margin</span><span class="p">)</span>
+            <span class="n">label_issues_mask</span><span class="p">[</span><span class="n">order</span><span class="p">[:</span><span class="n">num2prune</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">True</span>
     <span class="k">return</span> <span class="n">label_issues_mask</span>
 
 
