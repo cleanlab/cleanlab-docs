@@ -689,8 +689,8 @@ div.rendered_html tbody tr:hover {
 
 </script><section id="Classification-with-Tabular-Data-using-Scikit-Learn-and-Cleanlab">
 <h1>Classification with Tabular Data using Scikit-Learn and Cleanlab<a class="headerlink" href="#Classification-with-Tabular-Data-using-Scikit-Learn-and-Cleanlab" title="Permalink to this heading">#</a></h1>
-<p>In this 5-minute quickstart tutorial, we use cleanlab with scikit-learn models to find potential label errors in a classification dataset with tabular (numeric/categorical) features. Here we study the <a class="reference external" href="https://www.openml.org/d/31">German Credit</a> dataset which contains 1,000 individuals described by 20 features, each labeled as either “good” or “bad” credit risk. cleanlab automatically shortlists <em>hundreds</em> of examples from this dataset that confuse our ML model; many of which are potential
-label errors (due to annotator mistakes), edge cases, and otherwise ambiguous examples.</p>
+<p>In this 5-minute quickstart tutorial, we use cleanlab with scikit-learn models to find potential label errors in a classification dataset with tabular (numeric/categorical) features. Tabular (or <em>structured</em>) data are typically organized in a row/column format and stored in a SQL database or file types like: CSV, Excel, or Parquet. Here we study the <a class="reference external" href="https://www.openml.org/d/31">German Credit</a> dataset which contains 1,000 individuals described by 20 features, each labeled as either “good” or
+“bad” credit risk. cleanlab automatically shortlists <em>hundreds</em> of examples from this dataset that confuse our ML model; many of which are potential label errors (due to annotator mistakes), edge cases, and otherwise ambiguous examples.</p>
 <p><strong>Overview of what we’ll do in this tutorial:</strong></p>
 <ul class="simple">
 <li><p>Build a simple credit risk classifier with scikit-learn’s HistGradientBoostingClassifier.</p></li>
@@ -748,7 +748,7 @@ label errors (due to annotator mistakes), edge cases, and otherwise ambiguous ex
 </section>
 <section id="2.-Load-and-process-the-data">
 <h2>2. Load and process the data<a class="headerlink" href="#2.-Load-and-process-the-data" title="Permalink to this heading">#</a></h2>
-<p>We first load the data features and labels.</p>
+<p>We first load the data features and labels (which are possibly noisy).</p>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
 </pre></div>
@@ -812,7 +812,7 @@ label errors (due to annotator mistakes), edge cases, and otherwise ambiguous ex
 </pre></div>
 </div>
 </div>
-<p>To identify label issues, cleanlab requires a probabilistic prediction from your model for every datapoint. However, these predictions will be <em>overfitted</em> (and thus unreliable) for examples the model was previously trained on. cleanlab is intended to only be used with <strong>out-of-sample</strong> predicted probabilities, i.e., on examples held out from the model during the training.</p>
+<p>To find potential labeling errors, cleanlab requires a probabilistic prediction from your model for every datapoint. However, these predictions will be <em>overfitted</em> (and thus unreliable) for examples the model was previously trained on. cleanlab is intended to only be used with <strong>out-of-sample</strong> predicted probabilities, i.e., on examples held out from the model during the training.</p>
 <p>K-fold cross-validation is a straightforward way to produce out-of-sample predicted probabilities for every datapoint in the dataset by training K copies of our model on different data subsets and using each copy to predict on the subset of data it did not see during training. An additional benefit of cross-validation is that it provides a more reliable evaluation of our model than a single training/validation split. We can obtain cross-validated out-of-sample predicted probabilities from any
 classifier via a simple scikit-learn wrapper:</p>
 <div class="nbinput nblast docutils container">
@@ -835,8 +835,8 @@ classifier via a simple scikit-learn wrapper:</p>
 </section>
 <section id="4.-Use-cleanlab-to-find-label-issues">
 <h2>4. Use cleanlab to find label issues<a class="headerlink" href="#4.-Use-cleanlab-to-find-label-issues" title="Permalink to this heading">#</a></h2>
-<p>Based on the given labels and out-of-sample predicted probabilities, cleanlab can quickly help us identify label issues in our dataset. For a dataset with N examples from K classes, the labels should be a 1D array of length N and predicted probabilities should be a 2D (N x K) array. Here we request that the indices of the identified label issues be sorted by cleanlab’s self-confidence score, which measures the quality of each given label via the probability assigned to it in our model’s
-prediction.</p>
+<p>Based on the given labels and out-of-sample predicted probabilities, cleanlab can quickly help us identify poorly labeled instances in our data table. For a dataset with N examples from K classes, the labels should be a 1D array of length N and predicted probabilities should be a 2D (N x K) array. Here we request that the indices of the identified label issues be sorted by cleanlab’s self-confidence score, which measures the quality of each given label via the probability assigned to it in our
+model’s prediction.</p>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
 </pre></div>
@@ -1040,7 +1040,7 @@ Cleanlab found 195 potential label errors.
 <p>5 rows × 21 columns</p>
 </div></div>
 </div>
-<p>These examples appear the most suspicious to our model and should be carefully re-examined. Perhaps the original annotators missed something when deciding on the labels for these individuals.</p>
+<p>These examples appear the most suspicious to our model and should be carefully re-examined. Perhaps the original annotators missed something when deciding on the labels for these individuals. This is a straightforward approach to visualize the rows in a data table that might be mislabeled.</p>
 </section>
 <section id="5.-Train-a-more-robust-model-from-noisy-labels">
 <h2>5. Train a more robust model from noisy labels<a class="headerlink" href="#5.-Train-a-more-robust-model-from-noisy-labels" title="Permalink to this heading">#</a></h2>
