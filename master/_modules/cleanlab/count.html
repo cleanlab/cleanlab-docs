@@ -495,7 +495,7 @@
 <span class="sd">      Array of estimated class label error statisics used for identifying label issues,</span>
 <span class="sd">      in same format expected by :py:func:`filter.find_label_issues &lt;cleanlab.filter.find_label_issues&gt;` function.</span>
 <span class="sd">      The `confident_joint` can be computed using :py:func:`count.compute_confident_joint &lt;cleanlab.count.compute_confident_joint&gt;`.</span>
-<span class="sd">      If not provided, it is internally computed from the given (noisy) `labels` and `pred_probs`.</span>
+<span class="sd">      It is internally computed from the given (noisy) `labels` and `pred_probs`.</span>
 
 <span class="sd">    estimation_method :</span>
 <span class="sd">      Method for estimating the number of label issues in dataset by counting the examples in the off-diagonal of the `confident_joint` ``P(label=i, true_label=j)``.</span>
@@ -508,8 +508,11 @@
 <span class="sd">       two cases:</span>
 <span class="sd">          1. As we add more label and data quality scoring functions in :py:mod:`cleanlab.rank`, this approach will always work.</span>
 <span class="sd">          2. If you have a custom score to rank your data by label quality and you just need to know the cut-off of likely label issues.</span>
+<span class="sd">       - ``&#39;off_diagonal_custom&#39;``: Counts the number of examples in the off-diagonal of a provided `confident_joint` matrix.</span>
 
-<span class="sd">       TL;DR: use this method to get the most accurate estimate of number of label issues when you don&#39;t need the indices of the label issues.</span>
+
+<span class="sd">       TL;DR: Use this method to get the most accurate estimate of number of label issues when you don&#39;t need the indices of the label issues.</span>
+<span class="sd">      Note: ``&#39;off_diagonal&#39;`` may sometimes underestimate issues for data with few classes, so consider using ``&#39;off_diagonal_calibrated&#39;`` instead if your data has &lt; 4 classes.</span>
 
 <span class="sd">    multi_label : bool, optional</span>
 <span class="sd">      Set ``False`` if your dataset is for regular (multi-class) classification, where each example belongs to exactly one class.</span>
@@ -522,6 +525,14 @@
 <span class="sd">      The estimated number of examples with label issues in the dataset.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">valid_methods</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;off_diagonal&quot;</span><span class="p">,</span> <span class="s2">&quot;off_diagonal_calibrated&quot;</span><span class="p">]</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">confident_joint</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">):</span>
+        <span class="n">warn_str</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="s2">&quot;The supplied `confident_joint` is ignored as `confident_joint` is recomuputed internally using &quot;</span>
+            <span class="s2">&quot;the supplied `labels` and `pred_probs`. If you still want to use custom `confident_joint` call function &quot;</span>
+            <span class="s2">&quot;with `estimation_method=&#39;off_diagonal_custom&#39;`.&quot;</span>
+        <span class="p">)</span>
+        <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="n">warn_str</span><span class="p">)</span>
+
     <span class="k">if</span> <span class="n">multi_label</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">_num_label_issues_multilabel</span><span class="p">(</span>
             <span class="n">labels</span><span class="o">=</span><span class="n">labels</span><span class="p">,</span>
@@ -531,29 +542,54 @@
     <span class="n">labels</span> <span class="o">=</span> <span class="n">labels_to_array</span><span class="p">(</span><span class="n">labels</span><span class="p">)</span>
     <span class="n">assert_valid_inputs</span><span class="p">(</span><span class="n">X</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">labels</span><span class="p">,</span> <span class="n">pred_probs</span><span class="o">=</span><span class="n">pred_probs</span><span class="p">)</span>
 
-    <span class="k">if</span> <span class="n">confident_joint</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="c1"># Original non-calibrated counts of confidently correctly and incorrectly labeled examples.</span>
-        <span class="n">computed_confident_joint</span> <span class="o">=</span> <span class="n">compute_confident_joint</span><span class="p">(</span>
-            <span class="n">labels</span><span class="o">=</span><span class="n">labels</span><span class="p">,</span> <span class="n">pred_probs</span><span class="o">=</span><span class="n">pred_probs</span><span class="p">,</span> <span class="n">calibrate</span><span class="o">=</span><span class="kc">False</span>
-        <span class="p">)</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="n">computed_confident_joint</span> <span class="o">=</span> <span class="n">confident_joint</span>
-
-    <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">computed_confident_joint</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span>
-
     <span class="k">if</span> <span class="n">estimation_method</span> <span class="o">==</span> <span class="s2">&quot;off_diagonal&quot;</span><span class="p">:</span>
-        <span class="n">num_issues</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">computed_confident_joint</span><span class="p">)</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">trace</span><span class="p">(</span><span class="n">computed_confident_joint</span><span class="p">)</span>
+        <span class="n">_</span><span class="p">,</span> <span class="n">cl_error_indices</span> <span class="o">=</span> <span class="n">compute_confident_joint</span><span class="p">(</span>
+            <span class="n">labels</span><span class="o">=</span><span class="n">labels</span><span class="p">,</span>
+            <span class="n">pred_probs</span><span class="o">=</span><span class="n">pred_probs</span><span class="p">,</span>
+            <span class="n">calibrate</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+            <span class="n">return_indices_of_off_diagonals</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="n">label_issues_mask</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">labels</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">bool</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">idx</span> <span class="ow">in</span> <span class="n">cl_error_indices</span><span class="p">:</span>
+            <span class="n">label_issues_mask</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
+
+        <span class="c1"># Remove label issues if given label == model prediction</span>
+        <span class="n">pred</span> <span class="o">=</span> <span class="n">pred_probs</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">pred_label</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">pred</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">pred_label</span> <span class="o">==</span> <span class="n">labels</span><span class="p">[</span><span class="n">i</span><span class="p">]:</span>
+                <span class="n">label_issues_mask</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="n">num_issues</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">label_issues_mask</span><span class="p">)</span>
     <span class="k">elif</span> <span class="n">estimation_method</span> <span class="o">==</span> <span class="s2">&quot;off_diagonal_calibrated&quot;</span><span class="p">:</span>
+        <span class="n">calculated_confident_joint</span> <span class="o">=</span> <span class="n">compute_confident_joint</span><span class="p">(</span>
+            <span class="n">labels</span><span class="o">=</span><span class="n">labels</span><span class="p">,</span>
+            <span class="n">pred_probs</span><span class="o">=</span><span class="n">pred_probs</span><span class="p">,</span>
+            <span class="n">calibrate</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">calculated_confident_joint</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span>
         <span class="c1"># Estimate_joint calibrates the row sums to match the prior distribution of given labels and normalizes to sum to 1</span>
-        <span class="n">joint</span> <span class="o">=</span> <span class="n">estimate_joint</span><span class="p">(</span><span class="n">labels</span><span class="p">,</span> <span class="n">pred_probs</span><span class="p">,</span> <span class="n">confident_joint</span><span class="o">=</span><span class="n">computed_confident_joint</span><span class="p">)</span>
+        <span class="n">joint</span> <span class="o">=</span> <span class="n">estimate_joint</span><span class="p">(</span><span class="n">labels</span><span class="p">,</span> <span class="n">pred_probs</span><span class="p">,</span> <span class="n">confident_joint</span><span class="o">=</span><span class="n">calculated_confident_joint</span><span class="p">)</span>
         <span class="n">frac_issues</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="o">-</span> <span class="n">joint</span><span class="o">.</span><span class="n">trace</span><span class="p">()</span>
         <span class="n">num_issues</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">rint</span><span class="p">(</span><span class="n">frac_issues</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">labels</span><span class="p">))</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">estimation_method</span> <span class="o">==</span> <span class="s2">&quot;off_diagonal_custom&quot;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">confident_joint</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">                No `confident_joint` provided. For &#39;estimation_method&#39; = </span><span class="si">{</span><span class="n">estimation_method</span><span class="si">}</span><span class="s2"> you need to provide pre-calculated</span>
+<span class="s2">                `confident_joint` matrix. Use a different `estimation_method` if you want the `confident_joint` matrix to</span>
+<span class="s2">                be calculated for you.</span>
+<span class="s2">                &quot;&quot;&quot;</span>
+            <span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">joint</span> <span class="o">=</span> <span class="n">estimate_joint</span><span class="p">(</span><span class="n">labels</span><span class="p">,</span> <span class="n">pred_probs</span><span class="p">,</span> <span class="n">confident_joint</span><span class="o">=</span><span class="n">confident_joint</span><span class="p">)</span>
+            <span class="n">frac_issues</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="o">-</span> <span class="n">joint</span><span class="o">.</span><span class="n">trace</span><span class="p">()</span>
+            <span class="n">num_issues</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">rint</span><span class="p">(</span><span class="n">frac_issues</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">labels</span><span class="p">))</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
             <span class="sa">f</span><span class="s2">&quot;&quot;&quot;</span>
-<span class="s2">            </span><span class="si">{</span><span class="n">estimation_method</span><span class="si">}</span><span class="s2"> is not a valid estimation method!</span>
-<span class="s2">            Please choose a valid estimation method: </span><span class="si">{</span><span class="n">valid_methods</span><span class="si">}</span>
-<span class="s2">            &quot;&quot;&quot;</span>
+<span class="s2">                </span><span class="si">{</span><span class="n">estimation_method</span><span class="si">}</span><span class="s2"> is not a valid estimation method!</span>
+<span class="s2">                Please choose a valid estimation method: </span><span class="si">{</span><span class="n">valid_methods</span><span class="si">}</span>
+<span class="s2">                &quot;&quot;&quot;</span>
         <span class="p">)</span>
 
     <span class="k">return</span> <span class="n">num_issues</span></div>

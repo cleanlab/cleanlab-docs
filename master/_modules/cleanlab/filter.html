@@ -653,7 +653,7 @@
         <span class="n">frac_noise</span> <span class="o">!=</span> <span class="mf">1.0</span> <span class="ow">or</span> <span class="n">num_to_remove_per_class</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
     <span class="p">):</span>
         <span class="n">warn_str</span> <span class="o">=</span> <span class="p">(</span>
-            <span class="s2">&quot;WARNING! frac_noise and num_to_remove_per_class parameters are only supported&quot;</span>
+            <span class="s2">&quot;frac_noise and num_to_remove_per_class parameters are only supported&quot;</span>
             <span class="s2">&quot; for filter_by &#39;prune_by_noise_rate&#39;, &#39;prune_by_class&#39;, and &#39;both&#39;. They &quot;</span>
             <span class="s2">&quot;are not supported for methods &#39;confident_learning&#39; or &quot;</span>
             <span class="s2">&quot;&#39;predicted_neq_given&#39;.&quot;</span>
@@ -666,6 +666,13 @@
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
             <span class="s2">&quot;filter_by &#39;confident_learning&#39; or &#39;predicted_neq_given&#39; is not supported (yet) when setting &#39;num_to_remove_per_class&#39;&quot;</span>
         <span class="p">)</span>
+    <span class="k">if</span> <span class="n">filter_by</span> <span class="ow">is</span> <span class="s2">&quot;confident_learning&quot;</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">confident_joint</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">):</span>
+        <span class="n">warn_str</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="s2">&quot;The supplied `confident_joint` is ignored when `filter_by = &#39;confident_learning&#39;`; confident joint will be &quot;</span>
+            <span class="s2">&quot;re-estimated from the given labels. To use your supplied `confident_joint`, please specify a different &quot;</span>
+            <span class="s2">&quot;`filter_by` value.&quot;</span>
+        <span class="p">)</span>
+        <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="n">warn_str</span><span class="p">)</span>
 
     <span class="n">K</span> <span class="o">=</span> <span class="n">get_num_classes</span><span class="p">(</span>
         <span class="n">labels</span><span class="o">=</span><span class="n">labels</span><span class="p">,</span> <span class="n">pred_probs</span><span class="o">=</span><span class="n">pred_probs</span><span class="p">,</span> <span class="n">label_matrix</span><span class="o">=</span><span class="n">confident_joint</span><span class="p">,</span> <span class="n">multi_label</span><span class="o">=</span><span class="n">multi_label</span>
