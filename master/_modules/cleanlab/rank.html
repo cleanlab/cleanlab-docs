@@ -548,7 +548,6 @@
 
     <span class="c1"># Adjust predicted probabilities</span>
     <span class="k">if</span> <span class="n">adjust_pred_probs</span><span class="p">:</span>
-
         <span class="c1"># Check if adjust_pred_probs is supported for the chosen method</span>
         <span class="k">if</span> <span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;confidence_weighted_entropy&quot;</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;adjust_pred_probs is not currently supported for </span><span class="si">{</span><span class="n">method</span><span class="si">}</span><span class="s2">.&quot;</span><span class="p">)</span>
@@ -667,14 +666,12 @@
 
     <span class="c1"># This weighting scheme performs search of t in log_loss_search_T_values for &quot;best&quot; log loss</span>
     <span class="k">if</span> <span class="n">weight_ensemble_members_by</span> <span class="o">==</span> <span class="s2">&quot;log_loss_search&quot;</span><span class="p">:</span>
-
         <span class="c1"># Initialize variables for log loss search</span>
         <span class="n">pred_probs_avg_log_loss_weighted</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="n">neg_log_loss_weights</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="n">best_eval_log_loss</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="s2">&quot;inf&quot;</span><span class="p">)</span>
 
         <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">log_loss_search_T_values</span><span class="p">:</span>
-
             <span class="n">neg_log_loss_list</span> <span class="o">=</span> <span class="p">[]</span>
 
             <span class="c1"># pred_probs for each model</span>
@@ -707,7 +704,6 @@
     <span class="n">scores_list</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="n">accuracy_list</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="k">for</span> <span class="n">pred_probs</span> <span class="ow">in</span> <span class="n">pred_probs_list</span><span class="p">:</span>
-
         <span class="c1"># Calculate scores and accuracy</span>
         <span class="n">scores</span> <span class="o">=</span> <span class="n">get_label_quality_scores</span><span class="p">(</span>
             <span class="n">labels</span><span class="o">=</span><span class="n">labels</span><span class="p">,</span>
@@ -757,7 +753,6 @@
         <span class="n">label_quality_scores</span> <span class="o">=</span> <span class="p">(</span><span class="n">scores_ensemble</span> <span class="o">*</span> <span class="n">weights</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
 
     <span class="k">elif</span> <span class="n">weight_ensemble_members_by</span> <span class="o">==</span> <span class="s2">&quot;custom&quot;</span><span class="p">:</span>
-
         <span class="c1"># Check custom_weights for errors</span>
         <span class="k">assert</span> <span class="p">(</span>
             <span class="n">custom_weights</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
