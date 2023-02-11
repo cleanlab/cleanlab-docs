@@ -530,15 +530,28 @@
     <span class="n">assert_valid_inputs</span><span class="p">(</span>
         <span class="n">X</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">labels</span><span class="p">,</span> <span class="n">pred_probs</span><span class="o">=</span><span class="n">pred_probs</span><span class="p">,</span> <span class="n">multi_label</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">allow_one_class</span><span class="o">=</span><span class="kc">True</span>
     <span class="p">)</span>
+    <span class="k">return</span> <span class="n">_compute_label_quality_scores</span><span class="p">(</span>
+        <span class="n">labels</span><span class="o">=</span><span class="n">labels</span><span class="p">,</span> <span class="n">pred_probs</span><span class="o">=</span><span class="n">pred_probs</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="n">method</span><span class="p">,</span> <span class="n">adjust_pred_probs</span><span class="o">=</span><span class="n">adjust_pred_probs</span>
+    <span class="p">)</span></div>
 
-    <span class="c1"># Available scoring functions to choose from</span>
+
+<span class="k">def</span> <span class="nf">_compute_label_quality_scores</span><span class="p">(</span>
+    <span class="n">labels</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+    <span class="n">pred_probs</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+    <span class="o">*</span><span class="p">,</span>
+    <span class="n">method</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;self_confidence&quot;</span><span class="p">,</span>
+    <span class="n">adjust_pred_probs</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="n">confident_thresholds</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Internal implementation of get_label_quality_scores that assumes inputs</span>
+<span class="sd">    have already been checked and are valid. This speeds things up.</span>
+<span class="sd">    Can also take in pre-computed confident_thresholds to further accelerate things.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">scoring_funcs</span> <span class="o">=</span> <span class="p">{</span>
         <span class="s2">&quot;self_confidence&quot;</span><span class="p">:</span> <span class="n">get_self_confidence_for_each_label</span><span class="p">,</span>
         <span class="s2">&quot;normalized_margin&quot;</span><span class="p">:</span> <span class="n">get_normalized_margin_for_each_label</span><span class="p">,</span>
         <span class="s2">&quot;confidence_weighted_entropy&quot;</span><span class="p">:</span> <span class="n">get_confidence_weighted_entropy_for_each_label</span><span class="p">,</span>
     <span class="p">}</span>
-
-    <span class="c1"># Select scoring function</span>
     <span class="k">try</span><span class="p">:</span>
         <span class="n">scoring_func</span> <span class="o">=</span> <span class="n">scoring_funcs</span><span class="p">[</span><span class="n">method</span><span class="p">]</span>
     <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
@@ -548,22 +561,16 @@
 <span class="s2">            Please choose a valid rank_by: self_confidence, normalized_margin, confidence_weighted_entropy</span>
 <span class="s2">            &quot;&quot;&quot;</span>
         <span class="p">)</span>
-
-    <span class="c1"># Adjust predicted probabilities</span>
     <span class="k">if</span> <span class="n">adjust_pred_probs</span><span class="p">:</span>
-        <span class="c1"># Check if adjust_pred_probs is supported for the chosen method</span>
         <span class="k">if</span> <span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;confidence_weighted_entropy&quot;</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;adjust_pred_probs is not currently supported for </span><span class="si">{</span><span class="n">method</span><span class="si">}</span><span class="s2">.&quot;</span><span class="p">)</span>
+        <span class="n">pred_probs</span> <span class="o">=</span> <span class="n">_subtract_confident_thresholds</span><span class="p">(</span>
+            <span class="n">labels</span><span class="o">=</span><span class="n">labels</span><span class="p">,</span> <span class="n">pred_probs</span><span class="o">=</span><span class="n">pred_probs</span><span class="p">,</span> <span class="n">confident_thresholds</span><span class="o">=</span><span class="n">confident_thresholds</span>
+        <span class="p">)</span>
 
-        <span class="n">pred_probs</span> <span class="o">=</span> <span class="n">_subtract_confident_thresholds</span><span class="p">(</span><span class="n">labels</span><span class="p">,</span> <span class="n">pred_probs</span><span class="p">)</span>
-
-    <span class="c1"># Pass keyword arguments for scoring function</span>
-    <span class="nb">input</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;labels&quot;</span><span class="p">:</span> <span class="n">labels</span><span class="p">,</span> <span class="s2">&quot;pred_probs&quot;</span><span class="p">:</span> <span class="n">pred_probs</span><span class="p">}</span>
-
-    <span class="c1"># Calculate scores</span>
-    <span class="n">label_quality_scores</span> <span class="o">=</span> <span class="n">scoring_func</span><span class="p">(</span><span class="o">**</span><span class="nb">input</span><span class="p">)</span>
-
-    <span class="k">return</span> <span class="n">label_quality_scores</span></div>
+    <span class="n">scoring_inputs</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;labels&quot;</span><span class="p">:</span> <span class="n">labels</span><span class="p">,</span> <span class="s2">&quot;pred_probs&quot;</span><span class="p">:</span> <span class="n">pred_probs</span><span class="p">}</span>
+    <span class="n">label_quality_scores</span> <span class="o">=</span> <span class="n">scoring_func</span><span class="p">(</span><span class="o">**</span><span class="n">scoring_inputs</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">label_quality_scores</span>
 
 
 <div class="viewcode-block" id="get_label_quality_ensemble_scores"><a class="viewcode-back" href="../../cleanlab/rank.html#cleanlab.rank.get_label_quality_ensemble_scores">[docs]</a><span class="k">def</span> <span class="nf">get_label_quality_ensemble_scores</span><span class="p">(</span>
@@ -905,9 +912,9 @@
 <span class="sd">      Lower scores indicate more likely mislabeled examples.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="c1"># np.mean is used so that this works for multi-labels (list of lists)</span>
-    <span class="n">label_quality_scores</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">pred_probs</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">l</span><span class="p">])</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">l</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">labels</span><span class="p">)])</span>
-    <span class="k">return</span> <span class="n">label_quality_scores</span></div>
+    <span class="c1"># To make this work for multi-label (but it will slow down runtime), replace:</span>
+    <span class="c1"># pred_probs[i, l] -&gt; np.mean(pred_probs[i, l])</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">pred_probs</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">l</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">l</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">labels</span><span class="p">)])</span></div>
 
 
 <div class="viewcode-block" id="get_normalized_margin_for_each_label"><a class="viewcode-back" href="../../cleanlab/rank.html#cleanlab.rank.get_normalized_margin_for_each_label">[docs]</a><span class="k">def</span> <span class="nf">get_normalized_margin_for_each_label</span><span class="p">(</span>
