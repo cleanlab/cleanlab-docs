@@ -418,9 +418,137 @@ You can also use this approach to estimate label quality scores or the number of
 for big datasets with limited memory.</p>
 <p>With default settings, the results returned from this approach closely approximate those returned from:
 <code class="docutils literal notranslate"><span class="pre">cleanlab.filter.find_label_issues(...,</span> <span class="pre">filter_by=&quot;low_self_confidence&quot;,</span> <span class="pre">return_indices_ranked_by=&quot;self_confidence&quot;)</span></code></p>
-<p>To run this approach, either follow the examples script below,
-or use the <code class="docutils literal notranslate"><span class="pre">find_label_issues_batched()</span></code> convenience function defined in this module.</p>
-<p>The recommended usage demonstrated in the examples script involves two passes over your data:
+<p>To run this approach, either use the <code class="docutils literal notranslate"><span class="pre">find_label_issues_batched()</span></code> convenience function defined in this module,
+or follow the examples script for the <code class="docutils literal notranslate"><span class="pre">LabelInspector</span></code> class if you require greater customization.</p>
+<p><strong>Data:</strong></p>
+<div class="table-wrapper autosummary longtable docutils container">
+<table class="autosummary longtable docutils align-default">
+<tbody>
+</tbody>
+</table>
+</div>
+<p><strong>Functions:</strong></p>
+<div class="table-wrapper autosummary longtable docutils container">
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#cleanlab.experimental.label_issues_batched.find_label_issues_batched" title="cleanlab.experimental.label_issues_batched.find_label_issues_batched"><code class="xref py py-obj docutils literal notranslate"><span class="pre">find_label_issues_batched</span></code></a>([labels, ...])</p></td>
+<td><p>Variant of <a class="reference internal" href="../filter.html#cleanlab.filter.find_label_issues" title="cleanlab.filter.find_label_issues"><code class="xref py py-func docutils literal notranslate"><span class="pre">filter.find_label_issues</span></code></a> that requires less memory by reading from <cite>pred_probs</cite>, <cite>labels</cite> in mini-batches.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p><strong>Classes:</strong></p>
+<div class="table-wrapper autosummary longtable docutils container">
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#cleanlab.experimental.label_issues_batched.LabelInspector" title="cleanlab.experimental.label_issues_batched.LabelInspector"><code class="xref py py-obj docutils literal notranslate"><span class="pre">LabelInspector</span></code></a>(*, num_class[, ...])</p></td>
+<td><p>Class for finding label issues in big datasets where memory becomes a problem for other cleanlab methods.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<dl class="py data">
+<dt class="sig sig-object py" id="cleanlab.experimental.label_issues_batched.adj_confident_thresholds_shared">
+<span class="sig-prename descclassname"><span class="pre">cleanlab.experimental.label_issues_batched.</span></span><span class="sig-name descname"><span class="pre">adj_confident_thresholds_shared</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ndarray</span></em><a class="headerlink" href="#cleanlab.experimental.label_issues_batched.adj_confident_thresholds_shared" title="Permalink to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="cleanlab.experimental.label_issues_batched.labels_shared">
+<span class="sig-prename descclassname"><span class="pre">cleanlab.experimental.label_issues_batched.</span></span><span class="sig-name descname"><span class="pre">labels_shared</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">list</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">ndarray</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Series</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">DataFrame</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#cleanlab.experimental.label_issues_batched.labels_shared" title="Permalink to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="cleanlab.experimental.label_issues_batched.pred_probs_shared">
+<span class="sig-prename descclassname"><span class="pre">cleanlab.experimental.label_issues_batched.</span></span><span class="sig-name descname"><span class="pre">pred_probs_shared</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ndarray</span></em><a class="headerlink" href="#cleanlab.experimental.label_issues_batched.pred_probs_shared" title="Permalink to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="cleanlab.experimental.label_issues_batched.find_label_issues_batched">
+<span class="sig-prename descclassname"><span class="pre">cleanlab.experimental.label_issues_batched.</span></span><span class="sig-name descname"><span class="pre">find_label_issues_batched</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">labels</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pred_probs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">labels_file</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pred_probs_file</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">batch_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10000</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_jobs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">quality_score_kwargs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_issue_kwargs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/cleanlab/experimental/label_issues_batched.html#find_label_issues_batched"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cleanlab.experimental.label_issues_batched.find_label_issues_batched" title="Permalink to this definition">#</a></dt>
+<dd><p>Variant of <a class="reference internal" href="../filter.html#cleanlab.filter.find_label_issues" title="cleanlab.filter.find_label_issues"><code class="xref py py-func docutils literal notranslate"><span class="pre">filter.find_label_issues</span></code></a>
+that requires less memory by reading from <cite>pred_probs</cite>, <cite>labels</cite> in mini-batches.
+To avoid loading big <cite>pred_probs</cite>, <cite>labels</cite> arrays into memory,
+provide these as memory-mapped objects like Zarr arrays or memmap arrays instead of regular numpy arrays.
+See: <a class="reference external" href="https://pythonspeed.com/articles/mmap-vs-zarr-hdf5/">https://pythonspeed.com/articles/mmap-vs-zarr-hdf5/</a></p>
+<p>With default settings, the results returned from this method closely approximate those returned from:
+<code class="docutils literal notranslate"><span class="pre">cleanlab.filter.find_label_issues(...,</span> <span class="pre">filter_by=&quot;low_self_confidence&quot;,</span> <span class="pre">return_indices_ranked_by=&quot;self_confidence&quot;)</span></code></p>
+<p>This function internally implements the example usage script of the <code class="docutils literal notranslate"><span class="pre">LabelInspector</span></code> class,
+but you can further customize that script by running it yourself instead of this function.
+See the documentation of <code class="docutils literal notranslate"><span class="pre">LabelInspector</span></code> to learn more about how this method works internally.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>labels</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">np.ndarray-like</span> <span class="pre">object</span></code>, <em>optional</em>) – <p>1D array of given class labels for each example in the dataset, (int) values in <code class="docutils literal notranslate"><span class="pre">0,1,2,...,K-1</span></code>.
+To avoid loading big objects into memory, you should pass this as a memory-mapped object like:
+Zarr array loaded with <code class="docutils literal notranslate"><span class="pre">zarr.convenience.open(YOURFILE.zarr,</span> <span class="pre">mode=&quot;r&quot;)</span></code>,
+or memmap array loaded with <code class="docutils literal notranslate"><span class="pre">np.load(YOURFILE.npy,</span> <span class="pre">mmap_mode=&quot;r&quot;)</span></code>.</p>
+<p>Tip: You can save an existing numpy array to Zarr via: <code class="docutils literal notranslate"><span class="pre">zarr.convenience.save_array(YOURFILE.zarr,</span> <span class="pre">your_array)</span></code>,
+or to .npy file that can be loaded with mmap via: <code class="docutils literal notranslate"><span class="pre">np.save(YOURFILE.npy,</span> <span class="pre">your_array)</span></code>.</p>
+</p></li>
+<li><p><strong>pred_probs</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">np.ndarray-like</span> <span class="pre">object</span></code>, <em>optional</em>) – 2D array of model-predicted class probabilities (floats) for each example in the dataset.
+To avoid loading big objects into memory, you should pass this as a memory-mapped object like:
+Zarr array loaded with <code class="docutils literal notranslate"><span class="pre">zarr.convenience.open(YOURFILE.zarr,</span> <span class="pre">mode=&quot;r&quot;)</span></code>
+or memmap array loaded with <code class="docutils literal notranslate"><span class="pre">np.load(YOURFILE.npy,</span> <span class="pre">mmap_mode=&quot;r&quot;)</span></code>.</p></li>
+<li><p><strong>labels_file</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <em>optional</em>) – Specify this instead of <cite>labels</cite> if you want this method to load from file for you into a memmap array.
+Path to .npy file where the entire 1D <cite>labels</cite> numpy array is stored on disk (list format is not supported).
+This is loaded using: <code class="docutils literal notranslate"><span class="pre">np.load(labels_file,</span> <span class="pre">mmap_mode=&quot;r&quot;)</span></code>
+so make sure this file was created via: <code class="docutils literal notranslate"><span class="pre">np.save()</span></code> or other compatible methods (.npz not supported).</p></li>
+<li><p><strong>pred_probs_file</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <em>optional</em>) – Specify this instead of <cite>pred_probs</cite> if you want this method to load from file for you into a memmap array.
+Path to .npy file where the entire <cite>pred_probs</cite> numpy array is stored on disk.
+This is loaded using: <code class="docutils literal notranslate"><span class="pre">np.load(pred_probs_file,</span> <span class="pre">mmap_mode=&quot;r&quot;)</span></code>
+so make sure this file was created via: <code class="docutils literal notranslate"><span class="pre">np.save()</span></code> or other compatible methods (.npz not supported).</p></li>
+<li><p><strong>batch_size</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>, <em>optional</em>) – Size of mini-batches to use for estimating the label issues.
+To maximize efficiency, try to use the largest <cite>batch_size</cite> your memory allows.</p></li>
+<li><p><strong>n_jobs</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>, <em>optional</em>) – Number of processes for multiprocessing. Only used on Linux.
+If <cite>n_jobs=None</cite>, will use either the number of: physical cores if psutil is installed, or logical cores otherwise.</p></li>
+<li><p><strong>verbose</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code>, <em>optional</em>) – Whether to suppress print statements or not.</p></li>
+<li><p><strong>quality_score_kwargs</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code>, <em>optional</em>) – Keyword arguments to pass into <a class="reference internal" href="../rank.html#cleanlab.rank.get_label_quality_scores" title="cleanlab.rank.get_label_quality_scores"><code class="xref py py-func docutils literal notranslate"><span class="pre">rank.get_label_quality_scores</span></code></a>.</p></li>
+<li><p><strong>num_issue_kwargs</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code>, <em>optional</em>) – Keyword arguments to <code class="xref py py-func docutils literal notranslate"><span class="pre">count.num_label_issues()</span></code> &lt;cleanlab.count.num_label_issues&gt;`
+to control estimation of the number of label issues.
+The only supported kwarg here for now is: <cite>estimation_method</cite>.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>issue_indices</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">np.ndarray</span></code>) – Indices of examples with label issues, sorted by label quality score.</p>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">batch_size</span> <span class="o">=</span> <span class="mi">10000</span>  <span class="c1"># for efficiency, set this to as large of a value as your memory can handle</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># Just demonstrating how to save your existing numpy labels, pred_probs arrays to compatible .npy files:</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">np</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="s2">&quot;LABELS.npy&quot;</span><span class="p">,</span> <span class="n">labels_array</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">np</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="s2">&quot;PREDPROBS.npy&quot;</span><span class="p">,</span> <span class="n">pred_probs_array</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># You can load these back into memmap arrays via: labels = np.load(&quot;LABELS.npy&quot;, mmap_mode=&quot;r&quot;)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># and then run this method on the memmap arrays, or just run it directly on the .npy files like this:</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">issues</span> <span class="o">=</span> <span class="n">find_label_issues_batched</span><span class="p">(</span><span class="n">labels_file</span><span class="o">=</span><span class="s2">&quot;LABELS.npy&quot;</span><span class="p">,</span> <span class="n">pred_probs_file</span><span class="o">=</span><span class="s2">&quot;PREDPROBS.npy&quot;</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="n">batch_size</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># This method also works with Zarr arrays:</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">zarr</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># Just demonstrating how to save your existing numpy labels, pred_probs arrays to compatible .zarr files:</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">zarr</span><span class="o">.</span><span class="n">convenience</span><span class="o">.</span><span class="n">save_array</span><span class="p">(</span><span class="s2">&quot;LABELS.zarr&quot;</span><span class="p">,</span> <span class="n">labels_array</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">zarr</span><span class="o">.</span><span class="n">convenience</span><span class="o">.</span><span class="n">save_array</span><span class="p">(</span><span class="s2">&quot;PREDPROBS.zarr&quot;</span><span class="p">,</span> <span class="n">pred_probs_array</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># You can load from such files into Zarr arrays:</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">labels</span> <span class="o">=</span> <span class="n">zarr</span><span class="o">.</span><span class="n">convenience</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="s2">&quot;LABELS.zarr&quot;</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s2">&quot;r&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">pred_probs</span> <span class="o">=</span> <span class="n">zarr</span><span class="o">.</span><span class="n">convenience</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="s2">&quot;PREDPROBS.zarr&quot;</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s2">&quot;r&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># This method can be directly run on Zarr arrays, memmap arrays, or regular numpy arrays:</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">issues</span> <span class="o">=</span> <span class="n">find_label_issues_batched</span><span class="p">(</span><span class="n">labels</span><span class="o">=</span><span class="n">labels</span><span class="p">,</span> <span class="n">pred_probs</span><span class="o">=</span><span class="n">pred_probs</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="n">batch_size</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="cleanlab.experimental.label_issues_batched.LabelInspector">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">cleanlab.experimental.label_issues_batched.</span></span><span class="sig-name descname"><span class="pre">LabelInspector</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_class</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">store_results</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">quality_score_kwargs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_issue_kwargs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_jobs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/cleanlab/experimental/label_issues_batched.html#LabelInspector"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cleanlab.experimental.label_issues_batched.LabelInspector" title="Permalink to this definition">#</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Class for finding label issues in big datasets where memory becomes a problem for other cleanlab methods.
+Only create one such object per dataset and do not try to use the same <code class="docutils literal notranslate"><span class="pre">LabelInspector</span></code> across 2 datasets.
+For efficiency, this class does little input checking.
+You can first run <a class="reference internal" href="../filter.html#cleanlab.filter.find_label_issues" title="cleanlab.filter.find_label_issues"><code class="xref py py-func docutils literal notranslate"><span class="pre">filter.find_label_issues</span></code></a>
+on a small subset of your data to verify your inputs are properly formatted.
+Do NOT modify any of the attributes of this class yourself!
+Multi-label classification is not supported by this class, it is only for multi-class classification.</p>
+<p>The recommended usage demonstrated in the examples script below involves two passes over your data:
 one pass to compute <cite>confident_thresholds</cite>, another to evaluate each label.
 To maximize efficiency, try to use the largest batch_size your memory allows.
 To reduce runtime further, you can run the first pass on a subset of your dataset
@@ -461,59 +589,6 @@ HDF5 or Zarr files, see: <a class="reference external" href="https://pythonspeed
 <span class="gp">&gt;&gt;&gt; </span><span class="n">indices_of_examples_with_issues</span> <span class="o">=</span> <span class="n">find_label_issues_batched</span><span class="p">(</span><span class="n">labels</span><span class="p">,</span> <span class="n">pred_probs</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="mi">10000</span><span class="p">)</span>
 </pre></div>
 </div>
-<p><strong>Data:</strong></p>
-<div class="table-wrapper autosummary longtable docutils container">
-<table class="autosummary longtable docutils align-default">
-<tbody>
-</tbody>
-</table>
-</div>
-<p><strong>Classes:</strong></p>
-<div class="table-wrapper autosummary longtable docutils container">
-<table class="autosummary longtable docutils align-default">
-<tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#cleanlab.experimental.label_issues_batched.LabelInspector" title="cleanlab.experimental.label_issues_batched.LabelInspector"><code class="xref py py-obj docutils literal notranslate"><span class="pre">LabelInspector</span></code></a>(*, num_class[, ...])</p></td>
-<td><p>Class for finding label issues in big datasets where memory becomes a problem for other cleanlab methods.</p></td>
-</tr>
-</tbody>
-</table>
-</div>
-<p><strong>Functions:</strong></p>
-<div class="table-wrapper autosummary longtable docutils container">
-<table class="autosummary longtable docutils align-default">
-<tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#cleanlab.experimental.label_issues_batched.find_label_issues_batched" title="cleanlab.experimental.label_issues_batched.find_label_issues_batched"><code class="xref py py-obj docutils literal notranslate"><span class="pre">find_label_issues_batched</span></code></a>(*[, labels_file, ...])</p></td>
-<td><p>Variant of <a class="reference internal" href="../filter.html#cleanlab.filter.find_label_issues" title="cleanlab.filter.find_label_issues"><code class="xref py py-func docutils literal notranslate"><span class="pre">filter.find_label_issues</span></code></a> that requires less memory by reading <cite>pred_probs</cite>, <cite>labels</cite> in mini-batches, if provided as files.</p></td>
-</tr>
-</tbody>
-</table>
-</div>
-<dl class="py data">
-<dt class="sig sig-object py" id="cleanlab.experimental.label_issues_batched.adj_confident_thresholds_shared">
-<span class="sig-prename descclassname"><span class="pre">cleanlab.experimental.label_issues_batched.</span></span><span class="sig-name descname"><span class="pre">adj_confident_thresholds_shared</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ndarray</span></em><a class="headerlink" href="#cleanlab.experimental.label_issues_batched.adj_confident_thresholds_shared" title="Permalink to this definition">#</a></dt>
-<dd></dd></dl>
-
-<dl class="py data">
-<dt class="sig sig-object py" id="cleanlab.experimental.label_issues_batched.labels_shared">
-<span class="sig-prename descclassname"><span class="pre">cleanlab.experimental.label_issues_batched.</span></span><span class="sig-name descname"><span class="pre">labels_shared</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">list</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">ndarray</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Series</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">DataFrame</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#cleanlab.experimental.label_issues_batched.labels_shared" title="Permalink to this definition">#</a></dt>
-<dd></dd></dl>
-
-<dl class="py data">
-<dt class="sig sig-object py" id="cleanlab.experimental.label_issues_batched.pred_probs_shared">
-<span class="sig-prename descclassname"><span class="pre">cleanlab.experimental.label_issues_batched.</span></span><span class="sig-name descname"><span class="pre">pred_probs_shared</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ndarray</span></em><a class="headerlink" href="#cleanlab.experimental.label_issues_batched.pred_probs_shared" title="Permalink to this definition">#</a></dt>
-<dd></dd></dl>
-
-<dl class="py class">
-<dt class="sig sig-object py" id="cleanlab.experimental.label_issues_batched.LabelInspector">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">cleanlab.experimental.label_issues_batched.</span></span><span class="sig-name descname"><span class="pre">LabelInspector</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_class</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">store_results</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">quality_score_kwargs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_issue_kwargs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_jobs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/cleanlab/experimental/label_issues_batched.html#LabelInspector"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cleanlab.experimental.label_issues_batched.LabelInspector" title="Permalink to this definition">#</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<p>Class for finding label issues in big datasets where memory becomes a problem for other cleanlab methods.
-Only create one such object per dataset and do not try to use the same <code class="docutils literal notranslate"><span class="pre">LabelInspector</span></code> across 2 datasets.
-For efficiency, this class does little input checking.
-You can first run <a class="reference internal" href="../filter.html#cleanlab.filter.find_label_issues" title="cleanlab.filter.find_label_issues"><code class="xref py py-func docutils literal notranslate"><span class="pre">filter.find_label_issues</span></code></a>
-on a small subset of your data to verify your inputs are properly formatted.
-Do NOT modify any of the attributes of this class yourself!
-Multi-label classification is not supported by this class, it is only for multi-class classification.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -653,7 +728,7 @@ Inputs should be in same format as for: <a class="reference internal" href="../r
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>labels</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">np.ndarray</span></code> or <code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code>) – Given class labels for each example in the batch, values in <code class="docutils literal notranslate"><span class="pre">0,1,2,...,K-1</span></code>.</p></li>
+<li><p><strong>labels</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">np.ndarray</span></code>) – Given class labels for each example in the batch, values in <code class="docutils literal notranslate"><span class="pre">0,1,2,...,K-1</span></code>.</p></li>
 <li><p><strong>pred_probs</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">np.ndarray</span></code>) – 2D array of model-predicted class probabilities for each example in the batch of data.</p></li>
 <li><p><strong>update_num_issues</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code>, <em>optional</em>) – Whether or not to update the number of label issues or only compute label quality scores.
 For lower runtimes, set this to <code class="docutils literal notranslate"><span class="pre">False</span></code> if you only want to score label quality and not find label issues.</p></li>
@@ -668,57 +743,6 @@ For lower runtimes, set this to <code class="docutils literal notranslate"><span
 </dl>
 </dd></dl>
 
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="cleanlab.experimental.label_issues_batched.find_label_issues_batched">
-<span class="sig-prename descclassname"><span class="pre">cleanlab.experimental.label_issues_batched.</span></span><span class="sig-name descname"><span class="pre">find_label_issues_batched</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">labels_file</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pred_probs_file</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">labels</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pred_probs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">batch_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10000</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_jobs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">quality_score_kwargs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_issue_kwargs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/cleanlab/experimental/label_issues_batched.html#find_label_issues_batched"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cleanlab.experimental.label_issues_batched.find_label_issues_batched" title="Permalink to this definition">#</a></dt>
-<dd><p>Variant of <a class="reference internal" href="../filter.html#cleanlab.filter.find_label_issues" title="cleanlab.filter.find_label_issues"><code class="xref py py-func docutils literal notranslate"><span class="pre">filter.find_label_issues</span></code></a>
-that requires less memory by reading <cite>pred_probs</cite>, <cite>labels</cite> in mini-batches, if provided as files.
-Only .npy files are supported (not .npz), and these must be loadable via: <code class="docutils literal notranslate"><span class="pre">np.load(your_file,</span> <span class="pre">mmap_mode=&quot;r&quot;)</span></code>.
-If you want to read from other file-types (eg. HDF5 or Zarr) instead,
-see the example usage of the <code class="docutils literal notranslate"><span class="pre">LabelInspector</span></code> class.</p>
-<p>This function basically implements the example <code class="docutils literal notranslate"><span class="pre">LabelInspector</span></code> usage script,
-but you can further customize that script by running it yourself.
-See the documentation of <code class="docutils literal notranslate"><span class="pre">LabelInspector</span></code> to learn more about how this method works internally.</p>
-<p>With default settings, the results returned from this method closely approximate those returned from:
-<code class="docutils literal notranslate"><span class="pre">cleanlab.filter.find_label_issues(...,</span> <span class="pre">filter_by=&quot;low_self_confidence&quot;,</span> <span class="pre">return_indices_ranked_by=&quot;self_confidence&quot;)</span></code></p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>labels_file</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <em>optional</em>) – Path to .npy file where the entire 1D <cite>labels</cite> numpy array is stored on disk (list format is not supported).
-This is loaded using: <code class="docutils literal notranslate"><span class="pre">np.load(labels_file,</span> <span class="pre">mmap_mode=&quot;r&quot;)</span></code>
-so make sure this file was created via: <code class="docutils literal notranslate"><span class="pre">np.save()</span></code> or other compatible methods.</p></li>
-<li><p><strong>pred_probs_file</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <em>optional</em>) – Path to .npy file where the entire <cite>pred_probs</cite> numpy array is stored on disk.
-This is loaded using: <code class="docutils literal notranslate"><span class="pre">np.load(pred_probs_file,</span> <span class="pre">mmap_mode=&quot;r&quot;)</span></code>
-so make sure this file was created via: <code class="docutils literal notranslate"><span class="pre">np.save()</span></code> or other compatible methods.</p></li>
-<li><p><strong>labels</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">np.ndarray</span></code> or <code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code>, <em>optional</em>) – Given class labels for each example in the dataset, (int) values in <code class="docutils literal notranslate"><span class="pre">0,1,2,...,K-1</span></code>.
-Recommend providing <cite>labels_file</cite> instead of <cite>labels</cite> to avoid loading big objects into memory.</p></li>
-<li><p><strong>pred_probs</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">np.ndarray</span></code>, <em>optional</em>) – 2D array of model-predicted class probabilities (floats) for each example in the dataset.
-Recommend providing <cite>pred_probs_file</cite> instead of <cite>pred_probs</cite> to avoid loading big objects into memory.</p></li>
-<li><p><strong>batch_size</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>, <em>optional</em>) – Size of mini-batches to use for estimating the label issues.
-To maximize efficiency, try to use the largest <cite>batch_size</cite> your memory allows.</p></li>
-<li><p><strong>n_jobs</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>, <em>optional</em>) – Number of processes for multiprocessing. Only used on Linux.
-If <cite>n_jobs=None</cite>, will use either the number of: physical cores if psutil is installed, or logical cores otherwise.</p></li>
-<li><p><strong>verbose</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code>, <em>optional</em>) – Whether to suppress print statements or not.</p></li>
-<li><p><strong>quality_score_kwargs</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code>, <em>optional</em>) – Keyword arguments to pass into <a class="reference internal" href="../rank.html#cleanlab.rank.get_label_quality_scores" title="cleanlab.rank.get_label_quality_scores"><code class="xref py py-func docutils literal notranslate"><span class="pre">rank.get_label_quality_scores</span></code></a>.</p></li>
-<li><p><strong>num_issue_kwargs</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code>, <em>optional</em>) – Keyword arguments to <code class="xref py py-func docutils literal notranslate"><span class="pre">count.num_label_issues()</span></code> &lt;cleanlab.count.num_label_issues&gt;`
-to control estimation of the number of label issues.
-The only supported kwarg here for now is: <cite>estimation_method</cite>.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></p>
-</dd>
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>issue_indices</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">np.ndarray</span></code>) – Indices of examples with label issues, sorted by label quality score.</p>
-</dd>
-</dl>
-<p class="rubric">Examples</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">batch_size</span> <span class="o">=</span> <span class="mi">10000</span>  <span class="c1"># for efficiency, set this to as large of a value as your memory can handle</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">issues</span> <span class="o">=</span> <span class="n">find_label_issues_batched</span><span class="p">(</span><span class="n">labels_file</span><span class="o">=</span><span class="s2">&quot;LABELS.npy&quot;</span><span class="p">,</span> <span class="n">pred_probs_file</span><span class="o">=</span><span class="s2">&quot;PREDPROBS.npy&quot;</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="n">batch_size</span><span class="p">)</span>
-</pre></div>
-</div>
 </dd></dl>
 
 </section>
