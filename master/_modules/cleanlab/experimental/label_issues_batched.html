@@ -438,7 +438,7 @@
 <span class="sd">To run this approach, either follow the examples script below,</span>
 <span class="sd">or use the ``find_label_issues_batched()`` convenience function defined in this module.</span>
 
-<span class="sd">The recommended usage demonstrated in the examples script involves two passes over your data: </span>
+<span class="sd">The recommended usage demonstrated in the examples script involves two passes over your data:</span>
 <span class="sd">one pass to compute `confident_thresholds`, another to evaluate each label.</span>
 <span class="sd">To maximize efficiency, try to use the largest batch_size your memory allows.</span>
 <span class="sd">To reduce runtime further, you can run the first pass on a subset of your dataset</span>
@@ -484,15 +484,29 @@
 <span class="sd">&quot;&quot;&quot;</span>
 
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">List</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Any</span>
 
 <span class="kn">from</span> <span class="nn">cleanlab.count</span> <span class="kn">import</span> <span class="n">get_confident_thresholds</span>
 <span class="kn">from</span> <span class="nn">cleanlab.rank</span> <span class="kn">import</span> <span class="n">find_top_issues</span><span class="p">,</span> <span class="n">_compute_label_quality_scores</span>
 <span class="kn">from</span> <span class="nn">cleanlab.typing</span> <span class="kn">import</span> <span class="n">LabelLike</span>
 <span class="kn">from</span> <span class="nn">cleanlab.internal.util</span> <span class="kn">import</span> <span class="n">value_counts_fill_missing_classes</span>
 
+<span class="kn">import</span> <span class="nn">platform</span>
+<span class="kn">import</span> <span class="nn">multiprocessing</span> <span class="k">as</span> <span class="nn">mp</span>
+
+<span class="k">try</span><span class="p">:</span>
+    <span class="kn">import</span> <span class="nn">psutil</span>
+
+    <span class="n">PSUTIL_EXISTS</span> <span class="o">=</span> <span class="kc">True</span>
+<span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>  <span class="c1"># pragma: no cover</span>
+    <span class="n">PSUTIL_EXISTS</span> <span class="o">=</span> <span class="kc">False</span>
 
 <span class="n">EPS</span> <span class="o">=</span> <span class="mf">1e-6</span>  <span class="c1"># small number</span>
+
+<span class="c1"># global variable for multiproc on linux</span>
+<span class="n">adj_confident_thresholds_shared</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span>
+<span class="n">labels_shared</span><span class="p">:</span> <span class="n">LabelLike</span>
+<span class="n">pred_probs_shared</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span>
 
 
 <div class="viewcode-block" id="LabelInspector"><a class="viewcode-back" href="../../../cleanlab/experimental/label_issues_batched.html#cleanlab.experimental.label_issues_batched.LabelInspector">[docs]</a><span class="k">class</span> <span class="nc">LabelInspector</span><span class="p">:</span>
@@ -521,6 +535,10 @@
 <span class="sd">    verbose : bool, optional</span>
 <span class="sd">      Whether to suppress print statements or not.</span>
 
+<span class="sd">    n_jobs: int, optional</span>
+<span class="sd">      Number of processes for multiprocessing. Only used on Linux.</span>
+<span class="sd">      If `n_jobs=None`, will use either the number of: physical cores if psutil is installed, or logical cores otherwise.</span>
+
 <span class="sd">    quality_score_kwargs : dict, optional</span>
 <span class="sd">      Keyword arguments to pass into :py:func:`rank.get_label_quality_scores &lt;cleanlab.rank.get_label_quality_scores&gt;`.</span>
 
@@ -538,6 +556,7 @@
         <span class="n">verbose</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
         <span class="n">quality_score_kwargs</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">dict</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">num_issue_kwargs</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">dict</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">n_jobs</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">):</span>
         <span class="k">if</span> <span class="n">quality_score_kwargs</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">quality_score_kwargs</span> <span class="o">=</span> <span class="p">{}</span>
@@ -572,6 +591,27 @@
             <span class="mi">0</span>  <span class="c1"># number of examples seen so far for estimating thresholds</span>
         <span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">examples_processed_quality</span> <span class="o">=</span> <span class="mi">0</span>  <span class="c1"># number of examples seen so far for estimating label quality and number of label issues</span>
+        <span class="c1"># Determine number of cores for multiprocessing:</span>
+        <span class="n">os_name</span> <span class="o">=</span> <span class="n">platform</span><span class="o">.</span><span class="n">system</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">os_name</span> <span class="o">!=</span> <span class="s2">&quot;Linux&quot;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">n_jobs</span> <span class="o">=</span> <span class="mi">1</span>
+            <span class="k">if</span> <span class="n">n_jobs</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">n_jobs</span> <span class="o">!=</span> <span class="mi">1</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">verbose</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span>
+                    <span class="s2">&quot;n_jobs is overridden to 1 because multiprocessing is only supported for Linux.&quot;</span>
+                <span class="p">)</span>
+        <span class="k">elif</span> <span class="n">n_jobs</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">n_jobs</span> <span class="o">=</span> <span class="n">n_jobs</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">n_jobs</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="k">if</span> <span class="n">PSUTIL_EXISTS</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">n_jobs</span> <span class="o">=</span> <span class="n">psutil</span><span class="o">.</span><span class="n">cpu_count</span><span class="p">(</span><span class="n">logical</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>  <span class="c1"># physical cores</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_jobs</span><span class="p">:</span>
+                <span class="c1"># switch to logical cores</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">n_jobs</span> <span class="o">=</span> <span class="n">mp</span><span class="o">.</span><span class="n">cpu_count</span><span class="p">()</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">verbose</span><span class="p">:</span>
+                    <span class="nb">print</span><span class="p">(</span>
+                        <span class="sa">f</span><span class="s2">&quot;Multiprocessing will default to using the number of logical cores (</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">n_jobs</span><span class="si">}</span><span class="s2">). To default to number of physical cores: pip install psutil&quot;</span>
+                    <span class="p">)</span>
 
 <div class="viewcode-block" id="LabelInspector.get_confident_thresholds"><a class="viewcode-back" href="../../../cleanlab/experimental/label_issues_batched.html#cleanlab.experimental.label_issues_batched.LabelInspector.get_confident_thresholds">[docs]</a>    <span class="k">def</span> <span class="nf">get_confident_thresholds</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">silent</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
@@ -711,7 +751,11 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">examples_processed_thresh</span> <span class="o">+=</span> <span class="n">batch_size</span></div>
 
 <div class="viewcode-block" id="LabelInspector.score_label_quality"><a class="viewcode-back" href="../../../cleanlab/experimental/label_issues_batched.html#cleanlab.experimental.label_issues_batched.LabelInspector.score_label_quality">[docs]</a>    <span class="k">def</span> <span class="nf">score_label_quality</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">,</span> <span class="n">labels</span><span class="p">:</span> <span class="n">LabelLike</span><span class="p">,</span> <span class="n">pred_probs</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">update_num_issues</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">labels</span><span class="p">:</span> <span class="n">LabelLike</span><span class="p">,</span>
+        <span class="n">pred_probs</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+        <span class="o">*</span><span class="p">,</span>
+        <span class="n">update_num_issues</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Scores the label quality of each example in the provided batch of data,</span>
@@ -752,46 +796,148 @@
 
         <span class="k">return</span> <span class="n">scores</span></div>
 
-    <span class="k">def</span> <span class="nf">_update_num_label_issues</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">labels</span><span class="p">:</span> <span class="n">LabelLike</span><span class="p">,</span> <span class="n">pred_probs</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">_update_num_label_issues</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">labels</span><span class="p">:</span> <span class="n">LabelLike</span><span class="p">,</span>
+        <span class="n">pred_probs</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+        <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
+    <span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Update the estimate of num_label_issues stored in this class using a new batch of data.</span>
 <span class="sd">        Kwargs are ignored here for now (included for forwards compatibility).</span>
 <span class="sd">        Instead of being specified here, `estimation_method` should be declared when this class is initialized.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># whether to match the output of count.num_label_issues exactly</span>
+        <span class="c1"># default is False, which gives significant speedup on large batches</span>
+        <span class="c1"># and empirically matches num_label_issues even on input sizes of</span>
+        <span class="c1"># 1M x 10k</span>
+        <span class="n">thorough</span> <span class="o">=</span> <span class="kc">False</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">examples_processed_thresh</span> <span class="o">&lt;</span> <span class="mi">1</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
                 <span class="s2">&quot;Have not computed any confident_thresholds yet. Call `update_confident_thresholds()` first.&quot;</span>
             <span class="p">)</span>
-        <span class="n">batch_size</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">labels</span><span class="p">)</span>
-        <span class="n">pred_class</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">pred_probs</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
-        <span class="c1"># for efficiency, this pred_class index is also used where older implementation instead used:</span>
-        <span class="c1"># max_ind = np.argmax(pred_probs * (pred_probs &gt;= adj_confident_thresholds), axis=1)</span>
-        <span class="n">pred_confidence</span> <span class="o">=</span> <span class="n">pred_probs</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">batch_size</span><span class="p">),</span> <span class="n">pred_class</span><span class="p">]</span>
-        <span class="c1"># add margin for floating point comparison operations:</span>
-        <span class="n">adj_confident_thresholds</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">confident_thresholds</span> <span class="o">-</span> <span class="n">EPS</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">off_diagonal_calibrated</span><span class="p">:</span>
-            <span class="n">prune_count_batch</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span>
-                <span class="p">(</span>
-                    <span class="n">pred_probs</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">batch_size</span><span class="p">),</span> <span class="n">pred_class</span><span class="p">]</span>
-                    <span class="o">&gt;=</span> <span class="n">adj_confident_thresholds</span><span class="p">[</span><span class="n">pred_class</span><span class="p">]</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_jobs</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">adj_confident_thresholds</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">confident_thresholds</span> <span class="o">-</span> <span class="n">EPS</span>
+            <span class="n">pred_class</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">pred_probs</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+            <span class="n">batch_size</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">labels</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">thorough</span><span class="p">:</span>
+                <span class="c1"># add margin for floating point comparison operations:</span>
+                <span class="n">pred_gt_thresholds</span> <span class="o">=</span> <span class="n">pred_probs</span> <span class="o">&gt;=</span> <span class="n">adj_confident_thresholds</span>
+                <span class="n">max_ind</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">pred_probs</span> <span class="o">*</span> <span class="n">pred_gt_thresholds</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">off_diagonal_calibrated</span><span class="p">:</span>
+                    <span class="n">mask</span> <span class="o">=</span> <span class="p">(</span><span class="n">max_ind</span> <span class="o">!=</span> <span class="n">labels</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">pred_class</span> <span class="o">!=</span> <span class="n">labels</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="c1"># calibrated</span>
+                    <span class="c1"># should we change to above?</span>
+                    <span class="n">mask</span> <span class="o">=</span> <span class="n">pred_class</span> <span class="o">!=</span> <span class="n">labels</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">max_ind</span> <span class="o">=</span> <span class="n">pred_class</span>
+                <span class="n">mask</span> <span class="o">=</span> <span class="n">pred_class</span> <span class="o">!=</span> <span class="n">labels</span>
+
+            <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">off_diagonal_calibrated</span><span class="p">:</span>
+                <span class="n">prune_count_batch</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span>
+                    <span class="p">(</span>
+                        <span class="n">pred_probs</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">batch_size</span><span class="p">),</span> <span class="n">max_ind</span><span class="p">]</span>
+                        <span class="o">&gt;=</span> <span class="n">adj_confident_thresholds</span><span class="p">[</span><span class="n">max_ind</span><span class="p">]</span>
+                    <span class="p">)</span>
+                    <span class="o">&amp;</span> <span class="n">mask</span>
                 <span class="p">)</span>
-                <span class="o">&amp;</span> <span class="p">(</span><span class="n">pred_class</span> <span class="o">!=</span> <span class="n">labels</span><span class="p">)</span>
-            <span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">prune_count</span> <span class="o">+=</span> <span class="n">prune_count_batch</span>
-        <span class="k">else</span><span class="p">:</span>  <span class="c1"># calibrated</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">class_counts</span> <span class="o">+=</span> <span class="n">value_counts_fill_missing_classes</span><span class="p">(</span>
-                <span class="n">labels</span><span class="p">,</span> <span class="n">num_classes</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">num_class</span>
-            <span class="p">)</span>
-            <span class="n">to_increment</span> <span class="o">=</span> <span class="p">(</span>
-                <span class="n">pred_probs</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">batch_size</span><span class="p">),</span> <span class="n">pred_class</span><span class="p">]</span>
-                <span class="o">&gt;=</span> <span class="n">adj_confident_thresholds</span><span class="p">[</span><span class="n">pred_class</span><span class="p">]</span>
-            <span class="p">)</span>
-            <span class="k">for</span> <span class="n">class_label</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">num_class</span><span class="p">):</span>
-                <span class="n">labels_equal_to_class</span> <span class="o">=</span> <span class="n">labels</span> <span class="o">==</span> <span class="n">class_label</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">normalization</span><span class="p">[</span><span class="n">class_label</span><span class="p">]</span> <span class="o">+=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">labels_equal_to_class</span> <span class="o">&amp;</span> <span class="n">to_increment</span><span class="p">)</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">prune_counts</span><span class="p">[</span><span class="n">class_label</span><span class="p">]</span> <span class="o">+=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span>
-                    <span class="n">labels_equal_to_class</span> <span class="o">&amp;</span> <span class="n">to_increment</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">pred_class</span> <span class="o">!=</span> <span class="n">labels</span><span class="p">)</span>
-                <span class="p">)</span></div>
+                <span class="bp">self</span><span class="o">.</span><span class="n">prune_count</span> <span class="o">+=</span> <span class="n">prune_count_batch</span>
+            <span class="k">else</span><span class="p">:</span>  <span class="c1"># calibrated</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">class_counts</span> <span class="o">+=</span> <span class="n">value_counts_fill_missing_classes</span><span class="p">(</span>
+                    <span class="n">labels</span><span class="p">,</span> <span class="n">num_classes</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">num_class</span>
+                <span class="p">)</span>
+                <span class="n">to_increment</span> <span class="o">=</span> <span class="p">(</span>
+                    <span class="n">pred_probs</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">batch_size</span><span class="p">),</span> <span class="n">max_ind</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="n">adj_confident_thresholds</span><span class="p">[</span><span class="n">max_ind</span><span class="p">]</span>
+                <span class="p">)</span>
+                <span class="k">for</span> <span class="n">class_label</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">num_class</span><span class="p">):</span>
+                    <span class="n">labels_equal_to_class</span> <span class="o">=</span> <span class="n">labels</span> <span class="o">==</span> <span class="n">class_label</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">normalization</span><span class="p">[</span><span class="n">class_label</span><span class="p">]</span> <span class="o">+=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">labels_equal_to_class</span> <span class="o">&amp;</span> <span class="n">to_increment</span><span class="p">)</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">prune_counts</span><span class="p">[</span><span class="n">class_label</span><span class="p">]</span> <span class="o">+=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span>
+                        <span class="n">labels_equal_to_class</span>
+                        <span class="o">&amp;</span> <span class="n">to_increment</span>
+                        <span class="o">&amp;</span> <span class="p">(</span><span class="n">max_ind</span> <span class="o">!=</span> <span class="n">labels</span><span class="p">)</span>
+                        <span class="c1"># &amp; (pred_class != labels)</span>
+                        <span class="c1"># This is not applied in num_label_issues(..., estimation_method=&quot;off_diagonal_custom&quot;). Do we want to add it?</span>
+                    <span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>  <span class="c1"># multiprocessing implementation</span>
+            <span class="k">global</span> <span class="n">adj_confident_thresholds_shared</span>
+            <span class="n">adj_confident_thresholds_shared</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">confident_thresholds</span> <span class="o">-</span> <span class="n">EPS</span>
+
+            <span class="k">global</span> <span class="n">labels_shared</span><span class="p">,</span> <span class="n">pred_probs_shared</span>
+            <span class="n">labels_shared</span> <span class="o">=</span> <span class="n">labels</span>
+            <span class="n">pred_probs_shared</span> <span class="o">=</span> <span class="n">pred_probs</span>
+            <span class="k">if</span> <span class="n">thorough</span><span class="p">:</span>
+                <span class="n">use_thorough</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">labels_shared</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">bool</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">use_thorough</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">labels_shared</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">bool</span><span class="p">)</span>
+            <span class="n">inds</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">labels_shared</span><span class="p">))</span>
+            <span class="n">args</span> <span class="o">=</span> <span class="nb">zip</span><span class="p">(</span><span class="n">inds</span><span class="p">,</span> <span class="n">use_thorough</span><span class="p">)</span>
+            <span class="k">with</span> <span class="n">mp</span><span class="o">.</span><span class="n">Pool</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n_jobs</span><span class="p">)</span> <span class="k">as</span> <span class="n">pool</span><span class="p">:</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">off_diagonal_calibrated</span><span class="p">:</span>
+                    <span class="n">prune_count_batch</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span>
+                        <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">pool</span><span class="o">.</span><span class="n">imap_unordered</span><span class="p">(</span><span class="n">_compute_num_issues</span><span class="p">,</span> <span class="n">args</span><span class="p">)))</span>
+                    <span class="p">)</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">prune_count</span> <span class="o">+=</span> <span class="n">prune_count_batch</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">results</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">pool</span><span class="o">.</span><span class="n">imap_unordered</span><span class="p">(</span><span class="n">_compute_num_issues_calibrated</span><span class="p">,</span> <span class="n">args</span><span class="p">))</span>
+                    <span class="k">for</span> <span class="n">result</span> <span class="ow">in</span> <span class="n">results</span><span class="p">:</span>
+                        <span class="n">class_label</span> <span class="o">=</span> <span class="n">result</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">class_counts</span><span class="p">[</span><span class="n">class_label</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">normalization</span><span class="p">[</span><span class="n">class_label</span><span class="p">]</span> <span class="o">+=</span> <span class="n">result</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">prune_counts</span><span class="p">[</span><span class="n">class_label</span><span class="p">]</span> <span class="o">+=</span> <span class="n">result</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span></div>
+
+
+<span class="k">def</span> <span class="nf">_compute_num_issues</span><span class="p">(</span><span class="n">arg</span><span class="p">:</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">bool</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Helper function for `_update_num_label_issues` multiprocessing without calibration</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">ind</span> <span class="o">=</span> <span class="n">arg</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">thorough</span> <span class="o">=</span> <span class="n">arg</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">label</span> <span class="o">=</span> <span class="n">labels_shared</span><span class="p">[</span><span class="n">ind</span><span class="p">]</span>
+    <span class="n">pred_prob</span> <span class="o">=</span> <span class="n">pred_probs_shared</span><span class="p">[</span><span class="n">ind</span><span class="p">,</span> <span class="p">:]</span>
+    <span class="n">pred_class</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">pred_prob</span><span class="p">,</span> <span class="n">axis</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">thorough</span><span class="p">:</span>
+        <span class="n">pred_gt_thresholds</span> <span class="o">=</span> <span class="n">pred_prob</span> <span class="o">&gt;=</span> <span class="n">adj_confident_thresholds_shared</span>
+        <span class="n">max_ind</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">pred_prob</span> <span class="o">*</span> <span class="n">pred_gt_thresholds</span><span class="p">,</span> <span class="n">axis</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">prune_count_batch</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="p">(</span><span class="n">pred_prob</span><span class="p">[</span><span class="n">max_ind</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="n">adj_confident_thresholds_shared</span><span class="p">[</span><span class="n">max_ind</span><span class="p">])</span>
+            <span class="o">&amp;</span> <span class="p">(</span><span class="n">max_ind</span> <span class="o">!=</span> <span class="n">label</span><span class="p">)</span>
+            <span class="o">&amp;</span> <span class="p">(</span><span class="n">pred_class</span> <span class="o">!=</span> <span class="n">label</span><span class="p">)</span>
+        <span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">prune_count_batch</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span>
+            <span class="p">(</span><span class="n">pred_prob</span><span class="p">[</span><span class="n">pred_class</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="n">adj_confident_thresholds_shared</span><span class="p">[</span><span class="n">pred_class</span><span class="p">])</span>
+            <span class="o">&amp;</span> <span class="p">(</span><span class="n">pred_class</span> <span class="o">!=</span> <span class="n">label</span><span class="p">)</span>
+        <span class="p">)</span>
+    <span class="k">return</span> <span class="n">prune_count_batch</span>
+
+
+<span class="k">def</span> <span class="nf">_compute_num_issues_calibrated</span><span class="p">(</span><span class="n">arg</span><span class="p">:</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">bool</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">Any</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Helper function for `_update_num_label_issues` multiprocessing with calibration</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">ind</span> <span class="o">=</span> <span class="n">arg</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">thorough</span> <span class="o">=</span> <span class="n">arg</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">label</span> <span class="o">=</span> <span class="n">labels_shared</span><span class="p">[</span><span class="n">ind</span><span class="p">]</span>
+    <span class="n">pred_prob</span> <span class="o">=</span> <span class="n">pred_probs_shared</span><span class="p">[</span><span class="n">ind</span><span class="p">,</span> <span class="p">:]</span>
+
+    <span class="n">pred_class</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">pred_prob</span><span class="p">,</span> <span class="n">axis</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">thorough</span><span class="p">:</span>
+        <span class="n">pred_gt_thresholds</span> <span class="o">=</span> <span class="n">pred_prob</span> <span class="o">&gt;=</span> <span class="n">adj_confident_thresholds_shared</span>
+        <span class="n">max_ind</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">pred_prob</span> <span class="o">*</span> <span class="n">pred_gt_thresholds</span><span class="p">,</span> <span class="n">axis</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">to_inc</span> <span class="o">=</span> <span class="n">pred_prob</span><span class="p">[</span><span class="n">max_ind</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="n">adj_confident_thresholds_shared</span><span class="p">[</span><span class="n">max_ind</span><span class="p">]</span>
+
+        <span class="n">prune_count_batch</span> <span class="o">=</span> <span class="n">to_inc</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">max_ind</span> <span class="o">!=</span> <span class="n">label</span><span class="p">)</span>
+        <span class="n">normalization_batch</span> <span class="o">=</span> <span class="n">to_inc</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">to_inc</span> <span class="o">=</span> <span class="n">pred_prob</span><span class="p">[</span><span class="n">pred_class</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="n">adj_confident_thresholds_shared</span><span class="p">[</span><span class="n">pred_class</span><span class="p">]</span>
+        <span class="n">normalization_batch</span> <span class="o">=</span> <span class="n">to_inc</span>
+        <span class="n">prune_count_batch</span> <span class="o">=</span> <span class="n">to_inc</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">pred_class</span> <span class="o">!=</span> <span class="n">label</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="p">(</span><span class="n">label</span><span class="p">,</span> <span class="n">normalization_batch</span><span class="p">,</span> <span class="n">prune_count_batch</span><span class="p">)</span>
 
 
 <span class="k">def</span> <span class="nf">_batch_check</span><span class="p">(</span><span class="n">labels</span><span class="p">:</span> <span class="n">LabelLike</span><span class="p">,</span> <span class="n">pred_probs</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">num_class</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
@@ -822,6 +968,7 @@
     <span class="n">labels</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">LabelLike</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">pred_probs</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">batch_size</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">10000</span><span class="p">,</span>
+    <span class="n">n_jobs</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">verbose</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
     <span class="n">quality_score_kwargs</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">dict</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">num_issue_kwargs</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">dict</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
@@ -863,6 +1010,10 @@
 <span class="sd">    batch_size : int, optional</span>
 <span class="sd">      Size of mini-batches to use for estimating the label issues.</span>
 <span class="sd">      To maximize efficiency, try to use the largest `batch_size` your memory allows.</span>
+
+<span class="sd">    n_jobs: int, optional</span>
+<span class="sd">      Number of processes for multiprocessing. Only used on Linux.</span>
+<span class="sd">      If `n_jobs=None`, will use either the number of: physical cores if psutil is installed, or logical cores otherwise.</span>
 
 <span class="sd">    verbose : bool, optional</span>
 <span class="sd">      Whether to suppress print statements or not.</span>
@@ -921,6 +1072,7 @@
     <span class="n">lab</span> <span class="o">=</span> <span class="n">LabelInspector</span><span class="p">(</span>
         <span class="n">num_class</span><span class="o">=</span><span class="n">pred_probs</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>
         <span class="n">verbose</span><span class="o">=</span><span class="n">verbose</span><span class="p">,</span>
+        <span class="n">n_jobs</span><span class="o">=</span><span class="n">n_jobs</span><span class="p">,</span>
         <span class="n">quality_score_kwargs</span><span class="o">=</span><span class="n">quality_score_kwargs</span><span class="p">,</span>
         <span class="n">num_issue_kwargs</span><span class="o">=</span><span class="n">num_issue_kwargs</span><span class="p">,</span>
     <span class="p">)</span>
@@ -949,7 +1101,7 @@
         <span class="n">labels_batch</span> <span class="o">=</span> <span class="n">labels</span><span class="p">[</span><span class="n">i</span><span class="p">:</span><span class="n">end_index</span><span class="p">]</span>
         <span class="n">pred_probs_batch</span> <span class="o">=</span> <span class="n">pred_probs</span><span class="p">[</span><span class="n">i</span><span class="p">:</span><span class="n">end_index</span><span class="p">,</span> <span class="p">:]</span>
         <span class="n">i</span> <span class="o">=</span> <span class="n">end_index</span>
-        <span class="n">batch_results</span> <span class="o">=</span> <span class="n">lab</span><span class="o">.</span><span class="n">score_label_quality</span><span class="p">(</span><span class="n">labels_batch</span><span class="p">,</span> <span class="n">pred_probs_batch</span><span class="p">)</span>
+        <span class="n">_</span> <span class="o">=</span> <span class="n">lab</span><span class="o">.</span><span class="n">score_label_quality</span><span class="p">(</span><span class="n">labels_batch</span><span class="p">,</span> <span class="n">pred_probs_batch</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
             <span class="n">pbar</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">batch_size</span><span class="p">)</span>
 
