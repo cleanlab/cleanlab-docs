@@ -1043,11 +1043,19 @@
             <span class="k">global</span> <span class="n">labels_shared</span><span class="p">,</span> <span class="n">pred_probs_shared</span>
             <span class="n">labels_shared</span> <span class="o">=</span> <span class="n">labels</span>
             <span class="n">pred_probs_shared</span> <span class="o">=</span> <span class="n">pred_probs</span>
-            <span class="k">if</span> <span class="n">thorough</span><span class="p">:</span>
-                <span class="n">use_thorough</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">labels_shared</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">bool</span><span class="p">)</span>
+
+            <span class="c1"># good values for this are ~1000-10000 in benchmarks where pred_probs has 1B entries:</span>
+            <span class="n">processes</span> <span class="o">=</span> <span class="mi">5000</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">labels</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="n">processes</span><span class="p">:</span>
+                <span class="n">chunksize</span> <span class="o">=</span> <span class="mi">1</span>
             <span class="k">else</span><span class="p">:</span>
-                <span class="n">use_thorough</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">labels_shared</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">bool</span><span class="p">)</span>
-            <span class="n">inds</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">labels_shared</span><span class="p">))</span>
+                <span class="n">chunksize</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">labels</span><span class="p">)</span> <span class="o">//</span> <span class="n">processes</span>
+            <span class="n">inds</span> <span class="o">=</span> <span class="n">split_arr</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">labels</span><span class="p">)),</span> <span class="n">chunksize</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">thorough</span><span class="p">:</span>
+                <span class="n">use_thorough</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">inds</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">bool</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">use_thorough</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">inds</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">bool</span><span class="p">)</span>
             <span class="n">args</span> <span class="o">=</span> <span class="nb">zip</span><span class="p">(</span><span class="n">inds</span><span class="p">,</span> <span class="n">use_thorough</span><span class="p">)</span>
             <span class="k">with</span> <span class="n">mp</span><span class="o">.</span><span class="n">Pool</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n_jobs</span><span class="p">)</span> <span class="k">as</span> <span class="n">pool</span><span class="p">:</span>
                 <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">off_diagonal_calibrated</span><span class="p">:</span>
@@ -1064,7 +1072,14 @@
                         <span class="bp">self</span><span class="o">.</span><span class="n">prune_counts</span><span class="p">[</span><span class="n">class_label</span><span class="p">]</span> <span class="o">+=</span> <span class="n">result</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span></div>
 
 
-<span class="k">def</span> <span class="nf">_compute_num_issues</span><span class="p">(</span><span class="n">arg</span><span class="p">:</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">bool</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<div class="viewcode-block" id="split_arr"><a class="viewcode-back" href="../../../cleanlab/experimental/label_issues_batched.html#cleanlab.experimental.label_issues_batched.split_arr">[docs]</a><span class="k">def</span> <span class="nf">split_arr</span><span class="p">(</span><span class="n">arr</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">chunksize</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Helper function to split array into chunks for multiprocessing</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">arr</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">chunksize</span><span class="p">,</span> <span class="n">arr</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">chunksize</span><span class="p">),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span></div>
+
+
+<span class="k">def</span> <span class="nf">_compute_num_issues</span><span class="p">(</span><span class="n">arg</span><span class="p">:</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="nb">bool</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Helper function for `_update_num_label_issues` multiprocessing without calibration</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -1073,23 +1088,27 @@
     <span class="n">label</span> <span class="o">=</span> <span class="n">labels_shared</span><span class="p">[</span><span class="n">ind</span><span class="p">]</span>
     <span class="n">pred_prob</span> <span class="o">=</span> <span class="n">pred_probs_shared</span><span class="p">[</span><span class="n">ind</span><span class="p">,</span> <span class="p">:]</span>
     <span class="n">pred_class</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">pred_prob</span><span class="p">,</span> <span class="n">axis</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">batch_size</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">label</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">thorough</span><span class="p">:</span>
         <span class="n">pred_gt_thresholds</span> <span class="o">=</span> <span class="n">pred_prob</span> <span class="o">&gt;=</span> <span class="n">adj_confident_thresholds_shared</span>
         <span class="n">max_ind</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">pred_prob</span> <span class="o">*</span> <span class="n">pred_gt_thresholds</span><span class="p">,</span> <span class="n">axis</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
-        <span class="n">prune_count_batch</span> <span class="o">=</span> <span class="p">(</span>
-            <span class="p">(</span><span class="n">pred_prob</span><span class="p">[</span><span class="n">max_ind</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="n">adj_confident_thresholds_shared</span><span class="p">[</span><span class="n">max_ind</span><span class="p">])</span>
+        <span class="n">prune_count_batch</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span>
+            <span class="p">(</span><span class="n">pred_prob</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">batch_size</span><span class="p">),</span> <span class="n">max_ind</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="n">adj_confident_thresholds_shared</span><span class="p">[</span><span class="n">max_ind</span><span class="p">])</span>
             <span class="o">&amp;</span> <span class="p">(</span><span class="n">max_ind</span> <span class="o">!=</span> <span class="n">label</span><span class="p">)</span>
             <span class="o">&amp;</span> <span class="p">(</span><span class="n">pred_class</span> <span class="o">!=</span> <span class="n">label</span><span class="p">)</span>
         <span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="n">prune_count_batch</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span>
-            <span class="p">(</span><span class="n">pred_prob</span><span class="p">[</span><span class="n">pred_class</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="n">adj_confident_thresholds_shared</span><span class="p">[</span><span class="n">pred_class</span><span class="p">])</span>
+            <span class="p">(</span>
+                <span class="n">pred_prob</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">batch_size</span><span class="p">),</span> <span class="n">pred_class</span><span class="p">]</span>
+                <span class="o">&gt;=</span> <span class="n">adj_confident_thresholds_shared</span><span class="p">[</span><span class="n">pred_class</span><span class="p">]</span>
+            <span class="p">)</span>
             <span class="o">&amp;</span> <span class="p">(</span><span class="n">pred_class</span> <span class="o">!=</span> <span class="n">label</span><span class="p">)</span>
         <span class="p">)</span>
     <span class="k">return</span> <span class="n">prune_count_batch</span>
 
 
-<span class="k">def</span> <span class="nf">_compute_num_issues_calibrated</span><span class="p">(</span><span class="n">arg</span><span class="p">:</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">bool</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">Any</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]:</span>
+<span class="k">def</span> <span class="nf">_compute_num_issues_calibrated</span><span class="p">(</span><span class="n">arg</span><span class="p">:</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="nb">bool</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">Any</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Helper function for `_update_num_label_issues` multiprocessing with calibration</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -1097,17 +1116,23 @@
     <span class="n">thorough</span> <span class="o">=</span> <span class="n">arg</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
     <span class="n">label</span> <span class="o">=</span> <span class="n">labels_shared</span><span class="p">[</span><span class="n">ind</span><span class="p">]</span>
     <span class="n">pred_prob</span> <span class="o">=</span> <span class="n">pred_probs_shared</span><span class="p">[</span><span class="n">ind</span><span class="p">,</span> <span class="p">:]</span>
+    <span class="n">batch_size</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">label</span><span class="p">)</span>
 
     <span class="n">pred_class</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">pred_prob</span><span class="p">,</span> <span class="n">axis</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">thorough</span><span class="p">:</span>
         <span class="n">pred_gt_thresholds</span> <span class="o">=</span> <span class="n">pred_prob</span> <span class="o">&gt;=</span> <span class="n">adj_confident_thresholds_shared</span>
         <span class="n">max_ind</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">pred_prob</span> <span class="o">*</span> <span class="n">pred_gt_thresholds</span><span class="p">,</span> <span class="n">axis</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
-        <span class="n">to_inc</span> <span class="o">=</span> <span class="n">pred_prob</span><span class="p">[</span><span class="n">max_ind</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="n">adj_confident_thresholds_shared</span><span class="p">[</span><span class="n">max_ind</span><span class="p">]</span>
+        <span class="n">to_inc</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="n">pred_prob</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">batch_size</span><span class="p">),</span> <span class="n">max_ind</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="n">adj_confident_thresholds_shared</span><span class="p">[</span><span class="n">max_ind</span><span class="p">]</span>
+        <span class="p">)</span>
 
         <span class="n">prune_count_batch</span> <span class="o">=</span> <span class="n">to_inc</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">max_ind</span> <span class="o">!=</span> <span class="n">label</span><span class="p">)</span>
         <span class="n">normalization_batch</span> <span class="o">=</span> <span class="n">to_inc</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="n">to_inc</span> <span class="o">=</span> <span class="n">pred_prob</span><span class="p">[</span><span class="n">pred_class</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="n">adj_confident_thresholds_shared</span><span class="p">[</span><span class="n">pred_class</span><span class="p">]</span>
+        <span class="n">to_inc</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="n">pred_prob</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">batch_size</span><span class="p">),</span> <span class="n">pred_class</span><span class="p">]</span>
+            <span class="o">&gt;=</span> <span class="n">adj_confident_thresholds_shared</span><span class="p">[</span><span class="n">pred_class</span><span class="p">]</span>
+        <span class="p">)</span>
         <span class="n">normalization_batch</span> <span class="o">=</span> <span class="n">to_inc</span>
         <span class="n">prune_count_batch</span> <span class="o">=</span> <span class="n">to_inc</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">pred_class</span> <span class="o">!=</span> <span class="n">label</span><span class="p">)</span>
 
