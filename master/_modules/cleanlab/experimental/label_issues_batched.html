@@ -535,7 +535,7 @@
 <span class="sd">      Keyword arguments to pass into :py:func:`rank.get_label_quality_scores &lt;cleanlab.rank.get_label_quality_scores&gt;`.</span>
 
 <span class="sd">    num_issue_kwargs : dict, optional</span>
-<span class="sd">      Keyword arguments to :py:func:`count.num_label_issues()` &lt;cleanlab.count.num_label_issues&gt;`</span>
+<span class="sd">      Keyword arguments to :py:func:`count.num_label_issues &lt;cleanlab.count.num_label_issues&gt;`</span>
 <span class="sd">      to control estimation of the number of label issues.</span>
 <span class="sd">      The only supported kwarg here for now is: `estimation_method`.</span>
 
@@ -717,7 +717,7 @@
 <span class="sd">      Keyword arguments to pass into :py:func:`rank.get_label_quality_scores &lt;cleanlab.rank.get_label_quality_scores&gt;`.</span>
 
 <span class="sd">    num_issue_kwargs : dict, optional</span>
-<span class="sd">      Keyword arguments to :py:func:`count.num_label_issues()` &lt;cleanlab.count.num_label_issues&gt;`</span>
+<span class="sd">      Keyword arguments to :py:func:`count.num_label_issues &lt;cleanlab.count.num_label_issues&gt;`</span>
 <span class="sd">      to control estimation of the number of label issues.</span>
 <span class="sd">      The only supported kwarg here for now is: `estimation_method`.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -819,7 +819,7 @@
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
-<span class="sd">        num_issues :</span>
+<span class="sd">        num_issues : int</span>
 <span class="sd">          The estimated number of examples with label issues in the data seen so far.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">examples_processed_quality</span> <span class="o">&lt;</span> <span class="mi">1</span><span class="p">:</span>
@@ -867,7 +867,7 @@
 <span class="sd">        in the same format as: :py:func:`filter.find_label_issues &lt;cleanlab.filter.find_label_issues&gt;`</span>
 <span class="sd">        with its `return_indices_ranked_by` argument specified.</span>
 
-<span class="sd">        Note: this method corresponds to ``filter.find_label_issues(..., filter_by=METHOD1, return_indices_ranked_by=METHOD2)</span>
+<span class="sd">        Note: this method corresponds to ``filter.find_label_issues(..., filter_by=METHOD1, return_indices_ranked_by=METHOD2)``</span>
 <span class="sd">        where by default: ``METHOD1=&quot;low_self_confidence&quot;``, ``METHOD2=&quot;self_confidence&quot;``</span>
 <span class="sd">        or if this object was instantiated with ``quality_score_kwargs = {&quot;method&quot;: &quot;normalized_margin&quot;}`` then we instead have:</span>
 <span class="sd">        ``METHOD1=&quot;low_normalized_margin&quot;``, ``METHOD2=&quot;normalized_margin&quot;``.</span>
@@ -934,7 +934,7 @@
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Scores the label quality of each example in the provided batch of data,</span>
 <span class="sd">        and also updates the number of label issues stored in this class.</span>
-<span class="sd">        Inputs should be in same format as for: :py:func:`rank.get_label_quality_scores &lt;cleanlab.rank.get_label_quality_scores&gt;`..</span>
+<span class="sd">        Inputs should be in same format as for: :py:func:`rank.get_label_quality_scores &lt;cleanlab.rank.get_label_quality_scores&gt;`.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -1074,14 +1074,14 @@
 
 <div class="viewcode-block" id="split_arr"><a class="viewcode-back" href="../../../cleanlab/experimental/label_issues_batched.html#cleanlab.experimental.label_issues_batched.split_arr">[docs]</a><span class="k">def</span> <span class="nf">split_arr</span><span class="p">(</span><span class="n">arr</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">chunksize</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Helper function to split array into chunks for multiprocessing</span>
+<span class="sd">    Helper function to split array into chunks for multiprocessing.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">arr</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">chunksize</span><span class="p">,</span> <span class="n">arr</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">chunksize</span><span class="p">),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span></div>
 
 
 <span class="k">def</span> <span class="nf">_compute_num_issues</span><span class="p">(</span><span class="n">arg</span><span class="p">:</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="nb">bool</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Helper function for `_update_num_label_issues` multiprocessing without calibration</span>
+<span class="sd">    Helper function for `_update_num_label_issues` multiprocessing without calibration.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">ind</span> <span class="o">=</span> <span class="n">arg</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
     <span class="n">thorough</span> <span class="o">=</span> <span class="n">arg</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
@@ -1110,7 +1110,7 @@
 
 <span class="k">def</span> <span class="nf">_compute_num_issues_calibrated</span><span class="p">(</span><span class="n">arg</span><span class="p">:</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="nb">bool</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">Any</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Helper function for `_update_num_label_issues` multiprocessing with calibration</span>
+<span class="sd">    Helper function for `_update_num_label_issues` multiprocessing with calibration.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">ind</span> <span class="o">=</span> <span class="n">arg</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
     <span class="n">thorough</span> <span class="o">=</span> <span class="n">arg</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>

@@ -503,19 +503,23 @@
 
 <span class="sd">    estimation_method :</span>
 <span class="sd">      Method for estimating the number of label issues in dataset by counting the examples in the off-diagonal of the `confident_joint` ``P(label=i, true_label=j)``.</span>
-<span class="sd">       - ``&#39;off_diagonal&#39;``: Counts the number of examples in the off-diagonal of the `confident_joint`. Returns the same value as ``sum(find_label_issues(filter_by=&#39;confident_learning&#39;))``</span>
-<span class="sd">       - ``&#39;off_diagonal_calibrated&#39;``: Calibrates confident joint estimate ``P(label=i, true_label=j)`` such that</span>
-<span class="sd">       ``np.sum(cj) == len(labels)`` and ``np.sum(cj, axis = 1) == np.bincount(labels)`` before counting the number</span>
-<span class="sd">       of examples in the off-diagonal. Number will always be equal to or greater than</span>
-<span class="sd">       ``estimate_issues=&#39;off_diagonal&#39;``. You can use this value as the cutoff threshold used with ranking/scoring</span>
-<span class="sd">       functions from :py:mod:`cleanlab.rank` with `num_label_issues` over ``estimation_method=&#39;off_diagonal&#39;`` in</span>
-<span class="sd">       two cases:</span>
-<span class="sd">          1. As we add more label and data quality scoring functions in :py:mod:`cleanlab.rank`, this approach will always work.</span>
-<span class="sd">          2. If you have a custom score to rank your data by label quality and you just need to know the cut-off of likely label issues.</span>
-<span class="sd">       - ``&#39;off_diagonal_custom&#39;``: Counts the number of examples in the off-diagonal of a provided `confident_joint` matrix.</span>
 
+<span class="sd">      * ``&#39;off_diagonal&#39;``: Counts the number of examples in the off-diagonal of the `confident_joint`. Returns the same value as ``sum(find_label_issues(filter_by=&#39;confident_learning&#39;))``</span>
 
-<span class="sd">       TL;DR: Use this method to get the most accurate estimate of number of label issues when you don&#39;t need the indices of the label issues.</span>
+<span class="sd">      * ``&#39;off_diagonal_calibrated&#39;``: Calibrates confident joint estimate ``P(label=i, true_label=j)`` such that</span>
+<span class="sd">        ``np.sum(cj) == len(labels)`` and ``np.sum(cj, axis = 1) == np.bincount(labels)`` before counting the number</span>
+<span class="sd">        of examples in the off-diagonal. Number will always be equal to or greater than</span>
+<span class="sd">        ``estimate_issues=&#39;off_diagonal&#39;``. You can use this value as the cutoff threshold used with ranking/scoring</span>
+<span class="sd">        functions from :py:mod:`cleanlab.rank` with `num_label_issues` over ``estimation_method=&#39;off_diagonal&#39;`` in</span>
+<span class="sd">        two cases:</span>
+
+<span class="sd">        #. As we add more label and data quality scoring functions in :py:mod:`cleanlab.rank`, this approach will always work.</span>
+<span class="sd">        #. If you have a custom score to rank your data by label quality and you just need to know the cut-off of likely label issues.</span>
+
+<span class="sd">      * ``&#39;off_diagonal_custom&#39;``: Counts the number of examples in the off-diagonal of a provided `confident_joint` matrix.</span>
+
+<span class="sd">      TL;DR: Use this method to get the most accurate estimate of number of label issues when you don&#39;t need the indices of the label issues.</span>
+
 <span class="sd">      Note: ``&#39;off_diagonal&#39;`` may sometimes underestimate issues for data with few classes, so consider using ``&#39;off_diagonal_calibrated&#39;`` instead if your data has &lt; 4 classes.</span>
 
 <span class="sd">    multi_label : bool, optional</span>

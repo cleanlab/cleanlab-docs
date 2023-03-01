@@ -480,49 +480,35 @@ in same format expected by <a class="reference internal" href="filter.html#clean
 in same format expected by <a class="reference internal" href="filter.html#cleanlab.filter.find_label_issues" title="cleanlab.filter.find_label_issues"><code class="xref py py-func docutils literal notranslate"><span class="pre">filter.find_label_issues</span></code></a> function.
 The <cite>confident_joint</cite> can be computed using <a class="reference internal" href="#cleanlab.count.compute_confident_joint" title="cleanlab.count.compute_confident_joint"><code class="xref py py-func docutils literal notranslate"><span class="pre">count.compute_confident_joint</span></code></a>.
 It is internally computed from the given (noisy) <cite>labels</cite> and <cite>pred_probs</cite>.</p></li>
-<li><p><strong>estimation_method</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>) – <blockquote>
-<div><blockquote>
-<div><dl>
-<dt>Method for estimating the number of label issues in dataset by counting the examples in the off-diagonal of the <cite>confident_joint</cite> <code class="docutils literal notranslate"><span class="pre">P(label=i,</span> <span class="pre">true_label=j)</span></code>.</dt><dd><ul>
+<li><p><strong>estimation_method</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>) – <p>Method for estimating the number of label issues in dataset by counting the examples in the off-diagonal of the <cite>confident_joint</cite> <code class="docutils literal notranslate"><span class="pre">P(label=i,</span> <span class="pre">true_label=j)</span></code>.</p>
+<ul>
 <li><p><code class="docutils literal notranslate"><span class="pre">'off_diagonal'</span></code>: Counts the number of examples in the off-diagonal of the <cite>confident_joint</cite>. Returns the same value as <code class="docutils literal notranslate"><span class="pre">sum(find_label_issues(filter_by='confident_learning'))</span></code></p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">'off_diagonal_calibrated'</span></code>: Calibrates confident joint estimate <code class="docutils literal notranslate"><span class="pre">P(label=i,</span> <span class="pre">true_label=j)</span></code> such that</p></li>
-</ul>
-<p><code class="docutils literal notranslate"><span class="pre">np.sum(cj)</span> <span class="pre">==</span> <span class="pre">len(labels)</span></code> and <code class="docutils literal notranslate"><span class="pre">np.sum(cj,</span> <span class="pre">axis</span> <span class="pre">=</span> <span class="pre">1)</span> <span class="pre">==</span> <span class="pre">np.bincount(labels)</span></code> before counting the number
+<li><p><code class="docutils literal notranslate"><span class="pre">'off_diagonal_calibrated'</span></code>: Calibrates confident joint estimate <code class="docutils literal notranslate"><span class="pre">P(label=i,</span> <span class="pre">true_label=j)</span></code> such that
+<code class="docutils literal notranslate"><span class="pre">np.sum(cj)</span> <span class="pre">==</span> <span class="pre">len(labels)</span></code> and <code class="docutils literal notranslate"><span class="pre">np.sum(cj,</span> <span class="pre">axis</span> <span class="pre">=</span> <span class="pre">1)</span> <span class="pre">==</span> <span class="pre">np.bincount(labels)</span></code> before counting the number
 of examples in the off-diagonal. Number will always be equal to or greater than
 <code class="docutils literal notranslate"><span class="pre">estimate_issues='off_diagonal'</span></code>. You can use this value as the cutoff threshold used with ranking/scoring
 functions from <a class="reference internal" href="rank.html#module-cleanlab.rank" title="cleanlab.rank"><code class="xref py py-mod docutils literal notranslate"><span class="pre">cleanlab.rank</span></code></a> with <cite>num_label_issues</cite> over <code class="docutils literal notranslate"><span class="pre">estimation_method='off_diagonal'</span></code> in
 two cases:</p>
-<blockquote>
-<div><ol class="arabic simple">
+<ol class="arabic simple">
 <li><p>As we add more label and data quality scoring functions in <a class="reference internal" href="rank.html#module-cleanlab.rank" title="cleanlab.rank"><code class="xref py py-mod docutils literal notranslate"><span class="pre">cleanlab.rank</span></code></a>, this approach will always work.</p></li>
 <li><p>If you have a custom score to rank your data by label quality and you just need to know the cut-off of likely label issues.</p></li>
 </ol>
-</div></blockquote>
-<ul>
+</li>
 <li><p><code class="docutils literal notranslate"><span class="pre">'off_diagonal_custom'</span></code>: Counts the number of examples in the off-diagonal of a provided <cite>confident_joint</cite> matrix.</p></li>
 </ul>
-</dd>
-</dl>
-</div></blockquote>
 <p>TL;DR: Use this method to get the most accurate estimate of number of label issues when you don’t need the indices of the label issues.</p>
-</div></blockquote>
 <p>Note: <code class="docutils literal notranslate"><span class="pre">'off_diagonal'</span></code> may sometimes underestimate issues for data with few classes, so consider using <code class="docutils literal notranslate"><span class="pre">'off_diagonal_calibrated'</span></code> instead if your data has &lt; 4 classes.</p>
 </p></li>
+<li><p><strong>multi_label</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code>, <em>optional</em>) – Set <code class="docutils literal notranslate"><span class="pre">False</span></code> if your dataset is for regular (multi-class) classification, where each example belongs to exactly one class.
+Set <code class="docutils literal notranslate"><span class="pre">True</span></code> if your dataset is for multi-label classification, where each example can belong to multiple classes.
+See documentation of <a class="reference internal" href="#cleanlab.count.compute_confident_joint" title="cleanlab.count.compute_confident_joint"><code class="xref py py-func docutils literal notranslate"><span class="pre">compute_confident_joint</span></code></a> for details.</p></li>
 </ul>
 </dd>
-</dl>
-<dl class="simple">
-<dt>multi_label<span class="classifier">bool, optional</span></dt><dd><p>Set <code class="docutils literal notranslate"><span class="pre">False</span></code> if your dataset is for regular (multi-class) classification, where each example belongs to exactly one class.
-Set <code class="docutils literal notranslate"><span class="pre">True</span></code> if your dataset is for multi-label classification, where each example can belong to multiple classes.
-See documentation of <a class="reference internal" href="#cleanlab.count.compute_confident_joint" title="cleanlab.count.compute_confident_joint"><code class="xref py py-func docutils literal notranslate"><span class="pre">compute_confident_joint</span></code></a> for details.</p>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></p>
 </dd>
-</dl>
-<dl class="field-list simple">
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></p>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">num_issues</span></code> – The estimated number of examples with label issues in the dataset.</p>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">num_issues</span></code> – The estimated number of examples with label issues in the dataset.</p>
 </dd>
 </dl>
 </dd></dl>

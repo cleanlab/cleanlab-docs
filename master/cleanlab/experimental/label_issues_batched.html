@@ -435,7 +435,7 @@ or follow the examples script for the <code class="docutils literal notranslate"
 <td><p>Variant of <a class="reference internal" href="../filter.html#cleanlab.filter.find_label_issues" title="cleanlab.filter.find_label_issues"><code class="xref py py-func docutils literal notranslate"><span class="pre">filter.find_label_issues</span></code></a> that requires less memory by reading from <cite>pred_probs</cite>, <cite>labels</cite> in mini-batches.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#cleanlab.experimental.label_issues_batched.split_arr" title="cleanlab.experimental.label_issues_batched.split_arr"><code class="xref py py-obj docutils literal notranslate"><span class="pre">split_arr</span></code></a>(arr, chunksize)</p></td>
-<td><p>Helper function to split array into chunks for multiprocessing</p></td>
+<td><p>Helper function to split array into chunks for multiprocessing.</p></td>
 </tr>
 </tbody>
 </table>
@@ -506,7 +506,7 @@ To maximize efficiency, try to use the largest <cite>batch_size</cite> your memo
 If <cite>n_jobs=None</cite>, will use either the number of: physical cores if psutil is installed, or logical cores otherwise.</p></li>
 <li><p><strong>verbose</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code>, <em>optional</em>) – Whether to suppress print statements or not.</p></li>
 <li><p><strong>quality_score_kwargs</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code>, <em>optional</em>) – Keyword arguments to pass into <a class="reference internal" href="../rank.html#cleanlab.rank.get_label_quality_scores" title="cleanlab.rank.get_label_quality_scores"><code class="xref py py-func docutils literal notranslate"><span class="pre">rank.get_label_quality_scores</span></code></a>.</p></li>
-<li><p><strong>num_issue_kwargs</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code>, <em>optional</em>) – Keyword arguments to <code class="xref py py-func docutils literal notranslate"><span class="pre">count.num_label_issues()</span></code> &lt;cleanlab.count.num_label_issues&gt;`
+<li><p><strong>num_issue_kwargs</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code>, <em>optional</em>) – Keyword arguments to <a class="reference internal" href="../count.html#cleanlab.count.num_label_issues" title="cleanlab.count.num_label_issues"><code class="xref py py-func docutils literal notranslate"><span class="pre">count.num_label_issues</span></code></a>
 to control estimation of the number of label issues.
 The only supported kwarg here for now is: <cite>estimation_method</cite>.</p></li>
 </ul>
@@ -606,7 +606,7 @@ with <code class="docutils literal notranslate"><span class="pre">T</span> <span
 <li><p><strong>n_jobs</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>, <em>optional</em>) – Number of processes for multiprocessing (default value = 1). Only used on Linux.
 If <cite>n_jobs=None</cite>, will use either the number of: physical cores if psutil is installed, or logical cores otherwise.</p></li>
 <li><p><strong>quality_score_kwargs</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code>, <em>optional</em>) – Keyword arguments to pass into <a class="reference internal" href="../rank.html#cleanlab.rank.get_label_quality_scores" title="cleanlab.rank.get_label_quality_scores"><code class="xref py py-func docutils literal notranslate"><span class="pre">rank.get_label_quality_scores</span></code></a>.</p></li>
-<li><p><strong>num_issue_kwargs</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code>, <em>optional</em>) – Keyword arguments to <code class="xref py py-func docutils literal notranslate"><span class="pre">count.num_label_issues()</span></code> &lt;cleanlab.count.num_label_issues&gt;`
+<li><p><strong>num_issue_kwargs</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code>, <em>optional</em>) – Keyword arguments to <a class="reference internal" href="../count.html#cleanlab.count.num_label_issues" title="cleanlab.count.num_label_issues"><code class="xref py py-func docutils literal notranslate"><span class="pre">count.num_label_issues</span></code></a>
 to control estimation of the number of label issues.
 The only supported kwarg here for now is: <cite>estimation_method</cite>.</p></li>
 </ul>
@@ -664,7 +664,7 @@ by 1 due to rounding differences.</p>
 <dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">num_issues</span></code> – The estimated number of examples with label issues in the data seen so far.</p>
+<dd class="field-even"><p><strong>num_issues</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>) – The estimated number of examples with label issues in the data seen so far.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -691,8 +691,8 @@ Lower scores indicate more likely mislabeled examples.</p>
 <dd><p>Fetches already-computed estimate of indices of examples with label issues in the data seen so far,
 in the same format as: <a class="reference internal" href="../filter.html#cleanlab.filter.find_label_issues" title="cleanlab.filter.find_label_issues"><code class="xref py py-func docutils literal notranslate"><span class="pre">filter.find_label_issues</span></code></a>
 with its <cite>return_indices_ranked_by</cite> argument specified.</p>
-<p>Note: this method corresponds to <code class="docutils literal notranslate"><span class="pre">filter.find_label_issues(...,</span> <span class="pre">filter_by=METHOD1,</span> <span class="pre">return_indices_ranked_by=METHOD2)</span>
-<span class="pre">where</span> <span class="pre">by</span> <span class="pre">default:</span> <span class="pre">``METHOD1=&quot;low_self_confidence&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">METHOD2=&quot;self_confidence&quot;</span></code>
+<p>Note: this method corresponds to <code class="docutils literal notranslate"><span class="pre">filter.find_label_issues(...,</span> <span class="pre">filter_by=METHOD1,</span> <span class="pre">return_indices_ranked_by=METHOD2)</span></code>
+where by default: <code class="docutils literal notranslate"><span class="pre">METHOD1=&quot;low_self_confidence&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">METHOD2=&quot;self_confidence&quot;</span></code>
 or if this object was instantiated with <code class="docutils literal notranslate"><span class="pre">quality_score_kwargs</span> <span class="pre">=</span> <span class="pre">{&quot;method&quot;:</span> <span class="pre">&quot;normalized_margin&quot;}</span></code> then we instead have:
 <code class="docutils literal notranslate"><span class="pre">METHOD1=&quot;low_normalized_margin&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">METHOD2=&quot;normalized_margin&quot;</span></code>.</p>
 <p>Note: The estimated number of issues may differ from <a class="reference internal" href="../filter.html#cleanlab.filter.find_label_issues" title="cleanlab.filter.find_label_issues"><code class="xref py py-func docutils literal notranslate"><span class="pre">filter.find_label_issues</span></code></a>
@@ -727,7 +727,7 @@ Inputs should be in same format as for: <a class="reference internal" href="../c
 <span class="sig-name descname"><span class="pre">score_label_quality</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">labels</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pred_probs</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">update_num_issues</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/cleanlab/experimental/label_issues_batched.html#LabelInspector.score_label_quality"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cleanlab.experimental.label_issues_batched.LabelInspector.score_label_quality" title="Permalink to this definition">#</a></dt>
 <dd><p>Scores the label quality of each example in the provided batch of data,
 and also updates the number of label issues stored in this class.
-Inputs should be in same format as for: <a class="reference internal" href="../rank.html#cleanlab.rank.get_label_quality_scores" title="cleanlab.rank.get_label_quality_scores"><code class="xref py py-func docutils literal notranslate"><span class="pre">rank.get_label_quality_scores</span></code></a>..</p>
+Inputs should be in same format as for: <a class="reference internal" href="../rank.html#cleanlab.rank.get_label_quality_scores" title="cleanlab.rank.get_label_quality_scores"><code class="xref py py-func docutils literal notranslate"><span class="pre">rank.get_label_quality_scores</span></code></a>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -751,7 +751,7 @@ For lower runtimes, set this to <code class="docutils literal notranslate"><span
 <dl class="py function">
 <dt class="sig sig-object py" id="cleanlab.experimental.label_issues_batched.split_arr">
 <span class="sig-prename descclassname"><span class="pre">cleanlab.experimental.label_issues_batched.</span></span><span class="sig-name descname"><span class="pre">split_arr</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">arr</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">chunksize</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/cleanlab/experimental/label_issues_batched.html#split_arr"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cleanlab.experimental.label_issues_batched.split_arr" title="Permalink to this definition">#</a></dt>
-<dd><p>Helper function to split array into chunks for multiprocessing</p>
+<dd><p>Helper function to split array into chunks for multiprocessing.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>]</p>

@@ -426,8 +426,9 @@
 use the <a class="reference internal" href="#cleanlab.multiannotator.get_active_learning_scores" title="cleanlab.multiannotator.get_active_learning_scores"><code class="xref py py-func docutils literal notranslate"><span class="pre">get_active_learning_scores</span></code></a> function, which is intended for active learning.
 This function estimates an active learning quality score for each example,
 which can be used to prioritize which examples are most informative to collect additional labels for.
-This function is effective for settings where some examples have been labeled by one or more annotators and other examples can have no labels at all so far,
-as well as settings where new labels are collected either in batches of examples or one at a time.</p>
+This function is effective for settings where some examples have been labeled by one or more annotators and other examples can have no labels at all so far,
+as well as settings where new labels are collected either in batches of examples or one at a time.
+Here is an <a class="reference external" href="https://github.com/cleanlab/examples/blob/master/active_learning_multiannotator/active_learning.ipynb">example notebook</a> showcasing the use of this function in multiple active learning rounds.</p>
 <p>Each of the main functions in this module utilizes any trained classifier model.
 Variants of these functions are provided for settings where you have trained an ensemble of multiple models.</p>
 <p><strong>Functions:</strong></p>
@@ -604,7 +605,7 @@ Similar to output as <a class="reference internal" href="#cleanlab.multiannotato
 <dt class="sig sig-object py" id="cleanlab.multiannotator.get_active_learning_scores">
 <span class="sig-prename descclassname"><span class="pre">cleanlab.multiannotator.</span></span><span class="sig-name descname"><span class="pre">get_active_learning_scores</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">labels_multiannotator</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pred_probs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pred_probs_unlabeled</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/cleanlab/multiannotator.html#get_active_learning_scores"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cleanlab.multiannotator.get_active_learning_scores" title="Permalink to this definition">#</a></dt>
 <dd><p>Returns an active learning quality score for each example in the dataset.</p>
-<p>We consider settings where one example can be labeled by multiple annotators and some examples have no labels at all so far.</p>
+<p>We consider settings where one example can be labeled by one or more annotators and some examples have no labels at all so far.</p>
 <p>The score is in between 0 and 1, and can be used to prioritize what data to collect additional labels for.
 Lower scores indicate examples whose true label we are least confident about based on the current data;
 collecting additional labels for these low-scoring examples will be more informative than collecting labels for other examples.
@@ -616,7 +617,8 @@ and repeat this process after retraining your classifier.</p>
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>labels_multiannotator</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">pd.DataFrame</span></code> of <code class="xref py py-class docutils literal notranslate"><span class="pre">np.ndarray</span></code>) – 2D pandas DataFrame or array of multiple given labels for each example with shape <code class="docutils literal notranslate"><span class="pre">(N,</span> <span class="pre">M)</span></code>,
-where N is the number of examples and M is the number of annotators.
+where N is the number of examples and M is the number of annotators. Note that this function also works with
+datasets where there is only one annotator (M=1).
 For more details, labels in the same format expected by the <a class="reference internal" href="#cleanlab.multiannotator.get_label_quality_multiannotator" title="cleanlab.multiannotator.get_label_quality_multiannotator"><code class="xref py py-func docutils literal notranslate"><span class="pre">get_label_quality_multiannotator</span></code></a>.
 Note that examples that have no annotator labels should not be included in this DataFrame/array.</p></li>
 <li><p><strong>pred_probs</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">np.ndarray</span></code>) – An array of shape <code class="docutils literal notranslate"><span class="pre">(N,</span> <span class="pre">K)</span></code> of predicted class probabilities from a trained classifier model.
@@ -653,6 +655,7 @@ ensemble of multiple classifier models to be trained and will aggregate predicti
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>labels_multiannotator</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">pd.DataFrame</span></code> or <code class="xref py py-class docutils literal notranslate"><span class="pre">np.ndarray</span></code>) – Multiannotator labels in the same format expected by <a class="reference internal" href="#cleanlab.multiannotator.get_active_learning_scores" title="cleanlab.multiannotator.get_active_learning_scores"><code class="xref py py-func docutils literal notranslate"><span class="pre">get_active_learning_scores</span></code></a>.</p></li>
 <li><p><strong>pred_probs</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">np.ndarray</span></code>) – An array of shape <code class="docutils literal notranslate"><span class="pre">(P,</span> <span class="pre">N,</span> <span class="pre">K)</span></code> where P is the number of models, consisting of predicted class probabilities from the ensemble models.
+Note that this function also works with datasets where there is only one annotator (M=1).
 Each set of predicted probabilities with shape <code class="docutils literal notranslate"><span class="pre">(N,</span> <span class="pre">K)</span></code> is in the same format expected by the <a class="reference internal" href="rank.html#cleanlab.rank.get_label_quality_scores" title="cleanlab.rank.get_label_quality_scores"><code class="xref py py-func docutils literal notranslate"><span class="pre">get_label_quality_scores</span></code></a>.</p></li>
 <li><p><strong>pred_probs_unlabeled</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">np.ndarray</span></code>, <em>optional</em>) – An array of shape <code class="docutils literal notranslate"><span class="pre">(P,</span> <span class="pre">N,</span> <span class="pre">K)</span></code> where P is the number of models, consisting of predicted class probabilities from a trained classifier model
 for examples that have no annotated labels so far (but which we may want to label in the future, and hence compute active learning quality scores for).
