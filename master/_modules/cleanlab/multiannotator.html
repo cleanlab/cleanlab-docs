@@ -446,15 +446,17 @@
 <span class="sd">* An analogous label quality score for each individual label chosen by one annotator for a particular example.</span>
 <span class="sd">* An overall quality score for each annotator which measures our confidence in the overall correctness of labels obtained from this annotator.</span>
 
-<span class="sd">The underlying algorithms used to compute the statistics are described in `the CROWDLAB paper &lt;https://arxiv.org/abs/2210.06812&gt;`_.</span>
+<span class="sd">The algorithms to compute these estimates are described in `the CROWDLAB paper &lt;https://arxiv.org/abs/2210.06812&gt;`_.</span>
 
 <span class="sd">If you have some labeled and unlabeled data (with multiple annotators for some labeled examples) and want to decide what data to collect additional labels for,</span>
 <span class="sd">use the :py:func:`get_active_learning_scores &lt;cleanlab.multiannotator.get_active_learning_scores&gt;` function, which is intended for active learning. </span>
-<span class="sd">This function estimates an active learning quality score for each example,</span>
+<span class="sd">This function estimates an ActiveLab quality score for each example,</span>
 <span class="sd">which can be used to prioritize which examples are most informative to collect additional labels for.</span>
 <span class="sd">This function is effective for settings where some examples have been labeled by one or more annotators and other examples can have no labels at all so far,</span>
 <span class="sd">as well as settings where new labels are collected either in batches of examples or one at a time. </span>
-<span class="sd">Here is an `example notebook &lt;https://github.com/cleanlab/examples/blob/master/active_learning_multiannotator/active_learning.ipynb&gt;`_ showcasing the use of this function in multiple active learning rounds.</span>
+<span class="sd">Here is an `example notebook &lt;https://github.com/cleanlab/examples/blob/master/active_learning_multiannotator/active_learning.ipynb&gt;`_ showcasing the use of this ActiveLab method for active learning with data re-labeling.</span>
+
+<span class="sd">The algorithms to compute these active learning scores are described in `the ActiveLab paper &lt;https://arxiv.org/abs/2301.11856&gt;`_.</span>
 
 <span class="sd">Each of the main functions in this module utilizes any trained classifier model.</span>
 <span class="sd">Variants of these functions are provided for settings where you have trained an ensemble of multiple models.</span>
@@ -490,7 +492,7 @@
     <span class="n">verbose</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
     <span class="n">label_quality_score_kwargs</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">=</span> <span class="p">{},</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Returns label quality scores for each example and for each annotator.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Returns label quality scores for each example and for each annotator in a dataset labeled by multiple annotators.</span>
 
 <span class="sd">    This function is for multiclass classification datasets where examples have been labeled by</span>
 <span class="sd">    multiple annotators (not necessarily the same number of annotators per example).</span>
@@ -498,10 +500,10 @@
 <span class="sd">    It computes one consensus label for each example that best accounts for the labels chosen by each</span>
 <span class="sd">    annotator (and their quality), as well as a consensus quality score for how confident we are that this consensus label is actually correct.</span>
 <span class="sd">    It also computes similar quality scores for each annotator&#39;s individual labels, and the quality of each annotator.</span>
-<span class="sd">    Scores are between 0 and 1; lower scores indicate labels/annotators less likely to be correct.</span>
+<span class="sd">    Scores are between 0 and 1 (estimated via methods like CROWDLAB); lower scores indicate labels/annotators less likely to be correct.</span>
 
 <span class="sd">    To decide what data to collect additional labels for, try the :py:func:`get_active_learning_scores &lt;cleanlab.multiannotator.get_active_learning_scores&gt;`</span>
-<span class="sd">    function, which is intended for active learning with multiple annotators.</span>
+<span class="sd">    (ActiveLab) function, which is intended for active learning with multiple annotators.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -960,7 +962,7 @@
     <span class="n">pred_probs</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
     <span class="n">pred_probs_unlabeled</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Returns an active learning quality score for each example in the dataset.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Returns an ActiveLab quality score for each example in the dataset, to estimate which examples are most informative to (re)label next in active learning.</span>
 
 <span class="sd">    We consider settings where one example can be labeled by one or more annotators and some examples have no labels at all so far.</span>
 
@@ -971,7 +973,7 @@
 <span class="sd">    and repeat this process after retraining your classifier.</span>
 
 <span class="sd">    To analyze a fixed dataset labeled by multiple annotators rather than collecting additional labels, try the</span>
-<span class="sd">    :py:func:`get_label_quality_multiannotator &lt;cleanlab.multiannotator.get_label_quality_multiannotator&gt;` function instead.</span>
+<span class="sd">    :py:func:`get_label_quality_multiannotator &lt;cleanlab.multiannotator.get_label_quality_multiannotator&gt;` (CROWDLAB) function instead.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -991,7 +993,7 @@
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
 <span class="sd">    active_learning_scores : np.ndarray</span>
-<span class="sd">        Array of shape ``(N,)`` indicating the active learning quality scores for each example.</span>
+<span class="sd">        Array of shape ``(N,)`` indicating the ActiveLab quality scores for each example.</span>
 <span class="sd">        Examples with the lowest scores are those we should label next in order to maximally improve our classifier model.</span>
 
 <span class="sd">    active_learning_scores_unlabeled : np.ndarray</span>
@@ -1084,10 +1086,10 @@
     <span class="n">pred_probs</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
     <span class="n">pred_probs_unlabeled</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Returns an active learning quality score for each example in the dataset, based on predictions from an ensemble of models.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Returns an ActiveLab quality score for each example in the dataset, based on predictions from an ensemble of models.</span>
 
 <span class="sd">    This function is similar to :py:func:`get_active_learning_scores &lt;cleanlab.multiannotator.get_active_learning_scores&gt;` but allows for an</span>
-<span class="sd">    ensemble of multiple classifier models to be trained and will aggregate predictions from the models to compute the active learning quality score.</span>
+<span class="sd">    ensemble of multiple classifier models to be trained and will aggregate predictions from the models to compute the ActiveLab quality score.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
