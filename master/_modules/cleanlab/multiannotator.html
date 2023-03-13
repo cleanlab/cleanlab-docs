@@ -470,6 +470,8 @@
 
 <span class="kn">from</span> <span class="nn">cleanlab.rank</span> <span class="kn">import</span> <span class="n">get_label_quality_scores</span>
 <span class="kn">from</span> <span class="nn">cleanlab.internal.util</span> <span class="kn">import</span> <span class="n">get_num_classes</span><span class="p">,</span> <span class="n">value_counts</span>
+<span class="kn">from</span> <span class="nn">cleanlab.internal.constants</span> <span class="kn">import</span> <span class="n">CLIPPING_LOWER_BOUND</span>
+
 <span class="kn">from</span> <span class="nn">cleanlab.internal.multiannotator_utils</span> <span class="kn">import</span> <span class="p">(</span>
     <span class="n">assert_valid_inputs_multiannotator</span><span class="p">,</span>
     <span class="n">assert_valid_pred_probs</span><span class="p">,</span>
@@ -1717,7 +1719,7 @@
                 <span class="n">consensus_label_subset</span>
                 <span class="o">!=</span> <span class="n">np</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">bincount</span><span class="p">(</span><span class="n">consensus_label_subset</span><span class="p">,</span> <span class="n">minlength</span><span class="o">=</span><span class="n">num_classes</span><span class="p">))</span>
             <span class="p">),</span>
-            <span class="n">a_min</span><span class="o">=</span><span class="mf">1e-6</span><span class="p">,</span>
+            <span class="n">a_min</span><span class="o">=</span><span class="n">CLIPPING_LOWER_BOUND</span><span class="p">,</span>
             <span class="n">a_max</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
         <span class="p">)</span>
 
@@ -1727,14 +1729,14 @@
         <span class="p">)</span>
         <span class="n">annotator_error</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">annotator_agreement_with_annotators</span>
         <span class="n">adjusted_annotator_agreement</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">clip</span><span class="p">(</span>
-            <span class="mi">1</span> <span class="o">-</span> <span class="p">(</span><span class="n">annotator_error</span> <span class="o">/</span> <span class="n">most_likely_class_error</span><span class="p">),</span> <span class="n">a_min</span><span class="o">=</span><span class="mf">1e-6</span><span class="p">,</span> <span class="n">a_max</span><span class="o">=</span><span class="kc">None</span>
+            <span class="mi">1</span> <span class="o">-</span> <span class="p">(</span><span class="n">annotator_error</span> <span class="o">/</span> <span class="n">most_likely_class_error</span><span class="p">),</span> <span class="n">a_min</span><span class="o">=</span><span class="n">CLIPPING_LOWER_BOUND</span><span class="p">,</span> <span class="n">a_max</span><span class="o">=</span><span class="kc">None</span>
         <span class="p">)</span>
 
         <span class="c1"># compute model weight</span>
         <span class="n">model_error</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">prior_pred_probs_subset</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="n">consensus_label_subset</span><span class="p">)</span>
-        <span class="n">model_weight</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">([(</span><span class="mi">1</span> <span class="o">-</span> <span class="p">(</span><span class="n">model_error</span> <span class="o">/</span> <span class="n">most_likely_class_error</span><span class="p">)),</span> <span class="mf">1e-6</span><span class="p">])</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span>
-            <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">num_annotations</span><span class="p">)</span>
-        <span class="p">)</span>
+        <span class="n">model_weight</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span>
+            <span class="p">[(</span><span class="mi">1</span> <span class="o">-</span> <span class="p">(</span><span class="n">model_error</span> <span class="o">/</span> <span class="n">most_likely_class_error</span><span class="p">)),</span> <span class="n">CLIPPING_LOWER_BOUND</span><span class="p">]</span>
+        <span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">num_annotations</span><span class="p">))</span>
 
         <span class="c1"># compute weighted average</span>
         <span class="n">post_pred_probs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">full</span><span class="p">(</span><span class="n">prior_pred_probs</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">)</span>
@@ -1843,7 +1845,7 @@
             <span class="n">consensus_label_subset</span>
             <span class="o">!=</span> <span class="n">np</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">bincount</span><span class="p">(</span><span class="n">consensus_label_subset</span><span class="p">,</span> <span class="n">minlength</span><span class="o">=</span><span class="n">num_classes</span><span class="p">))</span>
         <span class="p">),</span>
-        <span class="n">a_min</span><span class="o">=</span><span class="mf">1e-6</span><span class="p">,</span>
+        <span class="n">a_min</span><span class="o">=</span><span class="n">CLIPPING_LOWER_BOUND</span><span class="p">,</span>
         <span class="n">a_max</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
     <span class="p">)</span>
 
@@ -1853,7 +1855,7 @@
     <span class="p">)</span>
     <span class="n">annotator_error</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">annotator_agreement_with_annotators</span>
     <span class="n">adjusted_annotator_agreement</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">clip</span><span class="p">(</span>
-        <span class="mi">1</span> <span class="o">-</span> <span class="p">(</span><span class="n">annotator_error</span> <span class="o">/</span> <span class="n">most_likely_class_error</span><span class="p">),</span> <span class="n">a_min</span><span class="o">=</span><span class="mf">1e-6</span><span class="p">,</span> <span class="n">a_max</span><span class="o">=</span><span class="kc">None</span>
+        <span class="mi">1</span> <span class="o">-</span> <span class="p">(</span><span class="n">annotator_error</span> <span class="o">/</span> <span class="n">most_likely_class_error</span><span class="p">),</span> <span class="n">a_min</span><span class="o">=</span><span class="n">CLIPPING_LOWER_BOUND</span><span class="p">,</span> <span class="n">a_max</span><span class="o">=</span><span class="kc">None</span>
     <span class="p">)</span>
 
     <span class="c1"># compute model weight</span>
@@ -1862,9 +1864,9 @@
         <span class="n">prior_pred_probs_subset</span> <span class="o">=</span> <span class="n">prior_pred_probs</span><span class="p">[</span><span class="n">idx</span><span class="p">][</span><span class="n">mask</span><span class="p">]</span>
 
         <span class="n">model_error</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">prior_pred_probs_subset</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="n">consensus_label_subset</span><span class="p">)</span>
-        <span class="n">model_weight</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">([(</span><span class="mi">1</span> <span class="o">-</span> <span class="p">(</span><span class="n">model_error</span> <span class="o">/</span> <span class="n">most_likely_class_error</span><span class="p">)),</span> <span class="mf">1e-6</span><span class="p">])</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span>
-            <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">num_annotations</span><span class="p">)</span>
-        <span class="p">)</span>
+        <span class="n">model_weight</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span>
+            <span class="p">[(</span><span class="mi">1</span> <span class="o">-</span> <span class="p">(</span><span class="n">model_error</span> <span class="o">/</span> <span class="n">most_likely_class_error</span><span class="p">)),</span> <span class="n">CLIPPING_LOWER_BOUND</span><span class="p">]</span>
+        <span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">num_annotations</span><span class="p">))</span>
 
     <span class="c1"># compute weighted average</span>
     <span class="n">post_pred_probs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">full</span><span class="p">(</span><span class="n">prior_pred_probs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">)</span>

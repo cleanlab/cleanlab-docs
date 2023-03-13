@@ -455,6 +455,11 @@
 <span class="kn">from</span> <span class="nn">cleanlab.rank</span> <span class="kn">import</span> <span class="n">find_top_issues</span><span class="p">,</span> <span class="n">_compute_label_quality_scores</span>
 <span class="kn">from</span> <span class="nn">cleanlab.typing</span> <span class="kn">import</span> <span class="n">LabelLike</span>
 <span class="kn">from</span> <span class="nn">cleanlab.internal.util</span> <span class="kn">import</span> <span class="n">value_counts_fill_missing_classes</span>
+<span class="kn">from</span> <span class="nn">cleanlab.internal.constants</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">CONFIDENT_THRESHOLDS_LOWER_BOUND</span><span class="p">,</span>
+    <span class="n">FLOATING_POINT_COMPARISON</span><span class="p">,</span>
+    <span class="n">CLIPPING_LOWER_BOUND</span><span class="p">,</span>
+<span class="p">)</span>
 
 <span class="kn">import</span> <span class="nn">platform</span>
 <span class="kn">import</span> <span class="nn">multiprocessing</span> <span class="k">as</span> <span class="nn">mp</span>
@@ -465,8 +470,6 @@
     <span class="n">PSUTIL_EXISTS</span> <span class="o">=</span> <span class="kc">True</span>
 <span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>  <span class="c1"># pragma: no cover</span>
     <span class="n">PSUTIL_EXISTS</span> <span class="o">=</span> <span class="kc">False</span>
-
-<span class="n">EPS</span> <span class="o">=</span> <span class="mf">1e-6</span>  <span class="c1"># small number</span>
 
 <span class="c1"># global variable for multiproc on linux</span>
 <span class="n">adj_confident_thresholds_shared</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span>
@@ -844,7 +847,7 @@
                 <span class="n">calibrated_prune_counts</span> <span class="o">=</span> <span class="p">(</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">prune_counts</span>
                     <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">class_counts</span>
-                    <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">clip</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">normalization</span><span class="p">,</span> <span class="n">a_min</span><span class="o">=</span><span class="n">EPS</span><span class="p">,</span> <span class="n">a_max</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+                    <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">clip</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">normalization</span><span class="p">,</span> <span class="n">a_min</span><span class="o">=</span><span class="n">CLIPPING_LOWER_BOUND</span><span class="p">,</span> <span class="n">a_max</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
                 <span class="p">)</span>  <span class="c1"># avoid division by 0</span>
                 <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">rint</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">calibrated_prune_counts</span><span class="p">))</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s2">&quot;int&quot;</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>  <span class="c1"># not calibrated</span>
@@ -930,6 +933,9 @@
         <span class="p">)</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">clip</span><span class="p">(</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">examples_per_class</span> <span class="o">+</span> <span class="n">batch_class_counts</span><span class="p">,</span> <span class="n">a_min</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">a_max</span><span class="o">=</span><span class="kc">None</span>
         <span class="p">)</span>  <span class="c1"># avoid division by 0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">confident_thresholds</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">clip</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">confident_thresholds</span><span class="p">,</span> <span class="n">a_min</span><span class="o">=</span><span class="n">CONFIDENT_THRESHOLDS_LOWER_BOUND</span><span class="p">,</span> <span class="n">a_max</span><span class="o">=</span><span class="kc">None</span>
+        <span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">examples_per_class</span> <span class="o">+=</span> <span class="n">batch_class_counts</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">examples_processed_thresh</span> <span class="o">+=</span> <span class="n">batch_size</span></div>
 
@@ -1002,7 +1008,7 @@
             <span class="p">)</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_jobs</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
-            <span class="n">adj_confident_thresholds</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">confident_thresholds</span> <span class="o">-</span> <span class="n">EPS</span>
+            <span class="n">adj_confident_thresholds</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">confident_thresholds</span> <span class="o">-</span> <span class="n">FLOATING_POINT_COMPARISON</span>
             <span class="n">pred_class</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">pred_probs</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
             <span class="n">batch_size</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">labels</span><span class="p">)</span>
             <span class="k">if</span> <span class="n">thorough</span><span class="p">:</span>
@@ -1047,7 +1053,7 @@
                     <span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>  <span class="c1"># multiprocessing implementation</span>
             <span class="k">global</span> <span class="n">adj_confident_thresholds_shared</span>
-            <span class="n">adj_confident_thresholds_shared</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">confident_thresholds</span> <span class="o">-</span> <span class="n">EPS</span>
+            <span class="n">adj_confident_thresholds_shared</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">confident_thresholds</span> <span class="o">-</span> <span class="n">FLOATING_POINT_COMPARISON</span>
 
             <span class="k">global</span> <span class="n">labels_shared</span><span class="p">,</span> <span class="n">pred_probs_shared</span>
             <span class="n">labels_shared</span> <span class="o">=</span> <span class="n">labels</span>

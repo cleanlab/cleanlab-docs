@@ -458,6 +458,10 @@
 <span class="kn">import</span> <span class="nn">warnings</span>
 
 <span class="kn">from</span> <span class="nn">cleanlab.internal.validation</span> <span class="kn">import</span> <span class="n">assert_valid_inputs</span>
+<span class="kn">from</span> <span class="nn">cleanlab.internal.constants</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">CLIPPING_LOWER_BOUND</span><span class="p">,</span>
+<span class="p">)</span>  <span class="c1"># lower-bound clipping threshold to prevents 0 in logs and division</span>
+
 <span class="kn">from</span> <span class="nn">cleanlab.internal.label_quality_utils</span> <span class="kn">import</span> <span class="p">(</span>
     <span class="n">_subtract_confident_thresholds</span><span class="p">,</span>
     <span class="n">get_normalized_entropy</span><span class="p">,</span>
@@ -657,8 +661,6 @@
 <span class="sd">    get_label_quality_scores</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="n">MIN_ALLOWED</span> <span class="o">=</span> <span class="mf">1e-6</span>  <span class="c1"># lower-bound clipping threshold to prevents 0 in logs and division</span>
-
     <span class="c1"># Check pred_probs_list for errors</span>
     <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span>
         <span class="n">pred_probs_list</span><span class="p">,</span> <span class="nb">list</span>
@@ -698,7 +700,7 @@
             <span class="c1"># pred_probs for each model</span>
             <span class="k">for</span> <span class="n">pred_probs</span> <span class="ow">in</span> <span class="n">pred_probs_list</span><span class="p">:</span>
                 <span class="n">pred_probs_clipped</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">clip</span><span class="p">(</span>
-                    <span class="n">pred_probs</span><span class="p">,</span> <span class="n">a_min</span><span class="o">=</span><span class="n">MIN_ALLOWED</span><span class="p">,</span> <span class="n">a_max</span><span class="o">=</span><span class="kc">None</span>
+                    <span class="n">pred_probs</span><span class="p">,</span> <span class="n">a_min</span><span class="o">=</span><span class="n">CLIPPING_LOWER_BOUND</span><span class="p">,</span> <span class="n">a_max</span><span class="o">=</span><span class="kc">None</span>
                 <span class="p">)</span>  <span class="c1"># lower-bound clipping threshold to prevents 0 in logs when calculating log loss</span>
                 <span class="n">pred_probs_clipped</span> <span class="o">/=</span> <span class="n">pred_probs_clipped</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)[:,</span> <span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">]</span>  <span class="c1"># renormalize</span>
 
@@ -995,15 +997,14 @@
 <span class="sd">      Lower scores indicate more likely mislabeled examples.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="n">MIN_ALLOWED</span> <span class="o">=</span> <span class="mf">1e-6</span>  <span class="c1"># lower-bound clipping threshold to prevents 0 in logs and division</span>
     <span class="n">self_confidence</span> <span class="o">=</span> <span class="n">get_self_confidence_for_each_label</span><span class="p">(</span><span class="n">labels</span><span class="p">,</span> <span class="n">pred_probs</span><span class="p">)</span>
-    <span class="n">self_confidence</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">clip</span><span class="p">(</span><span class="n">self_confidence</span><span class="p">,</span> <span class="n">a_min</span><span class="o">=</span><span class="n">MIN_ALLOWED</span><span class="p">,</span> <span class="n">a_max</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+    <span class="n">self_confidence</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">clip</span><span class="p">(</span><span class="n">self_confidence</span><span class="p">,</span> <span class="n">a_min</span><span class="o">=</span><span class="n">CLIPPING_LOWER_BOUND</span><span class="p">,</span> <span class="n">a_max</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
 
     <span class="c1"># Divide entropy by self confidence</span>
     <span class="n">label_quality_scores</span> <span class="o">=</span> <span class="n">get_normalized_entropy</span><span class="p">(</span><span class="n">pred_probs</span><span class="p">)</span> <span class="o">/</span> <span class="n">self_confidence</span>
 
     <span class="c1"># Rescale</span>
-    <span class="n">clipped_scores</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">clip</span><span class="p">(</span><span class="n">label_quality_scores</span><span class="p">,</span> <span class="n">a_min</span><span class="o">=</span><span class="n">MIN_ALLOWED</span><span class="p">,</span> <span class="n">a_max</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+    <span class="n">clipped_scores</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">clip</span><span class="p">(</span><span class="n">label_quality_scores</span><span class="p">,</span> <span class="n">a_min</span><span class="o">=</span><span class="n">CLIPPING_LOWER_BOUND</span><span class="p">,</span> <span class="n">a_max</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
     <span class="n">label_quality_scores</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">label_quality_scores</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">/</span> <span class="n">clipped_scores</span>
 
     <span class="k">return</span> <span class="n">label_quality_scores</span></div>

@@ -447,6 +447,7 @@
 
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">from</span> <span class="nn">cleanlab.internal.util</span> <span class="kn">import</span> <span class="n">value_counts</span>
+<span class="kn">from</span> <span class="nn">cleanlab.internal.constants</span> <span class="kn">import</span> <span class="n">FLOATING_POINT_COMPARISON</span>
 
 
 <div class="viewcode-block" id="noise_matrix_is_valid"><a class="viewcode-back" href="../../../cleanlab/benchmarking/noise_generation.html#cleanlab.benchmarking.noise_generation.noise_matrix_is_valid">[docs]</a><span class="k">def</span> <span class="nf">noise_matrix_is_valid</span><span class="p">(</span><span class="n">noise_matrix</span><span class="p">,</span> <span class="n">py</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
@@ -486,7 +487,7 @@
     <span class="n">joint_noise</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">multiply</span><span class="p">(</span><span class="n">noise_matrix</span><span class="p">,</span> <span class="n">py</span><span class="p">)</span>  <span class="c1"># / float(N)</span>
 
     <span class="c1"># Check that joint_probs is valid probability matrix</span>
-    <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="nb">abs</span><span class="p">(</span><span class="n">joint_noise</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span> <span class="o">-</span> <span class="mf">1.0</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mf">1e-6</span><span class="p">):</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="nb">abs</span><span class="p">(</span><span class="n">joint_noise</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span> <span class="o">-</span> <span class="mf">1.0</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">FLOATING_POINT_COMPARISON</span><span class="p">):</span>
         <span class="k">return</span> <span class="kc">False</span>
 
     <span class="c1"># Check that noise_matrix is a valid matrix</span>
@@ -807,11 +808,9 @@
 <span class="sd">      An array of probabilities.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="n">epsilon</span> <span class="o">=</span> <span class="mf">1e-6</span>  <span class="c1"># Imprecision allowed for inequalities with floats</span>
-
     <span class="k">if</span> <span class="n">n</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([])</span>
-    <span class="k">if</span> <span class="p">(</span><span class="n">max_prob</span> <span class="o">+</span> <span class="n">epsilon</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">m</span> <span class="o">/</span> <span class="nb">float</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">max_prob</span> <span class="o">+</span> <span class="n">FLOATING_POINT_COMPARISON</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">m</span> <span class="o">/</span> <span class="nb">float</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
             <span class="s2">&quot;max_prob must be greater or equal to m / n, but &quot;</span>
             <span class="o">+</span> <span class="s2">&quot;max_prob = &quot;</span>
@@ -823,7 +822,7 @@
             <span class="o">+</span> <span class="s2">&quot;, m / n = &quot;</span>
             <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">m</span> <span class="o">/</span> <span class="nb">float</span><span class="p">(</span><span class="n">n</span><span class="p">))</span>
         <span class="p">)</span>
-    <span class="k">if</span> <span class="n">min_prob</span> <span class="o">&gt;</span> <span class="p">(</span><span class="n">m</span> <span class="o">+</span> <span class="n">epsilon</span><span class="p">)</span> <span class="o">/</span> <span class="nb">float</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">min_prob</span> <span class="o">&gt;</span> <span class="p">(</span><span class="n">m</span> <span class="o">+</span> <span class="n">FLOATING_POINT_COMPARISON</span><span class="p">)</span> <span class="o">/</span> <span class="nb">float</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
             <span class="s2">&quot;min_prob must be less or equal to m / n, but &quot;</span>
             <span class="o">+</span> <span class="s2">&quot;max_prob = &quot;</span>
@@ -843,7 +842,7 @@
 
     <span class="n">min_val</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
     <span class="n">max_val</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
-    <span class="k">while</span> <span class="n">max_val</span> <span class="o">&gt;</span> <span class="p">(</span><span class="n">max_prob</span> <span class="o">+</span> <span class="n">epsilon</span><span class="p">):</span>
+    <span class="k">while</span> <span class="n">max_val</span> <span class="o">&gt;</span> <span class="p">(</span><span class="n">max_prob</span> <span class="o">+</span> <span class="n">FLOATING_POINT_COMPARISON</span><span class="p">):</span>
         <span class="n">new_min</span> <span class="o">=</span> <span class="n">min_val</span> <span class="o">+</span> <span class="p">(</span><span class="n">max_val</span> <span class="o">-</span> <span class="n">max_prob</span><span class="p">)</span>
         <span class="c1"># This adjustment prevents the new max from always being max_prob.</span>
         <span class="n">adjustment</span> <span class="o">=</span> <span class="p">(</span><span class="n">max_prob</span> <span class="o">-</span> <span class="n">new_min</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">rand</span><span class="p">()</span>
@@ -854,7 +853,7 @@
 
     <span class="n">min_val</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
     <span class="n">max_val</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
-    <span class="k">while</span> <span class="n">min_val</span> <span class="o">&lt;</span> <span class="p">(</span><span class="n">min_prob</span> <span class="o">-</span> <span class="n">epsilon</span><span class="p">):</span>
+    <span class="k">while</span> <span class="n">min_val</span> <span class="o">&lt;</span> <span class="p">(</span><span class="n">min_prob</span> <span class="o">-</span> <span class="n">FLOATING_POINT_COMPARISON</span><span class="p">):</span>
         <span class="n">min_val</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
         <span class="n">max_val</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
         <span class="n">new_max</span> <span class="o">=</span> <span class="n">max_val</span> <span class="o">-</span> <span class="p">(</span><span class="n">min_prob</span> <span class="o">-</span> <span class="n">min_val</span><span class="p">)</span>

@@ -443,6 +443,7 @@
 <span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Optional</span>
 
 <span class="kn">from</span> <span class="nn">cleanlab.count</span> <span class="kn">import</span> <span class="n">get_confident_thresholds</span>
+<span class="kn">from</span> <span class="nn">cleanlab.internal.constants</span> <span class="kn">import</span> <span class="n">CLIPPING_LOWER_BOUND</span>
 
 
 <span class="k">def</span> <span class="nf">_subtract_confident_thresholds</span><span class="p">(</span>
@@ -504,7 +505,9 @@
     <span class="k">return</span> <span class="n">pred_probs_adj</span>
 
 
-<div class="viewcode-block" id="get_normalized_entropy"><a class="viewcode-back" href="../../../cleanlab/internal/label_quality_utils.html#cleanlab.internal.label_quality_utils.get_normalized_entropy">[docs]</a><span class="k">def</span> <span class="nf">get_normalized_entropy</span><span class="p">(</span><span class="n">pred_probs</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">min_allowed_prob</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1e-6</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<div class="viewcode-block" id="get_normalized_entropy"><a class="viewcode-back" href="../../../cleanlab/internal/label_quality_utils.html#cleanlab.internal.label_quality_utils.get_normalized_entropy">[docs]</a><span class="k">def</span> <span class="nf">get_normalized_entropy</span><span class="p">(</span>
+    <span class="n">pred_probs</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">min_allowed_prob</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">CLIPPING_LOWER_BOUND</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Returns the normalized entropy of pred_probs.</span>
 
 <span class="sd">    Normalized entropy is between 0 and 1. Higher values of entropy indicate higher uncertainty in the model&#39;s prediction of the correct label.</span>
