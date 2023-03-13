@@ -443,6 +443,7 @@
 <span class="sd">and which classes to merge (see :py:func:`find_overlapping_classes &lt;cleanlab.dataset.find_overlapping_classes&gt;`).</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">cast</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 <span class="kn">from</span> <span class="nn">cleanlab.count</span> <span class="kn">import</span> <span class="n">estimate_joint</span>
@@ -669,7 +670,7 @@
             <span class="n">multi_label</span><span class="o">=</span><span class="n">multi_label</span><span class="p">,</span>
         <span class="p">)</span>
     <span class="k">if</span> <span class="n">num_examples</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">num_examples</span> <span class="o">=</span> <span class="n">_get_num_examples</span><span class="p">(</span><span class="n">labels</span><span class="o">=</span><span class="n">labels</span><span class="p">)</span>
+        <span class="n">num_examples</span> <span class="o">=</span> <span class="n">_get_num_examples</span><span class="p">(</span><span class="n">labels</span><span class="o">=</span><span class="n">labels</span><span class="p">,</span> <span class="n">confident_joint</span><span class="o">=</span><span class="n">confident_joint</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">asymmetric</span><span class="p">:</span>
         <span class="n">rcv_list</span> <span class="o">=</span> <span class="n">_2d_matrix_to_row_column_value_list</span><span class="p">(</span><span class="n">joint</span><span class="p">)</span>
         <span class="c1"># Remove diagonal elements</span>
@@ -865,7 +866,7 @@
     <span class="p">}</span></div>
 
 
-<span class="k">def</span> <span class="nf">_get_num_examples</span><span class="p">(</span><span class="n">labels</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<span class="k">def</span> <span class="nf">_get_num_examples</span><span class="p">(</span><span class="n">labels</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">confident_joint</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Helper method that finds the number of examples from the parameters or throws an error</span>
 <span class="sd">    if neither parameter is provided.</span>
 
@@ -883,13 +884,13 @@
 <span class="sd">    ValueError</span>
 <span class="sd">        If `labels` is None.&quot;&quot;&quot;</span>
 
-    <span class="k">if</span> <span class="n">labels</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">num_examples</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">labels</span><span class="p">)</span>
-    <span class="k">else</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">labels</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">confident_joint</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-            <span class="s2">&quot;Error: num_examples is None. You must provide a value for num_examples &quot;</span>
-            <span class="s2">&quot;when calling this method using the joint as an input parameter.&quot;</span>
+            <span class="s2">&quot;Error: num_examples is None. You must either provide confident_joint, &quot;</span>
+            <span class="s2">&quot;or provide both num_example and joint as input parameters.&quot;</span>
         <span class="p">)</span>
+    <span class="n">_confident_joint</span> <span class="o">=</span> <span class="n">cast</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">confident_joint</span><span class="p">)</span>
+    <span class="n">num_examples</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">labels</span><span class="p">)</span> <span class="k">if</span> <span class="n">labels</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">cast</span><span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">_confident_joint</span><span class="p">))</span>
     <span class="k">return</span> <span class="n">num_examples</span>
 </pre></div> 
         </article>
