@@ -550,17 +550,23 @@
 
 
 <div class="viewcode-block" id="assert_valid_pred_probs"><a class="viewcode-back" href="../../../cleanlab/internal/multiannotator_utils.html#cleanlab.internal.multiannotator_utils.assert_valid_pred_probs">[docs]</a><span class="k">def</span> <span class="nf">assert_valid_pred_probs</span><span class="p">(</span>
-    <span class="n">pred_probs</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+    <span class="n">pred_probs</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">pred_probs_unlabeled</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">ensemble</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
 <span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Validate format of pred_probs for multiannotator functions&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Validate format of pred_probs for multiannotator active learning functions&quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">pred_probs</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">pred_probs_unlabeled</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+            <span class="s2">&quot;pred_probs and pred_probs_unlabeled cannot both be None, specify at least one of the two.&quot;</span>
+        <span class="p">)</span>
+
     <span class="k">if</span> <span class="n">ensemble</span><span class="p">:</span>
-        <span class="k">if</span> <span class="n">pred_probs</span><span class="o">.</span><span class="n">ndim</span> <span class="o">!=</span> <span class="mi">3</span><span class="p">:</span>
-            <span class="n">error_message</span> <span class="o">=</span> <span class="s2">&quot;pred_probs must be a 3d array.&quot;</span>
-            <span class="k">if</span> <span class="n">pred_probs</span><span class="o">.</span><span class="n">ndim</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>  <span class="c1"># pragma: no cover</span>
-                <span class="n">error_message</span> <span class="o">+=</span> <span class="s2">&quot; If you have a 2d pred_probs array, use the non-ensemble version of this function.&quot;</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="n">error_message</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">pred_probs</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">pred_probs</span><span class="o">.</span><span class="n">ndim</span> <span class="o">!=</span> <span class="mi">3</span><span class="p">:</span>
+                <span class="n">error_message</span> <span class="o">=</span> <span class="s2">&quot;pred_probs must be a 3d array.&quot;</span>
+                <span class="k">if</span> <span class="n">pred_probs</span><span class="o">.</span><span class="n">ndim</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>  <span class="c1"># pragma: no cover</span>
+                    <span class="n">error_message</span> <span class="o">+=</span> <span class="s2">&quot; If you have a 2d pred_probs array (ie. only one predictor), use the non-ensemble version of this function.&quot;</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="n">error_message</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="n">pred_probs_unlabeled</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">pred_probs_unlabeled</span><span class="o">.</span><span class="n">ndim</span> <span class="o">!=</span> <span class="mi">3</span><span class="p">:</span>
@@ -569,19 +575,19 @@
                     <span class="n">error_message</span> <span class="o">+=</span> <span class="s2">&quot; If you have a 2d pred_probs_unlabeled array, use the non-ensemble version of this function.&quot;</span>
                 <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="n">error_message</span><span class="p">)</span>
 
+        <span class="k">if</span> <span class="n">pred_probs</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">pred_probs_unlabeled</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">pred_probs</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">!=</span> <span class="n">pred_probs_unlabeled</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">2</span><span class="p">]:</span>
                 <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
                     <span class="s2">&quot;pred_probs and pred_probs_unlabeled must have the same number of classes&quot;</span>
                 <span class="p">)</span>
 
     <span class="k">else</span><span class="p">:</span>
-        <span class="k">if</span> <span class="n">pred_probs</span><span class="o">.</span><span class="n">ndim</span> <span class="o">!=</span> <span class="mi">2</span><span class="p">:</span>
-            <span class="n">error_message</span> <span class="o">=</span> <span class="s2">&quot;pred_probs must be a 2d array.&quot;</span>
-            <span class="k">if</span> <span class="n">pred_probs</span><span class="o">.</span><span class="n">ndim</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>  <span class="c1"># pragma: no cover</span>
-                <span class="n">error_message</span> <span class="o">+=</span> <span class="p">(</span>
-                    <span class="s2">&quot; If you have a 3d pred_probs array, use the ensemble version of this function.&quot;</span>
-                <span class="p">)</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="n">error_message</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">pred_probs</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">pred_probs</span><span class="o">.</span><span class="n">ndim</span> <span class="o">!=</span> <span class="mi">2</span><span class="p">:</span>
+                <span class="n">error_message</span> <span class="o">=</span> <span class="s2">&quot;pred_probs must be a 2d array.&quot;</span>
+                <span class="k">if</span> <span class="n">pred_probs</span><span class="o">.</span><span class="n">ndim</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>  <span class="c1"># pragma: no cover</span>
+                    <span class="n">error_message</span> <span class="o">+=</span> <span class="s2">&quot; If you have a 3d pred_probs array, use the ensemble version of this function.&quot;</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="n">error_message</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="n">pred_probs_unlabeled</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">pred_probs_unlabeled</span><span class="o">.</span><span class="n">ndim</span> <span class="o">!=</span> <span class="mi">2</span><span class="p">:</span>
@@ -590,6 +596,7 @@
                     <span class="n">error_message</span> <span class="o">+=</span> <span class="s2">&quot; If you have a 3d pred_probs_unlabeled array, use the non-ensemble version of this function.&quot;</span>
                 <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="n">error_message</span><span class="p">)</span>
 
+        <span class="k">if</span> <span class="n">pred_probs</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">pred_probs_unlabeled</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">pred_probs</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">!=</span> <span class="n">pred_probs_unlabeled</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]:</span>
                 <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
                     <span class="s2">&quot;pred_probs and pred_probs_unlabeled must have the same number of classes&quot;</span>
