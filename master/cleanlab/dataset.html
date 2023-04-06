@@ -517,6 +517,26 @@ difference between the classes prior to having annotators label the data.</p>
 <p>This method uses the joint distribution of noisy and true labels to compute ontological
 issues via the approach published in <a class="reference external" href="https://jair.org/index.php/jair/article/view/12125">Northcutt et al.,
 2021</a>.</p>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">cleanlab.dataset</span> <span class="kn">import</span> <span class="n">find_overlapping_classes</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">sklearn.linear_model</span> <span class="kn">import</span> <span class="n">LogisticRegression</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="kn">import</span> <span class="n">cross_val_predict</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">data</span><span class="p">,</span> <span class="n">labels</span> <span class="o">=</span> <span class="n">get_data_labels_from_dataset</span><span class="p">(</span><span class="n">yourFavoriteDataset</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">yourFavoriteModel</span> <span class="o">=</span> <span class="n">LogisticRegression</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">num_crossval_folds</span> <span class="o">=</span> <span class="mi">3</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">pred_probs</span> <span class="o">=</span> <span class="n">cross_val_predict</span><span class="p">(</span>
+<span class="go">        yourFavoriteModel,</span>
+<span class="go">        data,</span>
+<span class="go">        labels,</span>
+<span class="go">        cv=num_crossval_folds,</span>
+<span class="go">        method=&quot;predict_proba&quot;,</span>
+<span class="go">    )</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">df</span> <span class="o">=</span> <span class="n">find_overlapping_classes</span><span class="p">(</span>
+<span class="go">        labels=labels,</span>
+<span class="go">        pred_probs=pred_probs,</span>
+<span class="go">    )  # lists pairs of classes that are often mislabeled as one another</span>
+</pre></div>
+</div>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>The joint distribution of noisy and true labels is asymmetric, and therefore the joint

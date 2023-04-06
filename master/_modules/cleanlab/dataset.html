@@ -569,6 +569,26 @@
 <span class="sd">    issues via the approach published in `Northcutt et al.,</span>
 <span class="sd">    2021 &lt;https://jair.org/index.php/jair/article/view/12125&gt;`_.</span>
 
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    &gt;&gt;&gt; from cleanlab.dataset import find_overlapping_classes</span>
+<span class="sd">    &gt;&gt;&gt; from sklearn.linear_model import LogisticRegression</span>
+<span class="sd">    &gt;&gt;&gt; from sklearn.model_selection import cross_val_predict</span>
+<span class="sd">    &gt;&gt;&gt; data, labels = get_data_labels_from_dataset(yourFavoriteDataset)</span>
+<span class="sd">    &gt;&gt;&gt; yourFavoriteModel = LogisticRegression()</span>
+<span class="sd">    &gt;&gt;&gt; num_crossval_folds = 3</span>
+<span class="sd">    &gt;&gt;&gt; pred_probs = cross_val_predict(</span>
+<span class="sd">            yourFavoriteModel,</span>
+<span class="sd">            data,</span>
+<span class="sd">            labels,</span>
+<span class="sd">            cv=num_crossval_folds,</span>
+<span class="sd">            method=&quot;predict_proba&quot;,</span>
+<span class="sd">        )</span>
+<span class="sd">    &gt;&gt;&gt; df = find_overlapping_classes(</span>
+<span class="sd">            labels=labels,</span>
+<span class="sd">            pred_probs=pred_probs,</span>
+<span class="sd">        )  # lists pairs of classes that are often mislabeled as one another</span>
+
 <span class="sd">    Note</span>
 <span class="sd">    ----</span>
 <span class="sd">    The joint distribution of noisy and true labels is asymmetric, and therefore the joint</span>
