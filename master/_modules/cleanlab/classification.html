@@ -1269,6 +1269,7 @@
                 <span class="n">pred_probs</span><span class="o">=</span><span class="n">pred_probs</span><span class="p">,</span>
                 <span class="n">thresholds</span><span class="o">=</span><span class="n">thresholds</span><span class="p">,</span>
             <span class="p">)</span>
+
         <span class="c1"># if pulearning == the integer specifying the class without noise.</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_classes</span> <span class="o">==</span> <span class="mi">2</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">pulearning</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>  <span class="c1"># pragma: no cover</span>
             <span class="c1"># pulearning = 1 (no error in 1 class) implies p(label=1|true_label=0) = 0</span>
@@ -1280,6 +1281,12 @@
             <span class="c1"># pulearning = 1 (no error in 1 class) implies p(label=1,true_label=0) = 0</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">confident_joint</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">pulearning</span><span class="p">][</span><span class="mi">1</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">pulearning</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">confident_joint</span><span class="p">[</span><span class="mi">1</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">pulearning</span><span class="p">][</span><span class="mi">1</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">pulearning</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+
+        <span class="c1"># Add confident joint to find label issue args if it is not previously specified</span>
+        <span class="k">if</span> <span class="s2">&quot;confident_joint&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">find_label_issues_kwargs</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+            <span class="c1"># however does not add if users specify filter_by=&quot;confident_learning&quot;, as it will throw a warning</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">find_label_issues_kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;filter_by&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="s2">&quot;confident_learning&quot;</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">find_label_issues_kwargs</span><span class="p">[</span><span class="s2">&quot;confident_joint&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">confident_joint</span>
 
         <span class="n">labels</span> <span class="o">=</span> <span class="n">labels_to_array</span><span class="p">(</span><span class="n">labels</span><span class="p">)</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">verbose</span><span class="p">:</span>
