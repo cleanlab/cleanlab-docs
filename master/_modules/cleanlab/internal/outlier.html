@@ -5,7 +5,7 @@
     <meta name="color-scheme" content="light dark"><link rel="index" title="Index" href="../../../genindex.html" /><link rel="search" title="Search" href="../../../search.html" />
 
     <link rel="shortcut icon" href="https://raw.githubusercontent.com/cleanlab/assets/a4483476d449f2f05a4c7cde329e72358099cc07/cleanlab/cleanlab_favicon.svg"/><meta name="generator" content="sphinx-5.1.1, furo 2022.06.21"/>
-        <title>cleanlab.internal.token_classification_utils - cleanlab</title>
+        <title>cleanlab.internal.outlier - cleanlab</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../../../_static/styles/furo.css?digest=40978830699223671f4072448e654b5958f38b89" />
     <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css" />
@@ -428,7 +428,7 @@
 
 <!-- End of Version Warning Banner -->
 
- <h1>Source code for cleanlab.internal.token_classification_utils</h1><div class="highlight"><pre>
+ <h1>Source code for cleanlab.internal.outlier</h1><div class="highlight"><pre>
 <span></span><span class="c1"># Copyright (C) 2017-2023  Cleanlab Inc.</span>
 <span class="c1"># This file is part of cleanlab.</span>
 <span class="c1">#</span>
@@ -446,278 +446,57 @@
 <span class="c1"># along with cleanlab.  If not, see &lt;https://www.gnu.org/licenses/&gt;.</span>
 
 <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">Helper methods used internally in cleanlab.token_classification</span>
+<span class="sd">Helper functions used internally for outlier detection tasks.</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
-<span class="kn">import</span> <span class="nn">re</span>
-<span class="kn">import</span> <span class="nn">string</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">from</span> <span class="nn">termcolor</span> <span class="kn">import</span> <span class="n">colored</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">TypeVar</span>
-<span class="kn">import</span> <span class="nn">numpy.typing</span> <span class="k">as</span> <span class="nn">npt</span>
 
 
-<span class="n">T</span> <span class="o">=</span> <span class="n">TypeVar</span><span class="p">(</span><span class="s2">&quot;T&quot;</span><span class="p">,</span> <span class="n">bound</span><span class="o">=</span><span class="n">npt</span><span class="o">.</span><span class="n">NBitBase</span><span class="p">)</span>
+<div class="viewcode-block" id="transform_distances_to_scores"><a class="viewcode-back" href="../../../cleanlab/internal/outlier.html#cleanlab.internal.outlier.transform_distances_to_scores">[docs]</a><span class="k">def</span> <span class="nf">transform_distances_to_scores</span><span class="p">(</span><span class="n">distances</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">k</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">t</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Returns an outlier score for each example based on its average distance to its k nearest neighbors.</span>
 
+<span class="sd">    The transformation of a distance, :math:`d` , to a score, :math:`o` , is based on the following formula:</span>
 
-<div class="viewcode-block" id="get_sentence"><a class="viewcode-back" href="../../../cleanlab/internal/token_classification_utils.html#cleanlab.internal.token_classification_utils.get_sentence">[docs]</a><span class="k">def</span> <span class="nf">get_sentence</span><span class="p">(</span><span class="n">words</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Get sentence formed by a list of words with minor processing for readability</span>
+<span class="sd">    .. math::</span>
+<span class="sd">        o = \\exp\\left(-dt\\right)</span>
 
-<span class="sd">    Parameters</span>
-<span class="sd">    ----------</span>
-<span class="sd">    words:</span>
-<span class="sd">        list of word-level tokens</span>
-
-<span class="sd">    Returns</span>
-<span class="sd">    ----------</span>
-<span class="sd">    sentence:</span>
-<span class="sd">        sentence formed by list of word-level tokens</span>
-
-<span class="sd">    Examples</span>
-<span class="sd">    --------</span>
-<span class="sd">    &gt;&gt;&gt; from cleanlab.internal.token_classification_utils import get_sentence</span>
-<span class="sd">    &gt;&gt;&gt; words = [&quot;This&quot;, &quot;is&quot;, &quot;a&quot;, &quot;sentence&quot;, &quot;.&quot;]</span>
-<span class="sd">    &gt;&gt;&gt; get_sentence(words)</span>
-<span class="sd">    &#39;This is a sentence.&#39;</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">sentence</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
-    <span class="k">for</span> <span class="n">word</span> <span class="ow">in</span> <span class="n">words</span><span class="p">:</span>
-        <span class="k">if</span> <span class="n">word</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">string</span><span class="o">.</span><span class="n">punctuation</span> <span class="ow">or</span> <span class="n">word</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;-&quot;</span><span class="p">,</span> <span class="s2">&quot;(&quot;</span><span class="p">]:</span>
-            <span class="n">word</span> <span class="o">=</span> <span class="s2">&quot; &quot;</span> <span class="o">+</span> <span class="n">word</span>
-        <span class="n">sentence</span> <span class="o">+=</span> <span class="n">word</span>
-    <span class="n">sentence</span> <span class="o">=</span> <span class="n">sentence</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot; &#39;&quot;</span><span class="p">,</span> <span class="s2">&quot;&#39;&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;( &quot;</span><span class="p">,</span> <span class="s2">&quot;(&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
-    <span class="k">return</span> <span class="n">sentence</span></div>
-
-
-<div class="viewcode-block" id="filter_sentence"><a class="viewcode-back" href="../../../cleanlab/internal/token_classification_utils.html#cleanlab.internal.token_classification_utils.filter_sentence">[docs]</a><span class="k">def</span> <span class="nf">filter_sentence</span><span class="p">(</span>
-    <span class="n">sentences</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
-    <span class="n">condition</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Callable</span><span class="p">[[</span><span class="nb">str</span><span class="p">],</span> <span class="nb">bool</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">List</span><span class="p">[</span><span class="nb">bool</span><span class="p">]]:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Filter sentence based on some condition, and returns filter mask</span>
+<span class="sd">    where :math:`t` scales the distance to a score in the range [0,1].</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    sentences:</span>
-<span class="sd">        list of sentences</span>
+<span class="sd">    distances : np.ndarray</span>
+<span class="sd">        An array of distances of shape ``(N, num_neighbors)``, where N is the number of examples.</span>
+<span class="sd">        Each row contains the distances to each example&#39;s `num_neighbors` nearest neighbors.</span>
+<span class="sd">        It is assumed that each row is sorted in ascending order.</span>
 
-<span class="sd">    condition:</span>
-<span class="sd">        sentence filtering condition</span>
+<span class="sd">    k : int</span>
+<span class="sd">        Number of neighbors used to compute the average distance to each example.</span>
+<span class="sd">        This assumes that the second dimension of distances is k or greater, but it</span>
+<span class="sd">        uses slicing to avoid indexing errors.</span>
 
-<span class="sd">    Returns</span>
-<span class="sd">    ---------</span>
-<span class="sd">    sentences:</span>
-<span class="sd">        list of sentences filtered</span>
-
-<span class="sd">    mask:</span>
-<span class="sd">        boolean mask such that `mask[i] == True` if the i&#39;th sentence is included in the</span>
-<span class="sd">        filtered sentence, otherwise `mask[i] == False`</span>
-
-<span class="sd">    Examples</span>
-<span class="sd">    --------</span>
-<span class="sd">    &gt;&gt;&gt; from cleanlab.internal.token_classification_utils import filter_sentence</span>
-<span class="sd">    &gt;&gt;&gt; sentences = [&quot;Short sentence.&quot;, &quot;This is a longer sentence.&quot;]</span>
-<span class="sd">    &gt;&gt;&gt; condition = lambda x: len(x.split()) &gt; 2</span>
-<span class="sd">    &gt;&gt;&gt; long_sentences, _ = filter_sentence(sentences, condition)</span>
-<span class="sd">    &gt;&gt;&gt; long_sentences</span>
-<span class="sd">    [&#39;This is a longer sentence.&#39;]</span>
-<span class="sd">    &gt;&gt;&gt; document = [&quot;# Headline&quot;, &quot;Sentence 1.&quot;, &quot;&amp;&quot;, &quot;Sentence 2.&quot;]</span>
-<span class="sd">    &gt;&gt;&gt; sentences, mask = filter_sentence(document)</span>
-<span class="sd">    &gt;&gt;&gt; sentences, mask</span>
-<span class="sd">    ([&#39;Sentence 1.&#39;, &#39;Sentence 2.&#39;], [False, True, False, True])</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">if</span> <span class="ow">not</span> <span class="n">condition</span><span class="p">:</span>
-        <span class="n">condition</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">sentence</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">sentence</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span> <span class="ow">and</span> <span class="s2">&quot;#&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">sentence</span>
-    <span class="n">mask</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="n">condition</span><span class="p">,</span> <span class="n">sentences</span><span class="p">))</span>
-    <span class="n">sentences</span> <span class="o">=</span> <span class="p">[</span><span class="n">sentence</span> <span class="k">for</span> <span class="n">m</span><span class="p">,</span> <span class="n">sentence</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">mask</span><span class="p">,</span> <span class="n">sentences</span><span class="p">)</span> <span class="k">if</span> <span class="n">m</span><span class="p">]</span>
-    <span class="k">return</span> <span class="n">sentences</span><span class="p">,</span> <span class="n">mask</span></div>
-
-
-<div class="viewcode-block" id="process_token"><a class="viewcode-back" href="../../../cleanlab/internal/token_classification_utils.html#cleanlab.internal.token_classification_utils.process_token">[docs]</a><span class="k">def</span> <span class="nf">process_token</span><span class="p">(</span><span class="n">token</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">replace</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="p">[(</span><span class="s2">&quot;#&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)])</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Replaces special characters in the tokens</span>
-
-<span class="sd">    Parameters</span>
-<span class="sd">    ----------</span>
-<span class="sd">    token:</span>
-<span class="sd">        token which potentially contains special characters</span>
-
-<span class="sd">    replace:</span>
-<span class="sd">        list of tuples `(s1, s2)`, where all occurances of s1 are replaced by s2</span>
+<span class="sd">    t : int</span>
+<span class="sd">        Controls transformation of distances between examples into similarity scores that lie in [0,1].</span>
 
 <span class="sd">    Returns</span>
-<span class="sd">    ---------</span>
-<span class="sd">    processed_token:</span>
-<span class="sd">        processed token whose special character has been replaced</span>
-
-<span class="sd">    Note</span>
-<span class="sd">    ----</span>
-<span class="sd">        Only applies to characters in the original input token.</span>
-
-<span class="sd">    Examples</span>
-<span class="sd">    --------</span>
-<span class="sd">    &gt;&gt;&gt; from cleanlab.internal.token_classification_utils import process_token</span>
-<span class="sd">    &gt;&gt;&gt; token = &quot;#Comment&quot;</span>
-<span class="sd">    &gt;&gt;&gt; process_token(&quot;#Comment&quot;)</span>
-<span class="sd">    &#39;Comment&#39;</span>
-
-<span class="sd">    Specify custom replacement rules</span>
-
-<span class="sd">    &gt;&gt;&gt; replace = [(&quot;C&quot;, &quot;a&quot;), (&quot;a&quot;, &quot;C&quot;)]</span>
-<span class="sd">    &gt;&gt;&gt; process_token(&quot;Cleanlab&quot;, replace)</span>
-<span class="sd">    &#39;aleCnlCb&#39;</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">replace_dict</span> <span class="o">=</span> <span class="p">{</span><span class="n">re</span><span class="o">.</span><span class="n">escape</span><span class="p">(</span><span class="n">k</span><span class="p">):</span> <span class="n">v</span> <span class="k">for</span> <span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span> <span class="ow">in</span> <span class="n">replace</span><span class="p">}</span>
-    <span class="n">pattern</span> <span class="o">=</span> <span class="s2">&quot;|&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">replace_dict</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
-    <span class="n">compiled_pattern</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="n">pattern</span><span class="p">)</span>
-    <span class="n">replacement</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">match</span><span class="p">:</span> <span class="n">replace_dict</span><span class="p">[</span><span class="n">re</span><span class="o">.</span><span class="n">escape</span><span class="p">(</span><span class="n">match</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">0</span><span class="p">))]</span>
-    <span class="n">processed_token</span> <span class="o">=</span> <span class="n">compiled_pattern</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="n">replacement</span><span class="p">,</span> <span class="n">token</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">processed_token</span></div>
-
-
-<div class="viewcode-block" id="mapping"><a class="viewcode-back" href="../../../cleanlab/internal/token_classification_utils.html#cleanlab.internal.token_classification_utils.mapping">[docs]</a><span class="k">def</span> <span class="nf">mapping</span><span class="p">(</span><span class="n">entities</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">],</span> <span class="n">maps</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Map a list of entities to its corresponding entities</span>
-
-<span class="sd">    Parameters</span>
-<span class="sd">    ----------</span>
-<span class="sd">    entities:</span>
-<span class="sd">        a list of given entities</span>
-
-<span class="sd">    maps:</span>
-<span class="sd">        a list of mapped entities, such that the i&#39;th indexed token should be mapped to `maps[i]`</span>
-
-<span class="sd">    Returns</span>
-<span class="sd">    ---------</span>
-<span class="sd">    mapped_entities:</span>
-<span class="sd">        a list of mapped entities</span>
-
-<span class="sd">    Examples</span>
-<span class="sd">    --------</span>
-<span class="sd">    &gt;&gt;&gt; unique_identities = [0, 1, 2, 3, 4]  # [&quot;O&quot;, &quot;B-PER&quot;, &quot;I-PER&quot;, &quot;B-LOC&quot;, &quot;I-LOC&quot;]</span>
-<span class="sd">    &gt;&gt;&gt; maps = [0, 1, 1, 2, 2]  # [&quot;O&quot;, &quot;PER&quot;, &quot;PER&quot;, &quot;LOC&quot;, &quot;LOC&quot;]</span>
-<span class="sd">    &gt;&gt;&gt; mapping(unique_identities, maps)</span>
-<span class="sd">    [0, 1, 1, 2, 2]  # [&quot;O&quot;, &quot;PER&quot;, &quot;PER&quot;, &quot;LOC&quot;, &quot;LOC&quot;]</span>
-<span class="sd">    &gt;&gt;&gt; mapping([0, 0, 4, 4, 3, 4, 0, 2], maps)</span>
-<span class="sd">    [0, 0, 2, 2, 2, 2, 0, 1]  # [&quot;O&quot;, &quot;O&quot;, &quot;LOC&quot;, &quot;LOC&quot;, &quot;LOC&quot;, &quot;LOC&quot;, &quot;O&quot;, &quot;PER&quot;]</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">f</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">maps</span><span class="p">[</span><span class="n">x</span><span class="p">]</span>
-    <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">entities</span><span class="p">))</span></div>
-
-
-<div class="viewcode-block" id="merge_probs"><a class="viewcode-back" href="../../../cleanlab/internal/token_classification_utils.html#cleanlab.internal.token_classification_utils.merge_probs">[docs]</a><span class="k">def</span> <span class="nf">merge_probs</span><span class="p">(</span>
-    <span class="n">probs</span><span class="p">:</span> <span class="n">npt</span><span class="o">.</span><span class="n">NDArray</span><span class="p">[</span><span class="s2">&quot;np.floating[T]&quot;</span><span class="p">],</span> <span class="n">maps</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span>
-<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">npt</span><span class="o">.</span><span class="n">NDArray</span><span class="p">[</span><span class="s2">&quot;np.floating[T]&quot;</span><span class="p">]:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Merges model-predictive probabilities with desired mapping</span>
-
-<span class="sd">    Parameters</span>
-<span class="sd">    ----------</span>
-<span class="sd">    probs:</span>
-<span class="sd">        A 2D np.array of shape `(N, K)`, where N is the number of tokens, and K is the number of classes for the model</span>
-
-<span class="sd">    maps:</span>
-<span class="sd">        a list of mapped index, such that the probability of the token being in the i&#39;th class is mapped to the</span>
-<span class="sd">        `maps[i]` index. If `maps[i] == -1`, the i&#39;th column of `probs` is ignored. If `np.any(maps == -1)`, the</span>
-<span class="sd">        returned probability is re-normalized.</span>
-
-<span class="sd">    Returns</span>
-<span class="sd">    ---------</span>
-<span class="sd">    probs_merged:</span>
-<span class="sd">        A 2D np.array of shape ``(N, K&#39;)``, where `K&#39;` is the number of new classes. Probabilities are merged and</span>
-<span class="sd">        re-normalized if necessary.</span>
+<span class="sd">    -------</span>
+<span class="sd">    ood_features_scores : np.ndarray</span>
+<span class="sd">        An array of outlier scores of shape ``(N,)`` for N examples.</span>
 
 <span class="sd">    Examples</span>
 <span class="sd">    --------</span>
 <span class="sd">    &gt;&gt;&gt; import numpy as np</span>
-<span class="sd">    &gt;&gt;&gt; from cleanlab.internal.token_classification_utils import merge_probs</span>
-<span class="sd">    &gt;&gt;&gt; probs = np.array([</span>
-<span class="sd">    ...     [0.55, 0.0125, 0.0375, 0.1, 0.3],</span>
-<span class="sd">    ...     [0.1, 0.8, 0, 0.075, 0.025],</span>
-<span class="sd">    ... ])</span>
-<span class="sd">    &gt;&gt;&gt; maps = [0, 1, 1, 2, 2]</span>
-<span class="sd">    &gt;&gt;&gt; merge_probs(probs, maps)</span>
-<span class="sd">    array([[0.55, 0.05, 0.4 ],</span>
-<span class="sd">           [0.1 , 0.8 , 0.1 ]])</span>
+<span class="sd">    &gt;&gt;&gt; from cleanlab.outlier import transform_distances_to_scores</span>
+<span class="sd">    &gt;&gt;&gt; distances = np.array([[0.0, 0.1, 0.25],</span>
+<span class="sd">    ...                       [0.15, 0.2, 0.3]])</span>
+<span class="sd">    &gt;&gt;&gt; transform_distances_to_scores(distances, k=2, t=1)</span>
+<span class="sd">    array([0.95122942, 0.83945702])</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">old_classes</span> <span class="o">=</span> <span class="n">probs</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
-    <span class="n">map_size</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">maps</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span>
-    <span class="n">probs_merged</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">([</span><span class="nb">len</span><span class="p">(</span><span class="n">probs</span><span class="p">),</span> <span class="n">map_size</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">probs</span><span class="o">.</span><span class="n">dtype</span><span class="o">.</span><span class="n">type</span><span class="p">)</span>
+    <span class="c1"># Calculate average distance to k-nearest neighbors</span>
+    <span class="n">avg_knn_distances</span> <span class="o">=</span> <span class="n">distances</span><span class="p">[:,</span> <span class="p">:</span><span class="n">k</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
 
-    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">old_classes</span><span class="p">):</span>
-        <span class="k">if</span> <span class="n">maps</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="n">probs_merged</span><span class="p">[:,</span> <span class="n">maps</span><span class="p">[</span><span class="n">i</span><span class="p">]]</span> <span class="o">+=</span> <span class="n">probs</span><span class="p">[:,</span> <span class="n">i</span><span class="p">]</span>
-    <span class="k">if</span> <span class="o">-</span><span class="mi">1</span> <span class="ow">in</span> <span class="n">maps</span><span class="p">:</span>
-        <span class="n">row_sums</span> <span class="o">=</span> <span class="n">probs_merged</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
-        <span class="n">probs_merged</span> <span class="o">/=</span> <span class="n">row_sums</span><span class="p">[:,</span> <span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">]</span>
-    <span class="k">return</span> <span class="n">probs_merged</span></div>
-
-
-<div class="viewcode-block" id="color_sentence"><a class="viewcode-back" href="../../../cleanlab/internal/token_classification_utils.html#cleanlab.internal.token_classification_utils.color_sentence">[docs]</a><span class="k">def</span> <span class="nf">color_sentence</span><span class="p">(</span><span class="n">sentence</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">word</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Searches for a given token in the sentence and returns the sentence where the given token is colored red</span>
-
-<span class="sd">    Parameters</span>
-<span class="sd">    ----------</span>
-<span class="sd">    sentence:</span>
-<span class="sd">        a sentence where the word is searched</span>
-
-<span class="sd">    word:</span>
-<span class="sd">        keyword to find in `sentence`. Assumes the word exists in the sentence.</span>
-<span class="sd">    Returns</span>
-<span class="sd">    ---------</span>
-<span class="sd">    colored_sentence:</span>
-<span class="sd">        `sentence` where the every occurrence of the word is colored red, using ``termcolor.colored``</span>
-
-<span class="sd">    Examples</span>
-<span class="sd">    --------</span>
-<span class="sd">    &gt;&gt;&gt; from cleanlab.internal.token_classification_utils import color_sentence</span>
-<span class="sd">    &gt;&gt;&gt; sentence = &quot;This is a sentence.&quot;</span>
-<span class="sd">    &gt;&gt;&gt; word = &quot;sentence&quot;</span>
-<span class="sd">    &gt;&gt;&gt; color_sentence(sentence, word)</span>
-<span class="sd">    &#39;This is a \x1b[31msentence\x1b[0m.&#39;</span>
-
-<span class="sd">    Also works for multiple occurrences of the word</span>
-
-<span class="sd">    &gt;&gt;&gt; document = &quot;This is a sentence. This is another sentence.&quot;</span>
-<span class="sd">    &gt;&gt;&gt; word = &quot;sentence&quot;</span>
-<span class="sd">    &gt;&gt;&gt; color_sentence(document, word)</span>
-<span class="sd">    &#39;This is a \x1b[31msentence\x1b[0m. This is another \x1b[31msentence\x1b[0m.&#39;</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">colored_word</span> <span class="o">=</span> <span class="n">colored</span><span class="p">(</span><span class="n">word</span><span class="p">,</span> <span class="s2">&quot;red&quot;</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">_replace_sentence</span><span class="p">(</span><span class="n">sentence</span><span class="o">=</span><span class="n">sentence</span><span class="p">,</span> <span class="n">word</span><span class="o">=</span><span class="n">word</span><span class="p">,</span> <span class="n">new_word</span><span class="o">=</span><span class="n">colored_word</span><span class="p">)</span></div>
-
-
-<span class="k">def</span> <span class="nf">_replace_sentence</span><span class="p">(</span><span class="n">sentence</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">word</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">new_word</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Searches for a given token in the sentence and returns the sentence where the given token has been replaced by</span>
-<span class="sd">    `new_word`.</span>
-
-<span class="sd">    Parameters</span>
-<span class="sd">    ----------</span>
-<span class="sd">    sentence:</span>
-<span class="sd">        a sentence where the word is searched</span>
-
-<span class="sd">    word:</span>
-<span class="sd">        keyword to find in `sentence`. Assumes the word exists in the sentence.</span>
-
-<span class="sd">    new_word:</span>
-<span class="sd">        the word to replace the keyword with</span>
-
-<span class="sd">    Returns</span>
-<span class="sd">    ---------</span>
-<span class="sd">    new_sentence:</span>
-<span class="sd">        `sentence` where the every occurrence of the word is replaced by `colored_word`</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-
-    <span class="n">new_sentence</span><span class="p">,</span> <span class="n">number_of_substitions</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">subn</span><span class="p">(</span>
-        <span class="sa">r</span><span class="s2">&quot;\b</span><span class="si">{}</span><span class="s2">\b&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">re</span><span class="o">.</span><span class="n">escape</span><span class="p">(</span><span class="n">word</span><span class="p">)),</span> <span class="n">new_word</span><span class="p">,</span> <span class="n">sentence</span>
-    <span class="p">)</span>
-    <span class="k">if</span> <span class="n">number_of_substitions</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-        <span class="c1"># Use basic string manipulation if regex fails</span>
-        <span class="n">new_sentence</span> <span class="o">=</span> <span class="n">sentence</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">word</span><span class="p">,</span> <span class="n">new_word</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">new_sentence</span>
+    <span class="c1"># Map ood_features_scores to range 0-1 with 0 = most concerning</span>
+    <span class="n">ood_features_scores</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span> <span class="o">*</span> <span class="n">avg_knn_distances</span> <span class="o">*</span> <span class="n">t</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">ood_features_scores</span></div>
 </pre></div> 
         </article>
       </div>

@@ -225,6 +225,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../../cleanlab/internal/label_quality_utils.html">label_quality_utils</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../cleanlab/internal/multilabel_utils.html">multilabel_utils</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../cleanlab/internal/multilabel_scorer.html">multilabel_scorer</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cleanlab/internal/outlier.html">outlier</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../cleanlab/internal/token_classification_utils.html">token_classification_utils</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../cleanlab/internal/validation.html">validation</a></li>
 </ul>
@@ -455,11 +456,12 @@
 <span class="kn">from</span> <span class="nn">cleanlab.count</span> <span class="kn">import</span> <span class="n">get_confident_thresholds</span>
 <span class="kn">from</span> <span class="nn">sklearn.neighbors</span> <span class="kn">import</span> <span class="n">NearestNeighbors</span>
 <span class="kn">from</span> <span class="nn">sklearn.exceptions</span> <span class="kn">import</span> <span class="n">NotFittedError</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Union</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Dict</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Union</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">cast</span>
 <span class="kn">from</span> <span class="nn">cleanlab.internal.label_quality_utils</span> <span class="kn">import</span> <span class="p">(</span>
     <span class="n">_subtract_confident_thresholds</span><span class="p">,</span>
     <span class="n">get_normalized_entropy</span><span class="p">,</span>
 <span class="p">)</span>
+<span class="kn">from</span> <span class="nn">cleanlab.internal.outlier</span> <span class="kn">import</span> <span class="n">transform_distances_to_scores</span>
 <span class="kn">from</span> <span class="nn">cleanlab.internal.validation</span> <span class="kn">import</span> <span class="n">assert_valid_inputs</span><span class="p">,</span> <span class="n">labels_to_array</span>
 <span class="kn">from</span> <span class="nn">cleanlab.typing</span> <span class="kn">import</span> <span class="n">LabelLike</span>
 
@@ -876,11 +878,7 @@
     <span class="c1"># neighbor of each point is the point itself, at a distance of zero.</span>
     <span class="n">distances</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">knn</span><span class="o">.</span><span class="n">kneighbors</span><span class="p">(</span><span class="n">features</span><span class="p">)</span>
 
-    <span class="c1"># Calculate average distance to k-nearest neighbors</span>
-    <span class="n">avg_knn_distances</span> <span class="o">=</span> <span class="n">distances</span><span class="p">[:,</span> <span class="p">:</span><span class="n">k</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
-
-    <span class="c1"># Map ood_features_scores to range 0-1 with 0 = most concerning</span>
-    <span class="n">ood_features_scores</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span> <span class="o">*</span> <span class="n">avg_knn_distances</span> <span class="o">*</span> <span class="n">t</span><span class="p">)</span>
+    <span class="n">ood_features_scores</span> <span class="o">=</span> <span class="n">transform_distances_to_scores</span><span class="p">(</span><span class="n">distances</span><span class="p">,</span> <span class="n">cast</span><span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="n">k</span><span class="p">),</span> <span class="n">t</span><span class="p">)</span>
     <span class="k">return</span> <span class="p">(</span><span class="n">ood_features_scores</span><span class="p">,</span> <span class="n">knn</span><span class="p">)</span>
 
 
