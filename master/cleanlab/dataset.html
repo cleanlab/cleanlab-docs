@@ -469,6 +469,25 @@ ranking across the classes.</p>
 <li><p><code class="docutils literal notranslate"><span class="pre">confident_joint</span></code></p></li>
 </ol>
 <p>Only provide <strong>exactly one of the above input options</strong>, do not provide a combination.</p>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">cleanlab.dataset</span> <span class="kn">import</span> <span class="n">rank_classes_by_label_quality</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">sklearn.linear_model</span> <span class="kn">import</span> <span class="n">LogisticRegression</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="kn">import</span> <span class="n">cross_val_predict</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">data</span><span class="p">,</span> <span class="n">labels</span> <span class="o">=</span> <span class="n">get_data_labels_from_dataset</span><span class="p">(</span><span class="n">yourFavoriteDataset</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">yourFavoriteModel</span> <span class="o">=</span> <span class="n">LogisticRegression</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">pred_probs</span> <span class="o">=</span> <span class="n">cross_val_predict</span><span class="p">(</span>
+<span class="go">        yourFavoriteModel,</span>
+<span class="go">        data,</span>
+<span class="go">        labels,</span>
+<span class="go">        cv=3,</span>
+<span class="go">        method=&quot;predict_proba&quot;,</span>
+<span class="go">    )  # generate cross-validation estimates for each input data point</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">df</span> <span class="o">=</span> <span class="n">rank_classes_by_label_quality</span><span class="p">(</span>
+<span class="go">        labels=labels,</span>
+<span class="go">        pred_probs=pred_probs,</span>
+<span class="go">    )  # report overall label quality scores summarizing the examples annotated as each class</span>
+</pre></div>
+</div>
 <p><strong>Parameters</strong>: For parameter info, see the docstring of <a class="reference internal" href="#cleanlab.dataset.find_overlapping_classes" title="cleanlab.dataset.find_overlapping_classes"><code class="xref py py-func docutils literal notranslate"><span class="pre">find_overlapping_classes</span></code></a>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
@@ -524,14 +543,13 @@ issues via the approach published in <a class="reference external" href="https:/
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="kn">import</span> <span class="n">cross_val_predict</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">data</span><span class="p">,</span> <span class="n">labels</span> <span class="o">=</span> <span class="n">get_data_labels_from_dataset</span><span class="p">(</span><span class="n">yourFavoriteDataset</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">yourFavoriteModel</span> <span class="o">=</span> <span class="n">LogisticRegression</span><span class="p">()</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">num_crossval_folds</span> <span class="o">=</span> <span class="mi">3</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">pred_probs</span> <span class="o">=</span> <span class="n">cross_val_predict</span><span class="p">(</span>
 <span class="go">        yourFavoriteModel,</span>
 <span class="go">        data,</span>
 <span class="go">        labels,</span>
-<span class="go">        cv=num_crossval_folds,</span>
+<span class="go">        cv=3,</span>
 <span class="go">        method=&quot;predict_proba&quot;,</span>
-<span class="go">    )</span>
+<span class="go">    )  # generate cross-validation estimates for each input data point</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">df</span> <span class="o">=</span> <span class="n">find_overlapping_classes</span><span class="p">(</span>
 <span class="go">        labels=labels,</span>
 <span class="go">        pred_probs=pred_probs,</span>
@@ -629,6 +647,25 @@ score implies a higher quality dataset.</p>
 <li><p><code class="docutils literal notranslate"><span class="pre">confident_joint</span></code></p></li>
 </ol>
 <p>Only provide <strong>exactly one of the above input options</strong>, do not provide a combination.</p>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">cleanlab.dataset</span> <span class="kn">import</span> <span class="n">overall_label_health_score</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">sklearn.linear_model</span> <span class="kn">import</span> <span class="n">LogisticRegression</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="kn">import</span> <span class="n">cross_val_predict</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">data</span><span class="p">,</span> <span class="n">labels</span> <span class="o">=</span> <span class="n">get_data_labels_from_dataset</span><span class="p">(</span><span class="n">yourFavoriteDataset</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">yourFavoriteModel</span> <span class="o">=</span> <span class="n">LogisticRegression</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">pred_probs</span> <span class="o">=</span> <span class="n">cross_val_predict</span><span class="p">(</span>
+<span class="go">        yourFavoriteModel,</span>
+<span class="go">        data,</span>
+<span class="go">        labels,</span>
+<span class="go">        cv=3,</span>
+<span class="go">        method=&quot;predict_proba&quot;,</span>
+<span class="go">    )  # generate cross-validation estimates for each input data point</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">score</span> <span class="o">=</span> <span class="n">overall_label_health_score</span><span class="p">(</span>
+<span class="go">        labels=labels,</span>
+<span class="go">        pred_probs=pred_probs,</span>
+<span class="go">    )  # a score measuring the overall quality of all labels in a dataset.</span>
+</pre></div>
+</div>
 <p><strong>Parameters</strong>: For parameter info, see the docstring of <a class="reference internal" href="#cleanlab.dataset.find_overlapping_classes" title="cleanlab.dataset.find_overlapping_classes"><code class="xref py py-func docutils literal notranslate"><span class="pre">find_overlapping_classes</span></code></a>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
@@ -657,6 +694,25 @@ A score of 0.5 implies that half of the dataset’s labels are estimated to have
 <li><p><code class="docutils literal notranslate"><span class="pre">confident_joint</span></code></p></li>
 </ol>
 <p>Only provide <strong>exactly one of the above input options</strong>, do not provide a combination.</p>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">cleanlab.dataset</span> <span class="kn">import</span> <span class="n">health_summary</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">sklearn.linear_model</span> <span class="kn">import</span> <span class="n">LogisticRegression</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="kn">import</span> <span class="n">cross_val_predict</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">data</span><span class="p">,</span> <span class="n">labels</span> <span class="o">=</span> <span class="n">get_data_labels_from_dataset</span><span class="p">(</span><span class="n">yourFavoriteDataset</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">yourFavoriteModel</span> <span class="o">=</span> <span class="n">LogisticRegression</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">pred_probs</span> <span class="o">=</span> <span class="n">cross_val_predict</span><span class="p">(</span>
+<span class="go">        yourFavoriteModel,</span>
+<span class="go">        data,</span>
+<span class="go">        labels,</span>
+<span class="go">        cv=3,</span>
+<span class="go">        method=&quot;predict_proba&quot;,</span>
+<span class="go">    )  # generate cross-validation estimates for each input data point</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">summary</span> <span class="o">=</span> <span class="n">health_summary</span><span class="p">(</span>
+<span class="go">            labels=labels,</span>
+<span class="go">            pred_probs=pred_probs,</span>
+<span class="go">    )  # dictionary summarizing the overall label quality of the classes in your dataset</span>
+</pre></div>
+</div>
 <p><strong>Parameters</strong>: For parameter info, see the docstring of <a class="reference internal" href="#cleanlab.dataset.find_overlapping_classes" title="cleanlab.dataset.find_overlapping_classes"><code class="xref py py-func docutils literal notranslate"><span class="pre">find_overlapping_classes</span></code></a>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
