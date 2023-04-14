@@ -716,13 +716,12 @@ div.rendered_html tbody tr:hover {
 tagging (or document tagging), where multiple tags can be appropriate for a single image (or document). For example, a image tagging application could involve the following classes: [<code class="docutils literal notranslate"><span class="pre">copyrighted</span></code>, <code class="docutils literal notranslate"><span class="pre">advertisement</span></code>, <code class="docutils literal notranslate"><span class="pre">face</span></code>, <code class="docutils literal notranslate"><span class="pre">violence</span></code>, <code class="docutils literal notranslate"><span class="pre">nsfw</span></code>]</p>
 <div class="admonition note">
 <p class="admonition-title">Quickstart</p>
-<p>cleanlab finds label issues based on two inputs: <code class="docutils literal notranslate"><span class="pre">labels</span></code> formatted as a list of lists of integer class indices that apply to each example in your dataset, and <code class="docutils literal notranslate"><span class="pre">pred_probs</span></code> from a trained multi-label classification model (which do not need to sum to 1 since the classes are not mutually exclusive). Once you have these, run the code below to find label issues in your dataset.</p>
-<div class="markdown" style="background:white;margin:16px"><div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">cleanlab.filter</span> <span class="kn">import</span> <span class="n">find_label_issues</span>
+<p>cleanlab finds label issues based on two inputs: <code class="docutils literal notranslate"><span class="pre">labels</span></code> formatted as a list of lists of integer class indices that apply to each example in your dataset, and <code class="docutils literal notranslate"><span class="pre">pred_probs</span></code> from a trained multi-label classification model (which do not need to sum to 1 since the classes are not mutually exclusive). Once you have these, run the code below to find label issues in your multi-label dataset:</p>
+<div class="markdown" style="background:white;margin:16px"><div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">cleanlab.multilabel_classification.filter</span> <span class="kn">import</span> <span class="n">find_label_issues</span>
 
 <span class="n">ranked_label_issues</span> <span class="o">=</span> <span class="n">find_label_issues</span><span class="p">(</span>
     <span class="n">labels</span><span class="o">=</span><span class="n">labels</span><span class="p">,</span>
     <span class="n">pred_probs</span><span class="o">=</span><span class="n">pred_probs</span><span class="p">,</span>
-    <span class="n">multi_label</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
     <span class="n">return_indices_ranked_by</span><span class="o">=</span><span class="s2">&quot;self_confidence&quot;</span><span class="p">,</span>
 <span class="p">)</span>
 </pre></div>
@@ -750,19 +749,20 @@ tagging (or document tagging), where multiple tags can be appropriate for a sing
 <span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="kn">import</span> <span class="n">StratifiedKFold</span>
 <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
 
-<span class="kn">from</span> <span class="nn">cleanlab.filter</span> <span class="kn">import</span> <span class="n">find_label_issues</span>
-<span class="kn">import</span> <span class="nn">cleanlab.internal.multilabel_utils</span> <span class="k">as</span> <span class="nn">mlutils</span>
-<span class="kn">from</span> <span class="nn">cleanlab.internal.multilabel_utils</span> <span class="kn">import</span> <span class="n">onehot2int</span><span class="p">,</span> <span class="n">int2onehot</span>
-<span class="kn">from</span> <span class="nn">cleanlab.benchmarking.noise_generation</span> <span class="kn">import</span> <span class="p">(</span>
-    <span class="n">generate_noise_matrix_from_trace</span><span class="p">,</span>
-    <span class="n">generate_noisy_labels</span><span class="p">,</span>
-<span class="p">)</span>
+<span class="kn">from</span> <span class="nn">cleanlab.multilabel_classification.filter</span> <span class="kn">import</span> <span class="n">find_label_issues</span>
+<span class="kn">from</span> <span class="nn">cleanlab.multilabel_classification.rank</span> <span class="kn">import</span> <span class="n">get_label_quality_scores</span>
+<span class="kn">from</span> <span class="nn">cleanlab.internal.multilabel_utils</span> <span class="kn">import</span> <span class="n">int2onehot</span><span class="p">,</span> <span class="n">onehot2int</span>
 </pre></div>
 </div>
 </div>
 <p>Here we generate a small multi-label classification dataset for a quick demo. To see cleanlab applied to a real image tagging dataset, check out our <a class="reference external" href="https://github.com/cleanlab/examples">example</a> notebook <a class="reference external" href="https://github.com/cleanlab/examples/blob/master/multilabel_classification/image_tagging.ipynb">“Find Label Errors in Multi-Label Classification Data (CelebA Image Tagging)”</a>.</p>
 <details><summary><p>Code to generate dataset (can skip these details) <strong>(click to expand)</strong></p>
 </summary><div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Note: This pulldown content is for docs.cleanlab.ai, if running on local Jupyter or Colab, please ignore it.</span>
+
+<span class="kn">from</span> <span class="nn">cleanlab.benchmarking.noise_generation</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">generate_noise_matrix_from_trace</span><span class="p">,</span>
+    <span class="n">generate_noisy_labels</span><span class="p">,</span>
+<span class="p">)</span>
 
 <span class="k">def</span> <span class="nf">make_multilabel_data</span><span class="p">(</span>
     <span class="n">means</span><span class="o">=</span><span class="p">[[</span><span class="o">-</span><span class="mi">5</span><span class="p">,</span> <span class="mf">3.5</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span> <span class="p">[</span><span class="o">-</span><span class="mi">3</span><span class="p">,</span> <span class="mi">6</span><span class="p">]],</span>
@@ -926,7 +926,7 @@ tagging (or document tagging), where multiple tags can be appropriate for a sing
 <p><code class="docutils literal notranslate"><span class="pre">pred_probs</span></code> should be 2D array whose rows are length-<em>K</em> vectors for <strong>each</strong> example in the dataset, representing the model-estimated probability that this example belongs to each class. Since one example can belong to multiple classes in multi-label classification, these probabilities need not sum to 1. For the best label error detection performance, these <code class="docutils literal notranslate"><span class="pre">pred_probs</span></code> should be out-of-sample (from a copy of the model that never saw this example during training, e.g. produced via
 cross-validation).</p>
 <p><code class="docutils literal notranslate"><span class="pre">labels</span></code> should be a list of lists, whose <em>i</em>-th entry is a list of (integer) class indices that apply to the <em>i</em>-th example in the dataset. If your classes are represented as string names, you should map these to integer indices. The label for an example that belongs to none of the classes should just be an empty list <code class="docutils literal notranslate"><span class="pre">[]</span></code>.</p>
-<p>Once you have <code class="docutils literal notranslate"><span class="pre">pred_probs</span></code> and <code class="docutils literal notranslate"><span class="pre">labels</span></code> in the appropriate formats, you can find label issues with cleanlab for any multi-label dataset!</p>
+<p>Once you have <code class="docutils literal notranslate"><span class="pre">pred_probs</span></code> and <code class="docutils literal notranslate"><span class="pre">labels</span></code> appropriately formatted, you can find/analyze label issues in any multi-label dataset via methods from the <code class="docutils literal notranslate"><span class="pre">cleanlab.multilabel_classification</span></code> module!</p>
 <p>Here’s what these look like for the first few examples in our synthetic multi-label dataset:</p>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
@@ -966,7 +966,6 @@ pred_probs for first 3 examples in format expected by cleanlab:
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">issues</span> <span class="o">=</span> <span class="n">find_label_issues</span><span class="p">(</span>
     <span class="n">labels</span><span class="o">=</span><span class="n">labels</span><span class="p">,</span>
     <span class="n">pred_probs</span><span class="o">=</span><span class="n">pred_probs</span><span class="p">,</span>
-    <span class="n">multi_label</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
     <span class="n">return_indices_ranked_by</span><span class="o">=</span><span class="s2">&quot;self_confidence&quot;</span><span class="p">,</span>
 <span class="p">)</span>
 
@@ -984,7 +983,6 @@ Indices of examples with label issues:
  143 172  53 216 265 176 164  73  75  10 159 107]
 </pre></div></div>
 </div>
-<p>Note we specified the <code class="docutils literal notranslate"><span class="pre">multi_label</span></code> option above to distinguish the task from <em>multi-class classification</em> (otherwise assumed as the default task).</p>
 <p>Let’s look at the samples that cleanlab thinks are most likely to be mislabeled. You can see that cleanlab was able to identify most of <code class="docutils literal notranslate"><span class="pre">true_errors</span></code> in our small dataset (despite not having access to this variable, which you won’t have in your own applications).</p>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
@@ -1008,9 +1006,7 @@ Indices of examples with label issues:
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">cleanlab.multilabel_classification</span> <span class="kn">import</span> <span class="n">get_label_quality_scores</span>
-
-<span class="n">scores</span> <span class="o">=</span> <span class="n">get_label_quality_scores</span><span class="p">(</span><span class="n">labels</span><span class="p">,</span> <span class="n">pred_probs</span><span class="p">)</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">scores</span> <span class="o">=</span> <span class="n">get_label_quality_scores</span><span class="p">(</span><span class="n">labels</span><span class="p">,</span> <span class="n">pred_probs</span><span class="p">)</span>
 
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Label quality scores of the first 10 examples in dataset:</span><span class="se">\n</span><span class="si">{</span><span class="n">scores</span><span class="p">[:</span><span class="mi">10</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 </pre></div>
@@ -1025,6 +1021,7 @@ Label quality scores of the first 10 examples in dataset:
 [1.     0.888  0.8224 0.9632 0.968  0.6512 0.0444 1.     0.76   0.774 ]
 </pre></div></div>
 </div>
+<p><strong>Note:</strong> For multi-label data, make sure to use the versions of <code class="docutils literal notranslate"><span class="pre">find_label_issues()</span></code> and <code class="docutils literal notranslate"><span class="pre">get_label_quality_scores()</span></code> from the <code class="docutils literal notranslate"><span class="pre">cleanlab.multilabel_classification</span></code> module. There exist other versions of these methods for other types of data.</p>
 </section>
 <section id="How-to-format-labels-given-as-a-one-hot-(multi-hot)-binary-matrix?">
 <h3>How to format labels given as a one-hot (multi-hot) binary matrix?<a class="headerlink" href="#How-to-format-labels-given-as-a-one-hot-(multi-hot)-binary-matrix?" title="Permalink to this heading">#</a></h3>
@@ -1033,9 +1030,7 @@ Label quality scores of the first 10 examples in dataset:
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">cleanlab.internal.multilabel_utils</span> <span class="kn">import</span> <span class="n">int2onehot</span><span class="p">,</span> <span class="n">onehot2int</span>
-
-<span class="n">labels_binary_format</span> <span class="o">=</span> <span class="n">int2onehot</span><span class="p">(</span><span class="n">labels</span><span class="p">,</span> <span class="n">K</span><span class="o">=</span><span class="n">num_class</span><span class="p">)</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">labels_binary_format</span> <span class="o">=</span> <span class="n">int2onehot</span><span class="p">(</span><span class="n">labels</span><span class="p">,</span> <span class="n">K</span><span class="o">=</span><span class="n">num_class</span><span class="p">)</span>
 <span class="n">labels_list_format</span> <span class="o">=</span> <span class="n">onehot2int</span><span class="p">(</span><span class="n">labels_binary_format</span><span class="p">)</span>
 </pre></div>
 </div>

@@ -485,6 +485,9 @@
 
 <span class="sd">    Only provide **exactly one of the above input options**, do not provide a combination.</span>
 
+<span class="sd">    **Parameters**: For information about the arguments to this method, see the documentation of</span>
+<span class="sd">    :py:func:`find_overlapping_classes &lt;cleanlab.dataset.find_overlapping_classes&gt;`.</span>
+
 <span class="sd">    Examples</span>
 <span class="sd">    --------</span>
 <span class="sd">    &gt;&gt;&gt; from cleanlab.dataset import rank_classes_by_label_quality</span>
@@ -504,7 +507,6 @@
 <span class="sd">            pred_probs=pred_probs,</span>
 <span class="sd">        )  # report overall label quality scores summarizing the examples annotated as each class</span>
 
-<span class="sd">    **Parameters**: For parameter info, see the docstring of :py:func:`find_overlapping_classes &lt;cleanlab.dataset.find_overlapping_classes&gt;`.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
@@ -526,13 +528,16 @@
 
 <span class="sd">        By default, the DataFrame is ordered by &quot;Label Quality Score&quot;, ascending.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">multi_label</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+            <span class="s2">&quot;For multilabel data, please instead call:  multilabel_classification.dataset.overall_multilabel_health_score()&quot;</span>
+        <span class="p">)</span>
 
     <span class="k">if</span> <span class="n">joint</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">joint</span> <span class="o">=</span> <span class="n">estimate_joint</span><span class="p">(</span>
             <span class="n">labels</span><span class="o">=</span><span class="n">labels</span><span class="p">,</span>
             <span class="n">pred_probs</span><span class="o">=</span><span class="n">pred_probs</span><span class="p">,</span>
             <span class="n">confident_joint</span><span class="o">=</span><span class="n">confident_joint</span><span class="p">,</span>
-            <span class="n">multi_label</span><span class="o">=</span><span class="n">multi_label</span><span class="p">,</span>
         <span class="p">)</span>
     <span class="k">if</span> <span class="n">num_examples</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">num_examples</span> <span class="o">=</span> <span class="n">_get_num_examples</span><span class="p">(</span><span class="n">labels</span><span class="o">=</span><span class="n">labels</span><span class="p">)</span>
@@ -673,12 +678,6 @@
 <span class="sd">      The `confident_joint` can be computed using :py:func:`count.compute_confident_joint &lt;cleanlab.count.compute_confident_joint&gt;`.</span>
 <span class="sd">      If not provided, it is computed from the given (noisy) `labels` and `pred_probs`.</span>
 
-<span class="sd">    multi_label : bool, optional</span>
-<span class="sd">      If ``True``, labels should be an iterable (e.g. list) of iterables, containing a</span>
-<span class="sd">      list of labels for each example, instead of just a single label.</span>
-<span class="sd">      The multi-label setting supports classification tasks where an example has 1 or more labels.</span>
-<span class="sd">      Example of a multi-labeled `labels` input: ``[[0,1], [1], [0,2], [0,1,2], [0], [1], ...]``.</span>
-
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
 <span class="sd">    overlapping_classes : pd.DataFrame</span>
@@ -710,12 +709,16 @@
 
         <span class="k">return</span> <span class="p">[(</span><span class="o">*</span><span class="n">i</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">np</span><span class="o">.</span><span class="n">ndenumerate</span><span class="p">(</span><span class="n">matrix</span><span class="p">)]</span>
 
+    <span class="k">if</span> <span class="n">multi_label</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+            <span class="s2">&quot;For multilabel data, please instead call: multilabel_classification.dataset.common_multilabel_issues()&quot;</span>
+        <span class="p">)</span>
+
     <span class="k">if</span> <span class="n">joint</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">joint</span> <span class="o">=</span> <span class="n">estimate_joint</span><span class="p">(</span>
             <span class="n">labels</span><span class="o">=</span><span class="n">labels</span><span class="p">,</span>
             <span class="n">pred_probs</span><span class="o">=</span><span class="n">pred_probs</span><span class="p">,</span>
             <span class="n">confident_joint</span><span class="o">=</span><span class="n">confident_joint</span><span class="p">,</span>
-            <span class="n">multi_label</span><span class="o">=</span><span class="n">multi_label</span><span class="p">,</span>
         <span class="p">)</span>
     <span class="k">if</span> <span class="n">num_examples</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">num_examples</span> <span class="o">=</span> <span class="n">_get_num_examples</span><span class="p">(</span><span class="n">labels</span><span class="o">=</span><span class="n">labels</span><span class="p">,</span> <span class="n">confident_joint</span><span class="o">=</span><span class="n">confident_joint</span><span class="p">)</span>
@@ -766,6 +769,9 @@
 
 <span class="sd">    Only provide **exactly one of the above input options**, do not provide a combination.</span>
 
+<span class="sd">    **Parameters**: For information about the arguments to this method, see the documentation of</span>
+<span class="sd">    :py:func:`find_overlapping_classes &lt;cleanlab.dataset.find_overlapping_classes&gt;`.</span>
+
 <span class="sd">    Examples</span>
 <span class="sd">    --------</span>
 <span class="sd">    &gt;&gt;&gt; from cleanlab.dataset import overall_label_health_score</span>
@@ -785,21 +791,22 @@
 <span class="sd">            pred_probs=pred_probs,</span>
 <span class="sd">        )  # a score measuring the overall quality of all labels in a dataset.</span>
 
-<span class="sd">    **Parameters**: For parameter info, see the docstring of :py:func:`find_overlapping_classes &lt;cleanlab.dataset.find_overlapping_classes&gt;`.</span>
-
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
 <span class="sd">    health_score : float</span>
 <span class="sd">        A score between 0 and 1, where 1 implies all labels in the dataset are estimated to be correct.</span>
 <span class="sd">        A score of 0.5 implies that half of the dataset&#39;s labels are estimated to have issues.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">multi_label</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+            <span class="s2">&quot;For multilabel data, please instead call: multilabel_classification.dataset.overall_multilabel_health_score()&quot;</span>
+        <span class="p">)</span>
 
     <span class="k">if</span> <span class="n">joint</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">joint</span> <span class="o">=</span> <span class="n">estimate_joint</span><span class="p">(</span>
             <span class="n">labels</span><span class="o">=</span><span class="n">labels</span><span class="p">,</span>
             <span class="n">pred_probs</span><span class="o">=</span><span class="n">pred_probs</span><span class="p">,</span>
             <span class="n">confident_joint</span><span class="o">=</span><span class="n">confident_joint</span><span class="p">,</span>
-            <span class="n">multi_label</span><span class="o">=</span><span class="n">multi_label</span><span class="p">,</span>
         <span class="p">)</span>
     <span class="k">if</span> <span class="n">num_examples</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">num_examples</span> <span class="o">=</span> <span class="n">_get_num_examples</span><span class="p">(</span><span class="n">labels</span><span class="o">=</span><span class="n">labels</span><span class="p">)</span>
@@ -840,6 +847,9 @@
 
 <span class="sd">    Only provide **exactly one of the above input options**, do not provide a combination.</span>
 
+<span class="sd">    **Parameters**: For information about the arguments to this method, see the documentation of</span>
+<span class="sd">    :py:func:`find_overlapping_classes &lt;cleanlab.dataset.find_overlapping_classes&gt;`.</span>
+
 <span class="sd">    Examples</span>
 <span class="sd">    --------</span>
 <span class="sd">    &gt;&gt;&gt; from cleanlab.dataset import health_summary</span>
@@ -859,7 +869,6 @@
 <span class="sd">                pred_probs=pred_probs,</span>
 <span class="sd">        )  # dictionary summarizing the overall label quality of the classes in your dataset</span>
 
-<span class="sd">    **Parameters**: For parameter info, see the docstring of :py:func:`find_overlapping_classes &lt;cleanlab.dataset.find_overlapping_classes&gt;`.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
@@ -873,12 +882,15 @@
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="kn">from</span> <span class="nn">cleanlab.internal.util</span> <span class="kn">import</span> <span class="n">smart_display_dataframe</span>
 
+    <span class="k">if</span> <span class="n">multi_label</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+            <span class="s2">&quot;For multilabel data, please call multilabel_classification.dataset.health_summary&quot;</span>
+        <span class="p">)</span>
     <span class="k">if</span> <span class="n">joint</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">joint</span> <span class="o">=</span> <span class="n">estimate_joint</span><span class="p">(</span>
             <span class="n">labels</span><span class="o">=</span><span class="n">labels</span><span class="p">,</span>
             <span class="n">pred_probs</span><span class="o">=</span><span class="n">pred_probs</span><span class="p">,</span>
             <span class="n">confident_joint</span><span class="o">=</span><span class="n">confident_joint</span><span class="p">,</span>
-            <span class="n">multi_label</span><span class="o">=</span><span class="n">multi_label</span><span class="p">,</span>
         <span class="p">)</span>
     <span class="k">if</span> <span class="n">num_examples</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">num_examples</span> <span class="o">=</span> <span class="n">_get_num_examples</span><span class="p">(</span><span class="n">labels</span><span class="o">=</span><span class="n">labels</span><span class="p">)</span>
@@ -905,7 +917,6 @@
         <span class="n">num_examples</span><span class="o">=</span><span class="n">num_examples</span><span class="p">,</span>
         <span class="n">joint</span><span class="o">=</span><span class="n">joint</span><span class="p">,</span>
         <span class="n">confident_joint</span><span class="o">=</span><span class="n">confident_joint</span><span class="p">,</span>
-        <span class="n">multi_label</span><span class="o">=</span><span class="n">multi_label</span><span class="p">,</span>
     <span class="p">)</span>
     <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
         <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Overall Class Quality and Noise across your dataset (below)&quot;</span><span class="p">)</span>
@@ -920,7 +931,6 @@
         <span class="n">num_examples</span><span class="o">=</span><span class="n">num_examples</span><span class="p">,</span>
         <span class="n">joint</span><span class="o">=</span><span class="n">joint</span><span class="p">,</span>
         <span class="n">confident_joint</span><span class="o">=</span><span class="n">confident_joint</span><span class="p">,</span>
-        <span class="n">multi_label</span><span class="o">=</span><span class="n">multi_label</span><span class="p">,</span>
     <span class="p">)</span>
     <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
         <span class="nb">print</span><span class="p">(</span>
@@ -939,7 +949,6 @@
         <span class="n">num_examples</span><span class="o">=</span><span class="n">num_examples</span><span class="p">,</span>
         <span class="n">joint</span><span class="o">=</span><span class="n">joint</span><span class="p">,</span>
         <span class="n">confident_joint</span><span class="o">=</span><span class="n">confident_joint</span><span class="p">,</span>
-        <span class="n">multi_label</span><span class="o">=</span><span class="n">multi_label</span><span class="p">,</span>
         <span class="n">verbose</span><span class="o">=</span><span class="n">verbose</span><span class="p">,</span>
     <span class="p">)</span>
     <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
@@ -956,9 +965,7 @@
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Helper method that finds the number of examples from the parameters or throws an error</span>
 <span class="sd">    if neither parameter is provided.</span>
 
-<span class="sd">    Parameters</span>
-<span class="sd">    ----------</span>
-<span class="sd">    For parameter info, see the docstring of `dataset.find_overlapping_classes`</span>
+<span class="sd">    **Parameters:** For information about the arguments to this method, see the documentation of `dataset.find_overlapping_classes`</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
