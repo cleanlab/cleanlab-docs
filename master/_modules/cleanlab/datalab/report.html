@@ -573,11 +573,21 @@
         <span class="k">return</span> <span class="n">report_str</span></div>
 
     <span class="k">def</span> <span class="nf">_write_summary</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">summary</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="n">statistics</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data_issues</span><span class="o">.</span><span class="n">get_info</span><span class="p">(</span><span class="s2">&quot;statistics&quot;</span><span class="p">)</span>
+        <span class="n">num_examples</span> <span class="o">=</span> <span class="n">statistics</span><span class="p">[</span><span class="s2">&quot;num_examples&quot;</span><span class="p">]</span>
+        <span class="n">num_classes</span> <span class="o">=</span> <span class="n">statistics</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
+            <span class="s2">&quot;num_classes&quot;</span>
+        <span class="p">)</span>  <span class="c1"># This may not be required for all types of datasets  in the future (e.g. unlabeled/regression)</span>
+
+        <span class="n">dataset_information</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;Dataset Information: num_examples: </span><span class="si">{</span><span class="n">num_examples</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="k">if</span> <span class="n">num_classes</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">dataset_information</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot;, num_classes: </span><span class="si">{</span><span class="n">num_classes</span><span class="si">}</span><span class="s2">&quot;</span>
         <span class="k">return</span> <span class="p">(</span>
             <span class="s2">&quot;Here is a summary of the different kinds of issues found in the data:</span><span class="se">\n\n</span><span class="s2">&quot;</span>
             <span class="o">+</span> <span class="n">summary</span><span class="o">.</span><span class="n">to_string</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
             <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n\n</span><span class="s2">&quot;</span>
-            <span class="o">+</span> <span class="s2">&quot;(Note: A lower score indicates a more severe issue across all examples in the dataset.)</span><span class="se">\n\n\n</span><span class="s2">&quot;</span>
+            <span class="o">+</span> <span class="s2">&quot;(Note: A lower score indicates a more severe issue across all examples in the dataset.)</span><span class="se">\n\n</span><span class="s2">&quot;</span>
+            <span class="o">+</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">dataset_information</span><span class="si">}</span><span class="se">\n\n\n</span><span class="s2">&quot;</span>
         <span class="p">)</span></div>
 </pre></div> 
         </article>
