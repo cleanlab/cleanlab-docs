@@ -213,6 +213,7 @@
 </li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../../../../cleanlab/datalab/index.html">datalab</a><input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" role="switch" type="checkbox"/><label for="toctree-checkbox-3"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l2 has-children"><a class="reference internal" href="../../../../cleanlab/datalab/guide/index.html">Datalab guides</a><input class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" role="switch" type="checkbox"/><label for="toctree-checkbox-4"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../cleanlab/datalab/guide/issue_type_description.html">Datalab issue types</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../cleanlab/datalab/guide/custom_issue_manager.html">Creating Your Own Issues Manager</a></li>
 </ul>
 </li>
@@ -527,7 +528,9 @@
     <span class="p">):</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">datalab</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">cl</span> <span class="o">=</span> <span class="n">CleanLearning</span><span class="p">(</span><span class="o">**</span><span class="p">(</span><span class="n">clean_learning_kwargs</span> <span class="ow">or</span> <span class="p">{}))</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">health_summary_parameters</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="n">health_summary_parameters</span> <span class="ow">or</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">health_summary_parameters</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="n">health_summary_parameters</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span> <span class="k">if</span> <span class="n">health_summary_parameters</span> <span class="k">else</span> <span class="p">{}</span>
+        <span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_reset</span><span class="p">()</span>
 
     <span class="nd">@staticmethod</span>
@@ -562,12 +565,12 @@
             <span class="n">statistics_dict</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">datalab</span><span class="o">.</span><span class="n">get_info</span><span class="p">(</span><span class="s2">&quot;statistics&quot;</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">health_summary_parameters</span> <span class="o">=</span> <span class="p">{</span>
                 <span class="s2">&quot;labels&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">datalab</span><span class="o">.</span><span class="n">_labels</span><span class="p">,</span>
-                <span class="s2">&quot;asymmetric&quot;</span><span class="p">:</span> <span class="n">statistics_dict</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;asymmetric&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
                 <span class="s2">&quot;class_names&quot;</span><span class="p">:</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">datalab</span><span class="o">.</span><span class="n">_label_map</span><span class="o">.</span><span class="n">values</span><span class="p">()),</span>
                 <span class="s2">&quot;num_examples&quot;</span><span class="p">:</span> <span class="n">statistics_dict</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;num_examples&quot;</span><span class="p">),</span>
                 <span class="s2">&quot;joint&quot;</span><span class="p">:</span> <span class="n">statistics_dict</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;joint&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
                 <span class="s2">&quot;confident_joint&quot;</span><span class="p">:</span> <span class="n">statistics_dict</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;confident_joint&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
                 <span class="s2">&quot;multi_label&quot;</span><span class="p">:</span> <span class="n">statistics_dict</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;multi_label&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
+                <span class="s2">&quot;asymmetric&quot;</span><span class="p">:</span> <span class="n">statistics_dict</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;asymmetric&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
                 <span class="s2">&quot;verbose&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
             <span class="p">}</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">health_summary_parameters</span> <span class="o">=</span> <span class="p">{</span>
@@ -577,7 +580,6 @@
 <div class="viewcode-block" id="LabelIssueManager.find_issues"><a class="viewcode-back" href="../../../../cleanlab/datalab/issue_manager/label.html#cleanlab.datalab.issue_manager.label.LabelIssueManager.find_issues">[docs]</a>    <span class="k">def</span> <span class="nf">find_issues</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">pred_probs</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
-        <span class="n">health_summary_kwargs</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">health_summary_parameters</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s2">&quot;pred_probs&quot;</span><span class="p">:</span> <span class="n">pred_probs</span><span class="p">})</span>
@@ -589,9 +591,7 @@
         <span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">issues</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;label_quality&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">issue_score_key</span><span class="p">},</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
-        <span class="n">summary_dict</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_health_summary</span><span class="p">(</span>
-            <span class="n">pred_probs</span><span class="o">=</span><span class="n">pred_probs</span><span class="p">,</span> <span class="o">**</span><span class="p">(</span><span class="n">health_summary_kwargs</span> <span class="ow">or</span> <span class="p">{})</span>
-        <span class="p">)</span>
+        <span class="n">summary_dict</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_health_summary</span><span class="p">(</span><span class="n">pred_probs</span><span class="o">=</span><span class="n">pred_probs</span><span class="p">)</span>
 
         <span class="c1"># Get a summarized dataframe of the label issues</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">summary</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">make_summary</span><span class="p">(</span><span class="n">score</span><span class="o">=</span><span class="n">summary_dict</span><span class="p">[</span><span class="s2">&quot;overall_label_health_score&quot;</span><span class="p">])</span>
@@ -602,18 +602,18 @@
         <span class="c1"># Drop columns from issues that are in the info</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">issues</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">issues</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;given_label&quot;</span><span class="p">,</span> <span class="s2">&quot;predicted_label&quot;</span><span class="p">])</span></div>
 
-<div class="viewcode-block" id="LabelIssueManager.get_health_summary"><a class="viewcode-back" href="../../../../cleanlab/datalab/issue_manager/label.html#cleanlab.datalab.issue_manager.label.LabelIssueManager.get_health_summary">[docs]</a>    <span class="k">def</span> <span class="nf">get_health_summary</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pred_probs</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+<div class="viewcode-block" id="LabelIssueManager.get_health_summary"><a class="viewcode-back" href="../../../../cleanlab/datalab/issue_manager/label.html#cleanlab.datalab.issue_manager.label.LabelIssueManager.get_health_summary">[docs]</a>    <span class="k">def</span> <span class="nf">get_health_summary</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pred_probs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns a short summary of the health of this Lab.&quot;&quot;&quot;</span>
         <span class="kn">from</span> <span class="nn">cleanlab.dataset</span> <span class="kn">import</span> <span class="n">health_summary</span>
 
         <span class="c1"># Validate input</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_validate_pred_probs</span><span class="p">(</span><span class="n">pred_probs</span><span class="p">)</span>
 
-        <span class="n">summary_kwargs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_summary_parameters</span><span class="p">(</span><span class="n">pred_probs</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="n">summary_kwargs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_summary_parameters</span><span class="p">(</span><span class="n">pred_probs</span><span class="p">)</span>
         <span class="n">summary</span> <span class="o">=</span> <span class="n">health_summary</span><span class="p">(</span><span class="o">**</span><span class="n">summary_kwargs</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">summary</span></div>
 
-    <span class="k">def</span> <span class="nf">_get_summary_parameters</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pred_probs</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="s2">&quot;str&quot;</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+    <span class="k">def</span> <span class="nf">_get_summary_parameters</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pred_probs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="s2">&quot;str&quot;</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Collects a set of input parameters for the health summary function based on</span>
 <span class="sd">        any info available in the datalab.</span>
 
@@ -650,9 +650,10 @@
             <span class="c1"># Start with the health_summary_parameters, then override with kwargs</span>
             <span class="k">if</span> <span class="n">k</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">health_summary_parameters</span><span class="p">:</span>
                 <span class="n">summary_parameters</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">health_summary_parameters</span><span class="p">[</span><span class="n">k</span><span class="p">]</span>
-            <span class="k">if</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="p">:</span>
-                <span class="n">summary_parameters</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">kwargs</span><span class="p">[</span><span class="n">k</span><span class="p">]</span>
-        <span class="k">return</span> <span class="n">summary_parameters</span>
+
+        <span class="k">return</span> <span class="p">(</span>
+            <span class="n">summary_parameters</span>  <span class="c1"># will be called in `dataset.health_summary(**summary_parameters)`</span>
+        <span class="p">)</span>
 
 <div class="viewcode-block" id="LabelIssueManager.collect_info"><a class="viewcode-back" href="../../../../cleanlab/datalab/issue_manager/label.html#cleanlab.datalab.issue_manager.label.LabelIssueManager.collect_info">[docs]</a>    <span class="k">def</span> <span class="nf">collect_info</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">issues</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">summary_dict</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
         <span class="n">issues_info</span> <span class="o">=</span> <span class="p">{</span>

@@ -3,10 +3,10 @@
   <head><meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
     <meta name="color-scheme" content="light dark"><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
-<link rel="index" title="Index" href="../../../genindex.html" /><link rel="search" title="Search" href="../../../search.html" /><link rel="next" title="datalab" href="../datalab.html" /><link rel="prev" title="Datalab issue types" href="issue_type_description.html" />
+<link rel="index" title="Index" href="../../../genindex.html" /><link rel="search" title="Search" href="../../../search.html" /><link rel="next" title="Creating Your Own Issues Manager" href="custom_issue_manager.html" /><link rel="prev" title="Datalab guides" href="index.html" />
 
     <link rel="shortcut icon" href="https://raw.githubusercontent.com/cleanlab/assets/a4483476d449f2f05a4c7cde329e72358099cc07/cleanlab/cleanlab_favicon.svg"/><meta name="generator" content="sphinx-5.1.1, furo 2022.06.21"/>
-        <title>Creating Your Own Issues Manager - cleanlab</title>
+        <title>Datalab issue types - cleanlab</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../../../_static/styles/furo.css?digest=40978830699223671f4072448e654b5958f38b89" />
     <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css" />
@@ -214,8 +214,8 @@
 </li>
 <li class="toctree-l1 current has-children"><a class="reference internal" href="../index.html">datalab</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" role="switch" type="checkbox"/><label for="toctree-checkbox-3"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="current">
 <li class="toctree-l2 current has-children"><a class="reference internal" href="index.html">Datalab guides</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" role="switch" type="checkbox"/><label for="toctree-checkbox-4"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="current">
-<li class="toctree-l3"><a class="reference internal" href="issue_type_description.html">Datalab issue types</a></li>
-<li class="toctree-l3 current current-page"><a class="current reference internal" href="#">Creating Your Own Issues Manager</a></li>
+<li class="toctree-l3 current current-page"><a class="current reference internal" href="#">Datalab issue types</a></li>
+<li class="toctree-l3"><a class="reference internal" href="custom_issue_manager.html">Creating Your Own Issues Manager</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../datalab.html">datalab</a></li>
@@ -459,212 +459,183 @@
 
 <!-- End of Version Warning Banner -->
 
- <section id="creating-your-own-issues-manager">
-<span id="issue-manager-creating-your-own"></span><h1>Creating Your Own Issues Manager<a class="headerlink" href="#creating-your-own-issues-manager" title="Permalink to this heading">#</a></h1>
-<p>This guide walks through the process of creating creating your own
-<a class="reference internal" href="../issue_manager/issue_manager.html#cleanlab.datalab.issue_manager.issue_manager.IssueManager" title="cleanlab.datalab.issue_manager.issue_manager.IssueManager"><code class="xref py py-class docutils literal notranslate"><span class="pre">IssueManager</span></code></a>
-to detect a custom-defined type of issue alongside the pre-defined issue types in
-<a class="reference internal" href="../datalab.html#cleanlab.datalab.datalab.Datalab" title="cleanlab.datalab.datalab.Datalab"><code class="xref py py-class docutils literal notranslate"><span class="pre">Datalab</span></code></a>.</p>
-<div class="admonition seealso">
-<p class="admonition-title">See also</p>
-<ul>
-<li><dl>
-<dt><a class="reference internal" href="../factory.html#cleanlab.datalab.factory.register" title="cleanlab.datalab.factory.register"><code class="xref py py-meth docutils literal notranslate"><span class="pre">register</span></code></a>:</dt><dd><p>You can either use this function at runtime to register a new issue manager:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">cleanlab.datalab.factory</span> <span class="kn">import</span> <span class="n">register</span>
-<span class="n">register</span><span class="p">(</span><span class="n">MyIssueManager</span><span class="p">)</span>
+ <section id="datalab-issue-types">
+<h1>Datalab issue types<a class="headerlink" href="#datalab-issue-types" title="Permalink to this heading">#</a></h1>
+<section id="types-of-issues-datalab-can-detect">
+<h2>Types of issues Datalab can detect<a class="headerlink" href="#types-of-issues-datalab-can-detect" title="Permalink to this heading">#</a></h2>
+<p>This page describes the various types of issues that Datalab can detect in a dataset.
+For each type of issue, we explain: what it says about your data if detected, why this matters, and what parameters you can optionally specify to control the detection of this issue.</p>
+<section id="estimates-for-each-issue-type">
+<h3>Estimates for Each Issue Type<a class="headerlink" href="#estimates-for-each-issue-type" title="Permalink to this heading">#</a></h3>
+<p>Datalab produces three estimates for <strong>each</strong> type of issue (called say <cite>&lt;ISSUE_NAME&gt;</cite> here):</p>
+<ol class="arabic simple">
+<li><p>A numeric quality score <cite>&lt;ISSUE_NAME&gt;_score</cite> (between 0 and 1) estimating how severe this issue is exhibited in each example from a dataset. Examples with higher scores are less likely to suffer from this issue. Access these via: the <a class="reference internal" href="../datalab.html#cleanlab.datalab.datalab.Datalab.issues" title="cleanlab.datalab.datalab.Datalab.issues"><code class="xref py py-attr docutils literal notranslate"><span class="pre">Datalab.issues</span></code></a> attribute or the method <a class="reference internal" href="../datalab.html#cleanlab.datalab.datalab.Datalab.get_issues" title="cleanlab.datalab.datalab.Datalab.get_issues"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Datalab.get_issues(&lt;ISSUE_NAME&gt;)</span></code></a>.</p></li>
+<li><p>A Boolean <cite>is_&lt;ISSUE_NAME&gt;_issue</cite> flag for each example from a dataset. Examples where this has value  <cite>True</cite> are those estimated to exhibit this issue. Access these via: the <a class="reference internal" href="../datalab.html#cleanlab.datalab.datalab.Datalab.issues" title="cleanlab.datalab.datalab.Datalab.issues"><code class="xref py py-attr docutils literal notranslate"><span class="pre">Datalab.issues</span></code></a> attribute or the method <a class="reference internal" href="../datalab.html#cleanlab.datalab.datalab.Datalab.get_issues" title="cleanlab.datalab.datalab.Datalab.get_issues"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Datalab.get_issues(&lt;ISSUE_NAME&gt;)</span></code></a>.</p></li>
+<li><p>An overall dataset quality score (between 0 and 1), quantifying how severe this issue is overall across the entire dataset. Datasets with higher scores do not exhibit this issue as badly overall. Access these via: the <a class="reference internal" href="../datalab.html#cleanlab.datalab.datalab.Datalab.issue_summary" title="cleanlab.datalab.datalab.Datalab.issue_summary"><code class="xref py py-attr docutils literal notranslate"><span class="pre">Datalab.issue_summary</span></code></a> attribute.</p></li>
+</ol>
+<section id="example-pseudo-code">
+<h4>Example (pseudo-code)<a class="headerlink" href="#example-pseudo-code" title="Permalink to this heading">#</a></h4>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">issue_name</span> <span class="o">=</span> <span class="s2">&quot;my_issue&quot;</span>
+<span class="n">issue_score</span> <span class="o">=</span> <span class="s2">&quot;my_issue_score&quot;</span>
+<span class="n">is_issue</span> <span class="o">=</span> <span class="s2">&quot;is_my_issue_issue&quot;</span>
 </pre></div>
 </div>
-<p>or add as a decorator to the class definition:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="nd">@register</span>
-<span class="k">class</span> <span class="nc">MyIssueManager</span><span class="p">(</span><span class="n">IssueManager</span><span class="p">):</span>
-    <span class="o">...</span>
-</pre></div>
-</div>
-</dd>
-</dl>
-</li>
-</ul>
-</div>
-<section id="prerequisites">
-<h2>Prerequisites<a class="headerlink" href="#prerequisites" title="Permalink to this heading">#</a></h2>
-<p>As a starting point for this guide, we’ll import the necessary things for the next section and create a dummy dataset.</p>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>This package has additional dependencies that are not required for the core <code class="docutils literal notranslate"><span class="pre">cleanlab</span></code> package. To install them, run:</p>
-<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>pip<span class="w"> </span>install<span class="w"> </span>cleanlab<span class="o">[</span>datalab<span class="o">]</span>
-</pre></div>
-</div>
-<p>For the developmental version of the package, install from source:</p>
-<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>pip<span class="w"> </span>install<span class="w"> </span>git+https://github.com/cleanlab/cleanlab.git#egg<span class="o">=</span>cleanlab<span class="o">[</span>datalab<span class="o">]</span>
-</pre></div>
-</div>
-</div>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
-<span class="kn">from</span> <span class="nn">cleanlab</span> <span class="kn">import</span> <span class="n">IssueManager</span>
-
-<span class="c1"># Create a dummy dataset</span>
-<span class="n">N</span> <span class="o">=</span> <span class="mi">20</span>
-<span class="n">data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
-    <span class="p">{</span>
-        <span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="p">[</span><span class="sa">f</span><span class="s2">&quot;example </span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">&quot;</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">N</span><span class="p">)],</span>
-        <span class="s2">&quot;label&quot;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">N</span><span class="p">),</span>
-    <span class="p">},</span>
-<span class="p">)</span>
-</pre></div>
-</div>
+<p>Datalab estimates various issues based on the four inputs below.
+Each input is optional, if you do not provide it, Datalab will skip checks for those types of issues that require this input.</p>
+<ol class="arabic simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">label_name</span></code> - a field in the dataset that the stores the annotated class for each example in a multi-class classification dataset.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">pred_probs</span></code> - predicted class probabilities output by your trained model for each example in the dataset (these should be out-of-sample, eg. produced via cross-validation).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">features</span></code> - numeric vector representations of the features for each example in the dataset. These may be embeddings from a (pre)trained model, or just a numerically-transformed version of the original data features.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">knn_graph</span></code> - K nearest neighbor graph represented as a sparse matrix of dissimilarity values between examples in the dataset. If both <cite>knn_graph</cite> and <cite>features</cite> are provided, the <cite>knn_graph</cite> takes precedence, and if only <cite>features</cite> is provided, then a <cite>knn_graph</cite> is internally constructed based on the (either euclidean or cosine) distance between different examples’ features.</p></li>
+</ol>
 </section>
-<section id="implementing-issuemanagers">
-<h2>Implementing IssueManagers<a class="headerlink" href="#implementing-issuemanagers" title="Permalink to this heading">#</a></h2>
-<section id="basic-issue-check">
-<span id="basic-issue-manager"></span><h3>Basic Issue Check<a class="headerlink" href="#basic-issue-check" title="Permalink to this heading">#</a></h3>
-<p>To create a basic issue manager, inherit from the
-<a class="reference internal" href="../issue_manager/issue_manager.html#cleanlab.datalab.issue_manager.issue_manager.IssueManager" title="cleanlab.datalab.issue_manager.issue_manager.IssueManager"><code class="xref py py-class docutils literal notranslate"><span class="pre">IssueManager</span></code></a> class,
-assign a name to the class as the class-variable, <cite>issue_name</cite>, and implement the
-<a class="reference internal" href="../issue_manager/issue_manager.html#cleanlab.datalab.issue_manager.issue_manager.IssueManager.find_issues" title="cleanlab.datalab.issue_manager.issue_manager.IssueManager.find_issues"><code class="xref py py-meth docutils literal notranslate"><span class="pre">find_issues</span></code></a> method.</p>
-<p>The <a class="reference internal" href="../issue_manager/issue_manager.html#cleanlab.datalab.issue_manager.issue_manager.IssueManager.find_issues" title="cleanlab.datalab.issue_manager.issue_manager.IssueManager.find_issues"><code class="xref py py-meth docutils literal notranslate"><span class="pre">find_issues</span></code></a>
-method should mark each example in the dataset as an issue or not with a boolean array.
-It should also provide a score for each example in the dataset that quantifies the quality of the example
-with regards to the issue.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Basic</span><span class="p">(</span><span class="n">IssueManager</span><span class="p">):</span>
-    <span class="c1"># Assign a name to the issue</span>
-    <span class="n">issue_name</span> <span class="o">=</span> <span class="s2">&quot;basic&quot;</span>
-    <span class="k">def</span> <span class="nf">find_issues</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="c1"># Compute scores for each example</span>
-        <span class="n">scores</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">rand</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">datalab</span><span class="o">.</span><span class="n">data</span><span class="p">))</span>
-
-        <span class="c1"># Construct a dataframe where examples are marked for issues</span>
-        <span class="c1"># and the score for each example is included.</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">issues</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
-            <span class="p">{</span>
-                <span class="sa">f</span><span class="s2">&quot;is_</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">issue_name</span><span class="si">}</span><span class="s2">_issue&quot;</span> <span class="p">:</span> <span class="n">scores</span> <span class="o">&lt;</span> <span class="mf">0.1</span><span class="p">,</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">issue_score_key</span> <span class="p">:</span> <span class="n">scores</span><span class="p">,</span>
-            <span class="p">},</span>
-        <span class="p">)</span>
-
-        <span class="c1"># Score the dataset as a whole based on this issue type</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">summary</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_summary</span><span class="p">(</span><span class="n">score</span> <span class="o">=</span> <span class="n">scores</span><span class="o">.</span><span class="n">mean</span><span class="p">())</span>
-</pre></div>
-</div>
 </section>
-<section id="intermediate-issue-check">
-<span id="intermediate-issue-manager"></span><h3>Intermediate Issue Check<a class="headerlink" href="#intermediate-issue-check" title="Permalink to this heading">#</a></h3>
-<p>To create an intermediate issue:</p>
+<section id="label-issue">
+<h3>Label Issue<a class="headerlink" href="#label-issue" title="Permalink to this heading">#</a></h3>
+<p>Examples whose given label is estimated to be potentially incorrect (e.g. due to annotation error) are flagged as having label issues.
+Datalab estimates which examples appear mislabeled as well as a numeric label quality score for each, which quantifies the likelihood that an example is correctly labeled.</p>
+<p>For now, Datalab can only detect label issues in a multi-class classification dataset.
+The cleanlab library has alternative methods you can us to detect label issues in other types of datasets (multi-label, multi-annotator, token classification, etc.).</p>
+<p>Label issues are calculated based on provided <cite>pred_probs</cite> from a trained model. If you do not provide this argument, this type of issue will not be considered.
+For the most accurate results, provide out-of-sample <cite>pred_probs</cite> which can be obtained for a dataset via <a class="reference external" href="https://docs.cleanlab.ai/stable/tutorials/pred_probs_cross_val.html">cross-validation</a>.</p>
+<p>Having mislabeled examples in your dataset may hamper the performance of supervised learning models you train on this data.
+For evaluating models or performing other types of data analytics, mislabeled examples may lead you to draw incorrect conclusions.
+To handle mislabeled examples, you can either filter out the data with label issues or try to correct their labels.</p>
+</section>
+<section id="outlier-issue">
+<h3>Outlier Issue<a class="headerlink" href="#outlier-issue" title="Permalink to this heading">#</a></h3>
+<p>Examples that are very different from the rest of the dataset (i.e. potentially out-of-distribution or rare/anomalous instances).</p>
+<p>Outlier issues are calculated based on provided <cite>features</cite> , <cite>knn_graph</cite> , or <cite>pred_probs</cite>.
+If you do not provide one of these arguments, this type of issue will not be considered.
+This article describes how outlier issues are detected in a dataset: <a class="reference external" href="https://cleanlab.ai/blog/outlier-detection/">https://cleanlab.ai/blog/outlier-detection/</a>.</p>
+<p>When based on <cite>features</cite> or <cite>knn_graph</cite>, the outlier quality of each example is scored inversely proportional to its distance to its K nearest neighbors in the dataset.</p>
+<p>When based on <cite>pred_probs</cite>, the outlier quality of each example is scored inversely proportional to the uncertainty in its prediction.</p>
+<p>Modeling data with outliers may have unexpected consequences.
+Closely inspect them and consider removing some outliers that may be negatively affecting your models.</p>
+</section>
+<section id="near-duplicate-issue">
+<h3>(Near) Duplicate Issue<a class="headerlink" href="#near-duplicate-issue" title="Permalink to this heading">#</a></h3>
+<p>A (near) duplicate issue refers to two or more examples in a dataset that are extremely similar to each other, relative to the rest of the dataset.
+The examples flagged with this issue may be exactly duplicated, or lie atypically close together when represented as vectors (i.e. feature embeddings).
+Near duplicated examples may record the same information with different:</p>
 <ul class="simple">
-<li><p>Perform the same steps as in the <a class="reference internal" href="#basic-issue-manager"><span class="std std-ref">basic issue check</span></a> section.</p></li>
-<li><p>Populate the <cite>info</cite> attribute with a dictionary of information about the identified issues.</p></li>
+<li><p>Abbreviations, misspellings, typos, formatting, etc. in text data.</p></li>
+<li><p>Compression formats, resolutions, or sampling rates in image, video, and audio data.</p></li>
+<li><p>Minor variations which naturally occur in many types of data (e.g. translated versions of an image).</p></li>
 </ul>
-<p>The information can be included in a report generated by <a class="reference internal" href="../datalab.html#cleanlab.datalab.datalab.Datalab" title="cleanlab.datalab.datalab.Datalab"><code class="xref py py-class docutils literal notranslate"><span class="pre">Datalab</span></code></a>,
-if you add any of the keys to the <cite>verbosity_levels</cite> class-attribute.
-Optionally, you can also add a description of the type of issue this issue manager handles to the <cite>description</cite> class-attribute.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Intermediate</span><span class="p">(</span><span class="n">IssueManager</span><span class="p">):</span>
-    <span class="n">issue_name</span> <span class="o">=</span> <span class="s2">&quot;intermediate&quot;</span>
-    <span class="c1"># Add a dictionary of information to include in the report</span>
-    <span class="n">verbosity_levels</span> <span class="o">=</span> <span class="p">{</span>
-        <span class="mi">0</span><span class="p">:</span> <span class="p">[],</span>
-        <span class="mi">1</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;std&quot;</span><span class="p">],</span>
-        <span class="mi">2</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;raw_scores&quot;</span><span class="p">],</span>
-    <span class="p">}</span>
-    <span class="c1"># Add a description of the issue</span>
-    <span class="n">description</span> <span class="o">=</span> <span class="s2">&quot;Intermediate issues are a bit more involved than basic issues.&quot;</span>
-    <span class="k">def</span> <span class="nf">find_issues</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">intermediate_arg</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">N</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">datalab</span><span class="o">.</span><span class="n">data</span><span class="p">)</span>
-        <span class="n">raw_scores</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">rand</span><span class="p">(</span><span class="n">N</span><span class="p">)</span>
-        <span class="n">std</span> <span class="o">=</span> <span class="n">raw_scores</span><span class="o">.</span><span class="n">std</span><span class="p">()</span>
-        <span class="n">threshold</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">raw_scores</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span> <span class="o">-</span> <span class="n">std</span><span class="p">)</span>
-        <span class="n">sin_filter</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">intermediate_arg</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">N</span><span class="p">)</span> <span class="o">/</span> <span class="n">N</span><span class="p">)</span>
-        <span class="n">kernel</span> <span class="o">=</span> <span class="n">sin_filter</span> <span class="o">**</span> <span class="mi">2</span>
-        <span class="n">scores</span> <span class="o">=</span> <span class="n">kernel</span> <span class="o">*</span> <span class="n">raw_scores</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">issues</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
-            <span class="p">{</span>
-                <span class="sa">f</span><span class="s2">&quot;is_</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">issue_name</span><span class="si">}</span><span class="s2">_issue&quot;</span> <span class="p">:</span> <span class="n">scores</span> <span class="o">&lt;</span> <span class="n">threshold</span><span class="p">,</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">issue_score_key</span> <span class="p">:</span> <span class="n">scores</span><span class="p">,</span>
-            <span class="p">},</span>
-        <span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">summary</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_summary</span><span class="p">(</span><span class="n">score</span> <span class="o">=</span> <span class="n">scores</span><span class="o">.</span><span class="n">mean</span><span class="p">())</span>
-
-        <span class="c1"># Useful information that will be available in the Datalab instance</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">info</span> <span class="o">=</span> <span class="p">{</span>
-            <span class="s2">&quot;std&quot;</span><span class="p">:</span> <span class="n">std</span><span class="p">,</span>
-            <span class="s2">&quot;raw_scores&quot;</span><span class="p">:</span> <span class="n">raw_scores</span><span class="p">,</span>
-            <span class="s2">&quot;kernel&quot;</span><span class="p">:</span> <span class="n">kernel</span><span class="p">,</span>
-        <span class="p">}</span>
+<p>Near Duplicate issues are calculated based on provided <cite>features</cite> or <cite>knn_graph</cite>.
+If you do not provide one of these arguments, this type of issue will not be considered.</p>
+<p>Datalab defines near duplicates as those examples whose distance to their nearest neighbor (in the space of provided <cite>features</cite>) in the dataset is less than <cite>c * D</cite>, where <cite>0 &lt; c &lt; 1</cite> is a fractional constant parameter, and <cite>D</cite> is the median (over the full dataset) of such distances between each example and its nearest neighbor.
+Scoring the numeric quality of an example in terms of the near duplicate issue type is done proportionally to its distance to its nearest neighbor.</p>
+<p>Including near-duplicate examples in a dataset may negatively impact a ML model’s generalization performance and lead to overfitting.
+In particular, it is questionable to include examples in a test dataset which are (nearly) duplicated in the corresponding training dataset.
+More generally, examples which happen to be duplicated can affect the final modeling results much more than other examples — so you should at least be aware of their presence.</p>
+</section>
+<section id="non-iid-issue">
+<h3>Non-IID Issue<a class="headerlink" href="#non-iid-issue" title="Permalink to this heading">#</a></h3>
+<p>Whether the dataset exhibits statistically significant violations of the IID assumption like:  changepoints or shift, drift, autocorrelation, etc. The specific form of violation considered is whether the examples are ordered such that almost adjacent examples tend to have more similar feature values.</p>
+<p>The Non-IID issue is detected based on provided <cite>features</cite> or <cite>knn_graph</cite>. If you do not provide one of these arguments, this type of issue will not be considered.</p>
+<p>Mathematically, the <strong>overall</strong> Non-IID score for the dataset is defined as the p-value of a statistical test for whether the distribution of <em>index-gap</em> values differs between group A vs. group B defined as follows. For a pair of examples in the dataset <cite>x1, x2</cite>, we define their <em>index-gap</em> as the distance between the indices of these examples in the ordering of the data (e.g. if <cite>x1</cite> is the 10th example and <cite>x2</cite> is the 100th example in the dataset, their index-gap is 90). We construct group A from pairs of examples which are amongst the K nearest neighbors of each other, where neighbors are defined based on the provided <cite>knn_graph</cite> or via distances in the space of the provided vector <cite>features</cite> . Group B is constructed from random pairs of examples in the dataset.</p>
+<p>The Non-IID quality score for each example <cite>x</cite> is defined via a similarly computed p-value but with Group A constructed from the K nearest neighbors of <cite>x</cite> and Group B constructed from  random examples from the dataset paired with <cite>x</cite>.</p>
+<p>The assumption that examples in a dataset are Independent and Identically Distributed (IID) is  fundamental to most proper modeling.  Detecting all possible violations of the IID assumption is statistically impossible. This issue type only considers specific forms of violation where examples that tend to be closer together in the dataset ordering also tend to have more similar feature values. This includes scenarios where:</p>
+<ul class="simple">
+<li><p>The underlying distribution from which examples stem is evolving over time (not identically distributed).</p></li>
+<li><p>An example can influence the values of future examples in the dataset (not independent).</p></li>
+</ul>
+<p>For datasets with low non-IID score, you should consider why your data are not IID and act accordingly. For example, if the data distribution is drifting over time, consider employing a time-based train/test split instead of a random partition.  Note that shuffling the data ahead of time will ensure a good non-IID score, but this is not always a fix to the underlying problem (e.g. future deployment data may stem from a different distribution, or you may overlook the fact that examples influence each other). We thus recommend <strong>not</strong> shuffling your data to be able to diagnose this issue if it exists.</p>
+</section>
+</section>
+<section id="optional-issue-parameters">
+<h2>Optional Issue Parameters<a class="headerlink" href="#optional-issue-parameters" title="Permalink to this heading">#</a></h2>
+<p>Here is the dict of possible (<strong>optional</strong>) parameter values that can be specified via the argument <cite>issue_types</cite> to <a class="reference internal" href="../datalab.html#cleanlab.datalab.datalab.Datalab.find_issues" title="cleanlab.datalab.datalab.Datalab.find_issues"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Datalab.find_issues</span></code></a>.
+Optionally specify these to exert greater control over how issues are detected in your dataset.
+Appropriate defaults are used for any parameters you do not specify, so no need to specify all of these!</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">possible_issue_types</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;label&quot;</span><span class="p">:</span> <span class="n">label_kwargs</span><span class="p">,</span> <span class="s2">&quot;outlier&quot;</span><span class="p">:</span> <span class="n">outlier_kwargs</span><span class="p">,</span>
+    <span class="s2">&quot;near_duplicate&quot;</span><span class="p">:</span> <span class="n">near_duplicate_kwargs</span><span class="p">,</span> <span class="s2">&quot;non_iid&quot;</span><span class="p">:</span> <span class="n">non_iid_kwargs</span>
+<span class="p">}</span>
 </pre></div>
 </div>
-</section>
-<section id="advanced-issue-check">
-<h3>Advanced Issue Check<a class="headerlink" href="#advanced-issue-check" title="Permalink to this heading">#</a></h3>
+<p>where the possible <cite>kwargs</cite> dicts for each key are described in the sections below.</p>
+<section id="label-issue-parameters">
+<h3>Label Issue Parameters<a class="headerlink" href="#label-issue-parameters" title="Permalink to this heading">#</a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">label_kwargs</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;health_summary_parameters&quot;</span><span class="p">:</span> <span class="c1"># dict of potential keyword arguments to method `dataset.health_summary()`,</span>
+    <span class="s2">&quot;clean_learning_kwargs&quot;</span><span class="p">:</span> <span class="c1"># dict of keyword arguments to constructor `CleanLearning()` including keys like: &quot;find_label_issues_kwargs&quot; or &quot;label_quality_scores_kwargs&quot;,</span>
+    <span class="s2">&quot;thresholds&quot;</span><span class="p">:</span> <span class="c1"># `thresholds` argument to `CleanLearning.find_label_issues()`,</span>
+    <span class="s2">&quot;noise_matrix&quot;</span><span class="p">:</span> <span class="c1"># `noise_matrix` argument to `CleanLearning.find_label_issues()`,</span>
+    <span class="s2">&quot;inverse_noise_matrix&quot;</span><span class="p">:</span> <span class="c1"># `inverse_noise_matrix` argument to `CleanLearning.find_label_issues()`,</span>
+    <span class="s2">&quot;save_space&quot;</span><span class="p">:</span> <span class="c1"># `save_space` argument to `CleanLearning.find_label_issues()`,</span>
+    <span class="s2">&quot;clf_kwargs&quot;</span><span class="p">:</span> <span class="c1"># `clf_kwargs` argument to `CleanLearning.find_label_issues()`. Currently has no effect.,</span>
+    <span class="s2">&quot;validation_func&quot;</span><span class="p">:</span> <span class="c1"># `validation_func` argument to `CleanLearning.fit()`. Currently has no effect.,</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<div class="admonition attention">
+<p class="admonition-title">Attention</p>
+<p><code class="docutils literal notranslate"><span class="pre">health_summary_parameters</span></code> and <code class="docutils literal notranslate"><span class="pre">health_summary_kwargs</span></code> can work in tandem to determine the arguments to be used in the call to <a class="reference internal" href="../../dataset.html#cleanlab.dataset.health_summary" title="cleanlab.dataset.health_summary"><code class="xref py py-meth docutils literal notranslate"><span class="pre">dataset.health_summary</span></code></a>.</p>
+</div>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>WIP: This section is a work in progress.</p>
+<p>For more information, view the source code of:  <a class="reference internal" href="../issue_manager/label.html#cleanlab.datalab.issue_manager.label.LabelIssueManager" title="cleanlab.datalab.issue_manager.label.LabelIssueManager"><code class="xref py py-class docutils literal notranslate"><span class="pre">datalab.issue_manager.label.LabelIssueManager</span></code></a>.</p>
 </div>
 </section>
+<section id="outlier-issue-parameters">
+<h3>Outlier Issue Parameters<a class="headerlink" href="#outlier-issue-parameters" title="Permalink to this heading">#</a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">outlier_kwargs</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;threshold&quot;</span><span class="p">:</span> <span class="c1"># floating value between 0 and 1 that sets the sensitivity of the outlier detection algorithms, based on either features or pred_probs..</span>
+    <span class="s2">&quot;ood_kwargs&quot;</span><span class="p">:</span> <span class="c1"># dict of keyword arguments to constructor `OutOfDistribution()`{</span>
+            <span class="s2">&quot;params&quot;</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="c1"># NOTE: Each of the following keyword arguments can also be provided outside &quot;ood_kwargs&quot;</span>
+
+                    <span class="s2">&quot;knn&quot;</span><span class="p">:</span> <span class="c1"># `knn` argument to constructor `OutOfDistribution()`. Used with features,</span>
+                    <span class="s2">&quot;k&quot;</span><span class="p">:</span> <span class="c1"># `k` argument to constructor `OutOfDistribution()`. Used with features,</span>
+                    <span class="s2">&quot;t&quot;</span><span class="p">:</span> <span class="c1"># `t` argument to constructor `OutOfDistribution()`. Used with features,</span>
+                    <span class="s2">&quot;adjust_pred_probs&quot;</span><span class="p">:</span> <span class="c1"># `adjust_pred_probs` argument to constructor `OutOfDistribution()`. Used with pred_probs,</span>
+                    <span class="s2">&quot;method&quot;</span><span class="p">:</span> <span class="c1"># `method` argument to constructor `OutOfDistribution()`. Used with pred_probs,</span>
+                    <span class="s2">&quot;confident_thresholds&quot;</span><span class="p">:</span> <span class="c1"># `confident_thresholds` argument to constructor `OutOfDistribution()`. Used with pred_probs,</span>
+            <span class="p">},</span>
+    <span class="p">},</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>For more information, view the source code of:  <a class="reference internal" href="../issue_manager/outlier.html#cleanlab.datalab.issue_manager.outlier.OutlierIssueManager" title="cleanlab.datalab.issue_manager.outlier.OutlierIssueManager"><code class="xref py py-class docutils literal notranslate"><span class="pre">datalab.issue_manager.outlier.OutlierIssueManager</span></code></a>.</p>
+</div>
 </section>
-<section id="use-with-datalab">
-<h2>Use with Datalab<a class="headerlink" href="#use-with-datalab" title="Permalink to this heading">#</a></h2>
-<p>We can create a
-<a class="reference internal" href="../datalab.html#cleanlab.datalab.datalab.Datalab" title="cleanlab.datalab.datalab.Datalab"><code class="xref py py-class docutils literal notranslate"><span class="pre">Datalab</span></code></a>
-instance and run issue checks with the custom issue managers we created like so:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">cleanlab.datalab.factory</span> <span class="kn">import</span> <span class="n">register</span>
-<span class="kn">from</span> <span class="nn">cleanlab</span> <span class="kn">import</span> <span class="n">Datalab</span>
-
-
-<span class="c1"># Register the issue manager</span>
-<span class="k">for</span> <span class="n">issue_manager</span> <span class="ow">in</span> <span class="p">[</span><span class="n">Basic</span><span class="p">,</span> <span class="n">Intermediate</span><span class="p">]:</span>
-    <span class="n">register</span><span class="p">(</span><span class="n">issue_manager</span><span class="p">)</span>
-
-<span class="c1"># Instantiate a datalab instance</span>
-<span class="n">datalab</span> <span class="o">=</span> <span class="n">Datalab</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">label_name</span><span class="o">=</span><span class="s2">&quot;label&quot;</span><span class="p">)</span>
-
-<span class="c1"># Run the issue check</span>
-<span class="n">issue_types</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;basic&quot;</span><span class="p">:</span> <span class="p">{},</span> <span class="s2">&quot;intermediate&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;intermediate_arg&quot;</span><span class="p">:</span> <span class="mi">2</span><span class="p">}}</span>
-<span class="n">datalab</span><span class="o">.</span><span class="n">find_issues</span><span class="p">(</span><span class="n">issue_types</span><span class="o">=</span><span class="n">issue_types</span><span class="p">)</span>
-
-<span class="c1"># Print report</span>
-<span class="n">datalab</span><span class="o">.</span><span class="n">report</span><span class="p">(</span><span class="n">verbosity</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<section id="duplicate-issue-parameters">
+<h3>Duplicate Issue Parameters<a class="headerlink" href="#duplicate-issue-parameters" title="Permalink to this heading">#</a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">near_duplicate_kwargs</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;metric&quot;</span><span class="p">:</span> <span class="c1"># string representing the distance metric used in nearest neighbors search (passed as argument to `NearestNeighbors`), if necessary,</span>
+    <span class="s2">&quot;k&quot;</span><span class="p">:</span> <span class="c1"># integer representing the number of nearest neighbors for nearest neighbors search (passed as argument to `NearestNeighbors`), if necessary,</span>
+    <span class="s2">&quot;threshold&quot;</span><span class="p">:</span> <span class="c1"># `threshold` argument to constructor of `NearDuplicateIssueManager()`. Non-negative floating value that determines the maximum distance between two examples to be considered outliers, relative to the median distance to the nearest neighbors,</span>
+<span class="p">}</span>
 </pre></div>
 </div>
-<p>The report will look something like this:</p>
-<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>Here is a summary of the different kinds of issues found in the data:
-
-  issue_type     score  num_issues
-       basic  0.477762           2
-intermediate  0.286455           0
-
-(Note: A lower score indicates a more severe issue across all examples in the dataset.)
-
-
-------------------------------------------- basic issues -------------------------------------------
-
-Number of examples with this issue: 2
-Overall dataset quality in terms of this issue: : 0.4778
-
-Examples representing most severe instances of this issue:
-    is_basic_issue  basic_score
-13            True     0.003042
-8             True     0.058117
-11           False     0.121908
-15           False     0.169312
-17           False     0.229044
-
-
---------------------------------------- intermediate issues ----------------------------------------
-
-About this issue:
-    Intermediate issues are a bit more involved than basic issues.
-
-Number of examples with this issue: 0
-Overall dataset quality in terms of this issue: : 0.2865
-
-Examples representing most severe instances of this issue:
-    is_intermediate_issue  intermediate_score    kernel
-0                   False            0.000000       0.0
-1                   False            0.007059  0.009967
-3                   False            0.010995  0.087332
-2                   False            0.016296   0.03947
-11                  False            0.019459  0.794251
+<div class="admonition attention">
+<p class="admonition-title">Attention</p>
+<p><cite>k</cite> does not affect the results of the (near) duplicate search algorithm. It only affects the construction of the knn graph, if necessary.</p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>For more information, view the source code of:  <a class="reference internal" href="../issue_manager/duplicate.html#cleanlab.datalab.issue_manager.duplicate.NearDuplicateIssueManager" title="cleanlab.datalab.issue_manager.duplicate.NearDuplicateIssueManager"><code class="xref py py-class docutils literal notranslate"><span class="pre">datalab.issue_manager.duplicate.NearDuplicateIssueManager</span></code></a>.</p>
+</div>
+</section>
+<section id="non-iid-issue-parameters">
+<h3>Non-IID Issue Parameters<a class="headerlink" href="#non-iid-issue-parameters" title="Permalink to this heading">#</a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">non_iid_kwargs</span> <span class="o">=</span> <span class="p">{</span>
+<span class="s2">&quot;metric&quot;</span><span class="p">:</span> <span class="c1"># `metric` argument to constructor of `NonIIDIssueManager`. String for the distance metric used for nearest neighbors search if necessary. `metric` argument to constructor of `sklearn.neighbors.NearestNeighbors`,</span>
+<span class="s2">&quot;k&quot;</span><span class="p">:</span> <span class="c1"># `k` argument to constructor of `NonIIDIssueManager`. Integer representing the number of nearest neighbors for nearest neighbors search if necessary. `n_neighbors` argument to constructor of `sklearn.neighbors.NearestNeighbors`</span>
+<span class="s2">&quot;num_permutations&quot;</span><span class="p">:</span> <span class="c1"># `num_permutations` argument to constructor of `NonIIDIssueManager`.</span>
+<span class="p">}</span>
 </pre></div>
 </div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>For more information, view the source code of:  <a class="reference internal" href="../issue_manager/noniid.html#cleanlab.datalab.issue_manager.noniid.NonIIDIssueManager" title="cleanlab.datalab.issue_manager.noniid.NonIIDIssueManager"><code class="xref py py-class docutils literal notranslate"><span class="pre">datalab.issue_manager.noniid.NonIIDIssueManager</span></code></a>.</p>
+</div>
+</section>
 </section>
 </section>
  
@@ -673,23 +644,23 @@ Examples representing most severe instances of this issue:
       <footer>
          
         <div class="related-pages">
-          <a class="next-page" href="../datalab.html">
+          <a class="next-page" href="custom_issue_manager.html">
               <div class="page-info">
                 <div class="context">
                   <span>Next</span>
                 </div>
-                <div class="title">datalab</div>
+                <div class="title">Creating Your Own Issues Manager</div>
               </div>
               <svg><use href="#svg-arrow-right"></use></svg>
             </a>
-          <a class="prev-page" href="issue_type_description.html">
+          <a class="prev-page" href="index.html">
               <svg><use href="#svg-arrow-right"></use></svg>
               <div class="page-info">
                 <div class="context">
                   <span>Previous</span>
                 </div>
                 
-                <div class="title">Datalab issue types</div>
+                <div class="title">Datalab guides</div>
                 
               </div>
             </a>
@@ -743,15 +714,25 @@ Examples representing most severe instances of this issue:
         <div class="toc-tree-container">
           <div class="toc-tree">
             <ul>
-<li><a class="reference internal" href="#">Creating Your Own Issues Manager</a><ul>
-<li><a class="reference internal" href="#prerequisites">Prerequisites</a></li>
-<li><a class="reference internal" href="#implementing-issuemanagers">Implementing IssueManagers</a><ul>
-<li><a class="reference internal" href="#basic-issue-check">Basic Issue Check</a></li>
-<li><a class="reference internal" href="#intermediate-issue-check">Intermediate Issue Check</a></li>
-<li><a class="reference internal" href="#advanced-issue-check">Advanced Issue Check</a></li>
+<li><a class="reference internal" href="#">Datalab issue types</a><ul>
+<li><a class="reference internal" href="#types-of-issues-datalab-can-detect">Types of issues Datalab can detect</a><ul>
+<li><a class="reference internal" href="#estimates-for-each-issue-type">Estimates for Each Issue Type</a><ul>
+<li><a class="reference internal" href="#example-pseudo-code">Example (pseudo-code)</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#use-with-datalab">Use with Datalab</a></li>
+<li><a class="reference internal" href="#label-issue">Label Issue</a></li>
+<li><a class="reference internal" href="#outlier-issue">Outlier Issue</a></li>
+<li><a class="reference internal" href="#near-duplicate-issue">(Near) Duplicate Issue</a></li>
+<li><a class="reference internal" href="#non-iid-issue">Non-IID Issue</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#optional-issue-parameters">Optional Issue Parameters</a><ul>
+<li><a class="reference internal" href="#label-issue-parameters">Label Issue Parameters</a></li>
+<li><a class="reference internal" href="#outlier-issue-parameters">Outlier Issue Parameters</a></li>
+<li><a class="reference internal" href="#duplicate-issue-parameters">Duplicate Issue Parameters</a></li>
+<li><a class="reference internal" href="#non-iid-issue-parameters">Non-IID Issue Parameters</a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
