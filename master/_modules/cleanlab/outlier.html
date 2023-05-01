@@ -499,6 +499,7 @@
 <div class="viewcode-block" id="OutOfDistribution"><a class="viewcode-back" href="../../cleanlab/outlier.html#cleanlab.outlier.OutOfDistribution">[docs]</a><span class="k">class</span> <span class="nc">OutOfDistribution</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Provides scores to detect Out Of Distribution (OOD) examples that are outliers in a dataset.</span>
+
 <span class="sd">    Each example&#39;s OOD score lies in [0,1] with smaller values indicating examples that are less typical under the data distribution.</span>
 <span class="sd">    OOD scores may be estimated from either: numeric feature embeddings or predicted probabilities from a trained classifier.</span>
 
@@ -566,10 +567,9 @@
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">params</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">dict</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_assert_valid_params</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">DEFAULT_PARAM_DICT</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">params</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">DEFAULT_PARAM_DICT</span>
-        <span class="k">if</span> <span class="n">params</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">params</span> <span class="o">=</span> <span class="p">{}</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">params</span> <span class="o">=</span> <span class="p">{</span><span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">,</span> <span class="o">**</span><span class="n">params</span><span class="p">}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">params</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">DEFAULT_PARAM_DICT</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">params</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">params</span><span class="p">)</span>
 
 <div class="viewcode-block" id="OutOfDistribution.fit_score"><a class="viewcode-back" href="../../cleanlab/outlier.html#cleanlab.outlier.OutOfDistribution.fit_score">[docs]</a>    <span class="k">def</span> <span class="nf">fit_score</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
@@ -581,6 +581,7 @@
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Fits this estimator to a given dataset and returns out-of-distribution scores for the same dataset.</span>
+
 <span class="sd">        Scores lie in [0,1] with smaller values indicating examples that are less typical under the dataset</span>
 <span class="sd">        distribution (values near 0 indicate outliers). Exactly one of `features` or `pred_probs` needs to be passed</span>
 <span class="sd">        in to calculate scores.</span>
@@ -636,6 +637,7 @@
     <span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Fits this estimator to a given dataset.</span>
+
 <span class="sd">        One of `features` or `pred_probs` must be specified.</span>
 
 <span class="sd">        If `features` are passed in, a ``NearestNeighbors`` object is fit.</span>
@@ -646,8 +648,8 @@
 <span class="sd">        ----------</span>
 <span class="sd">        features : np.ndarray, optional</span>
 <span class="sd">          Feature array of shape ``(N, M)``, where N is the number of examples and M is the number of features used to represent each example.</span>
-<span class="sd">          All features should be **numeric**. For less structured data (eg. images, text, categorical values, ...), you should provide</span>
-<span class="sd">          vector embeddings to represent each example (eg. extracted from some pretrained neural network).</span>
+<span class="sd">          All features should be **numeric**. For less structured data (e.g. images, text, categorical values, ...), you should provide</span>
+<span class="sd">          vector embeddings to represent each example (e.g. extracted from some pretrained neural network).</span>
 
 <span class="sd">        pred_probs : np.ndarray, optional</span>
 <span class="sd">           An array of shape ``(N, K)`` of model-predicted probabilities,</span>
@@ -679,7 +681,8 @@
         <span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">features</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">pred_probs</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Uses fitted estimator and passed in `features` or `pred_probs` to calculate out-of-distribution scores for a dataset.</span>
+<span class="sd">        Use fitted estimator and passed in `features` or `pred_probs` to calculate out-of-distribution scores for a dataset.</span>
+
 <span class="sd">        Score for each example corresponds to the likelihood this example stems from the same distribution as the dataset previously specified in ``fit()`` (i.e. is not an outlier).</span>
 
 <span class="sd">        If `features` are passed, returns OOD score for each example based on its feature values.</span>
@@ -714,36 +717,26 @@
         <span class="k">if</span> <span class="n">features</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s2">&quot;knn&quot;</span><span class="p">]</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
                 <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-                    <span class="sa">f</span><span class="s2">&quot;OOD estimator needs to be fit on features first. Call `fit()` or `fit_scores()` before this function.&quot;</span>
+                    <span class="s2">&quot;OOD estimator needs to be fit on features first. Call `fit()` or `fit_scores()` before this function.&quot;</span>
                 <span class="p">)</span>
-            <span class="k">else</span><span class="p">:</span>
-                <span class="n">scores</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">_get_ood_features_scores</span><span class="p">(</span>
-                    <span class="n">features</span><span class="p">,</span> <span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">_get_params</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">OUTLIER_PARAMS</span><span class="p">)</span>
-                <span class="p">)</span>
+            <span class="n">scores</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">_get_ood_features_scores</span><span class="p">(</span><span class="n">features</span><span class="p">,</span> <span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">_get_params</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">OUTLIER_PARAMS</span><span class="p">))</span>
 
         <span class="k">if</span> <span class="n">pred_probs</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s2">&quot;confident_thresholds&quot;</span><span class="p">]</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s2">&quot;adjust_pred_probs&quot;</span><span class="p">]:</span>
                 <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-                    <span class="sa">f</span><span class="s2">&quot;OOD estimator needs to be fit on pred_probs first since params[&#39;adjust_pred_probs&#39;]=True. Call `fit()` or `fit_scores()` before this function.&quot;</span>
+                    <span class="s2">&quot;OOD estimator needs to be fit on pred_probs first since params[&#39;adjust_pred_probs&#39;]=True. Call `fit()` or `fit_scores()` before this function.&quot;</span>
                 <span class="p">)</span>
-            <span class="k">else</span><span class="p">:</span>
-                <span class="n">scores</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">_get_ood_predictions_scores</span><span class="p">(</span>
-                    <span class="n">pred_probs</span><span class="p">,</span> <span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">_get_params</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">OOD_PARAMS</span><span class="p">)</span>
-                <span class="p">)</span>
+            <span class="n">scores</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">_get_ood_predictions_scores</span><span class="p">(</span><span class="n">pred_probs</span><span class="p">,</span> <span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">_get_params</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">OOD_PARAMS</span><span class="p">))</span>
 
         <span class="k">return</span> <span class="n">scores</span></div>
 
     <span class="k">def</span> <span class="nf">_get_params</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">param_keys</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Helper method to get function specific dictionary of parameters (i.e. only those in param_keys).</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get function specific dictionary of parameters (i.e. only those in param_keys).&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="n">v</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="k">if</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">param_keys</span><span class="p">}</span>
 
     <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">_assert_valid_params</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="n">param_keys</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Helper method to check passed in params valid and get list of parameters in param that are not in param_keys.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Validate passed in params and get list of parameters in param that are not in param_keys.&quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">params</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">wrong_params</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">params</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span><span class="o">.</span><span class="n">difference</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">param_keys</span><span class="p">)))</span>
             <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">wrong_params</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
@@ -753,23 +746,21 @@
 
     <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">_assert_valid_inputs</span><span class="p">(</span><span class="n">features</span><span class="p">,</span> <span class="n">pred_probs</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Helper method to check features and pred_prob inputs are valid. Throws error if not.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Check whether features and pred_prob inputs are valid, throw error if not.&quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">features</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">pred_probs</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-                <span class="sa">f</span><span class="s2">&quot;Not enough information to compute scores. Pass in either features or pred_probs.&quot;</span>
+                <span class="s2">&quot;Not enough information to compute scores. Pass in either features or pred_probs.&quot;</span>
             <span class="p">)</span>
 
         <span class="k">if</span> <span class="n">features</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">pred_probs</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-                <span class="sa">f</span><span class="s2">&quot;Cannot fit to OOD Estimator to both features and pred_probs. Pass in either one or the other.&quot;</span>
+                <span class="s2">&quot;Cannot fit to OOD Estimator to both features and pred_probs. Pass in either one or the other.&quot;</span>
             <span class="p">)</span>
 
         <span class="k">if</span> <span class="n">features</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">features</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">2</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-                <span class="sa">f</span><span class="s2">&quot;Feature array needs to be of shape (N, M), where N is the number of examples and M is the &quot;</span>
-                <span class="sa">f</span><span class="s2">&quot;number of features used to represent each example. &quot;</span>
+                <span class="s2">&quot;Feature array needs to be of shape (N, M), where N is the number of examples and M is the &quot;</span>
+                <span class="s2">&quot;number of features used to represent each example. &quot;</span>
             <span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">_shared_fit</span><span class="p">(</span>
@@ -782,6 +773,7 @@
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Shared fit functionality between ``fit()`` and ``fit_score()``.</span>
+
 <span class="sd">        For details, refer to :py:func:`fit &lt;cleanlab.outlier.OutOfDistribution.fit&gt;`</span>
 <span class="sd">        or :py:func:`fit_score &lt;cleanlab.outlier.OutOfDistribution.fit_score&gt;`.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -792,7 +784,7 @@
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s2">&quot;knn&quot;</span><span class="p">]</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
                 <span class="c1"># No fitting twice if knn object already fit</span>
                 <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
-                    <span class="sa">f</span><span class="s2">&quot;A KNN estimator has previously already been fit, call score() to apply it to data, or create a new OutOfDistribution object to fit a different estimator.&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;A KNN estimator has previously already been fit, call score() to apply it to data, or create a new OutOfDistribution object to fit a different estimator.&quot;</span><span class="p">,</span>
                     <span class="ne">UserWarning</span><span class="p">,</span>
                 <span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
@@ -808,7 +800,7 @@
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s2">&quot;confident_thresholds&quot;</span><span class="p">]</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
                 <span class="c1"># No fitting twice if confident_thresholds object already fit</span>
                 <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
-                    <span class="sa">f</span><span class="s2">&quot;Confident thresholds have previously already been fit, call score() to apply them to data, or create a new OutOfDistribution object to fit a different estimator.&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;Confident thresholds have previously already been fit, call score() to apply them to data, or create a new OutOfDistribution object to fit a different estimator.&quot;</span><span class="p">,</span>
                     <span class="ne">UserWarning</span><span class="p">,</span>
                 <span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
@@ -822,8 +814,8 @@
                 <span class="p">)</span>
                 <span class="k">if</span> <span class="n">confident_thresholds</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
                     <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
-                        <span class="sa">f</span><span class="s2">&quot;No estimates need to be be fit under the provided params, so you could directly call &quot;</span>
-                        <span class="sa">f</span><span class="s2">&quot;score() as an alternative.&quot;</span><span class="p">,</span>
+                        <span class="s2">&quot;No estimates need to be be fit under the provided params, so you could directly call &quot;</span>
+                        <span class="s2">&quot;score() as an alternative.&quot;</span><span class="p">,</span>
                         <span class="ne">UserWarning</span><span class="p">,</span>
                     <span class="p">)</span>
                 <span class="k">else</span><span class="p">:</span>
@@ -837,8 +829,11 @@
     <span class="n">k</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">t</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">Optional</span><span class="p">[</span><span class="n">NearestNeighbors</span><span class="p">]]:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Returns an outlier score for each example based on its feature values which is computed inversely proportional</span>
-<span class="sd">    to the average distance between this example and its K nearest neighbors (in feature space).</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Return outlier score based on feature values using `k` nearest neighbors.</span>
+
+<span class="sd">    The outlier score for each example is computed inversely proportional to</span>
+<span class="sd">    the average distance between this example and its K nearest neighbors (in feature space).</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -868,7 +863,7 @@
         <span class="c1"># Make sure both knn and features are not None</span>
         <span class="k">if</span> <span class="n">features</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-                <span class="sa">f</span><span class="s2">&quot;Both knn and features arguments cannot be None at the same time. Not enough information to compute outlier scores.&quot;</span>
+                <span class="s2">&quot;Both knn and features arguments cannot be None at the same time. Not enough information to compute outlier scores.&quot;</span>
             <span class="p">)</span>
         <span class="k">if</span> <span class="n">k</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">k</span> <span class="o">=</span> <span class="n">DEFAULT_K</span>  <span class="c1"># use default when knn and k are both None</span>
@@ -900,7 +895,7 @@
     <span class="c1"># Fit knn estimator on the features if a non-fitted estimator is passed in</span>
     <span class="k">try</span><span class="p">:</span>
         <span class="n">knn</span><span class="o">.</span><span class="n">kneighbors</span><span class="p">(</span><span class="n">features</span><span class="p">)</span>
-    <span class="k">except</span> <span class="n">NotFittedError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+    <span class="k">except</span> <span class="n">NotFittedError</span><span class="p">:</span>
         <span class="n">knn</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">features</span><span class="p">)</span>
 
     <span class="c1"># Get distances to k-nearest neighbors Note that the knn object contains the specification of distance metric</span>
@@ -920,7 +915,7 @@
     <span class="n">adjust_pred_probs</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
     <span class="n">method</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;entropy&quot;</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">Optional</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]]:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Returns an OOD (out of distribution) score for each example based on it pred_prob values.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return an OOD (out of distribution) score for each example based on it pred_prob values.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -948,17 +943,16 @@
 <span class="sd">    ood_predictions_scores : Tuple[np.ndarray, Optional[np.ndarray]]</span>
 <span class="sd">      Returns a tuple. First element is array of `ood_predictions_scores` and second is an np.ndarray of `confident_thresholds` or None is &#39;confident_thresholds&#39; is not calculated.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-
-    <span class="n">valid_methods</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="n">valid_methods</span> <span class="o">=</span> <span class="p">(</span>
         <span class="s2">&quot;entropy&quot;</span><span class="p">,</span>
         <span class="s2">&quot;least_confidence&quot;</span><span class="p">,</span>
-    <span class="p">]</span>
+    <span class="p">)</span>
 
     <span class="k">if</span> <span class="p">(</span><span class="n">confident_thresholds</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">labels</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">adjust_pred_probs</span><span class="p">:</span>
         <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
-            <span class="sa">f</span><span class="s2">&quot;OOD scores are not adjusted with confident thresholds. If scores need to be adjusted set &quot;</span>
-            <span class="sa">f</span><span class="s2">&quot;params[&#39;adjusted_pred_probs&#39;] = True. Otherwise passing in confident_thresholds and/or labels does not change &quot;</span>
-            <span class="sa">f</span><span class="s2">&quot;score calculation.&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;OOD scores are not adjusted with confident thresholds. If scores need to be adjusted set &quot;</span>
+            <span class="s2">&quot;params[&#39;adjusted_pred_probs&#39;] = True. Otherwise passing in confident_thresholds and/or labels does not change &quot;</span>
+            <span class="s2">&quot;score calculation.&quot;</span><span class="p">,</span>
             <span class="ne">UserWarning</span><span class="p">,</span>
         <span class="p">)</span>
 
@@ -966,15 +960,12 @@
         <span class="k">if</span> <span class="n">confident_thresholds</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">labels</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
                 <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-                    <span class="sa">f</span><span class="s2">&quot;Cannot calculate adjust_pred_probs without labels. Either pass in labels parameter or set &quot;</span>
-                    <span class="sa">f</span><span class="s2">&quot;params[&#39;adjusted_pred_probs&#39;] = False. &quot;</span>
+                    <span class="s2">&quot;Cannot calculate adjust_pred_probs without labels. Either pass in labels parameter or set &quot;</span>
+                    <span class="s2">&quot;params[&#39;adjusted_pred_probs&#39;] = False. &quot;</span>
                 <span class="p">)</span>
-            <span class="k">else</span><span class="p">:</span>
-                <span class="n">labels</span> <span class="o">=</span> <span class="n">labels_to_array</span><span class="p">(</span><span class="n">labels</span><span class="p">)</span>
-                <span class="n">assert_valid_inputs</span><span class="p">(</span><span class="n">X</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">labels</span><span class="p">,</span> <span class="n">pred_probs</span><span class="o">=</span><span class="n">pred_probs</span><span class="p">,</span> <span class="n">multi_label</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-                <span class="n">confident_thresholds</span> <span class="o">=</span> <span class="n">get_confident_thresholds</span><span class="p">(</span>
-                    <span class="n">labels</span><span class="p">,</span> <span class="n">pred_probs</span><span class="p">,</span> <span class="n">multi_label</span><span class="o">=</span><span class="kc">False</span>
-                <span class="p">)</span>
+            <span class="n">labels</span> <span class="o">=</span> <span class="n">labels_to_array</span><span class="p">(</span><span class="n">labels</span><span class="p">)</span>
+            <span class="n">assert_valid_inputs</span><span class="p">(</span><span class="n">X</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">labels</span><span class="p">,</span> <span class="n">pred_probs</span><span class="o">=</span><span class="n">pred_probs</span><span class="p">,</span> <span class="n">multi_label</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+            <span class="n">confident_thresholds</span> <span class="o">=</span> <span class="n">get_confident_thresholds</span><span class="p">(</span><span class="n">labels</span><span class="p">,</span> <span class="n">pred_probs</span><span class="p">,</span> <span class="n">multi_label</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 
         <span class="n">pred_probs</span> <span class="o">=</span> <span class="n">_subtract_confident_thresholds</span><span class="p">(</span>
             <span class="kc">None</span><span class="p">,</span> <span class="n">pred_probs</span><span class="p">,</span> <span class="n">multi_label</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">confident_thresholds</span><span class="o">=</span><span class="n">confident_thresholds</span>
