@@ -494,7 +494,7 @@ This is how we recommend you interface with the cleanlab library if you want to 
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>data</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">Union[Dataset</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">pd.DataFrame</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">str]</span></code>) – <p>Dataset-like object that can be converted to a Hugging Face Dataset object.</p>
 <p>It should contain the labels for all examples, identified by a
-<cite>label_name</cite> column in the Dataset object.</p>
+<code class="xref py py-obj docutils literal notranslate"><span class="pre">label_name</span></code> column in the Dataset object.</p>
 <dl class="simple">
 <dt>Supported formats:</dt><dd><ul>
 <li><p>datasets.Dataset</p></li>
@@ -570,10 +570,10 @@ Valid values are 0 through 4. Default is 1.</p></li>
 <td><p>Returns a list of all registered issue types.</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="#cleanlab.datalab.datalab.Datalab.list_default_issue_types" title="cleanlab.datalab.datalab.Datalab.list_default_issue_types"><code class="xref py py-obj docutils literal notranslate"><span class="pre">list_default_issue_types</span></code></a>()</p></td>
-<td><p>Returns a list of the issue types that are run by default when <a class="reference internal" href="#cleanlab.datalab.datalab.Datalab.find_issues" title="cleanlab.datalab.datalab.Datalab.find_issues"><code class="xref py py-meth docutils literal notranslate"><span class="pre">find_issues()</span></code></a> is called without specifying <cite>issue_types</cite>.</p></td>
+<td><p>Returns a list of the issue types that are run by default when <a class="reference internal" href="#cleanlab.datalab.datalab.Datalab.find_issues" title="cleanlab.datalab.datalab.Datalab.find_issues"><code class="xref py py-meth docutils literal notranslate"><span class="pre">find_issues()</span></code></a> is called without specifying <code class="xref py py-obj docutils literal notranslate"><span class="pre">issue_types</span></code>.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#cleanlab.datalab.datalab.Datalab.save" title="cleanlab.datalab.datalab.Datalab.save"><code class="xref py py-obj docutils literal notranslate"><span class="pre">save</span></code></a>(path[, force])</p></td>
-<td><p>Saves this Datalab object to file (all files are in folder at <cite>path/</cite>).</p></td>
+<td><p>Saves this Datalab object to file (all files are in folder at <code class="xref py py-obj docutils literal notranslate"><span class="pre">path/</span></code>).</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="#cleanlab.datalab.datalab.Datalab.load" title="cleanlab.datalab.datalab.Datalab.load"><code class="xref py py-obj docutils literal notranslate"><span class="pre">load</span></code></a>(path[, data])</p></td>
 <td><p>Loads Datalab object from a previously saved folder.</p></td>
@@ -636,9 +636,9 @@ evenly distributed across the rows.
 The non-zero entries must be the distances between the corresponding examples. Self-distances must be omitted
 (i.e. the diagonal must be all zeros and the k nearest neighbors of each example must not include itself).</p>
 <p>For any duplicated examples i,j whose distance is 0, there should be an <em>explicit</em> zero stored in the matrix, i.e. <code class="docutils literal notranslate"><span class="pre">knn_graph[i,j]</span> <span class="pre">=</span> <span class="pre">0</span></code>.</p>
-<p>If both <cite>knn_graph</cite> and <cite>features</cite> are provided, the <cite>knn_graph</cite> will take precendence.
-If <cite>knn_graph</cite> is not provided, it is constructed based on the provided <cite>features</cite>.
-If neither <cite>knn_graph</cite> nor <cite>features</cite> are provided, certain issue types like (near) duplicates will not be considered.</p>
+<p>If both <code class="xref py py-obj docutils literal notranslate"><span class="pre">knn_graph</span></code> and <code class="xref py py-obj docutils literal notranslate"><span class="pre">features</span></code> are provided, the <code class="xref py py-obj docutils literal notranslate"><span class="pre">knn_graph</span></code> will take precendence.
+If <code class="xref py py-obj docutils literal notranslate"><span class="pre">knn_graph</span></code> is not provided, it is constructed based on the provided <code class="xref py py-obj docutils literal notranslate"><span class="pre">features</span></code>.
+If neither <code class="xref py py-obj docutils literal notranslate"><span class="pre">knn_graph</span></code> nor <code class="xref py py-obj docutils literal notranslate"><span class="pre">features</span></code> are provided, certain issue types like (near) duplicates will not be considered.</p>
 </p></li>
 <li><p><strong>issue_types</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code>]]) – <p>Collection specifying which types of issues to consider in audit and any non-default parameter settings to use.
 If unspecified, a default set of issue types and recommended parameter settings is considered.</p>
@@ -753,7 +753,7 @@ to the constructor of the <a class="reference internal" href="issue_manager/labe
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>num_examples</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>) – Number of examples to show for each type of issue.
-The report shows the top <cite>num_examples</cite> instances in the dataset that suffer the most from each type of issue.</p></li>
+The report shows the top <code class="xref py py-obj docutils literal notranslate"><span class="pre">num_examples</span></code> instances in the dataset that suffer the most from each type of issue.</p></li>
 <li><p><strong>verbosity</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>]) – Higher verbosity levels add more information to the report.</p></li>
 <li><p><strong>include_description</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code>) – Whether or not to include a description of each issue type in the report.
 Consider setting this to <code class="docutils literal notranslate"><span class="pre">False</span></code> once you’re familiar with how each issue type is defined.</p></li>
@@ -844,10 +844,10 @@ then the info will look something like this:</p>
 </div>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>issue_name</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code> or <code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code>) – The type of issue to focus on. If <cite>None</cite>, returns full DataFrame summarizing all of the types of issues detected in each example from the dataset.</p>
+<dd class="field-odd"><p><strong>issue_name</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code> or <code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code>) – The type of issue to focus on. If <code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code>, returns full DataFrame summarizing all of the types of issues detected in each example from the dataset.</p>
 </dd>
 <dt class="field-even">Raises<span class="colon">:</span></dt>
-<dd class="field-even"><p><strong>ValueError</strong> – If <cite>issue_name</cite> is not a type of issue previously considered in the audit.</p>
+<dd class="field-even"><p><strong>ValueError</strong> – If <code class="xref py py-obj docutils literal notranslate"><span class="pre">issue_name</span></code> is not a type of issue previously considered in the audit.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code></p>
@@ -873,7 +873,7 @@ including how severe this type of issue is overall across the dataset.</p>
 </div>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>issue_name</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]) – Name of the issue type to summarize. If <cite>None</cite>, summarizes each of the different issue types previously considered in the audit.</p>
+<dd class="field-odd"><p><strong>issue_name</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]) – Name of the issue type to summarize. If <code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code>, summarizes each of the different issue types previously considered in the audit.</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code></p>
@@ -933,7 +933,7 @@ and the overall severity of the issue across the dataset (via a numeric quality 
 <dt class="sig sig-object py" id="cleanlab.datalab.datalab.Datalab.list_default_issue_types">
 <em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">list_default_issue_types</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/cleanlab/datalab/datalab.html#Datalab.list_default_issue_types"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cleanlab.datalab.datalab.Datalab.list_default_issue_types" title="Permalink to this definition">#</a></dt>
 <dd><p>Returns a list of the issue types that are run by default
-when <a class="reference internal" href="#cleanlab.datalab.datalab.Datalab.find_issues" title="cleanlab.datalab.datalab.Datalab.find_issues"><code class="xref py py-meth docutils literal notranslate"><span class="pre">find_issues()</span></code></a> is called without specifying <cite>issue_types</cite>.</p>
+when <a class="reference internal" href="#cleanlab.datalab.datalab.Datalab.find_issues" title="cleanlab.datalab.datalab.Datalab.find_issues"><code class="xref py py-meth docutils literal notranslate"><span class="pre">find_issues()</span></code></a> is called without specifying <code class="xref py py-obj docutils literal notranslate"><span class="pre">issue_types</span></code>.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>This method is a wrapper around <a class="reference internal" href="issue_finder.html#cleanlab.datalab.issue_finder.IssueFinder.list_default_issue_types" title="cleanlab.datalab.issue_finder.IssueFinder.list_default_issue_types"><code class="xref py py-meth docutils literal notranslate"><span class="pre">IssueFinder.list_default_issue_types</span></code></a>.</p>
@@ -952,13 +952,13 @@ when <a class="reference internal" href="#cleanlab.datalab.datalab.Datalab.find_
 <dl class="py method">
 <dt class="sig sig-object py" id="cleanlab.datalab.datalab.Datalab.save">
 <span class="sig-name descname"><span class="pre">save</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">force</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/cleanlab/datalab/datalab.html#Datalab.save"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cleanlab.datalab.datalab.Datalab.save" title="Permalink to this definition">#</a></dt>
-<dd><p>Saves this Datalab object to file (all files are in folder at <cite>path/</cite>).
+<dd><p>Saves this Datalab object to file (all files are in folder at <code class="xref py py-obj docutils literal notranslate"><span class="pre">path/</span></code>).
 We do not guarantee saved Datalab can be loaded from future versions of cleanlab.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>path</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>) – Folder in which all information about this Datalab should be saved.</p></li>
-<li><p><strong>force</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code>) – If <code class="docutils literal notranslate"><span class="pre">True</span></code>, overwrites any existing files in the folder at <cite>path</cite>. Use this with caution!</p></li>
+<li><p><strong>force</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code>) – If <code class="docutils literal notranslate"><span class="pre">True</span></code>, overwrites any existing files in the folder at <code class="xref py py-obj docutils literal notranslate"><span class="pre">path</span></code>. Use this with caution!</p></li>
 </ul>
 </dd>
 </dl>
@@ -990,7 +990,7 @@ you must save/load the data separately.</p></li>
 <dd class="field-even"><p><a class="reference internal" href="#cleanlab.datalab.datalab.Datalab" title="cleanlab.datalab.datalab.Datalab"><code class="xref py py-class docutils literal notranslate"><span class="pre">Datalab</span></code></a></p>
 </dd>
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p><cite>datalab</cite> – A Datalab object that is identical to the one originally saved.</p>
+<dd class="field-odd"><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">datalab</span></code> – A Datalab object that is identical to the one originally saved.</p>
 </dd>
 </dl>
 </dd></dl>

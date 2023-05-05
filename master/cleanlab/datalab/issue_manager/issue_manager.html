@@ -483,9 +483,9 @@
 </div></blockquote>
 <ul class="simple">
 <li><dl class="simple">
-<dt>A boolean <cite>is_issue</cite> value, which is True</dt><dd><p>if we believe this example suffers from the issue in question.</p>
+<dt>A boolean <code class="xref py py-obj docutils literal notranslate"><span class="pre">is_issue</span></code> value, which is True</dt><dd><p>if we believe this example suffers from the issue in question.</p>
 </dd>
-<dt><cite>is_issue</cite> may be determined by thresholding the severity score</dt><dd><p>(with an a priori determined reasonable threshold value),
+<dt><code class="xref py py-obj docutils literal notranslate"><span class="pre">is_issue</span></code> may be determined by thresholding the severity score</dt><dd><p>(with an a priori determined reasonable threshold value),
 or via some other means (e.g. Confident Learning for flagging label issues).</p>
 </dd>
 </dl>
@@ -495,25 +495,25 @@ or via some other means (e.g. Confident Learning for flagging label issues).</p>
 - A global value between 0 and 1 summarizing how severe this issue is in the dataset overall</p>
 <blockquote>
 <div><p>(e.g. the average severity across all examples in dataset
-or count of examples where <cite>is_issue=True</cite>).</p>
+or count of examples where <code class="xref py py-obj docutils literal notranslate"><span class="pre">is_issue=True</span></code>).</p>
 </div></blockquote>
 <ul class="simple">
-<li><p>Other interesting <cite>info</cite> about the issue and examples in the dataset,
+<li><p>Other interesting <a class="reference internal" href="#cleanlab.datalab.issue_manager.issue_manager.IssueManager.info" title="cleanlab.datalab.issue_manager.issue_manager.IssueManager.info"><code class="xref py py-obj docutils literal notranslate"><span class="pre">info</span></code></a> about the issue and examples in the dataset,
 and statistics estimated from current dataset that may be reused
 to score this issue in future data.
-For example, <cite>info</cite> for label issues could contain the:
+For example, <a class="reference internal" href="#cleanlab.datalab.issue_manager.issue_manager.IssueManager.info" title="cleanlab.datalab.issue_manager.issue_manager.IssueManager.info"><code class="xref py py-obj docutils literal notranslate"><span class="pre">info</span></code></a> for label issues could contain the:
 confident_thresholds, confident_joint, predicted label for each example, etc.
-Another example is for (near)-duplicate detection issue, where <cite>info</cite> could contain:
+Another example is for (near)-duplicate detection issue, where <a class="reference internal" href="#cleanlab.datalab.issue_manager.issue_manager.IssueManager.info" title="cleanlab.datalab.issue_manager.issue_manager.IssueManager.info"><code class="xref py py-obj docutils literal notranslate"><span class="pre">info</span></code></a> could contain:
 which set of examples in the dataset are all (nearly) identical.</p></li>
 </ul>
 <p>Implementing a new IssueManager:
-- Define the <cite>issue_name</cite> class attribute, e.g. “label”, “duplicate”, “outlier”, etc.
-- Implement the abstract methods <cite>find_issues</cite> and <cite>collect_info</cite>.</p>
+- Define the <a class="reference internal" href="#cleanlab.datalab.issue_manager.issue_manager.IssueManager.issue_name" title="cleanlab.datalab.issue_manager.issue_manager.IssueManager.issue_name"><code class="xref py py-obj docutils literal notranslate"><span class="pre">issue_name</span></code></a> class attribute, e.g. “label”, “duplicate”, “outlier”, etc.
+- Implement the abstract methods <a class="reference internal" href="#cleanlab.datalab.issue_manager.issue_manager.IssueManager.find_issues" title="cleanlab.datalab.issue_manager.issue_manager.IssueManager.find_issues"><code class="xref py py-obj docutils literal notranslate"><span class="pre">find_issues</span></code></a> and <a class="reference internal" href="#cleanlab.datalab.issue_manager.issue_manager.IssueManager.collect_info" title="cleanlab.datalab.issue_manager.issue_manager.IssueManager.collect_info"><code class="xref py py-obj docutils literal notranslate"><span class="pre">collect_info</span></code></a>.</p>
 <blockquote>
 <div><ul class="simple">
-<li><p><cite>find_issues</cite> is responsible for computing computing the <cite>issues</cite> and <cite>summary</cite> dataframes.</p></li>
-<li><p><cite>collect_info</cite> is responsible for computing the <cite>info</cite> dict. It is called by <cite>find_issues</cite>,
-once the manager has set the <cite>issues</cite> and <cite>summary</cite> dataframes as instance attributes.</p></li>
+<li><p><a class="reference internal" href="#cleanlab.datalab.issue_manager.issue_manager.IssueManager.find_issues" title="cleanlab.datalab.issue_manager.issue_manager.IssueManager.find_issues"><code class="xref py py-obj docutils literal notranslate"><span class="pre">find_issues</span></code></a> is responsible for computing computing the <a class="reference internal" href="#cleanlab.datalab.issue_manager.issue_manager.IssueManager.issues" title="cleanlab.datalab.issue_manager.issue_manager.IssueManager.issues"><code class="xref py py-obj docutils literal notranslate"><span class="pre">issues</span></code></a> and <a class="reference internal" href="#cleanlab.datalab.issue_manager.issue_manager.IssueManager.summary" title="cleanlab.datalab.issue_manager.issue_manager.IssueManager.summary"><code class="xref py py-obj docutils literal notranslate"><span class="pre">summary</span></code></a> dataframes.</p></li>
+<li><p><a class="reference internal" href="#cleanlab.datalab.issue_manager.issue_manager.IssueManager.collect_info" title="cleanlab.datalab.issue_manager.issue_manager.IssueManager.collect_info"><code class="xref py py-obj docutils literal notranslate"><span class="pre">collect_info</span></code></a> is responsible for computing the <a class="reference internal" href="#cleanlab.datalab.issue_manager.issue_manager.IssueManager.info" title="cleanlab.datalab.issue_manager.issue_manager.IssueManager.info"><code class="xref py py-obj docutils literal notranslate"><span class="pre">info</span></code></a> dict. It is called by <a class="reference internal" href="#cleanlab.datalab.issue_manager.issue_manager.IssueManager.find_issues" title="cleanlab.datalab.issue_manager.issue_manager.IssueManager.find_issues"><code class="xref py py-obj docutils literal notranslate"><span class="pre">find_issues</span></code></a>,
+once the manager has set the <a class="reference internal" href="#cleanlab.datalab.issue_manager.issue_manager.IssueManager.issues" title="cleanlab.datalab.issue_manager.issue_manager.IssueManager.issues"><code class="xref py py-obj docutils literal notranslate"><span class="pre">issues</span></code></a> and <a class="reference internal" href="#cleanlab.datalab.issue_manager.issue_manager.IssueManager.summary" title="cleanlab.datalab.issue_manager.issue_manager.IssueManager.summary"><code class="xref py py-obj docutils literal notranslate"><span class="pre">summary</span></code></a> dataframes as instance attributes.</p></li>
 </ul>
 </div></blockquote>
 <p><strong>Attributes:</strong></p>
@@ -610,7 +610,7 @@ report items to print.</p>
 <dt class="sig sig-object py" id="cleanlab.datalab.issue_manager.issue_manager.IssueManager.find_issues">
 <em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">find_issues</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/cleanlab/datalab/issue_manager/issue_manager.html#IssueManager.find_issues"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cleanlab.datalab.issue_manager.issue_manager.IssueManager.find_issues" title="Permalink to this definition">#</a></dt>
 <dd><p>Finds occurrences of this particular issue in the dataset.</p>
-<p>Computes the <cite>issues</cite> and <cite>summary</cite> dataframes. Calls <cite>collect_info</cite> to compute the <cite>info</cite> dict.</p>
+<p>Computes the <a class="reference internal" href="#cleanlab.datalab.issue_manager.issue_manager.IssueManager.issues" title="cleanlab.datalab.issue_manager.issue_manager.IssueManager.issues"><code class="xref py py-obj docutils literal notranslate"><span class="pre">issues</span></code></a> and <a class="reference internal" href="#cleanlab.datalab.issue_manager.issue_manager.IssueManager.summary" title="cleanlab.datalab.issue_manager.issue_manager.IssueManager.summary"><code class="xref py py-obj docutils literal notranslate"><span class="pre">summary</span></code></a> dataframes. Calls <a class="reference internal" href="#cleanlab.datalab.issue_manager.issue_manager.IssueManager.collect_info" title="cleanlab.datalab.issue_manager.issue_manager.IssueManager.collect_info"><code class="xref py py-obj docutils literal notranslate"><span class="pre">collect_info</span></code></a> to compute the <a class="reference internal" href="#cleanlab.datalab.issue_manager.issue_manager.IssueManager.info" title="cleanlab.datalab.issue_manager.issue_manager.IssueManager.info"><code class="xref py py-obj docutils literal notranslate"><span class="pre">info</span></code></a> dict.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></p>
@@ -624,7 +624,7 @@ report items to print.</p>
 <dd><p>Collects data for the info attribute of the Datalab.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>This method is called by <a class="reference internal" href="#cleanlab.datalab.issue_manager.issue_manager.IssueManager.find_issues" title="cleanlab.datalab.issue_manager.issue_manager.IssueManager.find_issues"><code class="xref py py-meth docutils literal notranslate"><span class="pre">find_issues()</span></code></a> after <a class="reference internal" href="#cleanlab.datalab.issue_manager.issue_manager.IssueManager.find_issues" title="cleanlab.datalab.issue_manager.issue_manager.IssueManager.find_issues"><code class="xref py py-meth docutils literal notranslate"><span class="pre">find_issues()</span></code></a> has set the <cite>issues</cite> and <cite>summary</cite> dataframes
+<p>This method is called by <a class="reference internal" href="#cleanlab.datalab.issue_manager.issue_manager.IssueManager.find_issues" title="cleanlab.datalab.issue_manager.issue_manager.IssueManager.find_issues"><code class="xref py py-meth docutils literal notranslate"><span class="pre">find_issues()</span></code></a> after <a class="reference internal" href="#cleanlab.datalab.issue_manager.issue_manager.IssueManager.find_issues" title="cleanlab.datalab.issue_manager.issue_manager.IssueManager.find_issues"><code class="xref py py-meth docutils literal notranslate"><span class="pre">find_issues()</span></code></a> has set the <a class="reference internal" href="#cleanlab.datalab.issue_manager.issue_manager.IssueManager.issues" title="cleanlab.datalab.issue_manager.issue_manager.IssueManager.issues"><code class="xref py py-obj docutils literal notranslate"><span class="pre">issues</span></code></a> and <a class="reference internal" href="#cleanlab.datalab.issue_manager.issue_manager.IssueManager.summary" title="cleanlab.datalab.issue_manager.issue_manager.IssueManager.summary"><code class="xref py py-obj docutils literal notranslate"><span class="pre">summary</span></code></a> dataframes
 as instance attributes.</p>
 </div>
 <dl class="field-list simple">

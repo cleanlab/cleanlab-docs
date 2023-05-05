@@ -546,7 +546,7 @@ difference between the classes prior to having annotators label the data.</p>
 <p>This method provides two scores in the Pandas DataFrame that is returned:</p>
 <ul class="simple">
 <li><p><strong>Num Overlapping Examples</strong>: The number of examples where the two classes overlap</p></li>
-<li><p><strong>Joint Probability</strong>: <cite>(num overlapping examples / total number of examples in the dataset</cite>).</p></li>
+<li><p><strong>Joint Probability</strong>: <code class="xref py py-obj docutils literal notranslate"><span class="pre">(num</span> <span class="pre">overlapping</span> <span class="pre">examples</span> <span class="pre">/</span> <span class="pre">total</span> <span class="pre">number</span> <span class="pre">of</span> <span class="pre">examples</span> <span class="pre">in</span> <span class="pre">the</span> <span class="pre">dataset</span></code>).</p></li>
 </ul>
 <p>This method works by providing any one (and only one) of the following inputs:</p>
 <ol class="arabic simple">
@@ -579,7 +579,7 @@ distribution. If you do not want this behavior, simply set <code class="docutils
 <p>This method estimates how often the annotators confuse two classes.
 This differs from just using a similarity matrix or confusion matrix,
 as these summarize characteristics of the predictive model rather than the data labelers (i.e. annotators).
-Instead, this method works even if the model that generated <cite>pred_probs</cite> tends to be more confident in some classes than others.</p>
+Instead, this method works even if the model that generated <code class="xref py py-obj docutils literal notranslate"><span class="pre">pred_probs</span></code> tends to be more confident in some classes than others.</p>
 </div>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -592,10 +592,10 @@ For multi-label classification where each example can belong to multiple classes
 your labels should instead satisfy: <code class="docutils literal notranslate"><span class="pre">len(set(k</span> <span class="pre">for</span> <span class="pre">l</span> <span class="pre">in</span> <span class="pre">labels</span> <span class="pre">for</span> <span class="pre">k</span> <span class="pre">in</span> <span class="pre">l))</span> <span class="pre">==</span> <span class="pre">pred_probs.shape[1])</span></code>.</p></li>
 <li><p><strong>pred_probs</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">np.ndarray</span></code>, <em>optional</em>) – An array of shape <code class="docutils literal notranslate"><span class="pre">(N,</span> <span class="pre">K)</span></code> of model-predicted probabilities,
 <code class="docutils literal notranslate"><span class="pre">P(label=k|x)</span></code>. Each row of this matrix corresponds
-to an example <cite>x</cite> and contains the model-predicted probabilities that
-<cite>x</cite> belongs to each possible class, for each of the K classes. The
+to an example <code class="xref py py-obj docutils literal notranslate"><span class="pre">x</span></code> and contains the model-predicted probabilities that
+<code class="xref py py-obj docutils literal notranslate"><span class="pre">x</span></code> belongs to each possible class, for each of the K classes. The
 columns must be ordered such that these probabilities correspond to
-class 0, 1, …, K-1. <cite>pred_probs</cite> should have been computed using 3 (or
+class 0, 1, …, K-1. <code class="xref py py-obj docutils literal notranslate"><span class="pre">pred_probs</span></code> should have been computed using 3 (or
 higher) fold cross-validation.</p></li>
 <li><p><strong>asymmetric</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code>, <em>optional</em>) – If <code class="docutils literal notranslate"><span class="pre">asymmetric=True</span></code>, returns separate estimates for both pairs (class1, class2) and (class2, class1). Use this
 for finding “is a” relationships where for example “class1 is a class2”.
@@ -613,12 +613,12 @@ representing the estimated joint distribution of the noisy labels and
 true labels. The sum of all entries in this matrix must be 1 (valid
 probability distribution). Each entry in the matrix captures the co-occurence joint
 probability of a true label and a noisy label, i.e. <code class="docutils literal notranslate"><span class="pre">p(noisy_label=i,</span> <span class="pre">true_label=j)</span></code>.
-<strong>Important</strong>. If you input the joint, you must also input <cite>num_examples</cite>.</p></li>
+<strong>Important</strong>. If you input the joint, you must also input <code class="xref py py-obj docutils literal notranslate"><span class="pre">num_examples</span></code>.</p></li>
 <li><p><strong>confident_joint</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">np.ndarray</span></code>, <em>optional</em>) – An array of shape <code class="docutils literal notranslate"><span class="pre">(K,</span> <span class="pre">K)</span></code> representing the confident joint, the matrix used for identifying label issues, which
 estimates a confident subset of the joint distribution of the noisy and true labels, <code class="docutils literal notranslate"><span class="pre">P_{noisy</span> <span class="pre">label,</span> <span class="pre">true</span> <span class="pre">label}</span></code>.
 Entry <code class="docutils literal notranslate"><span class="pre">(j,</span> <span class="pre">k)</span></code> in the matrix is the number of examples confidently counted into the pair of <code class="docutils literal notranslate"><span class="pre">(noisy</span> <span class="pre">label=j,</span> <span class="pre">true</span> <span class="pre">label=k)</span></code> classes.
-The <cite>confident_joint</cite> can be computed using <a class="reference internal" href="count.html#cleanlab.count.compute_confident_joint" title="cleanlab.count.compute_confident_joint"><code class="xref py py-func docutils literal notranslate"><span class="pre">count.compute_confident_joint</span></code></a>.
-If not provided, it is computed from the given (noisy) <cite>labels</cite> and <cite>pred_probs</cite>.</p></li>
+The <code class="xref py py-obj docutils literal notranslate"><span class="pre">confident_joint</span></code> can be computed using <a class="reference internal" href="count.html#cleanlab.count.compute_confident_joint" title="cleanlab.count.compute_confident_joint"><code class="xref py py-func docutils literal notranslate"><span class="pre">count.compute_confident_joint</span></code></a>.
+If not provided, it is computed from the given (noisy) <code class="xref py py-obj docutils literal notranslate"><span class="pre">labels</span></code> and <code class="xref py py-obj docutils literal notranslate"><span class="pre">pred_probs</span></code>.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
