@@ -515,11 +515,16 @@
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">,</span> <span class="n">data_issues</span><span class="p">:</span> <span class="s2">&quot;DataIssues&quot;</span><span class="p">,</span> <span class="n">verbosity</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="n">include_description</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">data_issues</span><span class="p">:</span> <span class="s2">&quot;DataIssues&quot;</span><span class="p">,</span>
+        <span class="n">verbosity</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
+        <span class="n">include_description</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="n">show_summary_score</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
     <span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">data_issues</span> <span class="o">=</span> <span class="n">data_issues</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">verbosity</span> <span class="o">=</span> <span class="n">verbosity</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">include_description</span> <span class="o">=</span> <span class="n">include_description</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">show_summary_score</span> <span class="o">=</span> <span class="n">show_summary_score</span>
 
 <div class="viewcode-block" id="Reporter.report"><a class="viewcode-back" href="../../../cleanlab/datalab/report.html#cleanlab.datalab.report.Reporter.report">[docs]</a>    <span class="k">def</span> <span class="nf">report</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">num_examples</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Prints a report about identified issues in the data.</span>
@@ -582,11 +587,20 @@
         <span class="n">dataset_information</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;Dataset Information: num_examples: </span><span class="si">{</span><span class="n">num_examples</span><span class="si">}</span><span class="s2">&quot;</span>
         <span class="k">if</span> <span class="n">num_classes</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">dataset_information</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot;, num_classes: </span><span class="si">{</span><span class="n">num_classes</span><span class="si">}</span><span class="s2">&quot;</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">show_summary_score</span><span class="p">:</span>
+            <span class="k">return</span> <span class="p">(</span>
+                <span class="s2">&quot;Here is a summary of the different kinds of issues found in the data:</span><span class="se">\n\n</span><span class="s2">&quot;</span>
+                <span class="o">+</span> <span class="n">summary</span><span class="o">.</span><span class="n">to_string</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+                <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n\n</span><span class="s2">&quot;</span>
+                <span class="o">+</span> <span class="s2">&quot;(Note: A lower score indicates a more severe issue across all examples in the dataset.)</span><span class="se">\n\n</span><span class="s2">&quot;</span>
+                <span class="o">+</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">dataset_information</span><span class="si">}</span><span class="se">\n\n\n</span><span class="s2">&quot;</span>
+            <span class="p">)</span>
+
         <span class="k">return</span> <span class="p">(</span>
             <span class="s2">&quot;Here is a summary of the different kinds of issues found in the data:</span><span class="se">\n\n</span><span class="s2">&quot;</span>
-            <span class="o">+</span> <span class="n">summary</span><span class="o">.</span><span class="n">to_string</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+            <span class="o">+</span> <span class="n">summary</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;score&quot;</span><span class="p">])</span><span class="o">.</span><span class="n">to_string</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
             <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n\n</span><span class="s2">&quot;</span>
-            <span class="o">+</span> <span class="s2">&quot;(Note: A lower score indicates a more severe issue across all examples in the dataset.)</span><span class="se">\n\n</span><span class="s2">&quot;</span>
             <span class="o">+</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">dataset_information</span><span class="si">}</span><span class="se">\n\n\n</span><span class="s2">&quot;</span>
         <span class="p">)</span></div>
 </pre></div> 
