@@ -473,11 +473,10 @@ For each type of issue, we explain: what it says about your data if detected, wh
 <li><p>A Boolean <code class="xref py py-obj docutils literal notranslate"><span class="pre">is_&lt;ISSUE_NAME&gt;_issue</span></code> flag for each example from a dataset. Examples where this has value  <code class="xref py py-obj docutils literal notranslate"><span class="pre">True</span></code> are those estimated to exhibit this issue. Access these via: the <a class="reference internal" href="../datalab.html#cleanlab.datalab.datalab.Datalab.issues" title="cleanlab.datalab.datalab.Datalab.issues"><code class="xref py py-attr docutils literal notranslate"><span class="pre">Datalab.issues</span></code></a> attribute or the method <a class="reference internal" href="../datalab.html#cleanlab.datalab.datalab.Datalab.get_issues" title="cleanlab.datalab.datalab.Datalab.get_issues"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Datalab.get_issues(&lt;ISSUE_NAME&gt;)</span></code></a>.</p></li>
 <li><p>An overall dataset quality score (between 0 and 1), quantifying how severe this issue is overall across the entire dataset. Datasets with higher scores do not exhibit this issue as badly overall. Access these via: the <a class="reference internal" href="../datalab.html#cleanlab.datalab.datalab.Datalab.issue_summary" title="cleanlab.datalab.datalab.Datalab.issue_summary"><code class="xref py py-attr docutils literal notranslate"><span class="pre">Datalab.issue_summary</span></code></a> attribute.</p></li>
 </ol>
-<section id="example-pseudo-code">
-<h4>Example (pseudo-code)<a class="headerlink" href="#example-pseudo-code" title="Permalink to this heading">#</a></h4>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">issue_name</span> <span class="o">=</span> <span class="s2">&quot;my_issue&quot;</span>
-<span class="n">issue_score</span> <span class="o">=</span> <span class="s2">&quot;my_issue_score&quot;</span>
-<span class="n">is_issue</span> <span class="o">=</span> <span class="s2">&quot;is_my_issue_issue&quot;</span>
+<p><strong>Example (for the outlier issue type)</strong></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">issue_name</span> <span class="o">=</span> <span class="s2">&quot;outlier&quot;</span>  <span class="c1"># how to reference the outlier issue type in code</span>
+<span class="n">issue_score</span> <span class="o">=</span> <span class="s2">&quot;outlier_score&quot;</span>  <span class="c1"># name of column with quality scores for the outlier issue type, atypical datapoints receive lower scores</span>
+<span class="n">is_issue</span> <span class="o">=</span> <span class="s2">&quot;is_outlier_issue&quot;</span>  <span class="c1"># name of Boolean column flagging which datapoints are considered outliers in the dataset</span>
 </pre></div>
 </div>
 <p>Datalab estimates various issues based on the four inputs below.
@@ -488,7 +487,6 @@ Each input is optional, if you do not provide it, Datalab will skip checks for t
 <li><p><code class="docutils literal notranslate"><span class="pre">features</span></code> - numeric vector representations of the features for each example in the dataset. These may be embeddings from a (pre)trained model, or just a numerically-transformed version of the original data features.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">knn_graph</span></code> - K nearest neighbor graph represented as a sparse matrix of dissimilarity values between examples in the dataset. If both <code class="xref py py-obj docutils literal notranslate"><span class="pre">knn_graph</span></code> and <code class="xref py py-obj docutils literal notranslate"><span class="pre">features</span></code> are provided, the <code class="xref py py-obj docutils literal notranslate"><span class="pre">knn_graph</span></code> takes precedence, and if only <code class="xref py py-obj docutils literal notranslate"><span class="pre">features</span></code> is provided, then a <code class="xref py py-obj docutils literal notranslate"><span class="pre">knn_graph</span></code> is internally constructed based on the (either euclidean or cosine) distance between different examples’ features.</p></li>
 </ol>
-</section>
 </section>
 <section id="label-issue">
 <h3>Label Issue<a class="headerlink" href="#label-issue" title="Permalink to this heading">#</a></h3>
@@ -718,10 +716,7 @@ Appropriate defaults are used for any parameters you do not specify, so no need 
             <ul>
 <li><a class="reference internal" href="#">Datalab issue types</a><ul>
 <li><a class="reference internal" href="#types-of-issues-datalab-can-detect">Types of issues Datalab can detect</a><ul>
-<li><a class="reference internal" href="#estimates-for-each-issue-type">Estimates for Each Issue Type</a><ul>
-<li><a class="reference internal" href="#example-pseudo-code">Example (pseudo-code)</a></li>
-</ul>
-</li>
+<li><a class="reference internal" href="#estimates-for-each-issue-type">Estimates for Each Issue Type</a></li>
 <li><a class="reference internal" href="#label-issue">Label Issue</a></li>
 <li><a class="reference internal" href="#outlier-issue">Outlier Issue</a></li>
 <li><a class="reference internal" href="#near-duplicate-issue">(Near) Duplicate Issue</a></li>
