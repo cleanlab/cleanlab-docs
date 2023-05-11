@@ -508,7 +508,9 @@
 <div class="viewcode-block" id="Datalab"><a class="viewcode-back" href="../../../cleanlab/datalab/datalab.html#cleanlab.datalab.datalab.Datalab">[docs]</a><span class="k">class</span> <span class="nc">Datalab</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    A single object to automatically detect all kinds of issues in datasets.</span>
-<span class="sd">    This is how we recommend you interface with the cleanlab library if you want to audit the quality of your data. If you have other specific goals, then consider using the other methods across this library. Even then, Datalab may be the easiest way to run specific analyses of your data. Datalab tracks intermediate state (e.g. data statistics) from certain cleanlab functions that can be re-used across other cleanlab functions for better efficiency.</span>
+<span class="sd">    This is how we recommend you interface with the cleanlab library if you want to audit the quality of your data and detect issues within it.</span>
+<span class="sd">    If you have other specific goals (or are doing a less standard ML task not supported by Datalab), then consider using the other methods across the library.</span>
+<span class="sd">    Datalab tracks intermediate state (e.g. data statistics) from certain cleanlab functions that can be re-used across other cleanlab functions for better efficiency.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -852,7 +854,8 @@
 <span class="sd">        -------</span>
 <span class="sd">        specific_issues :</span>
 <span class="sd">            A DataFrame where each row corresponds to an example from the dataset and columns specify:</span>
-<span class="sd">            whether this example exhibits a particular type of issue and how severely (via a numeric quality score where lower values indicate more severe instances of the issue).</span>
+<span class="sd">            whether this example exhibits a particular type of issue, and how severely (via a numeric quality score where lower values indicate more severe instances of the issue).</span>
+<span class="sd">            The quality scores lie between 0-1 and are directly comparable between examples (for the same issue type), but not across different issue types.</span>
 
 <span class="sd">            Additional columns may be present in the DataFrame depending on the type of issue specified.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -878,6 +881,7 @@
 <span class="sd">            DataFrame where each row corresponds to a type of issue, and columns quantify:</span>
 <span class="sd">            the number of examples in the dataset estimated to exhibit this type of issue,</span>
 <span class="sd">            and the overall severity of the issue across the dataset (via a numeric quality score where lower values indicate that the issue is overall more severe).</span>
+<span class="sd">            The quality scores lie between 0-1 and are directly comparable between multiple datasets (for the same issue type), but not across different issue types.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">data_issues</span><span class="o">.</span><span class="n">get_issue_summary</span><span class="p">(</span><span class="n">issue_name</span><span class="o">=</span><span class="n">issue_name</span><span class="p">)</span></div>
 
