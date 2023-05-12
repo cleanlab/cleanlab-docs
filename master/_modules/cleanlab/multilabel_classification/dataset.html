@@ -532,13 +532,12 @@
 <span class="sd">    -------</span>
 <span class="sd">    common_multilabel_issues : pd.DataFrame</span>
 <span class="sd">        DataFrame where each row corresponds to a class summarized by the following columns:</span>
-
-<span class="sd">        * *Class Name*: The name of the class if class_names is provided.</span>
-<span class="sd">        * *Class Index*: The index of the class.</span>
-<span class="sd">        * *In Given Label*: Whether the Class is originally annotated True or False in the given label.</span>
-<span class="sd">        * *In Suggested Label*: Whether the Class should be True or False in the suggested label (based on model&#39;s prediction).</span>
-<span class="sd">        * *Num Examples*: Number of examples flagged as a label issue where this Class is True/False &quot;In Given Label&quot; but cleanlab estimates the annotation should actually be as specified &quot;In Suggested Label&quot;. I.e. the number of examples in your dataset where this Class was labeled as True but likely should have been False (or vice versa).</span>
-<span class="sd">        * *Issue Probability*: The  *Num Examples* column divided by the total number of examples in the dataset; i.e. the relative overall frequency of each type of label issue in your dataset.</span>
+<span class="sd">            - *Class Name*: The name of the class if class_names is provided.</span>
+<span class="sd">            - *Class Index*: The index of the class.</span>
+<span class="sd">            - *In Given Label*: Whether the Class is originally annotated True or False in the given label.</span>
+<span class="sd">            - *In Suggested Label*: Whether the Class should be True or False in the suggested label (based on model&#39;s prediction).</span>
+<span class="sd">            - *Num Examples*: Number of examples flagged as a label issue where this Class is True/False &quot;In Given Label&quot; but cleanlab estimates the annotation should actually be as specified &quot;In Suggested Label&quot;. I.e. the number of examples in your dataset where this Class was labeled as True but likely should have been False (or vice versa).</span>
+<span class="sd">            - *Issue Probability*: The  *Num Examples* column divided by the total number of examples in the dataset; i.e. the relative overall frequency of each type of label issue in your dataset.</span>
 
 <span class="sd">        By default, the rows in this DataFrame are ordered by &quot;Issue Probability&quot; (descending).</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -597,26 +596,28 @@
 
 <span class="sd">    Score values are unnormalized and may be very small. What matters is their relative ranking across the classes.</span>
 
-<span class="sd">    **Parameters**: For information about the arguments to this method, see the documentation of</span>
-<span class="sd">    :py:func:`common_multilabel_issues &lt;cleanlab.multilabel_classificaiton.dataset.common_multilabel_issues&gt;`.</span>
+<span class="sd">    **Parameters**:</span>
+
+<span class="sd">    For information about the arguments to this method, see the documentation of</span>
+<span class="sd">    :py:func:`common_multilabel_issues &lt;cleanlab.multilabel_classification.dataset.common_multilabel_issues&gt;`.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
 <span class="sd">    overall_label_quality : pd.DataFrame</span>
 <span class="sd">        Pandas DataFrame with one row per class and columns: &quot;Class Index&quot;, &quot;Label Issues&quot;,</span>
-<span class="sd">         &quot;Inverse Label Issues&quot;, &quot;Label Issues&quot;, &quot;Inverse Label Noise&quot;, &quot;Label Quality Score&quot;.</span>
+<span class="sd">        &quot;Inverse Label Issues&quot;, &quot;Label Issues&quot;, &quot;Inverse Label Noise&quot;, &quot;Label Quality Score&quot;.</span>
 <span class="sd">        Some entries are overall quality scores between 0 and 1, summarizing how good overall the labels</span>
 <span class="sd">        appear to be for that class (lower values indicate more erroneous labels).</span>
 <span class="sd">        Other entries are estimated counts of annotation errors related to this class.</span>
-<span class="sd">        Here is what each column represents:</span>
 
-<span class="sd">        * *Class Name*: The name of the class if class_names is provided.</span>
-<span class="sd">        * *Class Index*: The index of the class in 0, 1, ..., K-1.</span>
-<span class="sd">        * *Label Issues*: Estimated number of examples in the dataset that are labeled as belonging to class k but actually should not belong to this class.</span>
-<span class="sd">        * *Inverse Label Issues*: Estimated number of examples in the dataset that should actually be labeled as class k but did not receive this label.</span>
-<span class="sd">        * *Label Noise*: Estimated proportion of examples in the dataset that are labeled as class k but should not be. For each class k: this is computed by dividing the number of examples with &quot;Label Issues&quot; that were labeled as class k by the total number of examples labeled as class k.</span>
-<span class="sd">        * *Inverse Label Noise*: Estimated proportion of examples in the dataset that should actually be labeled as class k but did not receive this label.</span>
-<span class="sd">        * *Label Quality Score*: Estimated proportion of examples labeled as class k that have been labeled correctly, i.e. ``1 - label_noise``.</span>
+<span class="sd">        Here is what each column represents:</span>
+<span class="sd">            - *Class Name*: The name of the class if class_names is provided.</span>
+<span class="sd">            - *Class Index*: The index of the class in 0, 1, ..., K-1.</span>
+<span class="sd">            - *Label Issues*: Estimated number of examples in the dataset that are labeled as belonging to class k but actually should not belong to this class.</span>
+<span class="sd">            - *Inverse Label Issues*: Estimated number of examples in the dataset that should actually be labeled as class k but did not receive this label.</span>
+<span class="sd">            - *Label Noise*: Estimated proportion of examples in the dataset that are labeled as class k but should not be. For each class k: this is computed by dividing the number of examples with &quot;Label Issues&quot; that were labeled as class k by the total number of examples labeled as class k.</span>
+<span class="sd">            - *Inverse Label Noise*: Estimated proportion of examples in the dataset that should actually be labeled as class k but did not receive this label.</span>
+<span class="sd">            - *Label Quality Score*: Estimated proportion of examples labeled as class k that have been labeled correctly, i.e. ``1 - label_noise``.</span>
 
 <span class="sd">        By default, the DataFrame is ordered by &quot;Label Quality Score&quot; (in ascending order), so the classes with the most label issues appear first.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -674,7 +675,7 @@
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    For parameter info, see the docstring of :py:func:`common_multilabel_issues &lt;cleanlab.multilabel_classification.dataset.common_multilabel_issues&gt;`</span>
+<span class="sd">    For parameter info, see the docstring of :py:func:`common_multilabel_issues &lt;cleanlab.multilabel_classification.dataset.common_multilabel_issues&gt;`.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
@@ -684,7 +685,8 @@
 <span class="sd">    Raises</span>
 <span class="sd">    ------</span>
 <span class="sd">    ValueError</span>
-<span class="sd">        If `labels` is None.&quot;&quot;&quot;</span>
+<span class="sd">        If `labels` is None.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">if</span> <span class="n">labels</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">confident_joint</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
@@ -709,7 +711,7 @@
 <span class="sd">    score implies a higher quality dataset.</span>
 
 <span class="sd">    **Parameters**: For information about the arguments to this method, see the documentation of</span>
-<span class="sd">    :py:func:`common_multilabel_issues &lt;cleanlab.multilabel_classificaiton.dataset.common_multilabel_issues&gt;`.</span>
+<span class="sd">    :py:func:`common_multilabel_issues &lt;cleanlab.multilabel_classification.dataset.common_multilabel_issues&gt;`.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
@@ -741,16 +743,15 @@
 <span class="sd">    * Overall label quality scores, summarizing how accurate the labels appear across the entire dataset.</span>
 
 <span class="sd">    **Parameters**: For information about the arguments to this method, see the documentation of</span>
-<span class="sd">    :py:func:`common_multilabel_issues &lt;cleanlab.multilabel_classificaiton.dataset.common_multilabel_issues&gt;`.</span>
+<span class="sd">    :py:func:`common_multilabel_issues &lt;cleanlab.multilabel_classification.dataset.common_multilabel_issues&gt;`.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
 <span class="sd">    summary : dict</span>
 <span class="sd">        A dictionary containing keys (see the corresponding functions&#39; documentation to understand the values):</span>
-
-<span class="sd">        - ``&quot;overall_label_health_score&quot;``, corresponding to output of :py:func:`overall_multilabel_health_score &lt;cleanlab.multilabel_classification.dataset.overall_multilabel_health_score&gt;`</span>
-<span class="sd">        - ``&quot;classes_by_multilabel_quality&quot;``, corresponding to output of :py:func:`rank_classes_by_multilabel_quality &lt;cleanlab.multilabel_classification.dataset.rank_classes_by_multilabel_quality&gt;`</span>
-<span class="sd">        - ``&quot;common_multilabel_issues&quot;``, corresponding to output of :py:func:`common_multilabel_issues &lt;cleanlab.multilabel_classification.dataset.common_multilabel_issues&gt;`</span>
+<span class="sd">            - ``&quot;overall_label_health_score&quot;``, corresponding to output of :py:func:`overall_multilabel_health_score &lt;cleanlab.multilabel_classification.dataset.overall_multilabel_health_score&gt;`</span>
+<span class="sd">            - ``&quot;classes_by_multilabel_quality&quot;``, corresponding to output of :py:func:`rank_classes_by_multilabel_quality &lt;cleanlab.multilabel_classification.dataset.rank_classes_by_multilabel_quality&gt;`</span>
+<span class="sd">            - ``&quot;common_multilabel_issues&quot;``, corresponding to output of :py:func:`common_multilabel_issues &lt;cleanlab.multilabel_classification.dataset.common_multilabel_issues&gt;`</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="kn">from</span> <span class="nn">cleanlab.internal.util</span> <span class="kn">import</span> <span class="n">smart_display_dataframe</span>
 

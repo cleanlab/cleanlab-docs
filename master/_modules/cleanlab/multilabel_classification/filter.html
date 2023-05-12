@@ -532,7 +532,7 @@
 <span class="sd">      To obtain out-of-sample predicted probabilities for every example in your dataset, you can use :ref:`cross-validation &lt;pred_probs_cross_val&gt;`.</span>
 <span class="sd">      This is encouraged to get better results.</span>
 
-<span class="sd">    return_indices_ranked_by : {None, &#39;self_confidence&#39;, &#39;normalized_margin&#39;, &#39;confidence_weighted_entropy&#39;}, default=None</span>
+<span class="sd">    return_indices_ranked_by : {None, &#39;self_confidence&#39;, &#39;normalized_margin&#39;, &#39;confidence_weighted_entropy&#39;}, default = None</span>
 <span class="sd">      This function can return a boolean mask (if None) or an array of the example-indices with issues sorted based on the specified ranking method.</span>
 <span class="sd">      Refer to documentation for this argument in :py:func:`filter.find_label_issues &lt;cleanlab.filter.find_label_issues&gt;` for details.</span>
 
@@ -541,12 +541,11 @@
 <span class="sd">      label quality score (see :py:func:`rank.get_label_quality_scores</span>
 <span class="sd">      &lt;cleanlab.rank.get_label_quality_scores&gt;`).</span>
 
-<span class="sd">    filter_by : {&#39;prune_by_class&#39;, &#39;prune_by_noise_rate&#39;, &#39;both&#39;, &#39;confident_learning&#39;, &#39;predicted_neq_given&#39;,</span>
-<span class="sd">        &#39;low_normalized_margin&#39;, &#39;low_self_confidence&#39;}, default=&#39;prune_by_noise_rate&#39;</span>
+<span class="sd">    filter_by : {&#39;prune_by_class&#39;, &#39;prune_by_noise_rate&#39;, &#39;both&#39;, &#39;confident_learning&#39;, &#39;predicted_neq_given&#39;, &#39;low_normalized_margin&#39;, &#39;low_self_confidence&#39;}, default=&#39;prune_by_noise_rate&#39;</span>
 <span class="sd">      The specific Confident Learning method to determine precisely which examples have label issues in a dataset.</span>
 <span class="sd">      Refer to documentation for this argument in :py:func:`filter.find_label_issues &lt;cleanlab.filter.find_label_issues&gt;` for details.</span>
 
-<span class="sd">    frac_noise : float, default=1.0</span>
+<span class="sd">    frac_noise : float, default = 1.0</span>
 <span class="sd">      This will return the &quot;top&quot; frac_noise * num_label_issues estimated label errors, dependent on the filtering method used,</span>
 <span class="sd">      Refer to documentation for this argument in :py:func:`filter.find_label_issues &lt;cleanlab.filter.find_label_issues&gt;` for details.</span>
 
@@ -554,7 +553,7 @@
 <span class="sd">      An iterable that specifies the number of mislabeled examples to return from each class.</span>
 <span class="sd">      Refer to documentation for this argument in :py:func:`filter.find_label_issues &lt;cleanlab.filter.find_label_issues&gt;` for details.</span>
 
-<span class="sd">    min_examples_per_class : int, default=1</span>
+<span class="sd">    min_examples_per_class : int, default = 1</span>
 <span class="sd">      The minimum number of examples required per class below which examples from this class will not be flagged as label issues.</span>
 <span class="sd">      Refer to documentation for this argument in :py:func:`filter.find_label_issues &lt;cleanlab.filter.find_label_issues&gt;` for details.</span>
 
@@ -563,7 +562,7 @@
 <span class="sd">      Entry ``(c, i, j)`` in this array is the number of examples confidently counted into a ``(class c, noisy label=i, true label=j)`` bin,</span>
 <span class="sd">      where `i, j` are either 0 or 1 to denote whether this example belongs to class `c` or not</span>
 <span class="sd">      (recall examples can belong to multiple classes in multi-label classification).</span>
-<span class="sd">      The `confident_joint` can be computed using :py:func:`count.compute_confident_joint &lt;cleanlab.count.compute_confident_joint&gt;` with multi_label=True.</span>
+<span class="sd">      The `confident_joint` can be computed using :py:func:`count.compute_confident_joint &lt;cleanlab.count.compute_confident_joint&gt;` with ``multi_label=True``.</span>
 <span class="sd">      If not provided, it is computed from the given (noisy) `labels` and `pred_probs`.</span>
 
 <span class="sd">    n_jobs : optional</span>
@@ -627,70 +626,66 @@
 <span class="sd">    This method returns a list of size K, the number of classes in the dataset.</span>
 
 <span class="sd">    Parameters</span>
-<span class="sd">     ----------</span>
-<span class="sd">     labels : List[List[int]]</span>
-<span class="sd">       List of noisy labels for multi-label classification where each example can belong to multiple classes.</span>
-<span class="sd">       Refer to documentation for this argument in :py:func:`find_label_issues &lt;cleanlab.multilabel_classification.filter.find_label_issues&gt;` for further details.</span>
-<span class="sd">       This method will identify whether ``labels[i][k]`` appears correct, for every example ``i`` and class ``k``.</span>
+<span class="sd">    ----------</span>
+<span class="sd">    labels : List[List[int]]</span>
+<span class="sd">      List of noisy labels for multi-label classification where each example can belong to multiple classes.</span>
+<span class="sd">      Refer to documentation for this argument in :py:func:`find_label_issues &lt;cleanlab.multilabel_classification.filter.find_label_issues&gt;` for further details.</span>
+<span class="sd">      This method will identify whether ``labels[i][k]`` appears correct, for every example ``i`` and class ``k``.</span>
 
 <span class="sd">    pred_probs : np.ndarray</span>
 <span class="sd">      An array of shape ``(N, K)`` of model-predicted class probabilities.</span>
 <span class="sd">      Refer to documentation for this argument in :py:func:`find_label_issues &lt;cleanlab.multilabel_classification.filter.find_label_issues&gt;` for further details.</span>
 
-<span class="sd">     return_indices_ranked_by : {None, &#39;self_confidence&#39;, &#39;normalized_margin&#39;, &#39;confidence_weighted_entropy&#39;}, default=None</span>
-<span class="sd">       This function can return a boolean mask (if this argument is ``None``) or a sorted array of indices based on the specified ranking method (if not ``None``).</span>
-<span class="sd">       Refer to documentation for this argument in :py:func:`filter.find_label_issues &lt;cleanlab.filter.find_label_issues&gt;` for details.</span>
+<span class="sd">    return_indices_ranked_by : {None, &#39;self_confidence&#39;, &#39;normalized_margin&#39;, &#39;confidence_weighted_entropy&#39;}, default = None</span>
+<span class="sd">      This function can return a boolean mask (if this argument is ``None``) or a sorted array of indices based on the specified ranking method (if not ``None``).</span>
+<span class="sd">      Refer to documentation for this argument in :py:func:`filter.find_label_issues &lt;cleanlab.filter.find_label_issues&gt;` for details.</span>
 
-<span class="sd">     rank_by_kwargs : dict, optional</span>
-<span class="sd">       Optional keyword arguments to pass into scoring functions for ranking by.</span>
-<span class="sd">       label quality score (see :py:func:`rank.get_label_quality_scores</span>
-<span class="sd">       &lt;cleanlab.rank.get_label_quality_scores&gt;`).</span>
+<span class="sd">    rank_by_kwargs : dict, optional</span>
+<span class="sd">      Optional keyword arguments to pass into scoring functions for ranking by.</span>
+<span class="sd">      label quality score (see :py:func:`rank.get_label_quality_scores</span>
+<span class="sd">      &lt;cleanlab.rank.get_label_quality_scores&gt;`).</span>
 
-<span class="sd">     filter_by : {&#39;prune_by_class&#39;, &#39;prune_by_noise_rate&#39;, &#39;both&#39;, &#39;confident_learning&#39;, &#39;predicted_neq_given&#39;,</span>
-<span class="sd">         &#39;low_normalized_margin&#39;, &#39;low_self_confidence&#39;}, default=&#39;prune_by_noise_rate&#39;</span>
-<span class="sd">       The specific method that can be used to filter or prune examples with label issues from a dataset.</span>
-<span class="sd">       Refer to documentation for this argument in :py:func:`filter.find_label_issues &lt;cleanlab.filter.find_label_issues&gt;` for details.</span>
+<span class="sd">    filter_by : {&#39;prune_by_class&#39;, &#39;prune_by_noise_rate&#39;, &#39;both&#39;, &#39;confident_learning&#39;, &#39;predicted_neq_given&#39;, &#39;low_normalized_margin&#39;, &#39;low_self_confidence&#39;}, default = &#39;prune_by_noise_rate&#39;</span>
+<span class="sd">      The specific method that can be used to filter or prune examples with label issues from a dataset.</span>
+<span class="sd">      Refer to documentation for this argument in :py:func:`filter.find_label_issues &lt;cleanlab.filter.find_label_issues&gt;` for details.</span>
 
-<span class="sd">     frac_noise : float, default=1.0</span>
-<span class="sd">       This will return the &quot;top&quot; frac_noise * num_label_issues estimated label errors, dependent on the filtering method used,</span>
-<span class="sd">       Refer to documentation for this argument in :py:func:`filter.find_label_issues &lt;cleanlab.filter.find_label_issues&gt;` for details.</span>
+<span class="sd">    frac_noise : float, default = 1.0</span>
+<span class="sd">      This will return the &quot;top&quot; frac_noise * num_label_issues estimated label errors, dependent on the filtering method used,</span>
+<span class="sd">      Refer to documentation for this argument in :py:func:`filter.find_label_issues &lt;cleanlab.filter.find_label_issues&gt;` for details.</span>
 
-<span class="sd">     num_to_remove_per_class : array_like</span>
-<span class="sd">       This parameter is an iterable that specifies the number of mislabeled examples to return from each class.</span>
-<span class="sd">       Refer to documentation for this argument in :py:func:`filter.find_label_issues &lt;cleanlab.filter.find_label_issues&gt;` for details.</span>
+<span class="sd">    num_to_remove_per_class : array_like</span>
+<span class="sd">      This parameter is an iterable that specifies the number of mislabeled examples to return from each class.</span>
+<span class="sd">      Refer to documentation for this argument in :py:func:`filter.find_label_issues &lt;cleanlab.filter.find_label_issues&gt;` for details.</span>
 
-<span class="sd">     min_examples_per_class : int, default=1</span>
-<span class="sd">       The minimum number of examples required per class to avoid flagging as label issues.</span>
-<span class="sd">       Refer to documentation for this argument in :py:func:`filter.find_label_issues &lt;cleanlab.filter.find_label_issues&gt;` for details.</span>
+<span class="sd">    min_examples_per_class : int, default = 1</span>
+<span class="sd">      The minimum number of examples required per class to avoid flagging as label issues.</span>
+<span class="sd">      Refer to documentation for this argument in :py:func:`filter.find_label_issues &lt;cleanlab.filter.find_label_issues&gt;` for details.</span>
 
-<span class="sd">     confident_joint : np.ndarray, optional</span>
-<span class="sd">       An array of shape ``(K, 2, 2)`` representing a one-vs-rest formatted confident joint.</span>
-<span class="sd">       Refer to documentation for this argument in :py:func:`cleanlab.multilabel_classification.filter.find_label_issues &lt;cleanlab.multilabel_classification.filter.find_label_issues&gt;` for details.</span>
+<span class="sd">    confident_joint : np.ndarray, optional</span>
+<span class="sd">      An array of shape ``(K, 2, 2)`` representing a one-vs-rest formatted confident joint.</span>
+<span class="sd">      Refer to documentation for this argument in :py:func:`cleanlab.multilabel_classification.filter.find_label_issues &lt;cleanlab.multilabel_classification.filter.find_label_issues&gt;` for details.</span>
 
 <span class="sd">    n_jobs : optional</span>
-<span class="sd">       Number of processing threads used by multiprocessing.</span>
-<span class="sd">       Refer to documentation for this argument in :py:func:`filter.find_label_issues &lt;cleanlab.filter.find_label_issues&gt;` for details.</span>
+<span class="sd">      Number of processing threads used by multiprocessing.</span>
+<span class="sd">      Refer to documentation for this argument in :py:func:`filter.find_label_issues &lt;cleanlab.filter.find_label_issues&gt;` for details.</span>
 
-<span class="sd">     verbose : optional</span>
-<span class="sd">       If ``True``, prints when multiprocessing happens.</span>
+<span class="sd">    verbose : optional</span>
+<span class="sd">      If ``True``, prints when multiprocessing happens.</span>
 
-<span class="sd">     Returns</span>
-<span class="sd">     -------</span>
-<span class="sd">     per_class_label_issues : list(np.ndarray)</span>
-<span class="sd">        By default, this is a list of length K containing the examples where each class appears incorrectly annotated.</span>
-<span class="sd">        ``per_class_label_issues[k]`` is a Boolean mask of the same length as the dataset,</span>
-<span class="sd">        where ``True`` values indicate examples where class ``k`` appears incorrectly annotated.</span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    per_class_label_issues : list(np.ndarray)</span>
+<span class="sd">      By default, this is a list of length K containing the examples where each class appears incorrectly annotated.</span>
+<span class="sd">      ``per_class_label_issues[k]`` is a Boolean mask of the same length as the dataset,</span>
+<span class="sd">      where ``True`` values indicate examples where class ``k`` appears incorrectly annotated.</span>
 
-<span class="sd">        For more details, refer to :py:func:`cleanlab.multilabel_classification.filter.find_label_issues &lt;cleanlab.multilabel_classification.filter.find_label_issues&gt;`.</span>
+<span class="sd">      For more details, refer to :py:func:`cleanlab.multilabel_classification.filter.find_label_issues &lt;cleanlab.multilabel_classification.filter.find_label_issues&gt;`.</span>
 
-<span class="sd">        Otherwise if `return_indices_ranked_by` is not ``None``, then this method returns 3 objects (each of length K, the number of classes): `label_issues_list`, `labels_list`, `pred_probs_list`.</span>
-
-<span class="sd">        * *label_issues_list*: an ordered list of indices of examples where class k appears incorrectly annotated, sorted by the likelihood that class k is correctly annotated.</span>
-
-<span class="sd">        * *labels_list*: a binary one-hot representation of the original labels, useful if you want to compute label quality scores.</span>
-
-<span class="sd">        * *pred_probs_list*: a one-vs-rest representation of the original predicted probabilities of shape ``(N, 2)``, useful if you want to compute label quality scores.</span>
-<span class="sd">          ``pred_probs_list[k][i][0]`` is the estimated probability that example ``i`` belongs to class ``k``, and is equal to: ``1 - ``pred_probs_list[k][i][1]``.</span>
+<span class="sd">      Otherwise if `return_indices_ranked_by` is not ``None``, then this method returns 3 objects (each of length K, the number of classes): `label_issues_list`, `labels_list`, `pred_probs_list`.</span>
+<span class="sd">        - *label_issues_list*: an ordered list of indices of examples where class k appears incorrectly annotated, sorted by the likelihood that class k is correctly annotated.</span>
+<span class="sd">        - *labels_list*: a binary one-hot representation of the original labels, useful if you want to compute label quality scores.</span>
+<span class="sd">        - *pred_probs_list*: a one-vs-rest representation of the original predicted probabilities of shape ``(N, 2)``, useful if you want to compute label quality scores.</span>
+<span class="sd">          ``pred_probs_list[k][i][0]`` is the estimated probability that example ``i`` belongs to class ``k``, and is equal to: ``1 - pred_probs_list[k][i][1]``.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="kn">import</span> <span class="nn">cleanlab.filter</span>
     <span class="kn">from</span> <span class="nn">cleanlab.internal.multilabel_utils</span> <span class="kn">import</span> <span class="n">get_onehot_num_classes</span><span class="p">,</span> <span class="n">stack_complement</span>
