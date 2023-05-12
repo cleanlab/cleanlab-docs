@@ -1394,12 +1394,15 @@ Examples representing most severe instances of this issue:
 </div></div>
 </div>
 <p>Looking at the labels for some of these top-ranked examples, we find their given label was indeed incorrect!</p>
+<section id="Get-additional-information">
+<h3>Get additional information<a class="headerlink" href="#Get-additional-information" title="Permalink to this heading">#</a></h3>
 <p>Additional information (statistics, intermediate results, etc) related to a particular issue type can be accessed via <code class="docutils literal notranslate"><span class="pre">get_info(issue_name)</span></code>.</p>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[15]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">lab</span><span class="o">.</span><span class="n">get_info</span><span class="p">(</span><span class="s2">&quot;label&quot;</span><span class="p">)</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">label_issues_info</span> <span class="o">=</span> <span class="n">lab</span><span class="o">.</span><span class="n">get_info</span><span class="p">(</span><span class="s2">&quot;label&quot;</span><span class="p">)</span>
+<span class="n">label_issues_info</span><span class="p">[</span><span class="s2">&quot;classes_by_label_quality&quot;</span><span class="p">]</span>
 </pre></div>
 </div>
 </div>
@@ -1407,74 +1410,149 @@ Examples representing most severe instances of this issue:
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[15]:
 </pre></div>
 </div>
-<div class="output_area docutils container">
-<div class="highlight"><pre>
-{&#39;num_label_issues&#39;: 11,
- &#39;average_label_quality&#39;: 0.6852252801299478,
- &#39;given_label&#39;: array([&#39;mid&#39;, &#39;mid&#39;, &#39;low&#39;, &#39;high&#39;, &#39;high&#39;, &#39;mid&#39;, &#39;high&#39;, &#39;low&#39;, &#39;mid&#39;,
-        &#39;mid&#39;, &#39;mid&#39;, &#39;low&#39;, &#39;mid&#39;, &#39;mid&#39;, &#39;mid&#39;, &#39;mid&#39;, &#39;mid&#39;, &#39;high&#39;,
-        &#39;high&#39;, &#39;mid&#39;, &#39;low&#39;, &#39;mid&#39;, &#39;high&#39;, &#39;mid&#39;, &#39;mid&#39;, &#39;mid&#39;, &#39;low&#39;,
-        &#39;low&#39;, &#39;mid&#39;, &#39;low&#39;, &#39;high&#39;, &#39;high&#39;, &#39;mid&#39;, &#39;low&#39;, &#39;mid&#39;, &#39;high&#39;,
-        &#39;high&#39;, &#39;high&#39;, &#39;low&#39;, &#39;mid&#39;, &#39;mid&#39;, &#39;mid&#39;, &#39;mid&#39;, &#39;high&#39;, &#39;mid&#39;,
-        &#39;mid&#39;, &#39;mid&#39;, &#39;high&#39;, &#39;low&#39;, &#39;low&#39;, &#39;mid&#39;, &#39;mid&#39;, &#39;mid&#39;, &#39;high&#39;,
-        &#39;mid&#39;, &#39;mid&#39;, &#39;low&#39;, &#39;low&#39;, &#39;high&#39;, &#39;mid&#39;, &#39;low&#39;, &#39;mid&#39;, &#39;mid&#39;,
-        &#39;mid&#39;, &#39;mid&#39;, &#39;low&#39;, &#39;mid&#39;, &#39;mid&#39;, &#39;mid&#39;, &#39;high&#39;, &#39;mid&#39;, &#39;mid&#39;,
-        &#39;low&#39;, &#39;mid&#39;, &#39;mid&#39;, &#39;high&#39;, &#39;mid&#39;, &#39;high&#39;, &#39;high&#39;, &#39;mid&#39;, &#39;mid&#39;,
-        &#39;high&#39;, &#39;low&#39;, &#39;mid&#39;, &#39;low&#39;, &#39;mid&#39;, &#39;mid&#39;, &#39;mid&#39;, &#39;low&#39;, &#39;mid&#39;,
-        &#39;mid&#39;, &#39;high&#39;, &#39;mid&#39;, &#39;low&#39;, &#39;mid&#39;, &#39;low&#39;, &#39;low&#39;, &#39;low&#39;, &#39;low&#39;,
-        &#39;mid&#39;, &#39;high&#39;, &#39;low&#39;, &#39;mid&#39;, &#39;mid&#39;, &#39;low&#39;, &#39;mid&#39;, &#39;mid&#39;, &#39;high&#39;,
-        &#39;mid&#39;, &#39;high&#39;, &#39;mid&#39;, &#39;mid&#39;, &#39;mid&#39;, &#39;mid&#39;, &#39;mid&#39;, &#39;mid&#39;, &#39;mid&#39;,
-        &#39;mid&#39;, &#39;mid&#39;, &#39;mid&#39;, &#39;high&#39;, &#39;mid&#39;, &#39;high&#39;, &#39;mid&#39;, &#39;mid&#39;, &#39;low&#39;,
-        &#39;mid&#39;, &#39;high&#39;, &#39;low&#39;, &#39;high&#39;, &#39;high&#39;, &#39;mid&#39;], dtype=&#39;&lt;U4&#39;),
- &#39;predicted_label&#39;: array([&#39;mid&#39;, &#39;mid&#39;, &#39;low&#39;, &#39;high&#39;, &#39;mid&#39;, &#39;mid&#39;, &#39;high&#39;, &#39;mid&#39;, &#39;mid&#39;,
-        &#39;mid&#39;, &#39;mid&#39;, &#39;low&#39;, &#39;mid&#39;, &#39;mid&#39;, &#39;mid&#39;, &#39;mid&#39;, &#39;mid&#39;, &#39;high&#39;,
-        &#39;mid&#39;, &#39;mid&#39;, &#39;mid&#39;, &#39;mid&#39;, &#39;mid&#39;, &#39;mid&#39;, &#39;mid&#39;, &#39;mid&#39;, &#39;low&#39;,
-        &#39;low&#39;, &#39;mid&#39;, &#39;low&#39;, &#39;high&#39;, &#39;high&#39;, &#39;mid&#39;, &#39;low&#39;, &#39;mid&#39;, &#39;high&#39;,
-        &#39;high&#39;, &#39;high&#39;, &#39;low&#39;, &#39;mid&#39;, &#39;low&#39;, &#39;mid&#39;, &#39;mid&#39;, &#39;mid&#39;, &#39;mid&#39;,
-        &#39;mid&#39;, &#39;mid&#39;, &#39;high&#39;, &#39;low&#39;, &#39;low&#39;, &#39;mid&#39;, &#39;mid&#39;, &#39;mid&#39;, &#39;mid&#39;,
-        &#39;low&#39;, &#39;mid&#39;, &#39;low&#39;, &#39;low&#39;, &#39;high&#39;, &#39;mid&#39;, &#39;low&#39;, &#39;mid&#39;, &#39;mid&#39;,
-        &#39;mid&#39;, &#39;mid&#39;, &#39;low&#39;, &#39;mid&#39;, &#39;mid&#39;, &#39;mid&#39;, &#39;high&#39;, &#39;mid&#39;, &#39;mid&#39;,
-        &#39;low&#39;, &#39;mid&#39;, &#39;mid&#39;, &#39;high&#39;, &#39;mid&#39;, &#39;mid&#39;, &#39;mid&#39;, &#39;mid&#39;, &#39;mid&#39;,
-        &#39;high&#39;, &#39;low&#39;, &#39;mid&#39;, &#39;mid&#39;, &#39;mid&#39;, &#39;mid&#39;, &#39;mid&#39;, &#39;low&#39;, &#39;mid&#39;,
-        &#39;mid&#39;, &#39;mid&#39;, &#39;mid&#39;, &#39;low&#39;, &#39;mid&#39;, &#39;low&#39;, &#39;mid&#39;, &#39;low&#39;, &#39;mid&#39;,
-        &#39;mid&#39;, &#39;high&#39;, &#39;low&#39;, &#39;mid&#39;, &#39;mid&#39;, &#39;mid&#39;, &#39;high&#39;, &#39;mid&#39;, &#39;mid&#39;,
-        &#39;mid&#39;, &#39;high&#39;, &#39;mid&#39;, &#39;mid&#39;, &#39;mid&#39;, &#39;mid&#39;, &#39;mid&#39;, &#39;high&#39;, &#39;mid&#39;,
-        &#39;mid&#39;, &#39;mid&#39;, &#39;mid&#39;, &#39;mid&#39;, &#39;mid&#39;, &#39;high&#39;, &#39;mid&#39;, &#39;mid&#39;, &#39;low&#39;,
-        &#39;mid&#39;, &#39;high&#39;, &#39;low&#39;, &#39;high&#39;, &#39;high&#39;, &#39;mid&#39;], dtype=&#39;&lt;U4&#39;),
- &#39;confident_joint&#39;: array([[23,  0,  6],
-        [ 0, 26,  2],
-        [ 1,  3, 71]]),
- &#39;classes_by_label_quality&#39;:   Class Name  Class Index  Label Issues  Inverse Label Issues  Label Noise
- 0       high            0             6                     1     0.206897  \
- 1        low            1             2                     3     0.071429
- 2        mid            2             4                     8     0.053333
+<div class="output_area rendered_html docutils container">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
 
-    Inverse Label Noise  Label Quality Score
- 0             0.041667             0.793103
- 1             0.103448             0.928571
- 2             0.101266             0.946667  ,
- &#39;overlapping_classes&#39;:   Class Name A Class Name B  Class Index A  Class Index B
- 0         high          mid              0              2  \
- 1          low          mid              1              2
- 2         high          low              0              1
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
 
-    Num Overlapping Examples  Joint Probability
- 0                         7           0.053030
- 1                         5           0.037879
- 2                         0           0.000000  ,
- &#39;py&#39;: array([0.18181818, 0.21969697, 0.59848485]),
- &#39;noise_matrix&#39;: array([[0.95833333, 0.        , 0.07594937],
-        [0.        , 0.89655172, 0.02531646],
-        [0.04166667, 0.10344828, 0.89873418]]),
- &#39;inverse_noise_matrix&#39;: array([[0.79310345, 0.        , 0.01333333],
-        [0.        , 0.92857143, 0.04      ],
-        [0.20689655, 0.07142857, 0.94666667]]),
- &#39;class_names&#39;: [&#39;high&#39;, &#39;low&#39;, &#39;mid&#39;]}
-</pre></div></div>
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Class Name</th>
+      <th>Class Index</th>
+      <th>Label Issues</th>
+      <th>Inverse Label Issues</th>
+      <th>Label Noise</th>
+      <th>Inverse Label Noise</th>
+      <th>Label Quality Score</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>high</td>
+      <td>0</td>
+      <td>6</td>
+      <td>1</td>
+      <td>0.206897</td>
+      <td>0.041667</td>
+      <td>0.793103</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>low</td>
+      <td>1</td>
+      <td>2</td>
+      <td>3</td>
+      <td>0.071429</td>
+      <td>0.103448</td>
+      <td>0.928571</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>mid</td>
+      <td>2</td>
+      <td>4</td>
+      <td>8</td>
+      <td>0.053333</td>
+      <td>0.101266</td>
+      <td>0.946667</td>
+    </tr>
+  </tbody>
+</table>
+</div></div>
 </div>
-<p>You can get view sorts of information regarding your dataset using the <code class="docutils literal notranslate"><span class="pre">get_info()</span></code> method with no arguments passed. This will not be printed here as it returns a huge dictionary but feel free to check it out yourself! Don’t worry if you don’t understand all of the miscellaneous information in this <code class="docutils literal notranslate"><span class="pre">info</span></code> dictionary, none of it is critical to diagnose the issues in your dataset.</p>
+<p>This portion of the info shows overall label quality summaries of all examples annotated as a particular class (e.g. the <code class="docutils literal notranslate"><span class="pre">Label</span> <span class="pre">Issues</span></code> column is the estimated number of examples labeled as this class that should actually have a different label). To learn more about this, see the documentation for the <code class="docutils literal notranslate"><span class="pre">cleanlab.dataset.rank_classes_by_label_quality</span></code> method.</p>
+<p>You can view all sorts of information regarding your dataset using the <code class="docutils literal notranslate"><span class="pre">get_info()</span></code> method with no arguments passed. This is not printed here as it returns a huge dictionary but feel free to check it out yourself! Don’t worry if you don’t understand all of the miscellaneous information in this <code class="docutils literal notranslate"><span class="pre">info</span></code> dictionary, none of it is critical to diagnose the issues in your dataset. Understanding miscellaneous info may require reading the documentation of the miscellaneous cleanlab functions which
+computed it.</p>
+</section>
+<section id="Near-duplicate-issues">
+<h3>Near duplicate issues<a class="headerlink" href="#Near-duplicate-issues" title="Permalink to this heading">#</a></h3>
+<p>Let’s also inspect the examples flagged as (near) duplicates. For each such example, the <code class="docutils literal notranslate"><span class="pre">near_duplicate_sets</span></code> column below indicates which other examples in the dataset are highly similar to it (this value is empty for examples not flagged as nearly duplicated). The <code class="docutils literal notranslate"><span class="pre">near_duplicate_score</span></code> quantifies how similar each example is to its nearest neighbor in the dataset.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[16]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">lab</span><span class="o">.</span><span class="n">get_issues</span><span class="p">(</span><span class="s2">&quot;near_duplicate&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s2">&quot;is_near_duplicate_issue&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="s2">&quot;near_duplicate_score&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[16]:
+</pre></div>
+</div>
+<div class="output_area rendered_html docutils container">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>is_near_duplicate_issue</th>
+      <th>near_duplicate_score</th>
+      <th>near_duplicate_sets</th>
+      <th>distance_to_nearest_neighbor</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>123</th>
+      <td>True</td>
+      <td>0.000000e+00</td>
+      <td>[131, 92]</td>
+      <td>0.000000e+00</td>
+    </tr>
+    <tr>
+      <th>131</th>
+      <td>True</td>
+      <td>0.000000e+00</td>
+      <td>[123, 92]</td>
+      <td>0.000000e+00</td>
+    </tr>
+    <tr>
+      <th>129</th>
+      <td>True</td>
+      <td>4.463180e-07</td>
+      <td>[130]</td>
+      <td>4.463180e-07</td>
+    </tr>
+    <tr>
+      <th>130</th>
+      <td>True</td>
+      <td>4.463180e-07</td>
+      <td>[129]</td>
+      <td>4.463180e-07</td>
+    </tr>
+  </tbody>
+</table>
+</div></div>
+</div>
 <p><code class="docutils literal notranslate"><span class="pre">Datalab</span></code> makes it very easy to check your datasets for all sorts of issues that are important to deal with for training robust models. The inputs it uses to detect issues can come from <em>any</em> model you have trained (the better your model, the more accurate the issue detection will be).</p>
-<p>For more information, check out this <a class="reference external" href="https://github.com/cleanlab/examples/blob/master/datalab_image_classification/datalab.ipynb">examples notebook</a> and the <a class="reference external" href="datalab_advanced.html">advanced Datalab tutorial</a>.</p>
+<p>To learn more, check out this <a class="reference external" href="https://github.com/cleanlab/examples/blob/master/datalab_image_classification/datalab.ipynb">examples notebook</a> and the <a class="reference external" href="datalab_advanced.html">advanced Datalab tutorial</a>.</p>
+</section>
 </section>
 </section>
  
@@ -1558,7 +1636,11 @@ Examples representing most severe instances of this issue:
 <li><a class="reference internal" href="#2.-Create-and-load-the-data-(can-skip-these-details)">2. Create and load the data (can skip these details)</a></li>
 <li><a class="reference internal" href="#3.-Get-out-of-sample-predicted-probabilities-from-a-classifier">3. Get out-of-sample predicted probabilities from a classifier</a></li>
 <li><a class="reference internal" href="#4.-Use-Datalab-to-find-issues-in-the-dataset">4. Use Datalab to find issues in the dataset</a></li>
-<li><a class="reference internal" href="#5.-Learn-more-about-the-issues-in-your-dataset">5. Learn more about the issues in your dataset</a></li>
+<li><a class="reference internal" href="#5.-Learn-more-about-the-issues-in-your-dataset">5. Learn more about the issues in your dataset</a><ul>
+<li><a class="reference internal" href="#Get-additional-information">Get additional information</a></li>
+<li><a class="reference internal" href="#Near-duplicate-issues">Near duplicate issues</a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
