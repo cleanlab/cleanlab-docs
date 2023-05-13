@@ -1,0 +1,1136 @@
+<!doctype html>
+<html class="no-js" lang="en">
+  <head><meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width,initial-scale=1"/>
+    <meta name="color-scheme" content="light dark"><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+<link rel="index" title="Index" href="../../genindex.html" /><link rel="search" title="Search" href="../../search.html" /><link rel="next" title="latent_algebra" href="latent_algebra.html" /><link rel="prev" title="internal" href="index.html" />
+
+    <link rel="shortcut icon" href="https://raw.githubusercontent.com/cleanlab/assets/a4483476d449f2f05a4c7cde329e72358099cc07/cleanlab/cleanlab_favicon.svg"/><meta name="generator" content="sphinx-5.1.1, furo 2022.06.21"/>
+        <title>util - cleanlab</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/styles/furo.css?digest=40978830699223671f4072448e654b5958f38b89" />
+    <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/tabs.css" />
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/katex@0.13.11/dist/katex.min.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/katex-math.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/styles/furo-extensions.css?digest=30d1aed668e5c3a91c3e3bf6a60b675221979f0e" />
+    <link rel="stylesheet" type="text/css" href="../../_static/css/custom.css" />
+    
+    
+
+
+<style>
+  body {
+    --color-code-background: #f8f8f8;
+  --color-code-foreground: black;
+  
+  }
+  @media not print {
+    body[data-theme="dark"] {
+      --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+    }
+    @media (prefers-color-scheme: dark) {
+      body:not([data-theme="light"]) {
+        --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+      }
+    }
+  }
+</style></head>
+  <body>
+    
+    <script>
+      document.body.dataset.theme = localStorage.getItem("theme") || "auto";
+    </script>
+    
+
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+  <symbol id="svg-toc" viewBox="0 0 24 24">
+    <title>Contents</title>
+    <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 1024 1024">
+      <path d="M408 442h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8zm-8 204c0 4.4 3.6 8 8 8h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56zm504-486H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zm0 632H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zM115.4 518.9L271.7 642c5.8 4.6 14.4.5 14.4-6.9V388.9c0-7.4-8.5-11.5-14.4-6.9L115.4 505.1a8.74 8.74 0 0 0 0 13.8z"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-menu" viewBox="0 0 24 24">
+    <title>Menu</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-menu">
+      <line x1="3" y1="12" x2="21" y2="12"></line>
+      <line x1="3" y1="6" x2="21" y2="6"></line>
+      <line x1="3" y1="18" x2="21" y2="18"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-arrow-right" viewBox="0 0 24 24">
+    <title>Expand</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-chevron-right">
+      <polyline points="9 18 15 12 9 6"></polyline>
+    </svg>
+  </symbol>
+  <symbol id="svg-sun" viewBox="0 0 24 24">
+    <title>Light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="feather-sun">
+      <circle cx="12" cy="12" r="5"></circle>
+      <line x1="12" y1="1" x2="12" y2="3"></line>
+      <line x1="12" y1="21" x2="12" y2="23"></line>
+      <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+      <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+      <line x1="1" y1="12" x2="3" y2="12"></line>
+      <line x1="21" y1="12" x2="23" y2="12"></line>
+      <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+      <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon" viewBox="0 0 24 24">
+    <title>Dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-moon">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454z" />
+    </svg>
+  </symbol>
+  <symbol id="svg-sun-half" viewBox="0 0 24 24">
+    <title>Auto light/dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-shadow">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+      <circle cx="12" cy="12" r="9" />
+      <path d="M13 12h5" />
+      <path d="M13 15h4" />
+      <path d="M13 18h1" />
+      <path d="M13 9h4" />
+      <path d="M13 6h1" />
+    </svg>
+  </symbol>
+</svg>
+
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation">
+<input type="checkbox" class="sidebar-toggle" name="__toc" id="__toc">
+<label class="overlay sidebar-overlay" for="__navigation">
+  <div class="visually-hidden">Hide navigation sidebar</div>
+</label>
+<label class="overlay toc-overlay" for="__toc">
+  <div class="visually-hidden">Hide table of contents sidebar</div>
+</label>
+
+
+
+<div class="page">
+  <header class="mobile-header">
+    <div class="header-left">
+      <label class="nav-overlay-icon" for="__navigation">
+        <div class="visually-hidden">Toggle site navigation sidebar</div>
+        <i class="icon"><svg><use href="#svg-menu"></use></svg></i>
+      </label>
+    </div>
+    <div class="header-center">
+      <a href="../../index.html"><div class="brand">cleanlab</div></a>
+    </div>
+    <div class="header-right">
+      <div class="theme-toggle-container theme-toggle-header">
+        <button class="theme-toggle">
+          <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+          <svg class="theme-icon-when-auto"><use href="#svg-sun-half"></use></svg>
+          <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+          <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+        </button>
+      </div>
+      <label class="toc-overlay-icon toc-header-icon no-toc" for="__toc">
+        <div class="visually-hidden">Toggle table of contents sidebar</div>
+        <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+      </label>
+    </div>
+  </header>
+  <aside class="sidebar-drawer">
+    <div class="sidebar-container">
+      
+      <div class="sidebar-sticky"><a style="padding-bottom: 0px;" class="sidebar-brand centered" href="../../index.html">
+    
+    <div class="sidebar-logo-container">
+        <img class="sidebar-logo" src="https://raw.githubusercontent.com/cleanlab/assets/master/cleanlab/cleanlab_logo_only.png" alt="Logo" />
+    </div>
+    
+    <span style="margin-bottom:0px" class="sidebar-brand-text">
+        cleanlab
+    </span>
+    
+</a>
+
+<div class="centered">
+    <a style="margin-top: 6px;" class="github-button" href="https://github.com/cleanlab/cleanlab" data-size="large" data-show-count="true"
+    aria-label="Star cleanlab/cleanlab on GitHub">Star</a>
+</div>
+<form class="sidebar-search-container" method="get" action="../../search.html" role="search">
+  <input class="sidebar-search" placeholder=Search name="q" aria-label="Search">
+  <input type="hidden" name="check_keywords" value="yes">
+  <input type="hidden" name="area" value="default">
+</form>
+<div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
+  <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../index.html">Quickstart</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Tutorials</span></p>
+<ul>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../tutorials/datalab/index.html">Datalab Tutorials</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../tutorials/datalab/datalab_quickstart.html">Detecting Common Data Issues with Datalab</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../tutorials/datalab/datalab_advanced.html">Perform Advanced Data Auditing with Datalab</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../tutorials/datalab/text.html">Text Classification</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../tutorials/datalab/tabular.html">Tabular Classification</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../tutorials/datalab/image.html">Image Classification Label Errors</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../tutorials/datalab/audio.html">Audio Classification Label Errors</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorials/indepth_overview.html">Workflows of Data-Centric AI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorials/image.html">Image Classification (pytorch)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorials/text.html">Text Classification (transformers)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorials/tabular.html">Tabular Classification (sklearn)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorials/audio.html">Audio Classification (speechbrain)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorials/dataset_health.html">Find Dataset-level Issues</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorials/outliers.html">Identifying Outliers (pytorch)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorials/multiannotator.html">Improving Consensus Labels for Multiannotator Data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorials/multilabel_classification.html">Multi-Label Classification</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorials/token_classification.html">Token Classification (text)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorials/pred_probs_cross_val.html">Predicted Probabilities via Cross Validation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorials/faq.html">FAQ</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API Reference</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../classification.html">classification</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../filter.html">filter</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../rank.html">rank</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../count.html">count</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../dataset.html">dataset</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../outlier.html">outlier</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../multiannotator.html">multiannotator</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../multilabel_classification/index.html">multilabel_classification</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../multilabel_classification/filter.html">filter</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../multilabel_classification/rank.html">rank</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../multilabel_classification/dataset.html">dataset</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../token_classification/index.html">token_classification</a><input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" role="switch" type="checkbox"/><label for="toctree-checkbox-3"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../token_classification/filter.html">filter</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../token_classification/rank.html">rank</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../token_classification/summary.html">summary</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../datalab/index.html">datalab</a><input class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" role="switch" type="checkbox"/><label for="toctree-checkbox-4"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../datalab/guide/index.html">Datalab guides</a><input class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" role="switch" type="checkbox"/><label for="toctree-checkbox-5"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../datalab/guide/issue_type_description.html">Datalab Issue Types</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../datalab/guide/custom_issue_manager.html">Creating Your Own Issues Manager</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../datalab/datalab.html">datalab</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../datalab/data.html">data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../datalab/data_issues.html">data_issues</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../datalab/issue_finder.html">issue_finder</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../datalab/factory.html">factory</a></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../datalab/issue_manager/index.html">issue_manager</a><input class="toctree-checkbox" id="toctree-checkbox-6" name="toctree-checkbox-6" role="switch" type="checkbox"/><label for="toctree-checkbox-6"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../datalab/issue_manager/issue_manager.html">Base issue_manager module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../datalab/issue_manager/label.html">label</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../datalab/issue_manager/outlier.html">outlier</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../datalab/issue_manager/duplicate.html">duplicate</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../datalab/issue_manager/noniid.html">noniid</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../datalab/report.html">report</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../benchmarking/index.html">benchmarking</a><input class="toctree-checkbox" id="toctree-checkbox-7" name="toctree-checkbox-7" role="switch" type="checkbox"/><label for="toctree-checkbox-7"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../benchmarking/noise_generation.html">noise_generation</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../models/index.html">models</a><input class="toctree-checkbox" id="toctree-checkbox-8" name="toctree-checkbox-8" role="switch" type="checkbox"/><label for="toctree-checkbox-8"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../models/keras.html">keras</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../models/fasttext.html">fasttext</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../experimental/index.html">experimental</a><input class="toctree-checkbox" id="toctree-checkbox-9" name="toctree-checkbox-9" role="switch" type="checkbox"/><label for="toctree-checkbox-9"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../experimental/label_issues_batched.html">label_issues_batched</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../experimental/mnist_pytorch.html">mnist_pytorch</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../experimental/coteaching.html">coteaching</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../experimental/cifar_cnn.html">cifar_cnn</a></li>
+</ul>
+</li>
+<li class="toctree-l1 current has-children"><a class="reference internal" href="index.html">internal</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-10" name="toctree-checkbox-10" role="switch" type="checkbox"/><label for="toctree-checkbox-10"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="current">
+<li class="toctree-l2 current current-page"><a class="current reference internal" href="#">util</a></li>
+<li class="toctree-l2"><a class="reference internal" href="latent_algebra.html">latent_algebra</a></li>
+<li class="toctree-l2"><a class="reference internal" href="label_quality_utils.html">label_quality_utils</a></li>
+<li class="toctree-l2"><a class="reference internal" href="multilabel_utils.html">multilabel_utils</a></li>
+<li class="toctree-l2"><a class="reference internal" href="multilabel_scorer.html">multilabel_scorer</a></li>
+<li class="toctree-l2"><a class="reference internal" href="outlier.html">outlier</a></li>
+<li class="toctree-l2"><a class="reference internal" href="token_classification_utils.html">token_classification_utils</a></li>
+<li class="toctree-l2"><a class="reference internal" href="validation.html">validation</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Guides</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/cleanlab/cleanlab/blob/master/CONTRIBUTING.md">How to contribute</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../migrating/migrate_v2.html">Migrating to v2.x</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Links</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference external" href="https://cleanlab.ai">Website</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/cleanlab/cleanlab">GitHub</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://pypi.org/project/cleanlab/">PyPI</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://anaconda.org/Cleanlab/cleanlab">Conda</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://cleanlab.ai/studio/?utm_source=github&amp;utm_medium=docs&amp;utm_campaign=clostostudio">Cleanlab Studio</a></li>
+</ul>
+
+</div>
+
+
+<!-- Start of versioning -->
+
+<div class="sidebar-tree">
+    <p class="caption" role="heading">
+        <span class="caption-text">Versions</span>
+    </p>
+    <ul>
+        <li class="toctree-l1">
+            <a
+                id="version_number"
+                class="reference internal"
+                href="/"
+                >stable</a
+            >
+        </li>
+        <li class="toctree-l1">
+            <a
+                id="commit_hash"
+                class="reference internal"
+                href="/master/"
+                >developer</a
+            >
+        </li>
+        
+        <li class="toctree-l1">
+            <a
+                id="v2.4.0"
+                class="reference internal"
+                href="/v2.4.0/"
+                >v2.4.0</a
+            >
+        </li>
+        
+        <li class="toctree-l1">
+            <a
+                id="v2.3.1"
+                class="reference internal"
+                href="/v2.3.1/"
+                >v2.3.1</a
+            >
+        </li>
+        
+        <li class="toctree-l1">
+            <a
+                id="v2.3.0"
+                class="reference internal"
+                href="/v2.3.0/"
+                >v2.3.0</a
+            >
+        </li>
+        
+        <li class="toctree-l1">
+            <a
+                id="v2.2.0"
+                class="reference internal"
+                href="/v2.2.0/"
+                >v2.2.0</a
+            >
+        </li>
+        
+        <li class="toctree-l1">
+            <a
+                id="v2.1.0"
+                class="reference internal"
+                href="/v2.1.0/"
+                >v2.1.0</a
+            >
+        </li>
+        
+        <li class="toctree-l1">
+            <a
+                id="v2.0.0"
+                class="reference internal"
+                href="/v2.0.0/"
+                >v2.0.0</a
+            >
+        </li>
+        
+        <li class="toctree-l1">
+            <a
+                id="v1.0.1"
+                class="reference internal"
+                href="/v1.0.1/"
+                >v1.0.1</a
+            >
+        </li>
+        
+    </ul>
+</div>
+
+<br>
+<br>
+
+<script
+    type="text/javascript"
+    src="/versioning.js"
+></script>
+
+<script type="text/javascript">
+    window.addEventListener("load", () => {
+        const version_number = Version.version_number;
+        const commit_hash = Version.commit_hash;
+
+        document.getElementById("version_number").innerHTML =
+            "stable <code class='docutils literal notranslate'><span class='pre'> (" +
+            version_number +
+            ")</span></code>";
+        document.getElementById("commit_hash").innerHTML =
+            "master <code class='docutils literal notranslate'><span class='pre'> (" +
+            commit_hash.slice(0, 7) +
+            "&hellip;)</span></code>";
+    });
+</script>
+
+<!-- End of versioning -->
+
+</div>
+      </div>
+      
+    </div>
+  </aside>
+  <div class="main">
+    <div class="content">
+      <div class="article-container">
+        <a href="#" class="back-to-top muted-link">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12z"></path>
+          </svg>
+          <span>Back to top</span>
+        </a>
+        <div class="content-icon-container">
+          <div class="theme-toggle-container theme-toggle-content">
+            <button class="theme-toggle">
+              <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+              <svg class="theme-icon-when-auto"><use href="#svg-sun-half"></use></svg>
+              <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+              <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+            </button>
+          </div>
+          <label class="toc-overlay-icon toc-content-icon no-toc" for="__toc">
+            <div class="visually-hidden">Toggle table of contents sidebar</div>
+            <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+          </label>
+        </div>
+        <article role="main">
+          
+
+<noscript>
+  <div class="admonition warning">
+    <p class="admonition-title">Warning</p>
+    <p>Parts of this site uses JavaScript, but your browser does not support it.</p>
+  </div>
+</noscript>
+
+
+
+<!-- Start of Version Warning Banner -->
+
+<p id="doc_ver_warning"></p>
+
+<script
+    type="text/javascript"
+    src="/versioning.js"
+></script>
+<script type="text/javascript">
+    window.addEventListener("load", () => {
+        const version_number = Version.version_number;
+        const path_arr = window.location.pathname.split("/");
+
+        if (path_arr.includes("master")) {
+            document.getElementById("doc_ver_warning").innerHTML =
+            `<div class="admonition warning">
+            <p class="admonition-title">Warning</p>
+            <p>This version of the documentation corresponds to the master branch of <code class="docutils literal notranslate"><span class="pre">cleanlab</span></code> source code from <a href="https://github.com/cleanlab/cleanlab/">GitHub</a>. To see the documentation for the latest <code class="docutils literal notranslate"><span class="pre">pip</span></code>-installed version, click <a href="/">here</a>.</p>
+            </div>`;
+        } else if (!path_arr.includes(version_number) && !path_arr.includes("stable")) {
+            document.getElementById("doc_ver_warning").innerHTML =
+            `<div class="admonition warning">
+            <p class="admonition-title">Warning</p>
+            <p>This documentation is for an old version (<code class="docutils literal notranslate"><span class="pre">v2.4.0</span></code>) of <code class="docutils literal notranslate"><span class="pre">cleanlab</span></code>. To see the documentation for the latest stable version (<code class="docutils literal notranslate"><span class="pre">` + version_number + `</span></code>), click <a href="/">here</a>.</p>
+            </div>`;
+        } else {
+            document.getElementById("doc_ver_warning").remove();
+        }
+    });
+</script>
+
+<!-- End of Version Warning Banner -->
+
+ <section id="module-cleanlab.internal.util">
+<span id="util"></span><h1>util<a class="headerlink" href="#module-cleanlab.internal.util" title="Permalink to this heading">#</a></h1>
+<p>Ancillary helper methods used internally throughout this package; mostly related to Confident Learning algorithms.</p>
+<p><strong>Functions:</strong></p>
+<div class="table-wrapper autosummary longtable docutils container">
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#cleanlab.internal.util.remove_noise_from_class" title="cleanlab.internal.util.remove_noise_from_class"><code class="xref py py-obj docutils literal notranslate"><span class="pre">remove_noise_from_class</span></code></a>(noise_matrix, ...)</p></td>
+<td><p>A helper function in the setting of PU learning.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#cleanlab.internal.util.clip_noise_rates" title="cleanlab.internal.util.clip_noise_rates"><code class="xref py py-obj docutils literal notranslate"><span class="pre">clip_noise_rates</span></code></a>(noise_matrix)</p></td>
+<td><p>Clip all noise rates to proper range [0,1), but do not modify the diagonal terms because they are not noise rates.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#cleanlab.internal.util.clip_values" title="cleanlab.internal.util.clip_values"><code class="xref py py-obj docutils literal notranslate"><span class="pre">clip_values</span></code></a>(x[, low, high, new_sum])</p></td>
+<td><p>Clip all values in p to range [low,high].</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#cleanlab.internal.util.value_counts" title="cleanlab.internal.util.value_counts"><code class="xref py py-obj docutils literal notranslate"><span class="pre">value_counts</span></code></a>(x, *[, num_classes, multi_label])</p></td>
+<td><p>Returns an np.ndarray of shape (K, 1), with the value counts for every unique item in the labels list/array, where K is the number of unique entries in labels.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#cleanlab.internal.util.value_counts_fill_missing_classes" title="cleanlab.internal.util.value_counts_fill_missing_classes"><code class="xref py py-obj docutils literal notranslate"><span class="pre">value_counts_fill_missing_classes</span></code></a>(x, ...[, ...])</p></td>
+<td><p>Same as <code class="docutils literal notranslate"><span class="pre">internal.util.value_counts</span></code> but requires that num_classes is provided and always fills missing classes with zero counts.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#cleanlab.internal.util.get_missing_classes" title="cleanlab.internal.util.get_missing_classes"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_missing_classes</span></code></a>(labels, *[, pred_probs, ...])</p></td>
+<td><p>Find which classes are present in <code class="docutils literal notranslate"><span class="pre">pred_probs</span></code> but not present in <code class="docutils literal notranslate"><span class="pre">labels</span></code>.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#cleanlab.internal.util.round_preserving_sum" title="cleanlab.internal.util.round_preserving_sum"><code class="xref py py-obj docutils literal notranslate"><span class="pre">round_preserving_sum</span></code></a>(iterable)</p></td>
+<td><p>Rounds an iterable of floats while retaining the original summed value.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#cleanlab.internal.util.round_preserving_row_totals" title="cleanlab.internal.util.round_preserving_row_totals"><code class="xref py py-obj docutils literal notranslate"><span class="pre">round_preserving_row_totals</span></code></a>(confident_joint)</p></td>
+<td><p>Rounds confident_joint cj to type int while preserving the totals of reach row.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#cleanlab.internal.util.estimate_pu_f1" title="cleanlab.internal.util.estimate_pu_f1"><code class="xref py py-obj docutils literal notranslate"><span class="pre">estimate_pu_f1</span></code></a>(s, prob_s_eq_1)</p></td>
+<td><p>Computes Claesen's estimate of f1 in the pulearning setting.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#cleanlab.internal.util.confusion_matrix" title="cleanlab.internal.util.confusion_matrix"><code class="xref py py-obj docutils literal notranslate"><span class="pre">confusion_matrix</span></code></a>(true, pred)</p></td>
+<td><p>Implements a confusion matrix for true labels and predicted labels.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#cleanlab.internal.util.print_square_matrix" title="cleanlab.internal.util.print_square_matrix"><code class="xref py py-obj docutils literal notranslate"><span class="pre">print_square_matrix</span></code></a>(matrix[, left_name, ...])</p></td>
+<td><p>Pretty prints a matrix.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#cleanlab.internal.util.print_noise_matrix" title="cleanlab.internal.util.print_noise_matrix"><code class="xref py py-obj docutils literal notranslate"><span class="pre">print_noise_matrix</span></code></a>(noise_matrix[, round_places])</p></td>
+<td><p>Pretty prints the noise matrix.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#cleanlab.internal.util.print_inverse_noise_matrix" title="cleanlab.internal.util.print_inverse_noise_matrix"><code class="xref py py-obj docutils literal notranslate"><span class="pre">print_inverse_noise_matrix</span></code></a>(inverse_noise_matrix)</p></td>
+<td><p>Pretty prints the inverse noise matrix.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#cleanlab.internal.util.print_joint_matrix" title="cleanlab.internal.util.print_joint_matrix"><code class="xref py py-obj docutils literal notranslate"><span class="pre">print_joint_matrix</span></code></a>(joint_matrix[, round_places])</p></td>
+<td><p>Pretty prints the joint label noise matrix.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#cleanlab.internal.util.compress_int_array" title="cleanlab.internal.util.compress_int_array"><code class="xref py py-obj docutils literal notranslate"><span class="pre">compress_int_array</span></code></a>(int_array, ...)</p></td>
+<td><p>Compresses dtype of np.ndarray&lt;int&gt; if num_possible_values is small enough.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#cleanlab.internal.util.train_val_split" title="cleanlab.internal.util.train_val_split"><code class="xref py py-obj docutils literal notranslate"><span class="pre">train_val_split</span></code></a>(X, labels, train_idx, ...)</p></td>
+<td><p>Splits data into training/validation sets based on given indices</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#cleanlab.internal.util.subset_X_y" title="cleanlab.internal.util.subset_X_y"><code class="xref py py-obj docutils literal notranslate"><span class="pre">subset_X_y</span></code></a>(X, labels, mask)</p></td>
+<td><p>Extracts subset of features/labels where mask is True</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#cleanlab.internal.util.subset_labels" title="cleanlab.internal.util.subset_labels"><code class="xref py py-obj docutils literal notranslate"><span class="pre">subset_labels</span></code></a>(labels, mask)</p></td>
+<td><p>Extracts subset of labels where mask is True</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#cleanlab.internal.util.subset_data" title="cleanlab.internal.util.subset_data"><code class="xref py py-obj docutils literal notranslate"><span class="pre">subset_data</span></code></a>(X, mask)</p></td>
+<td><p>Extracts subset of data examples where mask (np.ndarray) is True</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#cleanlab.internal.util.extract_indices_tf" title="cleanlab.internal.util.extract_indices_tf"><code class="xref py py-obj docutils literal notranslate"><span class="pre">extract_indices_tf</span></code></a>(X, idx, allow_shuffle)</p></td>
+<td><p>Extracts subset of tensorflow dataset corresponding to examples at particular indices.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#cleanlab.internal.util.unshuffle_tensorflow_dataset" title="cleanlab.internal.util.unshuffle_tensorflow_dataset"><code class="xref py py-obj docutils literal notranslate"><span class="pre">unshuffle_tensorflow_dataset</span></code></a>(X)</p></td>
+<td><p>Applies iterative inverse transformations to dataset to get version before ShuffleDataset was created.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#cleanlab.internal.util.is_torch_dataset" title="cleanlab.internal.util.is_torch_dataset"><code class="xref py py-obj docutils literal notranslate"><span class="pre">is_torch_dataset</span></code></a>(X)</p></td>
+<td><p><dl class="field-list simple">
+<dt class="field-odd">rtype<span class="colon">:</span></dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></p>
+</dd>
+</dl>
+</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#cleanlab.internal.util.is_tensorflow_dataset" title="cleanlab.internal.util.is_tensorflow_dataset"><code class="xref py py-obj docutils literal notranslate"><span class="pre">is_tensorflow_dataset</span></code></a>(X)</p></td>
+<td><p><dl class="field-list simple">
+<dt class="field-odd">rtype<span class="colon">:</span></dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></p>
+</dd>
+</dl>
+</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#cleanlab.internal.util.csr_vstack" title="cleanlab.internal.util.csr_vstack"><code class="xref py py-obj docutils literal notranslate"><span class="pre">csr_vstack</span></code></a>(a, b)</p></td>
+<td><p>Takes in 2 csr_matrices and appends the second one to the bottom of the first one.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#cleanlab.internal.util.append_extra_datapoint" title="cleanlab.internal.util.append_extra_datapoint"><code class="xref py py-obj docutils literal notranslate"><span class="pre">append_extra_datapoint</span></code></a>(to_data, from_data, index)</p></td>
+<td><p>Appends an extra datapoint to the data object <code class="docutils literal notranslate"><span class="pre">to_data</span></code>.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#cleanlab.internal.util.get_num_classes" title="cleanlab.internal.util.get_num_classes"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_num_classes</span></code></a>([labels, pred_probs, ...])</p></td>
+<td><p>Determines the number of classes based on information considered in a canonical ordering.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#cleanlab.internal.util.num_unique_classes" title="cleanlab.internal.util.num_unique_classes"><code class="xref py py-obj docutils literal notranslate"><span class="pre">num_unique_classes</span></code></a>(labels[, multi_label])</p></td>
+<td><p>Finds the number of unique classes for both single-labeled and multi-labeled labels.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#cleanlab.internal.util.get_unique_classes" title="cleanlab.internal.util.get_unique_classes"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_unique_classes</span></code></a>(labels[, multi_label])</p></td>
+<td><p>Returns the set of unique classes for both single-labeled and multi-labeled labels.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#cleanlab.internal.util.format_labels" title="cleanlab.internal.util.format_labels"><code class="xref py py-obj docutils literal notranslate"><span class="pre">format_labels</span></code></a>(labels)</p></td>
+<td><p>Takes an array of labels and formats it such that labels are in the set <code class="docutils literal notranslate"><span class="pre">0,</span> <span class="pre">1,</span> <span class="pre">...,</span> <span class="pre">K-1</span></code>, where <code class="docutils literal notranslate"><span class="pre">K</span></code> is the number of classes.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#cleanlab.internal.util.smart_display_dataframe" title="cleanlab.internal.util.smart_display_dataframe"><code class="xref py py-obj docutils literal notranslate"><span class="pre">smart_display_dataframe</span></code></a>(df)</p></td>
+<td><p>Display a pandas dataframe if in a jupyter notebook, otherwise print it to console.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<dl class="py function">
+<dt class="sig sig-object py" id="cleanlab.internal.util.remove_noise_from_class">
+<span class="sig-prename descclassname"><span class="pre">cleanlab.internal.util.</span></span><span class="sig-name descname"><span class="pre">remove_noise_from_class</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">noise_matrix</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">class_without_noise</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/cleanlab/internal/util.html#remove_noise_from_class"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cleanlab.internal.util.remove_noise_from_class" title="Permalink to this definition">#</a></dt>
+<dd><p>A helper function in the setting of PU learning.
+Sets all P(label=class_without_noise|true_label=any_other_class) = 0
+in noise_matrix for pulearning setting, where we have
+generalized the positive class in PU learning to be any
+class of choosing, denoted by class_without_noise.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>noise_matrix</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">np.ndarray</span></code> of <code class="xref py py-class docutils literal notranslate"><span class="pre">shape</span> <span class="pre">(K</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">K)</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">K</span> <span class="pre">=</span> <span class="pre">number</span></code> of <code class="xref py py-class docutils literal notranslate"><span class="pre">classes</span></code>) – A conditional probability matrix of the form P(label=k_s|true_label=k_y) containing
+the fraction of examples in every class, labeled as every other class.
+Assumes columns of noise_matrix sum to 1.</p></li>
+<li><p><strong>class_without_noise</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>) – Integer value of the class that has no noise. Traditionally,
+this is 1 (positive) for PU learning.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="cleanlab.internal.util.clip_noise_rates">
+<span class="sig-prename descclassname"><span class="pre">cleanlab.internal.util.</span></span><span class="sig-name descname"><span class="pre">clip_noise_rates</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">noise_matrix</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/cleanlab/internal/util.html#clip_noise_rates"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cleanlab.internal.util.clip_noise_rates" title="Permalink to this definition">#</a></dt>
+<dd><p>Clip all noise rates to proper range [0,1), but
+do not modify the diagonal terms because they are not
+noise rates.</p>
+<p>ASSUMES noise_matrix columns sum to 1.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>noise_matrix</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">np.ndarray</span></code> of <code class="xref py py-class docutils literal notranslate"><span class="pre">shape</span> <span class="pre">(K</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">K)</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">K</span> <span class="pre">=</span> <span class="pre">number</span></code> of <code class="xref py py-class docutils literal notranslate"><span class="pre">classes</span></code>) – A conditional probability matrix containing the fraction of
+examples in every class, labeled as every other class.
+Diagonal terms are not noise rates, but are consistency P(label=k|true_label=k)
+Assumes columns of noise_matrix sum to 1</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="cleanlab.internal.util.clip_values">
+<span class="sig-prename descclassname"><span class="pre">cleanlab.internal.util.</span></span><span class="sig-name descname"><span class="pre">clip_values</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">low</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">high</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">new_sum</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/cleanlab/internal/util.html#clip_values"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cleanlab.internal.util.clip_values" title="Permalink to this definition">#</a></dt>
+<dd><p>Clip all values in p to range [low,high].
+Preserves sum of x.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">np.ndarray</span></code>) – An array / list of values to be clipped.</p></li>
+<li><p><strong>low</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>) – values in x greater than ‘low’ are clipped to this value</p></li>
+<li><p><strong>high</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>) – values in x greater than ‘high’ are clipped to this value</p></li>
+<li><p><strong>new_sum</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>) – normalizes x after clipping to sum to new_sum</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>x</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">np.ndarray</span></code>) – A list of clipped values, summing to the same sum as x.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="cleanlab.internal.util.value_counts">
+<span class="sig-prename descclassname"><span class="pre">cleanlab.internal.util.</span></span><span class="sig-name descname"><span class="pre">value_counts</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_classes</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">multi_label</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/cleanlab/internal/util.html#value_counts"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cleanlab.internal.util.value_counts" title="Permalink to this definition">#</a></dt>
+<dd><p>Returns an np.ndarray of shape (K, 1), with the
+value counts for every unique item in the labels list/array,
+where K is the number of unique entries in labels.</p>
+<p>Works for both single-labeled and multi-labeled data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code> or <code class="xref py py-class docutils literal notranslate"><span class="pre">np.ndarray</span> <span class="pre">(one</span> <span class="pre">dimensional)</span></code>) – A list of discrete objects, like lists or strings, for
+example, class labels ‘y’ when training a classifier.
+e.g. [“dog”,”dog”,”cat”] or [1,2,0,1,1,0,2]</p></li>
+<li><p><strong>num_classes</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span> <span class="pre">(default</span></code>: <code class="xref py py-class docutils literal notranslate"><span class="pre">None)</span></code>) – Setting this fills the value counts for missing classes with zeros.
+For example, if x = [0, 0, 1, 1, 3] then setting <code class="docutils literal notranslate"><span class="pre">num_classes=5</span></code> returns
+[2, 2, 0, 1, 0] whereas setting <code class="docutils literal notranslate"><span class="pre">num_classes=None</span></code> would return [2, 2, 1]. This assumes
+your labels come from the set [0, 1,… num_classes=1] even if some classes are missing.</p></li>
+<li><p><strong>multi_label</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code>, <em>optional</em>) – If <code class="docutils literal notranslate"><span class="pre">True</span></code>, labels should be an iterable (e.g. list) of iterables, containing a
+list of labels for each example, instead of just a single label.
+Assumes all classes in pred_probs.shape[1] are represented in labels.
+The multi-label setting supports classification tasks where an example has 1 or more labels.
+Example of a multi-labeled <code class="xref py py-obj docutils literal notranslate"><span class="pre">labels</span></code> input: <code class="docutils literal notranslate"><span class="pre">[[0,1],</span> <span class="pre">[1],</span> <span class="pre">[0,2],</span> <span class="pre">[0,1,2],</span> <span class="pre">[0],</span> <span class="pre">[1],</span> <span class="pre">...]</span></code>.
+The major difference in how this is calibrated versus single-label is that
+the total number of errors considered is based on the number of labels,
+not the number of examples. So, the calibrated <code class="xref py py-obj docutils literal notranslate"><span class="pre">confident_joint</span></code> will sum
+to the number of total labels.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="cleanlab.internal.util.value_counts_fill_missing_classes">
+<span class="sig-prename descclassname"><span class="pre">cleanlab.internal.util.</span></span><span class="sig-name descname"><span class="pre">value_counts_fill_missing_classes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_classes</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">multi_label</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/cleanlab/internal/util.html#value_counts_fill_missing_classes"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cleanlab.internal.util.value_counts_fill_missing_classes" title="Permalink to this definition">#</a></dt>
+<dd><p>Same as <code class="docutils literal notranslate"><span class="pre">internal.util.value_counts</span></code> but requires that num_classes is provided and
+always fills missing classes with zero counts.</p>
+<p>See <code class="docutils literal notranslate"><span class="pre">internal.util.value_counts</span></code> for parameter docstrings.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="cleanlab.internal.util.get_missing_classes">
+<span class="sig-prename descclassname"><span class="pre">cleanlab.internal.util.</span></span><span class="sig-name descname"><span class="pre">get_missing_classes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">labels</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pred_probs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_classes</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">multi_label</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/cleanlab/internal/util.html#get_missing_classes"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cleanlab.internal.util.get_missing_classes" title="Permalink to this definition">#</a></dt>
+<dd><p>Find which classes are present in <code class="docutils literal notranslate"><span class="pre">pred_probs</span></code> but not present in <code class="docutils literal notranslate"><span class="pre">labels</span></code>.</p>
+<p>See <code class="docutils literal notranslate"><span class="pre">count.compute_confident_joint</span></code> for parameter docstrings.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="cleanlab.internal.util.round_preserving_sum">
+<span class="sig-prename descclassname"><span class="pre">cleanlab.internal.util.</span></span><span class="sig-name descname"><span class="pre">round_preserving_sum</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">iterable</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/cleanlab/internal/util.html#round_preserving_sum"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cleanlab.internal.util.round_preserving_sum" title="Permalink to this definition">#</a></dt>
+<dd><p>Rounds an iterable of floats while retaining the original summed value.
+The name of each parameter is required. The type and description of each
+parameter is optional, but should be included if not obvious.</p>
+<p>The while loop in this code was adapted from:
+<a class="reference external" href="https://github.com/cgdeboer/iteround">https://github.com/cgdeboer/iteround</a></p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>iterable</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code> or <code class="xref py py-class docutils literal notranslate"><span class="pre">np.ndarray</span></code>) – An iterable of floats</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code> or <code class="xref py py-class docutils literal notranslate"><span class="pre">np.ndarray</span></code> – The iterable rounded to int, preserving sum.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="cleanlab.internal.util.round_preserving_row_totals">
+<span class="sig-prename descclassname"><span class="pre">cleanlab.internal.util.</span></span><span class="sig-name descname"><span class="pre">round_preserving_row_totals</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">confident_joint</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/cleanlab/internal/util.html#round_preserving_row_totals"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cleanlab.internal.util.round_preserving_row_totals" title="Permalink to this definition">#</a></dt>
+<dd><p>Rounds confident_joint cj to type int
+while preserving the totals of reach row.
+Assumes that cj is a 2D np.ndarray of type float.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>confident_joint</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">2D</span> <span class="pre">np.ndarray</span></code> of <code class="xref py py-class docutils literal notranslate"><span class="pre">shape</span> <span class="pre">(K</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">K)</span></code>) – See compute_confident_joint docstring for details.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>confident_joint</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">2D</span> <span class="pre">np.ndarray</span></code> of <code class="xref py py-class docutils literal notranslate"><span class="pre">shape</span> <span class="pre">(K,K)</span></code>) – Rounded to int while preserving row totals.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="cleanlab.internal.util.estimate_pu_f1">
+<span class="sig-prename descclassname"><span class="pre">cleanlab.internal.util.</span></span><span class="sig-name descname"><span class="pre">estimate_pu_f1</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">s</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prob_s_eq_1</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/cleanlab/internal/util.html#estimate_pu_f1"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cleanlab.internal.util.estimate_pu_f1" title="Permalink to this definition">#</a></dt>
+<dd><p>Computes Claesen’s estimate of f1 in the pulearning setting.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>s</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">iterable</span> <span class="pre">(list</span></code> or <code class="xref py py-class docutils literal notranslate"><span class="pre">np.ndarray)</span></code>) – Binary label (whether each element is labeled or not) in pu learning.</p></li>
+<li><p><strong>prob_s_eq_1</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">iterable</span> <span class="pre">(list</span></code> or <code class="xref py py-class docutils literal notranslate"><span class="pre">np.ndarray)</span></code>) – The probability, for each example, whether it has label=1 P(label=1|x)</p></li>
+<li><p><strong>(</strong><strong>float</strong><strong>)</strong> (<em>Output</em>) – </p></li>
+<li><p><strong>------</strong> – </p></li>
+<li><p><strong>setting.</strong> (<em>Claesen's estimate for f1 in the pulearning</em>) – </p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="cleanlab.internal.util.confusion_matrix">
+<span class="sig-prename descclassname"><span class="pre">cleanlab.internal.util.</span></span><span class="sig-name descname"><span class="pre">confusion_matrix</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">true</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pred</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/cleanlab/internal/util.html#confusion_matrix"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cleanlab.internal.util.confusion_matrix" title="Permalink to this definition">#</a></dt>
+<dd><p>Implements a confusion matrix for true labels
+and predicted labels. true and pred MUST BE the same length
+and have the same distinct set of class labels represented.</p>
+<dl class="simple">
+<dt>Results are identical (and similar computation time) to:</dt><dd><p>“sklearn.metrics.confusion_matrix”</p>
+</dd>
+</dl>
+<p>However, this function avoids the dependency on sklearn.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>true</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">np.ndarray</span> <span class="pre">1d</span></code>) – Contains labels.
+Assumes true and pred contains the same set of distinct labels.</p></li>
+<li><p><strong>pred</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">np.ndarray</span> <span class="pre">1d</span></code>) – A discrete vector of noisy labels, i.e. some labels may be erroneous.
+<em>Format requirements</em>: for dataset with K classes, labels must be in {0,1,…,K-1}.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>confusion_matrix</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">np.ndarray</span> <span class="pre">(2D)</span></code>) – matrix of confusion counts with true on rows and pred on columns.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="cleanlab.internal.util.print_square_matrix">
+<span class="sig-prename descclassname"><span class="pre">cleanlab.internal.util.</span></span><span class="sig-name descname"><span class="pre">print_square_matrix</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">matrix</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">left_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'s'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">top_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'y'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">title</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'</span> <span class="pre">A</span> <span class="pre">square</span> <span class="pre">matrix'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">short_title</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'s,y'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">round_places</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/cleanlab/internal/util.html#print_square_matrix"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cleanlab.internal.util.print_square_matrix" title="Permalink to this definition">#</a></dt>
+<dd><p>Pretty prints a matrix.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>matrix</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">np.ndarray</span></code>) – the matrix to be printed</p></li>
+<li><p><strong>left_name</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>) – the name of the variable on the left of the matrix</p></li>
+<li><p><strong>top_name</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>) – the name of the variable on the top of the matrix</p></li>
+<li><p><strong>title</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>) – Prints this string above the printed square matrix.</p></li>
+<li><p><strong>short_title</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>) – A short title (6 characters or fewer) like P(labels|y) or P(labels,y).</p></li>
+<li><p><strong>round_places</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>) – Number of decimals to show for each matrix value.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="cleanlab.internal.util.print_noise_matrix">
+<span class="sig-prename descclassname"><span class="pre">cleanlab.internal.util.</span></span><span class="sig-name descname"><span class="pre">print_noise_matrix</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">noise_matrix</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">round_places</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/cleanlab/internal/util.html#print_noise_matrix"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cleanlab.internal.util.print_noise_matrix" title="Permalink to this definition">#</a></dt>
+<dd><p>Pretty prints the noise matrix.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="cleanlab.internal.util.print_inverse_noise_matrix">
+<span class="sig-prename descclassname"><span class="pre">cleanlab.internal.util.</span></span><span class="sig-name descname"><span class="pre">print_inverse_noise_matrix</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">inverse_noise_matrix</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">round_places</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/cleanlab/internal/util.html#print_inverse_noise_matrix"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cleanlab.internal.util.print_inverse_noise_matrix" title="Permalink to this definition">#</a></dt>
+<dd><p>Pretty prints the inverse noise matrix.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="cleanlab.internal.util.print_joint_matrix">
+<span class="sig-prename descclassname"><span class="pre">cleanlab.internal.util.</span></span><span class="sig-name descname"><span class="pre">print_joint_matrix</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">joint_matrix</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">round_places</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/cleanlab/internal/util.html#print_joint_matrix"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cleanlab.internal.util.print_joint_matrix" title="Permalink to this definition">#</a></dt>
+<dd><p>Pretty prints the joint label noise matrix.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="cleanlab.internal.util.compress_int_array">
+<span class="sig-prename descclassname"><span class="pre">cleanlab.internal.util.</span></span><span class="sig-name descname"><span class="pre">compress_int_array</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">int_array</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_possible_values</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/cleanlab/internal/util.html#compress_int_array"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cleanlab.internal.util.compress_int_array" title="Permalink to this definition">#</a></dt>
+<dd><p>Compresses dtype of np.ndarray&lt;int&gt; if num_possible_values is small enough.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="cleanlab.internal.util.train_val_split">
+<span class="sig-prename descclassname"><span class="pre">cleanlab.internal.util.</span></span><span class="sig-name descname"><span class="pre">train_val_split</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">labels</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">train_idx</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">holdout_idx</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/cleanlab/internal/util.html#train_val_split"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cleanlab.internal.util.train_val_split" title="Permalink to this definition">#</a></dt>
+<dd><p>Splits data into training/validation sets based on given indices</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><code class="xref py py-data docutils literal notranslate"><span class="pre">Tuple</span></code>[<code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code>, <code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code>, <code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">Series</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code>], <code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">Series</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code>]]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="cleanlab.internal.util.subset_X_y">
+<span class="sig-prename descclassname"><span class="pre">cleanlab.internal.util.</span></span><span class="sig-name descname"><span class="pre">subset_X_y</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">labels</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mask</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/cleanlab/internal/util.html#subset_X_y"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cleanlab.internal.util.subset_X_y" title="Permalink to this definition">#</a></dt>
+<dd><p>Extracts subset of features/labels where mask is True</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><code class="xref py py-data docutils literal notranslate"><span class="pre">Tuple</span></code>[<code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code>, <code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">Series</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code>]]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="cleanlab.internal.util.subset_labels">
+<span class="sig-prename descclassname"><span class="pre">cleanlab.internal.util.</span></span><span class="sig-name descname"><span class="pre">subset_labels</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">labels</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mask</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/cleanlab/internal/util.html#subset_labels"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cleanlab.internal.util.subset_labels" title="Permalink to this definition">#</a></dt>
+<dd><p>Extracts subset of labels where mask is True</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">Series</span></code>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="cleanlab.internal.util.subset_data">
+<span class="sig-prename descclassname"><span class="pre">cleanlab.internal.util.</span></span><span class="sig-name descname"><span class="pre">subset_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mask</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/cleanlab/internal/util.html#subset_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cleanlab.internal.util.subset_data" title="Permalink to this definition">#</a></dt>
+<dd><p>Extracts subset of data examples where mask (np.ndarray) is True</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="cleanlab.internal.util.extract_indices_tf">
+<span class="sig-prename descclassname"><span class="pre">cleanlab.internal.util.</span></span><span class="sig-name descname"><span class="pre">extract_indices_tf</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">idx</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">allow_shuffle</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/cleanlab/internal/util.html#extract_indices_tf"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cleanlab.internal.util.extract_indices_tf" title="Permalink to this definition">#</a></dt>
+<dd><p>Extracts subset of tensorflow dataset corresponding to examples at particular indices.</p>
+<dl>
+<dt>Args:</dt><dd><p>X : <code class="docutils literal notranslate"><span class="pre">tensorflow.data.Dataset</span></code></p>
+<dl class="simple">
+<dt>idx<span class="classifier">array_like of integer indices corresponding to examples to keep in the dataset.</span></dt><dd><p>Returns subset of examples in the dataset X that correspond to these indices.</p>
+</dd>
+<dt>allow_shuffle<span class="classifier">bool</span></dt><dd><p>Whether or not shuffling of this data is allowed (eg. must turn off shuffling for validation data).</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<p>Note: this code only works on Datasets in which:
+* <code class="docutils literal notranslate"><span class="pre">shuffle()</span></code> has been called before <code class="docutils literal notranslate"><span class="pre">batch()</span></code>,
+* no other order-destroying operation (eg. <code class="docutils literal notranslate"><span class="pre">repeat()</span></code>) has been applied.</p>
+<p>Indices are extracted from the original version of Dataset (before shuffle was called rather than in shuffled order).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="cleanlab.internal.util.unshuffle_tensorflow_dataset">
+<span class="sig-prename descclassname"><span class="pre">cleanlab.internal.util.</span></span><span class="sig-name descname"><span class="pre">unshuffle_tensorflow_dataset</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/cleanlab/internal/util.html#unshuffle_tensorflow_dataset"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cleanlab.internal.util.unshuffle_tensorflow_dataset" title="Permalink to this definition">#</a></dt>
+<dd><p>Applies iterative inverse transformations to dataset to get version before ShuffleDataset was created.
+If no ShuffleDataset is in the transformation-history of this dataset, returns None.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>X</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">a</span> <span class="pre">tensorflow</span> <span class="pre">Dataset</span> <span class="pre">that</span> <span class="pre">may</span> <span class="pre">have</span> <span class="pre">been</span> <span class="pre">created</span> <span class="pre">via</span> <span class="pre">series</span></code> of <code class="xref py py-class docutils literal notranslate"><span class="pre">transformations</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">one</span> <span class="pre">being</span> <span class="pre">shuffle.</span></code>) – </p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">tuple</span></code></p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><p><code class="xref py py-class docutils literal notranslate"><span class="pre">Tuple</span> <span class="pre">(pre_X</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">buffer_size)</span> <span class="pre">where</span></code> – pre_X : Dataset that was previously transformed to get ShuffleDataset (or None),
+buffer_size : int <code class="xref py py-obj docutils literal notranslate"><span class="pre">buffer_size</span></code> previously used in ShuffleDataset,</p>
+<blockquote>
+<div><p>or <code class="docutils literal notranslate"><span class="pre">len(pre_X)</span></code> if buffer_size cannot be determined, or None if no ShuffleDataset found.</p>
+</div></blockquote>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="cleanlab.internal.util.is_torch_dataset">
+<span class="sig-prename descclassname"><span class="pre">cleanlab.internal.util.</span></span><span class="sig-name descname"><span class="pre">is_torch_dataset</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/cleanlab/internal/util.html#is_torch_dataset"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cleanlab.internal.util.is_torch_dataset" title="Permalink to this definition">#</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="cleanlab.internal.util.is_tensorflow_dataset">
+<span class="sig-prename descclassname"><span class="pre">cleanlab.internal.util.</span></span><span class="sig-name descname"><span class="pre">is_tensorflow_dataset</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/cleanlab/internal/util.html#is_tensorflow_dataset"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cleanlab.internal.util.is_tensorflow_dataset" title="Permalink to this definition">#</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="cleanlab.internal.util.csr_vstack">
+<span class="sig-prename descclassname"><span class="pre">cleanlab.internal.util.</span></span><span class="sig-name descname"><span class="pre">csr_vstack</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">a</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/cleanlab/internal/util.html#csr_vstack"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cleanlab.internal.util.csr_vstack" title="Permalink to this definition">#</a></dt>
+<dd><p>Takes in 2 csr_matrices and appends the second one to the bottom of the first one.
+Alternative to scipy.sparse.vstack. Returns a sparse matrix.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="cleanlab.internal.util.append_extra_datapoint">
+<span class="sig-prename descclassname"><span class="pre">cleanlab.internal.util.</span></span><span class="sig-name descname"><span class="pre">append_extra_datapoint</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">to_data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">from_data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">index</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/cleanlab/internal/util.html#append_extra_datapoint"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cleanlab.internal.util.append_extra_datapoint" title="Permalink to this definition">#</a></dt>
+<dd><p>Appends an extra datapoint to the data object <code class="docutils literal notranslate"><span class="pre">to_data</span></code>.
+This datapoint is taken from the data object <code class="docutils literal notranslate"><span class="pre">from_data</span></code> at the corresponding index.
+One place this could be useful is ensuring no missing classes after train/validation split.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="cleanlab.internal.util.get_num_classes">
+<span class="sig-prename descclassname"><span class="pre">cleanlab.internal.util.</span></span><span class="sig-name descname"><span class="pre">get_num_classes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">labels</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pred_probs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">label_matrix</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">multi_label</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/cleanlab/internal/util.html#get_num_classes"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cleanlab.internal.util.get_num_classes" title="Permalink to this definition">#</a></dt>
+<dd><p>Determines the number of classes based on information considered in a
+canonical ordering. label_matrix can be: noise_matrix, inverse_noise_matrix, confident_joint,
+or any other K x K matrix where K = number of classes.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="cleanlab.internal.util.num_unique_classes">
+<span class="sig-prename descclassname"><span class="pre">cleanlab.internal.util.</span></span><span class="sig-name descname"><span class="pre">num_unique_classes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">labels</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">multi_label</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/cleanlab/internal/util.html#num_unique_classes"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cleanlab.internal.util.num_unique_classes" title="Permalink to this definition">#</a></dt>
+<dd><p>Finds the number of unique classes for both single-labeled
+and multi-labeled labels. If multi_label is set to None (default)
+this method will infer if multi_label is True or False based on
+the format of labels.
+This allows for a more general form of multiclass labels that looks
+like this: [1, [1,2], [0], [0, 1], 2, 1]</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="cleanlab.internal.util.get_unique_classes">
+<span class="sig-prename descclassname"><span class="pre">cleanlab.internal.util.</span></span><span class="sig-name descname"><span class="pre">get_unique_classes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">labels</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">multi_label</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/cleanlab/internal/util.html#get_unique_classes"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cleanlab.internal.util.get_unique_classes" title="Permalink to this definition">#</a></dt>
+<dd><p>Returns the set of unique classes for both single-labeled
+and multi-labeled labels. If multi_label is set to None (default)
+this method will infer if multi_label is True or False based on
+the format of labels.
+This allows for a more general form of multiclass labels that looks
+like this: [1, [1,2], [0], [0, 1], 2, 1]</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">set</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="cleanlab.internal.util.format_labels">
+<span class="sig-prename descclassname"><span class="pre">cleanlab.internal.util.</span></span><span class="sig-name descname"><span class="pre">format_labels</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">labels</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/cleanlab/internal/util.html#format_labels"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cleanlab.internal.util.format_labels" title="Permalink to this definition">#</a></dt>
+<dd><p>Takes an array of labels and formats it such that labels are in the set <code class="docutils literal notranslate"><span class="pre">0,</span> <span class="pre">1,</span> <span class="pre">...,</span> <span class="pre">K-1</span></code>,
+where <code class="docutils literal notranslate"><span class="pre">K</span></code> is the number of classes. The labels are assigned based on lexicographic order.
+This is useful for mapping string class labels to the integer format required by many cleanlab (and sklearn) functions.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><code class="xref py py-data docutils literal notranslate"><span class="pre">Tuple</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code>]</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><code class="xref py py-class docutils literal notranslate"><span class="pre">formatted_labels</span></code> – Returns np.ndarray of shape <code class="docutils literal notranslate"><span class="pre">(N,)</span></code>. The return labels will be properly formatted and can be passed to other cleanlab functions.</p></li>
+<li><p><code class="xref py py-class docutils literal notranslate"><span class="pre">mapping</span></code> – A dictionary showing the mapping of new to old labels, such that <code class="docutils literal notranslate"><span class="pre">mapping[k]</span></code> returns the name of the k-th class.</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="cleanlab.internal.util.smart_display_dataframe">
+<span class="sig-prename descclassname"><span class="pre">cleanlab.internal.util.</span></span><span class="sig-name descname"><span class="pre">smart_display_dataframe</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/cleanlab/internal/util.html#smart_display_dataframe"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cleanlab.internal.util.smart_display_dataframe" title="Permalink to this definition">#</a></dt>
+<dd><p>Display a pandas dataframe if in a jupyter notebook, otherwise print it to console.</p>
+</dd></dl>
+
+</section>
+ 
+        </article>
+      </div>
+      <footer>
+         
+        <div class="related-pages">
+          <a class="next-page" href="latent_algebra.html">
+              <div class="page-info">
+                <div class="context">
+                  <span>Next</span>
+                </div>
+                <div class="title">latent_algebra</div>
+              </div>
+              <svg><use href="#svg-arrow-right"></use></svg>
+            </a>
+          <a class="prev-page" href="index.html">
+              <svg><use href="#svg-arrow-right"></use></svg>
+              <div class="page-info">
+                <div class="context">
+                  <span>Previous</span>
+                </div>
+                
+                <div class="title">internal</div>
+                
+              </div>
+            </a>
+        </div>
+        <div class="bottom-of-page">
+          <div class="left-details">
+            <div class="copyright">
+                Copyright &#169; 2023, Cleanlab Inc.
+            </div>
+            Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
+            
+            <a href="https://github.com/pradyunsg/furo">Furo</a>
+            
+          </div>
+          <div class="right-details">
+            <div class="icons">
+              <a class="muted-link " href="https://github.com/cleanlab/cleanlab" aria-label="GitHub">
+                <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 16 16">
+                    <path fill-rule="evenodd" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0 0 16 8c0-4.42-3.58-8-8-8z"></path>
+                </svg>
+            </a>
+              
+            </div>
+          </div>
+        </div>
+        
+
+<script type="text/javascript">
+    window.addEventListener("load", () => {
+        let elements = document.getElementsByClassName("left-details");
+
+        elements[0].insertAdjacentHTML(
+            "afterbegin",
+            `<code class="docutils literal notranslate"><span class="pre">cleanlab</span></code> is distributed on <a href="https://pypi.org/project/cleanlab/">PyPI</a> and <a href="https://anaconda.org/conda-forge/cleanlab">conda</a>.`
+        );
+    });
+</script>
+
+
+      </footer>
+    </div>
+    <aside class="toc-drawer no-toc">
+      
+      
+      
+    </aside>
+  </div>
+</div><script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/scripts/furo.js"></script>
+    <script src="../../_static/clipboard.min.js"></script>
+    <script src="../../_static/copybutton.js"></script>
+    <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script src="https://unpkg.com/@jupyter-widgets/html-manager@^0.20.0/dist/embed-amd.js"></script>
+    
+<script async defer src="https://buttons.github.io/buttons.js"></script>
+</body>
+</html>
