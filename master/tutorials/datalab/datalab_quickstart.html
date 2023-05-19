@@ -1034,6 +1034,7 @@ Finding label issues ...
 Finding outlier issues ...
 Fitting OOD estimator based on provided features ...
 Finding near_duplicate issues ...
+Finding non_iid issues ...
 Audit complete. 21 issues found in the dataset.
 </pre></div></div>
 </div>
@@ -1057,6 +1058,7 @@ Here is a summary of the different kinds of issues found in the data:
          label          11
        outlier           6
 near_duplicate           4
+       non_iid           0
 
 Dataset Information: num_examples: 132, num_classes: 3
 
@@ -1119,6 +1121,32 @@ Examples representing most severe instances of this issue:
 129                     True          4.463180e-07               [130]                  4.463180e-07
 130                     True          4.463180e-07               [129]                  4.463180e-07
 51                     False          3.857172e-02                [52]                  3.859087e-02
+
+
+---------------------- non_iid issues ----------------------
+
+About this issue:
+        Whether the dataset exhibits statistically significant
+    violations of the IID assumption like:
+    changepoints or shift, drift, autocorrelation, etc.
+    The specific violation considered is whether the
+    examples are ordered such that almost adjacent examples
+    tend to have more similar feature values.
+
+
+Number of examples with this issue: 0
+Overall dataset quality in terms of this issue: 0.8218
+
+Examples representing most severe instances of this issue:
+     is_non_iid_issue  non_iid_score
+20              False       0.810274
+2               False       0.826147
+15              False       0.849587
+126             False       0.855359
+12              False       0.855485
+
+Additional Information:
+p-value: 0.821750488732925
 </pre></div></div>
 </div>
 </section>
@@ -1180,6 +1208,12 @@ Examples representing most severe instances of this issue:
       <td>near_duplicate</td>
       <td>0.246459</td>
       <td>4</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>non_iid</td>
+      <td>0.821750</td>
+      <td>0</td>
     </tr>
   </tbody>
 </table>
@@ -1271,6 +1305,8 @@ Examples representing most severe instances of this issue:
       <th>outlier_score</th>
       <th>is_near_duplicate_issue</th>
       <th>near_duplicate_score</th>
+      <th>is_non_iid_issue</th>
+      <th>non_iid_score</th>
     </tr>
   </thead>
   <tbody>
@@ -1282,6 +1318,8 @@ Examples representing most severe instances of this issue:
       <td>0.586131</td>
       <td>False</td>
       <td>0.235095</td>
+      <td>False</td>
+      <td>0.970324</td>
     </tr>
     <tr>
       <th>1</th>
@@ -1291,6 +1329,8 @@ Examples representing most severe instances of this issue:
       <td>0.548979</td>
       <td>False</td>
       <td>0.221560</td>
+      <td>False</td>
+      <td>0.890575</td>
     </tr>
     <tr>
       <th>2</th>
@@ -1300,6 +1340,8 @@ Examples representing most severe instances of this issue:
       <td>0.622256</td>
       <td>False</td>
       <td>0.199185</td>
+      <td>False</td>
+      <td>0.826147</td>
     </tr>
     <tr>
       <th>3</th>
@@ -1309,6 +1351,8 @@ Examples representing most severe instances of this issue:
       <td>0.499498</td>
       <td>False</td>
       <td>0.179601</td>
+      <td>False</td>
+      <td>0.948362</td>
     </tr>
     <tr>
       <th>4</th>
@@ -1318,6 +1362,8 @@ Examples representing most severe instances of this issue:
       <td>0.632385</td>
       <td>False</td>
       <td>0.292800</td>
+      <td>False</td>
+      <td>0.878267</td>
     </tr>
   </tbody>
 </table>

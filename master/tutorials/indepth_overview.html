@@ -951,7 +951,8 @@ Finding label issues ...
 Finding outlier issues ...
 Fitting OOD estimator based on provided features ...
 Finding near_duplicate issues ...
-Audit complete. 77 issues found in the dataset.
+Finding non_iid issues ...
+Audit complete. 78 issues found in the dataset.
 </pre></div></div>
 </div>
 <p>After the audit is complete, review the findings using the <code class="docutils literal notranslate"><span class="pre">report</span></code> method:</p>
@@ -974,6 +975,7 @@ Here is a summary of the different kinds of issues found in the data:
          label          64
        outlier           7
 near_duplicate           6
+       non_iid           1
 
 Dataset Information: num_examples: 250, num_classes: 4
 
@@ -1036,6 +1038,32 @@ Examples representing most severe instances of this issue:
 119                     True              0.033725          [103, 118]                      0.033738
 103                     True              0.033725          [119, 118]                      0.033738
 238                     True              0.037825               [236]                      0.037843
+
+
+---------------------- non_iid issues ----------------------
+
+About this issue:
+        Whether the dataset exhibits statistically significant
+    violations of the IID assumption like:
+    changepoints or shift, drift, autocorrelation, etc.
+    The specific violation considered is whether the
+    examples are ordered such that almost adjacent examples
+    tend to have more similar feature values.
+
+
+Number of examples with this issue: 1
+Overall dataset quality in terms of this issue: 0.0000
+
+Examples representing most severe instances of this issue:
+     is_non_iid_issue  non_iid_score
+222              True       0.614915
+122             False       0.624422
+126             False       0.625965
+119             False       0.626079
+118             False       0.627675
+
+Additional Information:
+p-value: 0.0
 </pre></div></div>
 </div>
 </section>

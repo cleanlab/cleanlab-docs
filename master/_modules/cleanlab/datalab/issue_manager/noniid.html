@@ -555,6 +555,11 @@
 <span class="sd">        The number of trials to run when performing permutation testing to determine whether</span>
 <span class="sd">        the distribution of index-distances between neighbors in the dataset is IID or not.</span>
 
+<span class="sd">    Note</span>
+<span class="sd">    ----</span>
+<span class="sd">    This class will only flag a single example as an issue if the dataset is considered non-IID. This type of issue</span>
+<span class="sd">    is more relevant to the entire dataset as a whole, rather than to individual examples.</span>
+
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">description</span><span class="p">:</span> <span class="n">ClassVar</span><span class="p">[</span>
@@ -638,11 +643,8 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">p_value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_permutation_test</span><span class="p">(</span><span class="n">num_permutations</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">num_permutations</span><span class="p">)</span>
 
         <span class="n">scores</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_score_dataset</span><span class="p">()</span>
-        <span class="n">score_median_threshold</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">median</span><span class="p">(</span><span class="n">scores</span><span class="p">)</span> <span class="o">*</span> <span class="mf">0.7</span>
-        <span class="n">issue_mask</span> <span class="o">=</span> <span class="n">scores</span> <span class="o">&lt;</span> <span class="n">score_median_threshold</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">p_value</span> <span class="o">&gt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">significance_threshold</span><span class="p">:</span>
-            <span class="n">issue_mask</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">N</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">bool</span><span class="p">)</span>
-        <span class="k">elif</span> <span class="n">issue_mask</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">issue_mask</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">N</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">bool</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">p_value</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">significance_threshold</span><span class="p">:</span>
             <span class="n">issue_mask</span><span class="p">[</span><span class="n">scores</span><span class="o">.</span><span class="n">argmin</span><span class="p">()]</span> <span class="o">=</span> <span class="kc">True</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">issues</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
             <span class="p">{</span>
