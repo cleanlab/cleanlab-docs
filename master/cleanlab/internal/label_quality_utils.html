@@ -489,7 +489,7 @@
 </div>
 <dl class="py function">
 <dt class="sig sig-object py" id="cleanlab.internal.label_quality_utils.get_normalized_entropy">
-<span class="sig-prename descclassname"><span class="pre">cleanlab.internal.label_quality_utils.</span></span><span class="sig-name descname"><span class="pre">get_normalized_entropy</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pred_probs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_allowed_prob</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1e-06</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/cleanlab/internal/label_quality_utils.html#get_normalized_entropy"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cleanlab.internal.label_quality_utils.get_normalized_entropy" title="Permalink to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">cleanlab.internal.label_quality_utils.</span></span><span class="sig-name descname"><span class="pre">get_normalized_entropy</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pred_probs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_allowed_prob</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/cleanlab/internal/label_quality_utils.html#get_normalized_entropy"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cleanlab.internal.label_quality_utils.get_normalized_entropy" title="Permalink to this definition">#</a></dt>
 <dd><p>Return the normalized entropy of pred_probs.</p>
 <p>Normalized entropy is between 0 and 1. Higher values of entropy indicate higher uncertainty in the model’s prediction of the correct label.</p>
 <p>Read more about normalized entropy <a class="reference external" href="https://en.wikipedia.org/wiki/Entropy_(information_theory)">on Wikipedia</a>.</p>
@@ -498,17 +498,26 @@
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>pred_probs</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>) – Each row of this matrix corresponds to an example x and contains the model-predicted
+<li><p><strong>pred_probs</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">np.ndarray</span> <span class="pre">(shape</span> <span class="pre">(N</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">K))</span></code>) – Each row of this matrix corresponds to an example x and contains the model-predicted
 probabilities that x belongs to each possible class: P(label=k|x)</p></li>
-<li><p><strong>min_allowed_prob</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>) – Minimum allowed probability value. Entries of <code class="xref py py-obj docutils literal notranslate"><span class="pre">pred_probs</span></code> below this value will be clipped to this value.
-Ensures entropy remains well-behaved even when <code class="xref py py-obj docutils literal notranslate"><span class="pre">pred_probs</span></code> contains zeros.</p></li>
+<li><p><strong>min_allowed_prob</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>, <em>default</em>: <code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">deprecated</span></code>) – <p>Minimum allowed probability value. If not <code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code> (default),
+entries of <code class="xref py py-obj docutils literal notranslate"><span class="pre">pred_probs</span></code> below this value will be clipped to this value.</p>
+<div class="deprecated">
+<p><span class="versionmodified deprecated">Deprecated since version 2.5.0: </span>This keyword is deprecated and should be left to the default.
+The entropy is well-behaved even if <code class="xref py py-obj docutils literal notranslate"><span class="pre">pred_probs</span></code> contains zeros,
+clipping is unnecessary and (slightly) changes the results.</p>
+</div>
+</p></li>
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></p>
 </dd>
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">entropy</span></code> – Each element is the normalized entropy of the corresponding row of <code class="docutils literal notranslate"><span class="pre">pred_probs</span></code>.</p>
+<dd class="field-odd"><p><strong>entropy</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">np.ndarray</span> <span class="pre">(shape</span> <span class="pre">(N</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">))</span></code>) – Each element is the normalized entropy of the corresponding row of <code class="docutils literal notranslate"><span class="pre">pred_probs</span></code>.</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>ValueError</strong> – An error is raised if any of the probabilities is not in the interval [0, 1].</p>
 </dd>
 </dl>
 </dd></dl>

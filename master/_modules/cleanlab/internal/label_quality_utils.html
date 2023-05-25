@@ -491,12 +491,12 @@
 <span class="c1"># along with cleanlab.  If not, see &lt;https://www.gnu.org/licenses/&gt;.</span>
 
 <span class="sd">&quot;&quot;&quot;Helper methods used internally for computing label quality scores.&quot;&quot;&quot;</span>
-
+<span class="kn">import</span> <span class="nn">warnings</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Optional</span>
+<span class="kn">from</span> <span class="nn">scipy.special</span> <span class="kn">import</span> <span class="n">xlogy</span>
 
 <span class="kn">from</span> <span class="nn">cleanlab.count</span> <span class="kn">import</span> <span class="n">get_confident_thresholds</span>
-<span class="kn">from</span> <span class="nn">cleanlab.internal.constants</span> <span class="kn">import</span> <span class="n">CLIPPING_LOWER_BOUND</span>
 
 
 <span class="k">def</span> <span class="nf">_subtract_confident_thresholds</span><span class="p">(</span>
@@ -557,7 +557,7 @@
 
 
 <div class="viewcode-block" id="get_normalized_entropy"><a class="viewcode-back" href="../../../cleanlab/internal/label_quality_utils.html#cleanlab.internal.label_quality_utils.get_normalized_entropy">[docs]</a><span class="k">def</span> <span class="nf">get_normalized_entropy</span><span class="p">(</span>
-    <span class="n">pred_probs</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">min_allowed_prob</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">CLIPPING_LOWER_BOUND</span>
+    <span class="n">pred_probs</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">min_allowed_prob</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Return the normalized entropy of pred_probs.</span>
 
@@ -571,24 +571,42 @@
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    pred_probs:</span>
+<span class="sd">    pred_probs : np.ndarray (shape (N, K))</span>
 <span class="sd">      Each row of this matrix corresponds to an example x and contains the model-predicted</span>
 <span class="sd">      probabilities that x belongs to each possible class: P(label=k|x)</span>
 
-<span class="sd">    min_allowed_prob:</span>
-<span class="sd">      Minimum allowed probability value. Entries of `pred_probs` below this value will be clipped to this value.</span>
-<span class="sd">      Ensures entropy remains well-behaved even when `pred_probs` contains zeros.</span>
+<span class="sd">    min_allowed_prob : float, default: None, deprecated</span>
+<span class="sd">      Minimum allowed probability value. If not `None` (default),</span>
+<span class="sd">      entries of `pred_probs` below this value will be clipped to this value.</span>
+
+<span class="sd">      .. deprecated:: 2.5.0</span>
+<span class="sd">         This keyword is deprecated and should be left to the default.</span>
+<span class="sd">         The entropy is well-behaved even if `pred_probs` contains zeros,</span>
+<span class="sd">         clipping is unnecessary and (slightly) changes the results.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
-<span class="sd">    entropy:</span>
+<span class="sd">    entropy : np.ndarray (shape (N, ))</span>
 <span class="sd">      Each element is the normalized entropy of the corresponding row of ``pred_probs``.</span>
+
+<span class="sd">    Raises</span>
+<span class="sd">    ------</span>
+<span class="sd">    ValueError</span>
+<span class="sd">        An error is raised if any of the probabilities is not in the interval [0, 1].</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="n">pred_probs</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">)</span> <span class="ow">or</span> <span class="n">np</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="n">pred_probs</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;All probabilities are required to be in the interval [0, 1].&quot;</span><span class="p">)</span>
     <span class="n">num_classes</span> <span class="o">=</span> <span class="n">pred_probs</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
 
+    <span class="k">if</span> <span class="n">min_allowed_prob</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
+            <span class="s2">&quot;Using `min_allowed_prob` is not necessary anymore and will be removed.&quot;</span><span class="p">,</span>
+            <span class="ne">DeprecationWarning</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="n">pred_probs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">clip</span><span class="p">(</span><span class="n">pred_probs</span><span class="p">,</span> <span class="n">a_min</span><span class="o">=</span><span class="n">min_allowed_prob</span><span class="p">,</span> <span class="n">a_max</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+
     <span class="c1"># Note that dividing by log(num_classes) changes the base of the log which rescales entropy to 0-1 range</span>
-    <span class="n">clipped_pred_probs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">clip</span><span class="p">(</span><span class="n">pred_probs</span><span class="p">,</span> <span class="n">a_min</span><span class="o">=</span><span class="n">min_allowed_prob</span><span class="p">,</span> <span class="n">a_max</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
-    <span class="k">return</span> <span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">pred_probs</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">clipped_pred_probs</span><span class="p">),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">num_classes</span><span class="p">)</span></div>
+    <span class="k">return</span> <span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">xlogy</span><span class="p">(</span><span class="n">pred_probs</span><span class="p">,</span> <span class="n">pred_probs</span><span class="p">),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">num_classes</span><span class="p">)</span></div>
 </pre></div> 
         </article>
       </div>
