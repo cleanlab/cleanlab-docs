@@ -1014,7 +1014,6 @@ div.rendered_html tbody tr:hover {
 <p>We create a <code class="docutils literal notranslate"><span class="pre">Datalab</span></code> object from the dataset, also providing the name of the label column in the dataset. Only instantiate one <code class="docutils literal notranslate"><span class="pre">Datalab</span></code> object per dataset, and note that only classification datasets are supported for now.</p>
 <p>All that is need to audit your data is to call <code class="docutils literal notranslate"><span class="pre">find_issues()</span></code>. This method accepts various inputs like: predicted class probabilities, numeric feature representations of the data. The more information you provide here, the more thoroughly <code class="docutils literal notranslate"><span class="pre">Datalab</span></code> will audit your data! Note that <code class="docutils literal notranslate"><span class="pre">features</span></code> should be some numeric representation of each example, either obtained through preprocessing transformation of your raw data or embeddings from a (pre)trained model. In this case, our data is already
 entirely numeric so we just provide the features directly.</p>
-<p><code class="docutils literal notranslate"><span class="pre">find_issues()</span></code> can be configured to find different types of issues, with more fine-grained control. Check out the <a class="reference external" href="../../cleanlab/datalab/guide/issue_type_description.html">Issue Type Descriptions</a> page for more details.</p>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
 </pre></div>
@@ -1151,8 +1150,10 @@ p-value: 0.821750488732925
 </section>
 <section id="5.-Learn-more-about-the-issues-in-your-dataset">
 <h2>5. Learn more about the issues in your dataset<a class="headerlink" href="#5.-Learn-more-about-the-issues-in-your-dataset" title="Permalink to this heading">#</a></h2>
-<p>There are several methods to get more details about a particular issue.</p>
-<p>The <code class="docutils literal notranslate"><span class="pre">get_issue_summary()</span></code> method fetches summary statistics regarding how severe each type of issue is overall across the whole dataset.</p>
+<p>Datalab detects all sorts of issues in a dataset and what to do with the findings will vary case-by-case. For automated improvement of a dataset via best practices to handle auto-detected issues, try <a class="reference external" href="https://cleanlab.ai/?utm_source=internal&amp;utm_medium=blog&amp;utm_campaign=clostostudio">Cleanlab Studio</a>.</p>
+<p>To conceptually understand how each type of issue is defined and what it means if detected in your data, check out the <a class="reference external" href="../../cleanlab/datalab/guide/issue_type_description.html">Issue Type Descriptions</a> page. The <a class="reference external" href="https://docs.cleanlab.ai/stable/cleanlab/datalab/guide/issue_type_description.html">Datalab Issue Types</a> page also lists additional types of issues that <code class="docutils literal notranslate"><span class="pre">Datalab.find_issues()</span></code> can detect, as well as optional parameters you can specify for greater control over how your data are
+checked.</p>
+<p>Datalab offers several methods to understand more details about a particular issue in your dataset. The <code class="docutils literal notranslate"><span class="pre">get_issue_summary()</span></code> method fetches summary statistics regarding how severe each type of issue is overall across the whole dataset.</p>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
 </pre></div>
@@ -1266,7 +1267,7 @@ p-value: 0.821750488732925
 </table>
 </div></div>
 </div>
-<p>The <code class="docutils literal notranslate"><span class="pre">get_issues()</span></code> method returns information for each individual example about: whether or not it is plagued by this issue, as well as a <em>quality score</em> quantifying how severe this issue appears to be for that particular example.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">get_issues()</span></code> method returns information for each individual example in the dataset including: whether or not it is plagued by this issue, as well as a <em>quality score</em> quantifying how severe this issue appears to be for this particular example.</p>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[13]:
 </pre></div>
@@ -1368,8 +1369,8 @@ p-value: 0.821750488732925
 </table>
 </div></div>
 </div>
-<p>Similar to above, we can pass the type of issue as a argument to <code class="docutils literal notranslate"><span class="pre">get_issues()</span></code> to get the information for that particular issue.</p>
-<p>Each example receives a separate <em>quality score</em> (betweeen 0 to 1) for each issue type. Lower scores indicate more severe instances of the issue, so you can sort by these values to see the most concerning examples in your dataset for each type of issue. The quality scores are directly comparable between examples/datasets, but not across different issue types. Here we show an example of how to get the examples that have been identified as having the most severe label issues.</p>
+<p>Similar to above, we can pass the type of issue as a argument to <code class="docutils literal notranslate"><span class="pre">get_issues()</span></code> to get the information for one particular issue.</p>
+<p>Each example receives a separate <em>quality score</em> (betweeen 0 to 1) for each issue type. Lower scores indicate more severe instances of the issue, so you can sort by these values to see the most concerning examples in your dataset for each type of issue. The quality scores are directly comparable between examples/datasets, but not across different issue types. Here we show an example of how to get the examples identified as having the most severe label issues.</p>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[14]:
 </pre></div>
