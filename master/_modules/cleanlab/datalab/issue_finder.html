@@ -825,6 +825,24 @@
                 <span class="k">if</span> <span class="n">issue</span> <span class="ow">in</span> <span class="n">issue_types_copy</span>
             <span class="p">}</span>
 
+        <span class="n">drop_label_check</span> <span class="o">=</span> <span class="s2">&quot;label&quot;</span> <span class="ow">in</span> <span class="n">issue_types_copy</span> <span class="ow">and</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">datalab</span><span class="o">.</span><span class="n">has_labels</span>
+        <span class="k">if</span> <span class="n">drop_label_check</span><span class="p">:</span>
+            <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s2">&quot;No labels were provided. &quot;</span> <span class="s2">&quot;The &#39;label&#39; issue type will not be run.&quot;</span><span class="p">)</span>
+            <span class="n">issue_types_copy</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;label&quot;</span><span class="p">)</span>
+
+        <span class="n">outlier_check_needs_features</span> <span class="o">=</span> <span class="s2">&quot;outlier&quot;</span> <span class="ow">in</span> <span class="n">issue_types_copy</span> <span class="ow">and</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">datalab</span><span class="o">.</span><span class="n">has_labels</span>
+        <span class="k">if</span> <span class="n">outlier_check_needs_features</span><span class="p">:</span>
+            <span class="n">no_features</span> <span class="o">=</span> <span class="n">features</span> <span class="ow">is</span> <span class="kc">None</span>
+            <span class="n">no_knn_graph</span> <span class="o">=</span> <span class="n">knn_graph</span> <span class="ow">is</span> <span class="kc">None</span>
+            <span class="n">pred_probs_given</span> <span class="o">=</span> <span class="n">issue_types_copy</span><span class="p">[</span><span class="s2">&quot;outlier&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;pred_probs&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+
+            <span class="n">only_pred_probs_given</span> <span class="o">=</span> <span class="n">pred_probs_given</span> <span class="ow">and</span> <span class="n">no_features</span> <span class="ow">and</span> <span class="n">no_knn_graph</span>
+            <span class="k">if</span> <span class="n">only_pred_probs_given</span><span class="p">:</span>
+                <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
+                    <span class="s2">&quot;No labels were provided. &quot;</span> <span class="s2">&quot;The &#39;outlier&#39; issue type will not be run.&quot;</span>
+                <span class="p">)</span>
+                <span class="n">issue_types_copy</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;outlier&quot;</span><span class="p">)</span>
+
         <span class="k">return</span> <span class="n">issue_types_copy</span></div></div>
 </pre></div> 
         </article>

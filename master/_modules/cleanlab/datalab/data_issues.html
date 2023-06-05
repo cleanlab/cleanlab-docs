@@ -539,17 +539,10 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">issue_summary</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
             <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;issue_type&quot;</span><span class="p">,</span> <span class="s2">&quot;score&quot;</span><span class="p">,</span> <span class="s2">&quot;num_issues&quot;</span><span class="p">]</span>
         <span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">({</span><span class="s2">&quot;score&quot;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">,</span> <span class="s2">&quot;num_issues&quot;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">int64</span><span class="p">})</span>
-        <span class="n">class_names</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">class_names</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">info</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]</span> <span class="o">=</span> <span class="p">{</span>
-            <span class="s2">&quot;statistics&quot;</span><span class="p">:</span> <span class="p">{</span>
-                <span class="s2">&quot;num_examples&quot;</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">),</span>
-                <span class="s2">&quot;class_names&quot;</span><span class="p">:</span> <span class="n">class_names</span><span class="p">,</span>
-                <span class="s2">&quot;num_classes&quot;</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">class_names</span><span class="p">),</span>
-                <span class="s2">&quot;multi_label&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
-                <span class="s2">&quot;health_score&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
-            <span class="p">},</span>
+            <span class="s2">&quot;statistics&quot;</span><span class="p">:</span> <span class="n">get_data_statistics</span><span class="p">(</span><span class="n">data</span><span class="p">),</span>
         <span class="p">}</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_label_map</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">_label_map</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_label_map</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">labels</span><span class="o">.</span><span class="n">label_map</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">statistics</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
@@ -655,6 +648,11 @@
             <span class="p">)</span>
         <span class="n">info</span> <span class="o">=</span> <span class="n">info</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
         <span class="k">if</span> <span class="n">issue_name</span> <span class="o">==</span> <span class="s2">&quot;label&quot;</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_label_map</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                    <span class="s2">&quot;The label map is not available. &quot;</span>
+                    <span class="s2">&quot;Most likely, no label column was provided when creating the Data object.&quot;</span>
+                <span class="p">)</span>
             <span class="c1"># Labels that are stored as integers may need to be converted to strings.</span>
             <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;given_label&quot;</span><span class="p">,</span> <span class="s2">&quot;predicted_label&quot;</span><span class="p">]:</span>
                 <span class="n">labels</span> <span class="o">=</span> <span class="n">info</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
@@ -745,6 +743,28 @@
 <span class="sd">        Currently, the health score is the mean of the scores for each issue type.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">info</span><span class="p">[</span><span class="s2">&quot;statistics&quot;</span><span class="p">][</span><span class="s2">&quot;health_score&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">issue_summary</span><span class="p">[</span><span class="s2">&quot;score&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span></div></div>
+
+
+<div class="viewcode-block" id="get_data_statistics"><a class="viewcode-back" href="../../../cleanlab/datalab/data_issues.html#cleanlab.datalab.data_issues.get_data_statistics">[docs]</a><span class="k">def</span> <span class="nf">get_data_statistics</span><span class="p">(</span><span class="n">data</span><span class="p">:</span> <span class="n">Data</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Get statistics about a dataset.</span>
+
+<span class="sd">    This function is called to initialize the &quot;statistics&quot; info in all `Datalab` objects.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    data : Data</span>
+<span class="sd">        Data object containing the dataset.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">statistics</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;num_examples&quot;</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">),</span>
+        <span class="s2">&quot;multi_label&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="s2">&quot;health_score&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">}</span>
+    <span class="k">if</span> <span class="n">data</span><span class="o">.</span><span class="n">labels</span><span class="o">.</span><span class="n">is_available</span><span class="p">:</span>
+        <span class="n">class_names</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">class_names</span>
+        <span class="n">statistics</span><span class="p">[</span><span class="s2">&quot;class_names&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">class_names</span>
+        <span class="n">statistics</span><span class="p">[</span><span class="s2">&quot;num_classes&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">class_names</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">statistics</span></div>
 </pre></div> 
         </article>
       </div>
