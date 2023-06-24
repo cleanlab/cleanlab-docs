@@ -3,7 +3,7 @@
   <head><meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
     <meta name="color-scheme" content="light dark"><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
-<link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="Detect Outliers with Cleanlab and PyTorch Image Models (timm)" href="outliers.html" /><link rel="prev" title="Find Dataset-level Issues for Dataset Curation" href="dataset_health.html" />
+<link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="Find Label Errors in Token Classification (Text) Datasets" href="token_classification.html" /><link rel="prev" title="Find Label Errors in Multi-Label Classification Datasets" href="multilabel_classification.html" />
 
     <link rel="shortcut icon" href="https://raw.githubusercontent.com/cleanlab/assets/a4483476d449f2f05a4c7cde329e72358099cc07/cleanlab/cleanlab_favicon.svg"/><meta name="generator" content="sphinx-5.1.1, furo 2022.06.21"/>
         <title>Find Noisy Labels in Regression Datasets - cleanlab</title>
@@ -187,12 +187,11 @@
 <li class="toctree-l1"><a class="reference internal" href="text.html">Text Classification (transformers)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="tabular.html">Tabular Classification (sklearn)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="audio.html">Audio Classification (speechbrain)</a></li>
-<li class="toctree-l1"><a class="reference internal" href="object_detection.html">Object Detection (detectron2)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="dataset_health.html">Find Dataset-level Issues</a></li>
-<li class="toctree-l1 current current-page"><a class="current reference internal" href="#">Regression</a></li>
 <li class="toctree-l1"><a class="reference internal" href="outliers.html">Identifying Outliers (pytorch)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="multiannotator.html">Improving Consensus Labels for Multiannotator Data</a></li>
 <li class="toctree-l1"><a class="reference internal" href="multilabel_classification.html">Multi-Label Classification</a></li>
+<li class="toctree-l1 current current-page"><a class="current reference internal" href="#">Noisy Labels in Regression</a></li>
 <li class="toctree-l1"><a class="reference internal" href="token_classification.html">Token Classification (text)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="segmentation.html">Semantic Segmentation (pytorch)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="object_detection.html">Object Detection (detectron2)</a></li>
@@ -1287,13 +1286,13 @@ r-squared score of cleanlab&#39;s model: 0.925
 <p>We can see that the coefficient of determination (r-squared score) of the test set improved as a result of the data cleaning. Note that this will not always be the case, especially when we are evaluating on test data that are themselves noisy. The best practice is to run cleanlab to identify potential label issues and then manually review them, before blindly trusting any evaluation metrics. In particular, the most effort should be made to ensure high-quality test data, which is supposed to
 reflect the expected performance of our model during deployment.</p>
 </section>
-<section id="5.-Other-workflows-to-find-label-issues-in-regression-datasets">
-<h2>5. Other workflows to find label issues in regression datasets<a class="headerlink" href="#5.-Other-workflows-to-find-label-issues-in-regression-datasets" title="Permalink to this heading">#</a></h2>
-<p>The <code class="docutils literal notranslate"><span class="pre">CleanLearning</span></code> workflow above requires a sklearn-compatible model, if your model or data format is not compatible with the requirements for using <code class="docutils literal notranslate"><span class="pre">CleanLearning</span></code>, you can instead run cross-validation on your model to get out-of-sample predictions, then use the <code class="docutils literal notranslate"><span class="pre">cleanlab.regression.rank.get_label_quality_scores</span></code> method to obtain label quality scores for each example.</p>
+<section id="5.-Other-ways-to-find-noisy-labels-in-regression-datasets">
+<h2>5. Other ways to find noisy labels in regression datasets<a class="headerlink" href="#5.-Other-ways-to-find-noisy-labels-in-regression-datasets" title="Permalink to this heading">#</a></h2>
+<p>The <code class="docutils literal notranslate"><span class="pre">CleanLearning</span></code> workflow above requires a sklearn-compatible model. If your model or data format is not compatible with the requirements for using <code class="docutils literal notranslate"><span class="pre">CleanLearning</span></code>, you can instead run cross-validation on your model to get out-of-sample predictions, and then use <code class="docutils literal notranslate"><span class="pre">cleanlab.regression.rank.get_label_quality_scores</span></code> to estimate label quality scores for each example in your dataset.</p>
 <p>This method only requires two inputs:</p>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">labels</span></code>: numpy array of given labels in the dataset.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">predictions</span></code>: numpy array of predictions generated through your favorite model.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">predictions</span></code>: numpy array of predictions generated through your favorite model (these should be out-of-sample predictions to get the best results).</p></li>
 </ul>
 <div class="nbinput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[18]:
@@ -1327,7 +1326,7 @@ array([3.64404888e-02, 3.06755306e-01, 3.05302732e-04, 2.66635743e-01,
 </pre></div></div>
 </div>
 <p>As before, these label quality scores are continuous values in the range [0,1] where 1 represents a clean label (given label appears correct) and 0 a represents dirty label (given label appears corrupted). You can sort examples by their label quality scores to inspect the most-likely corrupted datapoints.</p>
-<p>If possible, we recommend you use <code class="docutils literal notranslate"><span class="pre">CleanLearning</span></code> over <code class="docutils literal notranslate"><span class="pre">rank.get_label_quality_scores</span></code> for the most accurate label error detection. To understand how these approaches work, refer to our paper: <a class="reference external" href="https://arxiv.org/abs/2305.16583">Detecting Errors in Numerical Data via any Regression Model</a></p>
+<p>If possible, we recommend you use <code class="docutils literal notranslate"><span class="pre">CleanLearning</span></code> over <code class="docutils literal notranslate"><span class="pre">rank.get_label_quality_scores</span></code> for the most accurate label error detection (that properly accounts for aleatoric/epistemic uncertainty in the regression model). To understand how these approaches work, refer to our paper: <a class="reference external" href="https://arxiv.org/abs/2305.16583">Detecting Errors in Numerical Data via any Regression Model</a></p>
 </section>
 </section>
  
@@ -1336,23 +1335,23 @@ array([3.64404888e-02, 3.06755306e-01, 3.05302732e-04, 2.66635743e-01,
       <footer>
          
         <div class="related-pages">
-          <a class="next-page" href="outliers.html">
+          <a class="next-page" href="token_classification.html">
               <div class="page-info">
                 <div class="context">
                   <span>Next</span>
                 </div>
-                <div class="title">Detect Outliers with Cleanlab and PyTorch Image Models (timm)</div>
+                <div class="title">Find Label Errors in Token Classification (Text) Datasets</div>
               </div>
               <svg><use href="#svg-arrow-right"></use></svg>
             </a>
-          <a class="prev-page" href="dataset_health.html">
+          <a class="prev-page" href="multilabel_classification.html">
               <svg><use href="#svg-arrow-right"></use></svg>
               <div class="page-info">
                 <div class="context">
                   <span>Previous</span>
                 </div>
                 
-                <div class="title">Find Dataset-level Issues for Dataset Curation</div>
+                <div class="title">Find Label Errors in Multi-Label Classification Datasets</div>
                 
               </div>
             </a>
@@ -1411,7 +1410,7 @@ array([3.64404888e-02, 3.06755306e-01, 3.05302732e-04, 2.66635743e-01,
 <li><a class="reference internal" href="#2.-Load-and-process-the-data">2. Load and process the data</a></li>
 <li><a class="reference internal" href="#3.-Define-a-regression-model-and-use-cleanlab-to-find-potential-label-errors">3. Define a regression model and use cleanlab to find potential label errors</a></li>
 <li><a class="reference internal" href="#4.-Train-a-more-robust-model-from-noisy-labels">4. Train a more robust model from noisy labels</a></li>
-<li><a class="reference internal" href="#5.-Other-workflows-to-find-label-issues-in-regression-datasets">5. Other workflows to find label issues in regression datasets</a></li>
+<li><a class="reference internal" href="#5.-Other-ways-to-find-noisy-labels-in-regression-datasets">5. Other ways to find noisy labels in regression datasets</a></li>
 </ul>
 </li>
 </ul>
