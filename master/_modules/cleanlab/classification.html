@@ -626,6 +626,7 @@
     <span class="n">compress_int_array</span><span class="p">,</span>
     <span class="n">subset_X_y</span><span class="p">,</span>
     <span class="n">get_num_classes</span><span class="p">,</span>
+    <span class="n">force_two_dimensions</span><span class="p">,</span>
 <span class="p">)</span>
 <span class="kn">from</span> <span class="nn">cleanlab.count</span> <span class="kn">import</span> <span class="p">(</span>
     <span class="n">estimate_py_noise_matrices_and_cv_pred_proba</span><span class="p">,</span>
@@ -676,6 +677,8 @@
 <span class="sd">      Stores the classifier used in Confident Learning.</span>
 <span class="sd">      Default classifier used is `sklearn.linear_model.LogisticRegression</span>
 <span class="sd">      &lt;https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.LogisticRegression.html&gt;`_.</span>
+<span class="sd">      Default classifier assumes that indexing along the first dimension of the dataset corresponds to</span>
+<span class="sd">      selecting different training examples.</span>
 
 <span class="sd">    seed : int, optional</span>
 <span class="sd">      Set the default state of the random number generator used to split</span>
@@ -724,9 +727,11 @@
         <span class="n">label_quality_scores_kwargs</span><span class="o">=</span><span class="p">{},</span>
         <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
     <span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_default_clf</span> <span class="o">=</span> <span class="kc">False</span>
         <span class="k">if</span> <span class="n">clf</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="c1"># Use logistic regression if no classifier is provided.</span>
             <span class="n">clf</span> <span class="o">=</span> <span class="n">LogReg</span><span class="p">(</span><span class="n">multi_class</span><span class="o">=</span><span class="s2">&quot;auto&quot;</span><span class="p">,</span> <span class="n">solver</span><span class="o">=</span><span class="s2">&quot;lbfgs&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_default_clf</span> <span class="o">=</span> <span class="kc">True</span>
 
         <span class="c1"># Make sure the given classifier has the appropriate methods defined.</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">clf</span><span class="p">,</span> <span class="s2">&quot;fit&quot;</span><span class="p">):</span>
@@ -948,6 +953,8 @@
             <span class="n">labels</span> <span class="o">=</span> <span class="n">y</span>
         <span class="k">if</span> <span class="n">labels</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;You must specify `labels`.&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_default_clf</span><span class="p">:</span>
+            <span class="n">X</span> <span class="o">=</span> <span class="n">force_two_dimensions</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">clf_final_kwargs</span> <span class="o">=</span> <span class="p">{</span><span class="o">**</span><span class="n">clf_kwargs</span><span class="p">,</span> <span class="o">**</span><span class="n">clf_final_kwargs</span><span class="p">}</span>
 
@@ -1097,8 +1104,19 @@
 <span class="sd">        class_predictions : np.ndarray</span>
 <span class="sd">          Vector of class predictions for the test examples.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">clf</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_default_clf</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">args</span><span class="p">:</span>
+                <span class="n">X</span> <span class="o">=</span> <span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="k">elif</span> <span class="s2">&quot;X&quot;</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="p">:</span>
+                <span class="n">X</span> <span class="o">=</span> <span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;X&quot;</span><span class="p">]</span>
+                <span class="k">del</span> <span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;X&quot;</span><span class="p">]</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;No input provided to predict, please provide X.&quot;</span><span class="p">)</span>
+            <span class="n">X</span> <span class="o">=</span> <span class="n">force_two_dimensions</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+            <span class="n">new_args</span> <span class="o">=</span> <span class="p">(</span><span class="n">X</span><span class="p">,)</span> <span class="o">+</span> <span class="n">args</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">clf</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="o">*</span><span class="n">new_args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">clf</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="CleanLearning.predict_proba"><a class="viewcode-back" href="../../cleanlab/classification.html#cleanlab.classification.CleanLearning.predict_proba">[docs]</a>    <span class="k">def</span> <span class="nf">predict_proba</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Predict class probabilities ``P(true label=k)`` using your wrapped classifier `clf`.</span>
@@ -1114,8 +1132,19 @@
 <span class="sd">        pred_probs : np.ndarray</span>
 <span class="sd">          ``(N x K)`` array of predicted class probabilities, one row for each test example.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">clf</span><span class="o">.</span><span class="n">predict_proba</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_default_clf</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">args</span><span class="p">:</span>
+                <span class="n">X</span> <span class="o">=</span> <span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="k">elif</span> <span class="s2">&quot;X&quot;</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="p">:</span>
+                <span class="n">X</span> <span class="o">=</span> <span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;X&quot;</span><span class="p">]</span>
+                <span class="k">del</span> <span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;X&quot;</span><span class="p">]</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;No input provided to predict, please provide X.&quot;</span><span class="p">)</span>
+            <span class="n">X</span> <span class="o">=</span> <span class="n">force_two_dimensions</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+            <span class="n">new_args</span> <span class="o">=</span> <span class="p">(</span><span class="n">X</span><span class="p">,)</span> <span class="o">+</span> <span class="n">args</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">clf</span><span class="o">.</span><span class="n">predict_proba</span><span class="p">(</span><span class="o">*</span><span class="n">new_args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">clf</span><span class="o">.</span><span class="n">predict_proba</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="CleanLearning.score"><a class="viewcode-back" href="../../cleanlab/classification.html#cleanlab.classification.CleanLearning.score">[docs]</a>    <span class="k">def</span> <span class="nf">score</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">sample_weight</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Evaluates your wrapped classifier `clf`&#39;s score on a test set `X` with labels `y`.</span>
@@ -1137,7 +1166,8 @@
 <span class="sd">        score: float</span>
 <span class="sd">          Number quantifying the performance of this classifier on the test data.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_default_clf</span><span class="p">:</span>
+            <span class="n">X</span> <span class="o">=</span> <span class="n">force_two_dimensions</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
         <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">clf</span><span class="p">,</span> <span class="s2">&quot;score&quot;</span><span class="p">):</span>
             <span class="c1"># Check if sample_weight in clf.score()</span>
             <span class="k">if</span> <span class="s2">&quot;sample_weight&quot;</span> <span class="ow">in</span> <span class="n">inspect</span><span class="o">.</span><span class="n">getfullargspec</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">clf</span><span class="o">.</span><span class="n">score</span><span class="p">)</span><span class="o">.</span><span class="n">args</span><span class="p">:</span>
@@ -1230,6 +1260,8 @@
             <span class="n">t</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">trace</span><span class="p">(</span><span class="n">inverse_noise_matrix</span><span class="p">),</span> <span class="mi">2</span><span class="p">)</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Trace(inverse_noise_matrix) is </span><span class="si">{}</span><span class="s2">. Must exceed 1.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">t</span><span class="p">))</span>
 
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_default_clf</span><span class="p">:</span>
+            <span class="n">X</span> <span class="o">=</span> <span class="n">force_two_dimensions</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">noise_matrix</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">label_matrix</span> <span class="o">=</span> <span class="n">noise_matrix</span>
         <span class="k">else</span><span class="p">:</span>

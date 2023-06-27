@@ -1232,6 +1232,27 @@
         <span class="n">display</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
     <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
         <span class="nb">print</span><span class="p">(</span><span class="n">df</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="force_two_dimensions"><a class="viewcode-back" href="../../../cleanlab/internal/util.html#cleanlab.internal.util.force_two_dimensions">[docs]</a><span class="k">def</span> <span class="nf">force_two_dimensions</span><span class="p">(</span><span class="n">X</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">DatasetLike</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Enforce the dimensionality of a dataset to two dimensions for the use of CleanLearning default classifier,</span>
+<span class="sd">    which is `sklearn.linear_model.LogisticRegression</span>
+<span class="sd">      &lt;https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.LogisticRegression.html&gt;`_.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    X : np.ndarray or DatasetLike</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    X : np.ndarray or DatasetLike</span>
+<span class="sd">        The original dataset reduced to two dimensions, so that the dataset will have the shape ``(N, sum(...))``,</span>
+<span class="sd">        where N is still the number of examples.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">X</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">2</span><span class="p">:</span>
+        <span class="n">X</span> <span class="o">=</span> <span class="n">X</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="nb">len</span><span class="p">(</span><span class="n">X</span><span class="p">),</span> <span class="o">-</span><span class="mi">1</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">X</span></div>
 </pre></div> 
         </article>
       </div>
