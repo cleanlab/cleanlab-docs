@@ -510,7 +510,7 @@
 
 <span class="sd">&quot;&quot;&quot;Methods to find label issues in an object detection dataset, where each annotated bounding box in an image receives its own class label.&quot;&quot;&quot;</span>
 
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Dict</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Optional</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 
 <span class="kn">from</span> <span class="nn">cleanlab.internal.constants</span> <span class="kn">import</span> <span class="p">(</span>
@@ -537,7 +537,8 @@
     <span class="n">labels</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]],</span>
     <span class="n">predictions</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">],</span>
     <span class="o">*</span><span class="p">,</span>
-    <span class="n">return_indices_ranked_by_score</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="n">return_indices_ranked_by_score</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="n">overlapping_label_check</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Identifies potentially mislabeled images in an object detection dataset.</span>
@@ -578,6 +579,10 @@
 <span class="sd">    return_indices_ranked_by_score:</span>
 <span class="sd">        Determines what is returned by this method (see description of return value for details).</span>
 
+<span class="sd">    overlapping_label_check : bool, default = True</span>
+<span class="sd">       If True, boxes annotated with more than one class label have their swap score penalized.  Set this to False if you are not concerned when two very similar boxes exist with different class labels in the given annotations.</span>
+
+
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
 <span class="sd">    label_issues : np.ndarray</span>
@@ -600,6 +605,7 @@
         <span class="n">predictions</span><span class="p">,</span>
         <span class="n">scoring_method</span><span class="o">=</span><span class="n">scoring_method</span><span class="p">,</span>
         <span class="n">return_indices_ranked_by_score</span><span class="o">=</span><span class="n">return_indices_ranked_by_score</span><span class="p">,</span>
+        <span class="n">overlapping_label_check</span><span class="o">=</span><span class="n">overlapping_label_check</span><span class="p">,</span>
     <span class="p">)</span>
 
     <span class="k">return</span> <span class="n">is_issue</span></div>
@@ -609,8 +615,9 @@
     <span class="n">labels</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]],</span>
     <span class="n">predictions</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">],</span>
     <span class="o">*</span><span class="p">,</span>
-    <span class="n">return_indices_ranked_by_score</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
-    <span class="n">scoring_method</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;objectlab&quot;</span><span class="p">,</span>
+    <span class="n">scoring_method</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;objectlab&quot;</span><span class="p">,</span>
+    <span class="n">return_indices_ranked_by_score</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+    <span class="n">overlapping_label_check</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
 <span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Internal function to find label issues based on passed in method.&quot;&quot;&quot;</span>
 
@@ -638,6 +645,7 @@
         <span class="n">swap_scores_per_box</span> <span class="o">=</span> <span class="n">compute_swap_box_scores</span><span class="p">(</span>
             <span class="n">alpha</span><span class="o">=</span><span class="n">ALPHA</span><span class="p">,</span>
             <span class="n">high_probability_threshold</span><span class="o">=</span><span class="n">HIGH_PROBABILITY_THRESHOLD</span><span class="p">,</span>
+            <span class="n">overlapping_label_check</span><span class="o">=</span><span class="n">overlapping_label_check</span><span class="p">,</span>
             <span class="n">auxiliary_inputs</span><span class="o">=</span><span class="n">auxiliary_inputs</span><span class="p">,</span>
         <span class="p">)</span>
         <span class="n">swap_issues_per_box</span> <span class="o">=</span> <span class="n">_find_label_issues_per_box</span><span class="p">(</span><span class="n">swap_scores_per_box</span><span class="p">,</span> <span class="n">SWAP_THRESHOLD</span><span class="p">)</span>

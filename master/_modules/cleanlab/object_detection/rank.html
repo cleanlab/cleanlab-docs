@@ -524,6 +524,7 @@
     <span class="n">MAX_ALLOWED_BOX_PRUNE</span><span class="p">,</span>
     <span class="n">TINY_VALUE</span><span class="p">,</span>
     <span class="n">TEMPERATURE</span><span class="p">,</span>
+    <span class="n">LABEL_OVERLAP_THRESHOLD</span><span class="p">,</span>
 <span class="p">)</span>
 
 
@@ -559,8 +560,9 @@
 <div class="viewcode-block" id="get_label_quality_scores"><a class="viewcode-back" href="../../../cleanlab/object_detection/rank.html#cleanlab.object_detection.rank.get_label_quality_scores">[docs]</a><span class="k">def</span> <span class="nf">get_label_quality_scores</span><span class="p">(</span>
     <span class="n">labels</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]],</span>
     <span class="n">predictions</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">],</span>
-    <span class="n">aggregation_weights</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">float</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="o">*</span><span class="p">,</span>
+    <span class="n">aggregation_weights</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">float</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">overlapping_label_check</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
     <span class="n">verbose</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Computes a label quality score for each image of the ``N`` images in the dataset.</span>
@@ -588,6 +590,9 @@
 <span class="sd">        A list of ``N`` ``np.ndarray`` such that ``predictions[i]`` corresponds to the model predictions for the `i`-th image.</span>
 <span class="sd">        Refer to documentation for this argument in :py:func:`find_label_issues &lt;cleanlab.object_detection.filter.find_label_issues&gt;` for further details.</span>
 
+<span class="sd">    verbose : bool, default = True</span>
+<span class="sd">      Set to ``False`` to suppress all print statements.</span>
+
 <span class="sd">    aggregation_weights:</span>
 <span class="sd">       Optional dictionary to specify weights for aggregating quality scores for subtype of label issue into an overall label quality score for the image.</span>
 <span class="sd">       Its keys are: &quot;overlooked&quot;, &quot;swap&quot;, &quot;badloc&quot;, and values should be nonnegative weights that sum to 1.</span>
@@ -597,8 +602,8 @@
 <span class="sd">       swapped examples, bad location examples, and overlooked examples.</span>
 <span class="sd">       It is important to ensure that the weights are non-negative values and that their sum equals 1.0.</span>
 
-<span class="sd">    verbose : bool, default = True</span>
-<span class="sd">      Set to ``False`` to suppress all print statements.</span>
+<span class="sd">    overlapping_label_check : bool, default = True</span>
+<span class="sd">        If True, boxes annotated with more than one class label have their swap score penalized. Set this to False if you are not concerned when two very similar boxes exist with different class labels in the given annotations.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    ---------</span>
@@ -623,6 +628,7 @@
         <span class="n">method</span><span class="o">=</span><span class="n">method</span><span class="p">,</span>
         <span class="n">threshold</span><span class="o">=</span><span class="n">probability_threshold</span><span class="p">,</span>
         <span class="n">aggregation_weights</span><span class="o">=</span><span class="n">aggregation_weights</span><span class="p">,</span>
+        <span class="n">overlapping_label_check</span><span class="o">=</span><span class="n">overlapping_label_check</span><span class="p">,</span>
         <span class="n">verbose</span><span class="o">=</span><span class="n">verbose</span><span class="p">,</span>
     <span class="p">)</span></div>
 
@@ -663,10 +669,11 @@
 <span class="k">def</span> <span class="nf">_compute_label_quality_scores</span><span class="p">(</span>
     <span class="n">labels</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]],</span>
     <span class="n">predictions</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">],</span>
-    <span class="n">aggregation_weights</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">float</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="o">*</span><span class="p">,</span>
-    <span class="n">method</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;objectlab&quot;</span><span class="p">,</span>
+    <span class="n">method</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;objectlab&quot;</span><span class="p">,</span>
+    <span class="n">aggregation_weights</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">float</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">threshold</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">overlapping_label_check</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
     <span class="n">verbose</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Internal function to prune extra bounding boxes and compute label quality scores based on passed in method.&quot;&quot;&quot;</span>
@@ -686,15 +693,21 @@
 
     <span class="k">if</span> <span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;objectlab&quot;</span><span class="p">:</span>
         <span class="n">scores</span> <span class="o">=</span> <span class="n">_get_subtype_label_quality_scores</span><span class="p">(</span>
-            <span class="n">labels</span><span class="p">,</span>
-            <span class="n">predictions</span><span class="p">,</span>
+            <span class="n">labels</span><span class="o">=</span><span class="n">labels</span><span class="p">,</span>
+            <span class="n">predictions</span><span class="o">=</span><span class="n">predictions</span><span class="p">,</span>
             <span class="n">alpha</span><span class="o">=</span><span class="n">ALPHA</span><span class="p">,</span>
             <span class="n">low_probability_threshold</span><span class="o">=</span><span class="n">LOW_PROBABILITY_THRESHOLD</span><span class="p">,</span>
             <span class="n">high_probability_threshold</span><span class="o">=</span><span class="n">HIGH_PROBABILITY_THRESHOLD</span><span class="p">,</span>
             <span class="n">temperature</span><span class="o">=</span><span class="n">TEMPERATURE</span><span class="p">,</span>
             <span class="n">aggregation_weights</span><span class="o">=</span><span class="n">aggregation_weights</span><span class="p">,</span>
+            <span class="n">overlapping_label_check</span><span class="o">=</span><span class="n">overlapping_label_check</span><span class="p">,</span>
         <span class="p">)</span>
-
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+            <span class="s2">&quot;Invalid method: &#39;</span><span class="si">{}</span><span class="s2">&#39; is not a valid method for computing label quality scores. Please use the &#39;objectlab&#39; method.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                <span class="n">method</span>
+            <span class="p">)</span>
+        <span class="p">)</span>
     <span class="k">return</span> <span class="n">scores</span>
 
 
@@ -863,6 +876,23 @@
     <span class="k">return</span> <span class="n">iou</span>
 
 
+<span class="k">def</span> <span class="nf">_has_overlap</span><span class="p">(</span><span class="n">bbox_list</span><span class="p">,</span> <span class="n">labels</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;This function determines whether each labeled box overlaps with another box of a different class (i.e. virtually the same box having multiple conflicting annotations). It returns a boolean array.&quot;&quot;&quot;</span>
+    <span class="n">iou_matrix</span> <span class="o">=</span> <span class="n">_get_overlap_matrix</span><span class="p">(</span><span class="n">bbox_list</span><span class="p">,</span> <span class="n">bbox_list</span><span class="p">)</span>
+    <span class="n">results_overlap</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">iou_matrix</span><span class="p">)):</span>
+        <span class="n">is_overlap</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">iou_matrix</span><span class="p">)):</span>
+            <span class="k">if</span> <span class="n">i</span> <span class="o">!=</span> <span class="n">j</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">iou_matrix</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="n">LABEL_OVERLAP_THRESHOLD</span><span class="p">:</span>
+                    <span class="n">lab_1</span> <span class="o">=</span> <span class="n">labels</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+                    <span class="n">lab_2</span> <span class="o">=</span> <span class="n">labels</span><span class="p">[</span><span class="n">j</span><span class="p">]</span>
+                    <span class="k">if</span> <span class="n">lab_1</span> <span class="o">!=</span> <span class="n">lab_2</span><span class="p">:</span>
+                        <span class="n">is_overlap</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="n">results_overlap</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">is_overlap</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">results_overlap</span><span class="p">)</span>
+
+
 <span class="k">def</span> <span class="nf">_euc_dis</span><span class="p">(</span><span class="n">box1</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">],</span> <span class="n">box2</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Calculates the Euclidean distance between `box1` and `box2`.&quot;&quot;&quot;</span>
     <span class="n">x1</span><span class="p">,</span> <span class="n">y1</span> <span class="o">=</span> <span class="p">(</span><span class="n">box1</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">box1</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span> <span class="p">(</span><span class="n">box1</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">box1</span><span class="p">[</span><span class="mi">3</span><span class="p">])</span> <span class="o">/</span> <span class="mi">2</span>
@@ -904,16 +934,16 @@
 
 
 <span class="k">def</span> <span class="nf">_get_valid_inputs_for_compute_scores_per_image</span><span class="p">(</span>
-    <span class="o">*</span><span class="p">,</span>
     <span class="n">alpha</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="o">*</span><span class="p">,</span>
     <span class="n">label</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">prediction</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">pred_labels</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">pred_label_probs</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">pred_bboxes</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">lab_labels</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-    <span class="n">lab_bboxes</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-    <span class="n">similarity_matrix</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">lab_bboxes</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">similarity_matrix</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">min_possible_similarity</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">AuxiliaryTypesDict</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Returns valid inputs for compute scores by either passing through values or calculating the inputs internally.&quot;&quot;&quot;</span>
@@ -1082,15 +1112,16 @@
 
 
 <div class="viewcode-block" id="compute_overlooked_box_scores"><a class="viewcode-back" href="../../../cleanlab/object_detection/rank.html#cleanlab.object_detection.rank.compute_overlooked_box_scores">[docs]</a><span class="k">def</span> <span class="nf">compute_overlooked_box_scores</span><span class="p">(</span>
+    <span class="o">*</span><span class="p">,</span>
     <span class="n">labels</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">predictions</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-    <span class="o">*</span><span class="p">,</span>
     <span class="n">alpha</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">high_probability_threshold</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">auxiliary_inputs</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">AuxiliaryTypesDict</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Returns an array of overlooked box scores for each image.</span>
+<span class="sd">    An overlooked box error is when an image contains an object that is one of the given classes but there is no annotated bounding box around it.</span>
 <span class="sd">    Score per high-confidence predicted bounding box is between 0 and 1, with lower values indicating boxes we are more confident were overlooked in the given label.</span>
 
 <span class="sd">    Each image has ``L`` annotated bounding boxes and ``M`` predicted bounding boxes.</span>
@@ -1215,15 +1246,16 @@
 
 
 <div class="viewcode-block" id="compute_badloc_box_scores"><a class="viewcode-back" href="../../../cleanlab/object_detection/rank.html#cleanlab.object_detection.rank.compute_badloc_box_scores">[docs]</a><span class="k">def</span> <span class="nf">compute_badloc_box_scores</span><span class="p">(</span>
+    <span class="o">*</span><span class="p">,</span>
     <span class="n">labels</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">predictions</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-    <span class="o">*</span><span class="p">,</span>
     <span class="n">alpha</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">low_probability_threshold</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">auxiliary_inputs</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">AuxiliaryTypesDict</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Returns a numeric score for each annotated bounding box in each image, estimating the likelihood that the edges of this box are not badly located.</span>
+<span class="sd">    An badly located box error is when a box has the correct label but incorrect coordinates so it does not correctly encapsulate the entire object it is for.</span>
 <span class="sd">    Score per high-confidence predicted bounding box is between 0 and 1, with lower values indicating boxes we are more confident were overlooked in the given label.</span>
 
 <span class="sd">    Each image has ``L`` annotated bounding boxes and ``M`` predicted bounding boxes.</span>
@@ -1300,6 +1332,7 @@
     <span class="n">lab_bboxes</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">similarity_matrix</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">min_possible_similarity</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">overlapping_label_check</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;This method returns one score per labeled box in an image. Score from 0 to 1 ranking how likeley swapped the box is.&quot;&quot;&quot;</span>
 
@@ -1322,6 +1355,11 @@
     <span class="n">similarity_matrix</span> <span class="o">=</span> <span class="n">auxiliary_input_dict</span><span class="p">[</span><span class="s2">&quot;similarity_matrix&quot;</span><span class="p">]</span>
     <span class="n">min_possible_similarity</span> <span class="o">=</span> <span class="n">auxiliary_input_dict</span><span class="p">[</span><span class="s2">&quot;min_possible_similarity&quot;</span><span class="p">]</span>
 
+    <span class="k">if</span> <span class="n">overlapping_label_check</span><span class="p">:</span>
+        <span class="n">has_overlap_label_bboxes</span> <span class="o">=</span> <span class="n">_has_overlap</span><span class="p">(</span><span class="n">lab_bboxes</span><span class="p">,</span> <span class="n">lab_labels</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">has_overlap_label_bboxes</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="kc">False</span><span class="p">]</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">lab_labels</span><span class="p">))</span>
+
     <span class="n">scores_swap</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">(</span>
         <span class="n">shape</span><span class="o">=</span><span class="p">[</span>
             <span class="nb">len</span><span class="p">(</span><span class="n">lab_labels</span><span class="p">),</span>
@@ -1329,7 +1367,9 @@
     <span class="p">)</span>  <span class="c1"># same length as number of labeled boxes</span>
     <span class="k">for</span> <span class="n">iid</span><span class="p">,</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">lab_labels</span><span class="p">):</span>
         <span class="n">not_k_idx</span> <span class="o">=</span> <span class="n">pred_labels</span> <span class="o">!=</span> <span class="n">k</span>
-
+        <span class="k">if</span> <span class="n">has_overlap_label_bboxes</span><span class="p">[</span><span class="n">iid</span><span class="p">]:</span>
+            <span class="n">scores_swap</span><span class="p">[</span><span class="n">iid</span><span class="p">]</span> <span class="o">=</span> <span class="n">min_possible_similarity</span>
+            <span class="k">continue</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">not_k_idx</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
             <span class="n">scores_swap</span><span class="p">[</span><span class="n">iid</span><span class="p">]</span> <span class="o">=</span> <span class="mf">1.0</span>
             <span class="k">continue</span>
@@ -1353,15 +1393,17 @@
 
 
 <div class="viewcode-block" id="compute_swap_box_scores"><a class="viewcode-back" href="../../../cleanlab/object_detection/rank.html#cleanlab.object_detection.rank.compute_swap_box_scores">[docs]</a><span class="k">def</span> <span class="nf">compute_swap_box_scores</span><span class="p">(</span>
+    <span class="o">*</span><span class="p">,</span>
     <span class="n">labels</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">predictions</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-    <span class="o">*</span><span class="p">,</span>
     <span class="n">alpha</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">high_probability_threshold</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">overlapping_label_check</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
     <span class="n">auxiliary_inputs</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">AuxiliaryTypesDict</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Returns a numeric score for each annotated bounding box in each image, estimating the likelihood that the class label for this box was not accidentally swapped with another class.</span>
+<span class="sd">    A swapped box error occurs when a bounding box should be labeled as a class different to what the curent label is.</span>
 <span class="sd">    Score per high-confidence predicted bounding box is between 0 and 1, with lower values indicating boxes we are more confident were overlooked in the given label.</span>
 
 <span class="sd">    Each image has ``L`` annotated bounding boxes and ``M`` predicted bounding boxes.</span>
@@ -1384,6 +1426,9 @@
 
 <span class="sd">    high_probability_threshold:</span>
 <span class="sd">        Optional probability threshold that determines which predicted boxes are considered high-confidence when computing overlooked scores. If not provided, a good default is used.</span>
+
+<span class="sd">    overlapping_label_check : bool, default = True</span>
+<span class="sd">        If True, boxes annotated with more than one class label have their swap score penalized. Set this to False if you are not concerned when two very similar boxes exist with different class labels in the given annotations.</span>
 
 <span class="sd">    auxiliary_inputs:</span>
 <span class="sd">        Optional list of ``N`` dictionaries containing keys for sub-parts of label and prediction per image. Useful to minimize computation when computing multiple box scores for a single set of images. For the `i`-th image, `auxiliary_inputs[i]` should contain following keys:</span>
@@ -1420,7 +1465,10 @@
     <span class="n">scores_swap</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="k">for</span> <span class="n">auxiliary_inputs</span> <span class="ow">in</span> <span class="n">auxiliary_inputs</span><span class="p">:</span>
         <span class="n">scores_swap_per_box</span> <span class="o">=</span> <span class="n">_compute_swap_box_scores_for_image</span><span class="p">(</span>
-            <span class="n">alpha</span><span class="o">=</span><span class="n">alpha</span><span class="p">,</span> <span class="n">high_probability_threshold</span><span class="o">=</span><span class="n">high_probability_threshold</span><span class="p">,</span> <span class="o">**</span><span class="n">auxiliary_inputs</span>
+            <span class="n">alpha</span><span class="o">=</span><span class="n">alpha</span><span class="p">,</span>
+            <span class="n">high_probability_threshold</span><span class="o">=</span><span class="n">high_probability_threshold</span><span class="p">,</span>
+            <span class="n">overlapping_label_check</span><span class="o">=</span><span class="n">overlapping_label_check</span><span class="p">,</span>
+            <span class="o">**</span><span class="n">auxiliary_inputs</span><span class="p">,</span>
         <span class="p">)</span>
         <span class="n">scores_swap</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">scores_swap_per_box</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">scores_swap</span></div>
@@ -1474,6 +1522,7 @@
     <span class="n">high_probability_threshold</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">temperature</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">aggregation_weights</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">float</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">overlapping_label_check</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Returns a label quality score for each of the ``N`` images in the dataset.</span>
@@ -1503,6 +1552,9 @@
 
 <span class="sd">    temperature:</span>
 <span class="sd">        Optional temperature of the softmin function where a lower score suggests softmin acts closer to min. If not provided, a good default is used.</span>
+
+<span class="sd">    overlapping_label_check : bool, default = True</span>
+<span class="sd">        If True, boxes annotated with more than one class label have their swap score penalized. Set this to False if you are not concerned when two very similar boxes exist with different class labels in the given annotations.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    ---------</span>
@@ -1542,6 +1594,7 @@
         <span class="n">alpha</span><span class="o">=</span><span class="n">alpha</span><span class="p">,</span>
         <span class="n">high_probability_threshold</span><span class="o">=</span><span class="n">high_probability_threshold</span><span class="p">,</span>
         <span class="n">auxiliary_inputs</span><span class="o">=</span><span class="n">auxiliary_inputs</span><span class="p">,</span>
+        <span class="n">overlapping_label_check</span><span class="o">=</span><span class="n">overlapping_label_check</span><span class="p">,</span>
     <span class="p">)</span>
     <span class="n">swap_score_per_image</span> <span class="o">=</span> <span class="n">pool_box_scores_per_image</span><span class="p">(</span><span class="n">swap_scores_per_box</span><span class="p">,</span> <span class="n">temperature</span><span class="o">=</span><span class="n">temperature</span><span class="p">)</span>
 
