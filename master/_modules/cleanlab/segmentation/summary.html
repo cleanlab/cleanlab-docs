@@ -556,17 +556,19 @@
 <span class="sd">      or :py:func:`segmentation.rank.issues_from_scores &lt;cleanlab.segmentation.rank.issues_from_scores&gt;`.</span>
 
 <span class="sd">    labels:</span>
-<span class="sd">      Optional discrete array of noisy labels for a segmantic segmentation dataset, in the shape``(N,H,W,)``.</span>
+<span class="sd">      Optional discrete array of noisy labels for a segmantic segmentation dataset, in the shape ``(N,H,W,)``,</span>
 <span class="sd">      where each pixel must be integer in 0, 1, ..., K-1.</span>
 <span class="sd">      If `labels` is provided, this function also displays given label of the pixel identified with issue.</span>
-<span class="sd">      Refer to documentation for this argument in :py:func:find_label_issues &lt;cleanlab.segemntation.filter.find_label_issues&gt; for more information.</span>
+<span class="sd">      Refer to documentation for this argument in :py:func:`find_label_issues &lt;cleanlab.segmentation.filter.find_label_issues&gt;` for more information.</span>
 
 <span class="sd">    pred_probs:</span>
 <span class="sd">      Optional array of shape ``(N,K,H,W,)`` of model-predicted class probabilities.</span>
 <span class="sd">      If `pred_probs` is provided, this function also displays predicted label of the pixel identified with issue.</span>
-<span class="sd">      Refer to documentation for this argument in :py:func:find_label_issues &lt;cleanlab.segemntation.filter.find_label_issues&gt; for more information.</span>
+<span class="sd">      Refer to documentation for this argument in :py:func:`find_label_issues &lt;cleanlab.segmentation.filter.find_label_issues&gt;` for more information.</span>
 
-<span class="sd">      Tip: If your labels are one hot encoded you can `np.argmax(labels_one_hot,axis=1)` assuming that `labels_one_hot` is of dimension (N,K,H,W)</span>
+<span class="sd">      Tip</span>
+<span class="sd">      ---</span>
+<span class="sd">      If your labels are one hot encoded you can `np.argmax(labels_one_hot, axis=1)` assuming that `labels_one_hot` is of dimension (N,K,H,W)</span>
 <span class="sd">      before entering in the function</span>
 
 <span class="sd">    class_names:</span>
@@ -577,8 +579,11 @@
 <span class="sd">      showing the color mapping of each class in the provided colormap.</span>
 
 <span class="sd">      Example:</span>
-<span class="sd">        If there are three classes in your labels, represented by 0, 1, 2, then class_names might look like this:</span>
-<span class="sd">        class_names = [&#39;background&#39;, &#39;person&#39;, &#39;dog&#39;]</span>
+<span class="sd">      If there are three classes in your labels, represented by 0, 1, 2, then class_names might look like this:</span>
+
+<span class="sd">      .. code-block:: python</span>
+
+<span class="sd">            class_names = [&#39;background&#39;, &#39;person&#39;, &#39;dog&#39;]</span>
 
 <span class="sd">    top:</span>
 <span class="sd">        Optional maximum number of issues to be printed. If not provided, a good default is used.</span>
@@ -692,15 +697,17 @@
 <span class="sd">      or :py:func:`segmentation.rank.issues_from_scores &lt;cleanlab.segmentation.rank.issues_from_scores&gt;`.</span>
 
 <span class="sd">    labels:</span>
-<span class="sd">      A discrete array of noisy labels for a segmantic segmentation dataset, in the shape``(N,H,W,)``.</span>
+<span class="sd">      A discrete array of noisy labels for a segmantic segmentation dataset, in the shape ``(N,H,W,)``.</span>
 <span class="sd">      where each pixel must be integer in 0, 1, ..., K-1.</span>
-<span class="sd">      Refer to documentation for this argument in :py:func:`find_label_issues &lt;cleanlab.segemntation.filter.find_label_issues&gt;` for more information.</span>
+<span class="sd">      Refer to documentation for this argument in :py:func:`find_label_issues &lt;cleanlab.segmentation.filter.find_label_issues&gt;` for more information.</span>
 
 <span class="sd">    pred_probs:</span>
 <span class="sd">      An array of shape ``(N,K,H,W,)`` of model-predicted class probabilities.</span>
-<span class="sd">      Refer to documentation for this argument in :py:func:`find_label_issues &lt;cleanlab.segemntation.filter.find_label_issues&gt;` for more information.</span>
+<span class="sd">      Refer to documentation for this argument in :py:func:`find_label_issues &lt;cleanlab.segmentation.filter.find_label_issues&gt;` for more information.</span>
 
-<span class="sd">      Tip: If your labels are one hot encoded you can `np.argmax(labels_one_hot,axis=1)` assuming that `labels_one_hot` is of dimension (N,K,H,W)</span>
+<span class="sd">      Tip</span>
+<span class="sd">      ---</span>
+<span class="sd">      If your labels are one hot encoded you can `np.argmax(labels_one_hot, axis=1)` assuming that `labels_one_hot` is of dimension (N,K,H,W)</span>
 <span class="sd">      before entering in the function</span>
 
 <span class="sd">    class_names:</span>
@@ -719,8 +726,9 @@
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
 <span class="sd">    issues_df:</span>
-<span class="sd">      DataFrame `issues_df` contains columns ``[&#39;given_label&#39;, &#39;predicted_label&#39;, &#39;num_label_issues&#39;]`` and each row contains information for a</span>
-<span class="sd">      given/predicted label swap, ordered by the number of label issues inferred for this type of label swap.</span>
+<span class="sd">      DataFrame with columns ``[&#39;given_label&#39;, &#39;predicted_label&#39;, &#39;num_label_issues&#39;]``</span>
+<span class="sd">      where each row contains information about a particular given/predicted label swap.</span>
+<span class="sd">      Rows are ordered by the number of label issues inferred to exhibit this type of label swap.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">try</span><span class="p">:</span>
         <span class="n">N</span><span class="p">,</span> <span class="n">K</span><span class="p">,</span> <span class="n">H</span><span class="p">,</span> <span class="n">W</span> <span class="o">=</span> <span class="n">pred_probs</span><span class="o">.</span><span class="n">shape</span>
@@ -786,13 +794,13 @@
 <span class="sd">      or :py:func:`segmentation.rank.issues_from_scores &lt;cleanlab.segmentation.rank.issues_from_scores&gt;`.</span>
 
 <span class="sd">    labels:</span>
-<span class="sd">      A discrete array of noisy labels for a segmantic segmentation dataset, in the shape``(N,H,W,)``.</span>
+<span class="sd">      A discrete array of noisy labels for a segmantic segmentation dataset, in the shape ``(N,H,W,)``,</span>
 <span class="sd">      where each pixel must be integer in 0, 1, ..., K-1.</span>
-<span class="sd">      Refer to documentation for this argument in :py:func:`find_label_issues &lt;cleanlab.segemntation.filter.find_label_issues&gt;` for further details.</span>
+<span class="sd">      Refer to documentation for this argument in :py:func:`find_label_issues &lt;cleanlab.segmentation.filter.find_label_issues&gt;` for further details.</span>
 
 <span class="sd">    pred_probs:</span>
 <span class="sd">      An array of shape ``(N,K,H,W,)`` of model-predicted class probabilities.</span>
-<span class="sd">      Refer to documentation for this argument in :py:func:`find_label_issues &lt;cleanlab.segemntation.filter.find_label_issues&gt;` for further details.</span>
+<span class="sd">      Refer to documentation for this argument in :py:func:`find_label_issues &lt;cleanlab.segmentation.filter.find_label_issues&gt;` for further details.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    ----------</span>

@@ -533,15 +533,18 @@ where lower scores indicate labels less likely to be correct.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>labels</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>) – A discrete array of noisy labels for a segmantic segmentation dataset, in the shape``(N,H,W,)``.
+<li><p><strong>labels</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>) – A discrete array of noisy labels for a segmantic segmentation dataset, in the shape <code class="docutils literal notranslate"><span class="pre">(N,H,W,)</span></code>,
 where each pixel must be integer in 0, 1, …, K-1.
-Refer to documentation for this argument in :py:func:find_label_issues &lt;cleanlab.segemntation.filter.find_label_issues&gt; for further details.</p></li>
+Refer to documentation for this argument in <a class="reference internal" href="filter.html#cleanlab.segmentation.filter.find_label_issues" title="cleanlab.segmentation.filter.find_label_issues"><code class="xref py py-func docutils literal notranslate"><span class="pre">find_label_issues</span></code></a> for further details.</p></li>
 <li><p><strong>pred_probs</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>) – An array of shape <code class="docutils literal notranslate"><span class="pre">(N,K,H,W,)</span></code> of model-predicted class probabilities.
-Refer to documentation for this argument in :py:func:find_label_issues &lt;cleanlab.segemntation.filter.find_label_issues&gt; for further details.</p></li>
-<li><p><strong>method</strong> (<code class="docutils literal notranslate"><span class="pre">{&quot;softmin&quot;,</span> <span class="pre">&quot;num_pixel_issues&quot;}</span></code>, <em>default</em> <code class="docutils literal notranslate"><span class="pre">&quot;softmin&quot;</span></code>) – Label quality scoring method.
-- “softmin” - Calculates the inner product between scores and softmax(1-scores). For efficiency, use instead of “num_pixel_issues”.
-- “num_pixel_issues” - Uses the number of pixels with label issues for each image using :py:func:find_label_issues &lt;cleanlab.segemntation.filter.find_label_issues&gt;</p></li>
-<li><p><strong>batch_size</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>]) – Optional size of mini-batches to use for estimating the label issues for ‘num_pixel_issues’ only, not ‘softmin’
+Refer to documentation for this argument in <a class="reference internal" href="filter.html#cleanlab.segmentation.filter.find_label_issues" title="cleanlab.segmentation.filter.find_label_issues"><code class="xref py py-func docutils literal notranslate"><span class="pre">find_label_issues</span></code></a> for further details.</p></li>
+<li><p><strong>method</strong> (<code class="docutils literal notranslate"><span class="pre">{&quot;softmin&quot;,</span> <span class="pre">&quot;num_pixel_issues&quot;}</span></code>, <em>default</em> <code class="docutils literal notranslate"><span class="pre">&quot;softmin&quot;</span></code>) – <p>Label quality scoring method.</p>
+<ul>
+<li><p>”softmin” - Calculates the inner product between scores and softmax(1-scores). For efficiency, use instead of “num_pixel_issues”.</p></li>
+<li><p>”num_pixel_issues” - Uses the number of pixels with label issues for each image using <a class="reference internal" href="filter.html#cleanlab.segmentation.filter.find_label_issues" title="cleanlab.segmentation.filter.find_label_issues"><code class="xref py py-func docutils literal notranslate"><span class="pre">find_label_issues</span></code></a></p></li>
+</ul>
+</p></li>
+<li><p><strong>batch_size</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>]) – Optional size of mini-batches to use for estimating the label issues for ‘num_pixel_issues’ only, not ‘softmin’.
 To maximize efficiency, try to use the largest <code class="xref py py-obj docutils literal notranslate"><span class="pre">batch_size</span></code> your memory allows. If not provided, a good default is used.</p></li>
 <li><p><strong>n_jobs</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>]) – Optional number of processes for multiprocessing (default value = 1). Only used on Linux. For ‘num_pixel_issues’ only, not ‘softmin’
 If <code class="xref py py-obj docutils literal notranslate"><span class="pre">n_jobs=None</span></code>, will use either the number of: physical cores if psutil is installed, or logical cores otherwise.</p></li>
@@ -583,11 +586,13 @@ Lower scores indicate image more likely to contain a label issue.</p></li>
 to a list of issues of similar format as output by <a class="reference internal" href="filter.html#cleanlab.segmentation.filter.find_label_issues" title="cleanlab.segmentation.filter.find_label_issues"><code class="xref py py-func docutils literal notranslate"><span class="pre">segmentation.filter.find_label_issues</span></code></a>.</p>
 <p>Only considers as issues those tokens with label quality score lower than <code class="xref py py-obj docutils literal notranslate"><span class="pre">threshold</span></code>,
 so this parameter determines the number of issues that are returned.</p>
-<p>Note: This method is intended for converting the most severely mislabeled examples to a format compatible with
-<code class="docutils literal notranslate"><span class="pre">summary</span></code> methods like <a class="reference internal" href="summary.html#cleanlab.segmentation.summary.display_issues" title="cleanlab.segmentation.summary.display_issues"><code class="xref py py-func docutils literal notranslate"><span class="pre">segmentation.summary.display_issues</span></code></a>.
-This method does not estimate the number of label errors since the <code class="xref py py-obj docutils literal notranslate"><span class="pre">threshold</span></code> is arbitrary,
-for that instead use <a class="reference internal" href="filter.html#cleanlab.segmentation.filter.find_label_issues" title="cleanlab.segmentation.filter.find_label_issues"><code class="xref py py-func docutils literal notranslate"><span class="pre">segmentation.filter.find_label_issues</span></code></a>,
-which estimates the label errors via Confident Learning rather than score thresholding.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<ul class="simple">
+<li><p>This method is intended for converting the most severely mislabeled examples into a format compatible with <code class="docutils literal notranslate"><span class="pre">summary</span></code> methods like <a class="reference internal" href="summary.html#cleanlab.segmentation.summary.display_issues" title="cleanlab.segmentation.summary.display_issues"><code class="xref py py-func docutils literal notranslate"><span class="pre">segmentation.summary.display_issues</span></code></a>.</p></li>
+<li><p>This method does not estimate the number of label errors since the <code class="xref py py-obj docutils literal notranslate"><span class="pre">threshold</span></code> is arbitrary, for that instead use <a class="reference internal" href="filter.html#cleanlab.segmentation.filter.find_label_issues" title="cleanlab.segmentation.filter.find_label_issues"><code class="xref py py-func docutils literal notranslate"><span class="pre">segmentation.filter.find_label_issues</span></code></a>, which estimates the label errors via Confident Learning rather than score thresholding.</p></li>
+</ul>
+</div>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">

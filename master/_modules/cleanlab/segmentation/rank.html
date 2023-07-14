@@ -552,21 +552,22 @@
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 <span class="sd">    labels:</span>
-<span class="sd">      A discrete array of noisy labels for a segmantic segmentation dataset, in the shape``(N,H,W,)``.</span>
+<span class="sd">      A discrete array of noisy labels for a segmantic segmentation dataset, in the shape ``(N,H,W,)``,</span>
 <span class="sd">      where each pixel must be integer in 0, 1, ..., K-1.</span>
-<span class="sd">      Refer to documentation for this argument in :py:func:find_label_issues &lt;cleanlab.segemntation.filter.find_label_issues&gt; for further details.</span>
+<span class="sd">      Refer to documentation for this argument in :py:func:`find_label_issues &lt;cleanlab.segmentation.filter.find_label_issues&gt;` for further details.</span>
 
 <span class="sd">    pred_probs:</span>
 <span class="sd">      An array of shape ``(N,K,H,W,)`` of model-predicted class probabilities.</span>
-<span class="sd">      Refer to documentation for this argument in :py:func:find_label_issues &lt;cleanlab.segemntation.filter.find_label_issues&gt; for further details.</span>
+<span class="sd">      Refer to documentation for this argument in :py:func:`find_label_issues &lt;cleanlab.segmentation.filter.find_label_issues&gt;` for further details.</span>
 
 <span class="sd">    method: {&quot;softmin&quot;, &quot;num_pixel_issues&quot;}, default=&quot;softmin&quot;</span>
 <span class="sd">      Label quality scoring method.</span>
+
 <span class="sd">      - &quot;softmin&quot; - Calculates the inner product between scores and softmax(1-scores). For efficiency, use instead of &quot;num_pixel_issues&quot;.</span>
-<span class="sd">      - &quot;num_pixel_issues&quot; - Uses the number of pixels with label issues for each image using :py:func:find_label_issues &lt;cleanlab.segemntation.filter.find_label_issues&gt;</span>
+<span class="sd">      - &quot;num_pixel_issues&quot; - Uses the number of pixels with label issues for each image using :py:func:`find_label_issues &lt;cleanlab.segmentation.filter.find_label_issues&gt;`</span>
 
 <span class="sd">    batch_size :</span>
-<span class="sd">      Optional size of mini-batches to use for estimating the label issues for &#39;num_pixel_issues&#39; only, not &#39;softmin&#39;</span>
+<span class="sd">      Optional size of mini-batches to use for estimating the label issues for &#39;num_pixel_issues&#39; only, not &#39;softmin&#39;.</span>
 <span class="sd">      To maximize efficiency, try to use the largest `batch_size` your memory allows. If not provided, a good default is used.</span>
 
 <span class="sd">    n_jobs:</span>
@@ -655,11 +656,10 @@
 <span class="sd">    Only considers as issues those tokens with label quality score lower than `threshold`,</span>
 <span class="sd">    so this parameter determines the number of issues that are returned.</span>
 
-<span class="sd">    Note: This method is intended for converting the most severely mislabeled examples to a format compatible with</span>
-<span class="sd">    ``summary`` methods like :py:func:`segmentation.summary.display_issues &lt;cleanlab.segmentation.summary.display_issues&gt;`.</span>
-<span class="sd">    This method does not estimate the number of label errors since the `threshold` is arbitrary,</span>
-<span class="sd">    for that instead use :py:func:`segmentation.filter.find_label_issues &lt;cleanlab.segmentation.filter.find_label_issues&gt;`,</span>
-<span class="sd">    which estimates the label errors via Confident Learning rather than score thresholding.</span>
+<span class="sd">    Note</span>
+<span class="sd">    ----</span>
+<span class="sd">    - This method is intended for converting the most severely mislabeled examples into a format compatible with ``summary`` methods like :py:func:`segmentation.summary.display_issues &lt;cleanlab.segmentation.summary.display_issues&gt;`.</span>
+<span class="sd">    - This method does not estimate the number of label errors since the `threshold` is arbitrary, for that instead use :py:func:`segmentation.filter.find_label_issues &lt;cleanlab.segmentation.filter.find_label_issues&gt;`, which estimates the label errors via Confident Learning rather than score thresholding.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>

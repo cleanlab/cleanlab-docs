@@ -526,13 +526,20 @@ an example identified with a label issue and <code class="docutils literal notra
 <li><p>H - Height of each image</p></li>
 <li><p>W - Width of each image</p></li>
 </ul>
-<p>Tip: if you encounter the error “pred_probs is not defined”, try setting <code class="docutils literal notranslate"><span class="pre">n_jobs=1</span></code>.</p>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>If you encounter the error “pred_probs is not defined”, try setting <code class="docutils literal notranslate"><span class="pre">n_jobs=1</span></code>.</p>
+</div>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>labels</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>) – A discrete array of shape <code class="docutils literal notranslate"><span class="pre">(N,H,W,)</span></code> of noisy labels for a semantic segmentation dataset, i.e. some labels may be erroneous.
-<em>Format requirements</em>: for a dataset with K classes, each pixel must be labeled using an integer in 0, 1, …, K-1.
-Tip: If your labels are one hot encoded you can do: <code class="docutils literal notranslate"><span class="pre">labels</span> <span class="pre">=</span> <span class="pre">np.argmax(labels_one_hot,axis=1)</span></code> assuming that <code class="xref py py-obj docutils literal notranslate"><span class="pre">labels_one_hot</span></code> is of dimension <code class="docutils literal notranslate"><span class="pre">(N,K,H,W)</span></code>, in order to get properly formatted <code class="xref py py-obj docutils literal notranslate"><span class="pre">labels</span></code></p></li>
+<li><p><strong>labels</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>) – <p>A discrete array of shape <code class="docutils literal notranslate"><span class="pre">(N,H,W,)</span></code> of noisy labels for a semantic segmentation dataset, i.e. some labels may be erroneous.</p>
+<p><em>Format requirements</em>: For a dataset with K classes, each pixel must be labeled using an integer in 0, 1, …, K-1.</p>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>If your labels are one hot encoded you can do: <code class="docutils literal notranslate"><span class="pre">labels</span> <span class="pre">=</span> <span class="pre">np.argmax(labels_one_hot,</span> <span class="pre">axis=1)</span></code> assuming that <code class="xref py py-obj docutils literal notranslate"><span class="pre">labels_one_hot</span></code> is of dimension <code class="docutils literal notranslate"><span class="pre">(N,K,H,W)</span></code>, in order to get properly formatted <code class="xref py py-obj docutils literal notranslate"><span class="pre">labels</span></code>.</p>
+</div>
+</p></li>
 <li><p><strong>pred_probs</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>) – An array of shape <code class="docutils literal notranslate"><span class="pre">(N,K,H,W,)</span></code> of model-predicted class probabilities,
 <code class="docutils literal notranslate"><span class="pre">P(label=k|x)</span></code> for each pixel <code class="docutils literal notranslate"><span class="pre">x</span></code>. The prediction for each pixel is an array corresponding to the estimated likelihood that this pixel belongs to each of the <code class="docutils literal notranslate"><span class="pre">K</span></code> classes. The 2nd dimension of <code class="xref py py-obj docutils literal notranslate"><span class="pre">pred_probs</span></code> must be ordered such that these probabilities correspond to class 0, 1, …, K-1.</p></li>
 <li><p><strong>batch_size</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>]) – Optional size of image mini-batches used for computing the label issues in a streaming fashion (does not affect results, just the runtime and memory requirements).
