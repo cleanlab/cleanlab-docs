@@ -1178,7 +1178,7 @@ Pruning 0 predictions out of 113 using threshold==0.0. These predictions are no 
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-array([16, 48, 50, 30, 31])
+array([50, 16, 31, 29, 45])
 </pre></div></div>
 </div>
 <p>The above code identifies <em>which</em> images have label issues, returning a list of their indices. This is because we specified the <code class="docutils literal notranslate"><span class="pre">return_indices_ranked_by_score</span></code> argument which sorts these indices by the estimated label quality of each image. Below we describe how to directly estimate the label quality scores of each image.</p>
@@ -1210,7 +1210,7 @@ Pruning 0 predictions out of 113 using threshold==0.0. These predictions are no 
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-array([0.95042265, 0.07992203, 0.97545155, 0.20161353, 0.98179967])
+array([0.97489622, 0.70610878, 0.98764951, 0.88899237, 0.99085805])
 </pre></div></div>
 </div>
 <p>We can also use the label quality scores to flag <em>which</em> images have label issues based on a threshold. Here we convert these per-image scores into an array of indices corresponding to images flagged with label issues, sorted by label quality score, in the same format returned by <code class="docutils literal notranslate"><span class="pre">find_label_issues()</span></code></p>
@@ -1229,9 +1229,9 @@ array([0.95042265, 0.07992203, 0.97545155, 0.20161353, 0.98179967])
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-(array([16, 48, 50, 30, 31]),
- array([9.03354841e-05, 1.34320270e-02, 4.05915529e-02, 4.50713695e-02,
-        7.47494338e-02]))
+(array([50, 16, 31, 29, 45]),
+ array([6.95569726e-05, 9.03354841e-05, 8.57510169e-04, 1.58447666e-03,
+        2.39755858e-01]))
 </pre></div></div>
 </div>
 </section>
@@ -1243,7 +1243,7 @@ array([0.95042265, 0.07992203, 0.97545155, 0.20161353, 0.98179967])
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">issue_to_visualize</span> <span class="o">=</span> <span class="n">issue_idx</span><span class="p">[</span><span class="mi">7</span><span class="p">]</span>  <span class="c1"># change this to view other images</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">issue_to_visualize</span> <span class="o">=</span> <span class="n">issue_idx</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>  <span class="c1"># change this to view other images</span>
 <span class="n">class_names</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;0&quot;</span><span class="p">:</span> <span class="s2">&quot;car&quot;</span><span class="p">,</span> <span class="s2">&quot;1&quot;</span><span class="p">:</span> <span class="s2">&quot;chair&quot;</span><span class="p">,</span> <span class="s2">&quot;2&quot;</span><span class="p">:</span> <span class="s2">&quot;cup&quot;</span><span class="p">,</span> <span class="s2">&quot;3&quot;</span><span class="p">:</span><span class="s2">&quot;person&quot;</span><span class="p">,</span> <span class="s2">&quot;4&quot;</span><span class="p">:</span> <span class="s2">&quot;traffic light&quot;</span><span class="p">}</span>
 
 <span class="n">label</span> <span class="o">=</span> <span class="n">labels</span><span class="p">[</span><span class="n">issue_to_visualize</span><span class="p">]</span>
@@ -1261,7 +1261,7 @@ array([0.95042265, 0.07992203, 0.97545155, 0.20161353, 0.98179967])
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-./example_images/000000421455.jpg | idx 32 | label quality score: 0.11661874031006411 | is issue: True
+./example_images/000000009483.jpg | idx 50 | label quality score: 6.955697261680538e-05 | is issue: True
 </pre></div></div>
 </div>
 <div class="nboutput nblast docutils container">
@@ -1272,45 +1272,14 @@ array([0.95042265, 0.07992203, 0.97545155, 0.20161353, 0.98179967])
 </div>
 </div>
 <p>The visualization depicts the given label (original image annotation which cleanlab identified as problematic) in red on the left and the model-predicted label in blue on the right. Each bounding box contains a class-index number in the top corner indicating which object class that bounding box was annotated/predicted to contain.</p>
-<p>This image has a <strong>low</strong> label quality score and is marked as an error. On closer inspection we notice the annotator missed a car in the back right corner that the model identified. Additionally, the bounding box for the foreground car the woman is in is cut short a bit on the right.</p>
+<p>This image has a <strong>low</strong> label quality score and is marked as an error. On closer inspection we notice the annotator missed the reflection of the person in the mirror that the model identified. Additionally, the chairs visible in the reflection were not annotated.</p>
 <p>Notice examples where the predictions and labels are more similar have higher quality scores than those that are missmatched, and are less likeley to be marked as issues and the number of boxes is agnostic to the score.</p>
-<p>Since our model is not perfect, it incorrectly identified the passenger dog as a person however it was still able to identify issues in the scene. Better trained models will lead to better label error detection but you don’t need a near perfect model to identify label issues.</p>
+<p>Better trained models will lead to better label error detection but you don’t need a near perfect model to identify label issues.</p>
 <section id="Different-kinds-of-label-issues-identified-by-ObjectLab">
 <h3>Different kinds of label issues identified by ObjectLab<a class="headerlink" href="#Different-kinds-of-label-issues-identified-by-ObjectLab" title="Permalink to this heading">#</a></h3>
 <p>Now lets view the first few images in our vaidation dataset that are clearly marked as issues and see what various inconsistencies between the <code class="docutils literal notranslate"><span class="pre">given</span></code> and <code class="docutils literal notranslate"><span class="pre">predicted</span></code> label we can spot.</p>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[12]:
-</pre></div>
-</div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">issue_to_visualize</span> <span class="o">=</span> <span class="n">issue_idx</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span>
-<span class="n">label</span> <span class="o">=</span> <span class="n">labels</span><span class="p">[</span><span class="n">issue_to_visualize</span><span class="p">]</span>
-<span class="n">prediction</span> <span class="o">=</span> <span class="n">predictions</span><span class="p">[</span><span class="n">issue_to_visualize</span><span class="p">]</span>
-<span class="n">score</span> <span class="o">=</span> <span class="n">scores</span><span class="p">[</span><span class="n">issue_to_visualize</span><span class="p">]</span>
-
-<span class="n">image_path</span> <span class="o">=</span> <span class="n">IMAGE_PATH</span> <span class="o">+</span> <span class="n">label</span><span class="p">[</span><span class="s1">&#39;seg_map&#39;</span><span class="p">]</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">image_path</span><span class="p">,</span> <span class="s1">&#39;| idx&#39;</span><span class="p">,</span> <span class="n">issue_to_visualize</span> <span class="p">,</span> <span class="s1">&#39;| label quality score:&#39;</span><span class="p">,</span> <span class="n">score</span><span class="p">,</span> <span class="s1">&#39;| is issue: True&#39;</span><span class="p">)</span>
-<span class="n">visualize</span><span class="p">(</span><span class="n">image_path</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="n">label</span><span class="p">,</span> <span class="n">prediction</span><span class="o">=</span><span class="n">prediction</span><span class="p">,</span> <span class="n">class_names</span><span class="o">=</span><span class="n">class_names</span><span class="p">,</span> <span class="n">overlay</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-<div class="nboutput docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<div class="highlight"><pre>
-./example_images/000000543043.jpg | idx 30 | label quality score: 0.045071369510819075 | is issue: True
-</pre></div></div>
-</div>
-<div class="nboutput nblast docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<img alt="../_images/tutorials_object_detection_24_1.png" src="../_images/tutorials_object_detection_24_1.png" />
-</div>
-</div>
-<p>The car in the foreground and the chair in the front yard are missing annotations.</p>
-<div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[13]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">issue_to_visualize</span> <span class="o">=</span> <span class="n">issue_idx</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
@@ -1329,22 +1298,22 @@ array([0.95042265, 0.07992203, 0.97545155, 0.20161353, 0.98179967])
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-./example_images/000000340894.jpg | idx 48 | label quality score: 0.013432026964258877 | is issue: True
+./example_images/000000395701.jpg | idx 16 | label quality score: 9.033548411774308e-05 | is issue: True
 </pre></div></div>
 </div>
 <div class="nboutput nblast docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/tutorials_object_detection_26_1.png" src="../_images/tutorials_object_detection_26_1.png" />
+<img alt="../_images/tutorials_object_detection_24_1.png" src="../_images/tutorials_object_detection_24_1.png" />
 </div>
 </div>
-<p>The monitor in this image is missing annotations for a cup and a person – who is working on a chair in the background.</p>
+<p>Notice the armchair to the left of the TV is missing an annotation.</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[14]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[13]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">issue_to_visualize</span> <span class="o">=</span> <span class="n">issue_idx</span><span class="p">[</span><span class="mi">5</span><span class="p">]</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">issue_to_visualize</span> <span class="o">=</span> <span class="n">issue_idx</span><span class="p">[</span><span class="mi">6</span><span class="p">]</span>
 <span class="n">label</span> <span class="o">=</span> <span class="n">labels</span><span class="p">[</span><span class="n">issue_to_visualize</span><span class="p">]</span>
 <span class="n">prediction</span> <span class="o">=</span> <span class="n">predictions</span><span class="p">[</span><span class="n">issue_to_visualize</span><span class="p">]</span>
 <span class="n">score</span> <span class="o">=</span> <span class="n">scores</span><span class="p">[</span><span class="n">issue_to_visualize</span><span class="p">]</span>
@@ -1360,7 +1329,38 @@ array([0.95042265, 0.07992203, 0.97545155, 0.20161353, 0.98179967])
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-./example_images/000000345361.jpg | idx 1 | label quality score: 0.07992202647526786 | is issue: True
+./example_images/000000154004.jpg | idx 62 | label quality score: 0.38300759625496356 | is issue: True
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/tutorials_object_detection_26_1.png" src="../_images/tutorials_object_detection_26_1.png" />
+</div>
+</div>
+<p>Similarly, the woman in a red jacket in the foreground is missing an annotation.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[14]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">issue_to_visualize</span> <span class="o">=</span> <span class="n">issue_idx</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+<span class="n">label</span> <span class="o">=</span> <span class="n">labels</span><span class="p">[</span><span class="n">issue_to_visualize</span><span class="p">]</span>
+<span class="n">prediction</span> <span class="o">=</span> <span class="n">predictions</span><span class="p">[</span><span class="n">issue_to_visualize</span><span class="p">]</span>
+<span class="n">score</span> <span class="o">=</span> <span class="n">scores</span><span class="p">[</span><span class="n">issue_to_visualize</span><span class="p">]</span>
+
+<span class="n">image_path</span> <span class="o">=</span> <span class="n">IMAGE_PATH</span> <span class="o">+</span> <span class="n">label</span><span class="p">[</span><span class="s1">&#39;seg_map&#39;</span><span class="p">]</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">image_path</span><span class="p">,</span> <span class="s1">&#39;| idx&#39;</span><span class="p">,</span> <span class="n">issue_to_visualize</span> <span class="p">,</span> <span class="s1">&#39;| label quality score:&#39;</span><span class="p">,</span> <span class="n">score</span><span class="p">,</span> <span class="s1">&#39;| is issue: True&#39;</span><span class="p">)</span>
+<span class="n">visualize</span><span class="p">(</span><span class="n">image_path</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="n">label</span><span class="p">,</span> <span class="n">prediction</span><span class="o">=</span><span class="n">prediction</span><span class="p">,</span> <span class="n">class_names</span><span class="o">=</span><span class="n">class_names</span><span class="p">,</span> <span class="n">overlay</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+./example_images/000000448410.jpg | idx 31 | label quality score: 0.0008575101690203273 | is issue: True
 </pre></div></div>
 </div>
 <div class="nboutput nblast docutils container">
@@ -1370,7 +1370,7 @@ array([0.95042265, 0.07992203, 0.97545155, 0.20161353, 0.98179967])
 <img alt="../_images/tutorials_object_detection_28_1.png" src="../_images/tutorials_object_detection_28_1.png" />
 </div>
 </div>
-<p>The birthday party in this image should have had individual bounding boxes around each kid (the COCO guidelines state only groups with 10+ objects of the same type can be a “crowd” bounded by a single box).</p>
+<p>The people in this image should have had individual bounding boxes around each persons (the COCO guidelines state only groups with 10+ objects of the same type can be a “crowd” bounded by a single box). Individuals in the back are missing annotations.</p>
 <p>All of these examples received low label quality scores reflecting their low annotation quality in the original dataset.</p>
 </section>
 <section id="Other-uses-of-visualize">
@@ -1393,7 +1393,7 @@ array([0.95042265, 0.07992203, 0.97545155, 0.20161353, 0.98179967])
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-./example_images/000000499768.jpg | idx 0 | label quality score: 0.9504226458552448 | is issue: False
+./example_images/000000499768.jpg | idx 0 | label quality score: 0.9748962231208227 | is issue: False
 </pre></div></div>
 </div>
 <div class="nboutput nblast docutils container">
@@ -1408,7 +1408,7 @@ array([0.95042265, 0.07992203, 0.97545155, 0.20161353, 0.98179967])
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[16]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">image_to_visualize</span> <span class="o">=</span> <span class="mi">1</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">image_to_visualize</span> <span class="o">=</span> <span class="mi">3</span>
 <span class="n">image_path</span> <span class="o">=</span> <span class="n">IMAGE_PATH</span> <span class="o">+</span> <span class="n">labels</span><span class="p">[</span><span class="n">image_to_visualize</span><span class="p">][</span><span class="s1">&#39;seg_map&#39;</span><span class="p">]</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">image_path</span><span class="p">,</span> <span class="s1">&#39;| idx&#39;</span><span class="p">,</span> <span class="n">image_to_visualize</span> <span class="p">,</span> <span class="s1">&#39;| label quality score:&#39;</span><span class="p">,</span> <span class="n">scores</span><span class="p">[</span><span class="n">image_to_visualize</span><span class="p">],</span> <span class="s1">&#39;| is issue:&#39;</span><span class="p">,</span> <span class="n">image_to_visualize</span> <span class="ow">in</span> <span class="n">issue_idx</span><span class="p">)</span>
 <span class="n">visualize</span><span class="p">(</span><span class="n">image_path</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="n">labels</span><span class="p">[</span><span class="n">image_to_visualize</span><span class="p">],</span> <span class="n">class_names</span><span class="o">=</span><span class="n">class_names</span><span class="p">)</span>
@@ -1420,7 +1420,7 @@ array([0.95042265, 0.07992203, 0.97545155, 0.20161353, 0.98179967])
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-./example_images/000000345361.jpg | idx 1 | label quality score: 0.07992202647526786 | is issue: True
+./example_images/000000521141.jpg | idx 3 | label quality score: 0.8889923658893665 | is issue: False
 </pre></div></div>
 </div>
 <div class="nboutput nblast docutils container">
@@ -1437,7 +1437,7 @@ array([0.95042265, 0.07992203, 0.97545155, 0.20161353, 0.98179967])
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">image_to_visualize</span> <span class="o">=</span> <span class="mi">2</span>
 <span class="n">image_path</span> <span class="o">=</span> <span class="n">IMAGE_PATH</span> <span class="o">+</span> <span class="n">labels</span><span class="p">[</span><span class="n">image_to_visualize</span><span class="p">][</span><span class="s1">&#39;seg_map&#39;</span><span class="p">]</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">image_path</span><span class="p">,</span> <span class="s1">&#39;| idx&#39;</span><span class="p">,</span> <span class="n">image_to_visualize</span> <span class="p">,</span> <span class="s1">&#39;| label quality score:&#39;</span><span class="p">,</span> <span class="n">score</span><span class="p">,</span> <span class="s1">&#39;| is issue:&#39;</span><span class="p">,</span> <span class="n">image_to_visualize</span> <span class="ow">in</span> <span class="n">issue_idx</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">image_path</span><span class="p">,</span> <span class="s1">&#39;| idx&#39;</span><span class="p">,</span> <span class="n">image_to_visualize</span> <span class="p">,</span> <span class="s1">&#39;| label quality score:&#39;</span><span class="p">,</span> <span class="n">scores</span><span class="p">[</span><span class="n">image_to_visualize</span><span class="p">],</span> <span class="s1">&#39;| is issue:&#39;</span><span class="p">,</span> <span class="n">image_to_visualize</span> <span class="ow">in</span> <span class="n">issue_idx</span><span class="p">)</span>
 <span class="n">visualize</span><span class="p">(</span><span class="n">image_path</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -1447,7 +1447,7 @@ array([0.95042265, 0.07992203, 0.97545155, 0.20161353, 0.98179967])
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-./example_images/000000143931.jpg | idx 2 | label quality score: 0.07992202647526786 | is issue: False
+./example_images/000000143931.jpg | idx 2 | label quality score: 0.9876495074395957 | is issue: False
 </pre></div></div>
 </div>
 <div class="nboutput nblast docutils container">
