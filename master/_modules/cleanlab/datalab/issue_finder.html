@@ -527,19 +527,19 @@
 <span class="sd">and collects the results to :py:class:`DataIssues &lt;cleanlab.datalab.data_issues.DataIssues&gt;`.</span>
 
 <span class="sd">.. note::</span>
-<span class="sd">    </span>
+
 <span class="sd">    This module is not intended to be used directly. Instead, use the public-facing</span>
 <span class="sd">    :py:meth:`Datalab.find_issues &lt;cleanlab.datalab.datalab.Datalab.find_issues&gt;` method.</span>
 <span class="sd">&quot;&quot;&quot;</span>
 <span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">annotations</span>
 
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">TYPE_CHECKING</span>
 <span class="kn">import</span> <span class="nn">warnings</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">TYPE_CHECKING</span>
 
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">from</span> <span class="nn">scipy.sparse</span> <span class="kn">import</span> <span class="n">csr_matrix</span>
 
-<span class="kn">from</span> <span class="nn">cleanlab.datalab.factory</span> <span class="kn">import</span> <span class="n">_IssueManagerFactory</span><span class="p">,</span> <span class="n">REGISTRY</span>
+<span class="kn">from</span> <span class="nn">cleanlab.datalab.issue_manager_factory</span> <span class="kn">import</span> <span class="n">_IssueManagerFactory</span><span class="p">,</span> <span class="n">REGISTRY</span>
 
 <span class="k">if</span> <span class="n">TYPE_CHECKING</span><span class="p">:</span>  <span class="c1"># pragma: no cover</span>
     <span class="kn">import</span> <span class="nn">numpy.typing</span> <span class="k">as</span> <span class="nn">npt</span>
@@ -643,18 +643,6 @@
 <span class="sd">                :py:class:`IssueManager &lt;cleanlab.datalab.issue_manager.issue_manager.IssueManager&gt;`</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
-        <span class="k">if</span> <span class="n">issue_types</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">issue_types</span><span class="p">:</span>
-            <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
-                <span class="s2">&quot;No issue types were specified. &quot;</span> <span class="s2">&quot;No issues will be found in the dataset.&quot;</span>
-            <span class="p">)</span>
-            <span class="k">return</span> <span class="kc">None</span>
-
-        <span class="k">if</span> <span class="n">issue_types</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">issue_types</span><span class="p">:</span>
-            <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
-                <span class="s2">&quot;No issue types were specified. &quot;</span> <span class="s2">&quot;No issues will be found in the dataset.&quot;</span>
-            <span class="p">)</span>
-            <span class="k">return</span> <span class="kc">None</span>
-
         <span class="n">issue_types_copy</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_available_issue_types</span><span class="p">(</span>
             <span class="n">pred_probs</span><span class="o">=</span><span class="n">pred_probs</span><span class="p">,</span>
             <span class="n">features</span><span class="o">=</span><span class="n">features</span><span class="p">,</span>
@@ -662,17 +650,13 @@
             <span class="n">issue_types</span><span class="o">=</span><span class="n">issue_types</span><span class="p">,</span>
         <span class="p">)</span>
 
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">issue_types_copy</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">None</span>
+
         <span class="n">new_issue_managers</span> <span class="o">=</span> <span class="p">[</span>
             <span class="n">factory</span><span class="p">(</span><span class="n">datalab</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">datalab</span><span class="p">,</span> <span class="o">**</span><span class="n">issue_types_copy</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">factory</span><span class="o">.</span><span class="n">issue_name</span><span class="p">,</span> <span class="p">{}))</span>
             <span class="k">for</span> <span class="n">factory</span> <span class="ow">in</span> <span class="n">_IssueManagerFactory</span><span class="o">.</span><span class="n">from_list</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">issue_types_copy</span><span class="o">.</span><span class="n">keys</span><span class="p">()))</span>
         <span class="p">]</span>
-
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">new_issue_managers</span><span class="p">:</span>
-            <span class="n">no_args_passed</span> <span class="o">=</span> <span class="nb">all</span><span class="p">(</span><span class="n">arg</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">for</span> <span class="n">arg</span> <span class="ow">in</span> <span class="p">[</span><span class="n">pred_probs</span><span class="p">,</span> <span class="n">features</span><span class="p">,</span> <span class="n">knn_graph</span><span class="p">])</span>
-            <span class="k">if</span> <span class="n">no_args_passed</span><span class="p">:</span>
-                <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s2">&quot;No arguments were passed to find_issues.&quot;</span><span class="p">)</span>
-            <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s2">&quot;No issue check performed.&quot;</span><span class="p">)</span>
-            <span class="k">return</span> <span class="kc">None</span>
 
         <span class="n">failed_managers</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="n">data_issues</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">datalab</span><span class="o">.</span><span class="n">data_issues</span>
@@ -681,19 +665,13 @@
                 <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">verbosity</span><span class="p">:</span>
                     <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Finding </span><span class="si">{</span><span class="n">issue_manager</span><span class="o">.</span><span class="n">issue_name</span><span class="si">}</span><span class="s2"> issues ...&quot;</span><span class="p">)</span>
                 <span class="n">issue_manager</span><span class="o">.</span><span class="n">find_issues</span><span class="p">(</span><span class="o">**</span><span class="n">arg_dict</span><span class="p">)</span>
-                <span class="n">data_issues</span><span class="o">.</span><span class="n">collect_statistics_from_issue_manager</span><span class="p">(</span><span class="n">issue_manager</span><span class="p">)</span>
-                <span class="n">data_issues</span><span class="o">.</span><span class="n">collect_results_from_issue_manager</span><span class="p">(</span><span class="n">issue_manager</span><span class="p">)</span>
+                <span class="n">data_issues</span><span class="o">.</span><span class="n">collect_statistics</span><span class="p">(</span><span class="n">issue_manager</span><span class="p">)</span>
+                <span class="n">data_issues</span><span class="o">.</span><span class="n">collect_issues_from_issue_manager</span><span class="p">(</span><span class="n">issue_manager</span><span class="p">)</span>
             <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
                 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Error in </span><span class="si">{</span><span class="n">issue_manager</span><span class="o">.</span><span class="n">issue_name</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
                 <span class="n">failed_managers</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">issue_manager</span><span class="p">)</span>
-
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">verbosity</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span>
-                <span class="sa">f</span><span class="s2">&quot;Audit complete. </span><span class="si">{</span><span class="n">data_issues</span><span class="o">.</span><span class="n">issue_summary</span><span class="p">[</span><span class="s1">&#39;num_issues&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span><span class="si">}</span><span class="s2"> issues found in the dataset.&quot;</span>
-            <span class="p">)</span>
         <span class="k">if</span> <span class="n">failed_managers</span><span class="p">:</span>
             <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Failed to check for these issue types: </span><span class="si">{</span><span class="n">failed_managers</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-
         <span class="n">data_issues</span><span class="o">.</span><span class="n">set_health_score</span><span class="p">()</span></div>
 
     <span class="k">def</span> <span class="nf">_resolve_required_args</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pred_probs</span><span class="p">,</span> <span class="n">features</span><span class="p">,</span> <span class="n">knn_graph</span><span class="p">):</span>
@@ -773,12 +751,20 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">_check_missing_args</span><span class="p">(</span><span class="n">required_defaults_dict</span><span class="p">,</span> <span class="n">issue_types_copy</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">issue_types_copy</span> <span class="o">=</span> <span class="n">required_defaults_dict</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+            <span class="c1"># keep only default issue types</span>
+            <span class="n">issue_types_copy</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="n">issue</span><span class="p">:</span> <span class="n">issue_types_copy</span><span class="p">[</span><span class="n">issue</span><span class="p">]</span>
+                <span class="k">for</span> <span class="n">issue</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">list_default_issue_types</span><span class="p">()</span>
+                <span class="k">if</span> <span class="n">issue</span> <span class="ow">in</span> <span class="n">issue_types_copy</span>
+            <span class="p">}</span>
+
         <span class="c1"># Check that all required arguments are provided.</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_validate_issue_types_dict</span><span class="p">(</span><span class="n">issue_types_copy</span><span class="p">,</span> <span class="n">required_defaults_dict</span><span class="p">)</span>
 
         <span class="c1"># Remove None values from argument list, rely on default values in IssueManager</span>
         <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">issue_types_copy</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
             <span class="n">issue_types_copy</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="n">v</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">value</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="k">if</span> <span class="n">v</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">}</span>
+
         <span class="k">return</span> <span class="n">issue_types_copy</span>
 
     <span class="nd">@staticmethod</span>
@@ -816,7 +802,7 @@
 
 <span class="sd">        See Also</span>
 <span class="sd">        --------</span>
-<span class="sd">        :py:class:`REGISTRY &lt;cleanlab.datalab.factory.REGISTRY&gt;` : All available issue types and their corresponding issue managers can be found here.</span>
+<span class="sd">        :py:class:`REGISTRY &lt;cleanlab.datalab.issue_manager_factory.REGISTRY&gt;` : All available issue types and their corresponding issue managers can be found here.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="n">REGISTRY</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span></div>
 
@@ -827,7 +813,7 @@
 
 <span class="sd">        See Also</span>
 <span class="sd">        --------</span>
-<span class="sd">        :py:class:`REGISTRY &lt;cleanlab.datalab.factory.REGISTRY&gt;` : All available issue types and their corresponding issue managers can be found here.</span>
+<span class="sd">        :py:class:`REGISTRY &lt;cleanlab.datalab.issue_manager_factory.REGISTRY&gt;` : All available issue types and their corresponding issue managers can be found here.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="p">[</span><span class="s2">&quot;label&quot;</span><span class="p">,</span> <span class="s2">&quot;outlier&quot;</span><span class="p">,</span> <span class="s2">&quot;near_duplicate&quot;</span><span class="p">,</span> <span class="s2">&quot;non_iid&quot;</span><span class="p">]</span></div>
 

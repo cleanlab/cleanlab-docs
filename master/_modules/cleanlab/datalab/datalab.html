@@ -525,18 +525,25 @@
 <span class="sd">&quot;&quot;&quot;</span>
 <span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">annotations</span>
 
+<span class="kn">import</span> <span class="nn">warnings</span>
 <span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">TYPE_CHECKING</span><span class="p">,</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Union</span>
 
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 
 <span class="kn">import</span> <span class="nn">cleanlab</span>
+<span class="kn">from</span> <span class="nn">cleanlab.datalab.adapter.imagelab</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">create_imagelab</span><span class="p">,</span>
+<span class="p">)</span>
 <span class="kn">from</span> <span class="nn">cleanlab.datalab.data</span> <span class="kn">import</span> <span class="n">Data</span>
-<span class="kn">from</span> <span class="nn">cleanlab.datalab.data_issues</span> <span class="kn">import</span> <span class="n">DataIssues</span>
 <span class="kn">from</span> <span class="nn">cleanlab.datalab.display</span> <span class="kn">import</span> <span class="n">_Displayer</span>
+<span class="kn">from</span> <span class="nn">cleanlab.datalab.helper_factory</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">data_issues_factory</span><span class="p">,</span>
+    <span class="n">issue_finder_factory</span><span class="p">,</span>
+    <span class="n">report_factory</span><span class="p">,</span>
+<span class="p">)</span>
 <span class="kn">from</span> <span class="nn">cleanlab.datalab.issue_finder</span> <span class="kn">import</span> <span class="n">IssueFinder</span>
 <span class="kn">from</span> <span class="nn">cleanlab.datalab.serialize</span> <span class="kn">import</span> <span class="n">_Serializer</span>
-<span class="kn">from</span> <span class="nn">cleanlab.datalab.report</span> <span class="kn">import</span> <span class="n">Reporter</span>
 
 <span class="k">if</span> <span class="n">TYPE_CHECKING</span><span class="p">:</span>  <span class="c1"># pragma: no cover</span>
     <span class="kn">import</span> <span class="nn">numpy.typing</span> <span class="k">as</span> <span class="nn">npt</span>
@@ -573,8 +580,13 @@
 <span class="sd">            - path to a local file: Text (.txt), CSV (.csv), JSON (.json)</span>
 <span class="sd">            - or a dataset identifier on the Hugging Face Hub</span>
 
-<span class="sd">    label_name : str</span>
+<span class="sd">    label_name : str, optional</span>
 <span class="sd">        The name of the label column in the dataset.</span>
+
+<span class="sd">    image_key : str, optional</span>
+<span class="sd">        Optional key that can be specified for image datasets to point to the field containing the actual images themselves.</span>
+<span class="sd">        If specified, additional image-specific issue types can be detected in the dataset.</span>
+<span class="sd">        See the CleanVision package `documentation &lt;https://cleanvision.readthedocs.io/en/latest/&gt;`_ for descriptions of these image-specific issue types.</span>
 
 <span class="sd">    verbosity : int, optional</span>
 <span class="sd">        The higher the verbosity level, the more information</span>
@@ -593,6 +605,7 @@
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">data</span><span class="p">:</span> <span class="s2">&quot;DatasetLike&quot;</span><span class="p">,</span>
         <span class="n">label_name</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">image_key</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">verbosity</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_data</span> <span class="o">=</span> <span class="n">Data</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">label_name</span><span class="p">)</span>
@@ -601,10 +614,12 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_label_map</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_labels</span><span class="o">.</span><span class="n">label_map</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">label_name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_labels</span><span class="o">.</span><span class="n">label_name</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_data_hash</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="o">.</span><span class="n">_data_hash</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">data_issues</span> <span class="o">=</span> <span class="n">DataIssues</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">cleanlab_version</span> <span class="o">=</span> <span class="n">cleanlab</span><span class="o">.</span><span class="n">version</span><span class="o">.</span><span class="n">__version__</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">verbosity</span> <span class="o">=</span> <span class="n">verbosity</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_imagelab</span> <span class="o">=</span> <span class="n">create_imagelab</span><span class="p">(</span><span class="n">dataset</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="n">image_key</span><span class="o">=</span><span class="n">image_key</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">data_issues</span> <span class="o">=</span> <span class="n">data_issues_factory</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_imagelab</span><span class="p">)(</span><span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="p">)</span>
 
+    <span class="c1"># todo: check displayer methods</span>
     <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">_Displayer</span><span class="p">(</span><span class="n">data_issues</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">data_issues</span><span class="p">)</span><span class="o">.</span><span class="fm">__repr__</span><span class="p">()</span>
 
@@ -774,13 +789,23 @@
 <span class="sd">                &gt;&gt;&gt; # lab.find_issues(pred_probs=pred_probs, issue_types=issue_types)</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">issue_finder</span> <span class="o">=</span> <span class="n">IssueFinder</span><span class="p">(</span><span class="n">datalab</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">verbosity</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">verbosity</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">issue_types</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">issue_types</span><span class="p">:</span>
+            <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
+                <span class="s2">&quot;No issue types were specified so no issues will be found in the dataset. Set `issue_types` as None to consider a default set of issues.&quot;</span>
+            <span class="p">)</span>
+            <span class="k">return</span> <span class="kc">None</span>
+
+        <span class="n">issue_finder</span> <span class="o">=</span> <span class="n">issue_finder_factory</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_imagelab</span><span class="p">)(</span><span class="n">datalab</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">verbosity</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">verbosity</span><span class="p">)</span>
         <span class="n">issue_finder</span><span class="o">.</span><span class="n">find_issues</span><span class="p">(</span>
             <span class="n">pred_probs</span><span class="o">=</span><span class="n">pred_probs</span><span class="p">,</span>
             <span class="n">features</span><span class="o">=</span><span class="n">features</span><span class="p">,</span>
             <span class="n">knn_graph</span><span class="o">=</span><span class="n">knn_graph</span><span class="p">,</span>
             <span class="n">issue_types</span><span class="o">=</span><span class="n">issue_types</span><span class="p">,</span>
-        <span class="p">)</span></div>
+        <span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">verbosity</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Audit complete. </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">data_issues</span><span class="o">.</span><span class="n">issue_summary</span><span class="p">[</span><span class="s1">&#39;num_issues&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span><span class="si">}</span><span class="s2"> issues found in the dataset.&quot;</span>
+            <span class="p">)</span></div>
 
 <div class="viewcode-block" id="Datalab.report"><a class="viewcode-back" href="../../../cleanlab/datalab/datalab.html#cleanlab.datalab.datalab.Datalab.report">[docs]</a>    <span class="k">def</span> <span class="nf">report</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
@@ -812,11 +837,16 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">verbosity</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">verbosity</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">verbosity</span>
-        <span class="n">reporter</span> <span class="o">=</span> <span class="n">Reporter</span><span class="p">(</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">data_issues</span><span class="o">.</span><span class="n">issue_summary</span><span class="o">.</span><span class="n">empty</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Please specify some `issue_types` in datalab.find_issues() to see a report.</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">return</span>
+
+        <span class="n">reporter</span> <span class="o">=</span> <span class="n">report_factory</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_imagelab</span><span class="p">)(</span>
             <span class="n">data_issues</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">data_issues</span><span class="p">,</span>
             <span class="n">verbosity</span><span class="o">=</span><span class="n">verbosity</span><span class="p">,</span>
             <span class="n">include_description</span><span class="o">=</span><span class="n">include_description</span><span class="p">,</span>
             <span class="n">show_summary_score</span><span class="o">=</span><span class="n">show_summary_score</span><span class="p">,</span>
+            <span class="n">imagelab</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_imagelab</span><span class="p">,</span>
         <span class="p">)</span>
         <span class="n">reporter</span><span class="o">.</span><span class="n">report</span><span class="p">(</span><span class="n">num_examples</span><span class="o">=</span><span class="n">num_examples</span><span class="p">)</span></div>
 
@@ -971,7 +1001,7 @@
 
 <span class="sd">        See Also</span>
 <span class="sd">        --------</span>
-<span class="sd">        :py:class:`REGISTRY &lt;cleanlab.datalab.factory.REGISTRY&gt;` : All available issue types and their corresponding issue managers can be found here.</span>
+<span class="sd">        :py:class:`REGISTRY &lt;cleanlab.datalab.issue_manager_factory.REGISTRY&gt;` : All available issue types and their corresponding issue managers can be found here.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">IssueFinder</span><span class="o">.</span><span class="n">list_possible_issue_types</span><span class="p">()</span></div>
 
@@ -986,7 +1016,7 @@
 
 <span class="sd">        See Also</span>
 <span class="sd">        --------</span>
-<span class="sd">        :py:class:`REGISTRY &lt;cleanlab.datalab.factory.REGISTRY&gt;` : All available issue types and their corresponding issue managers can be found here.</span>
+<span class="sd">        :py:class:`REGISTRY &lt;cleanlab.datalab.issue_manager_factory.REGISTRY&gt;` : All available issue types and their corresponding issue managers can be found here.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">IssueFinder</span><span class="o">.</span><span class="n">list_default_issue_types</span><span class="p">()</span></div>
 

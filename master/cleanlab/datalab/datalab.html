@@ -520,7 +520,7 @@
 <div class="table-wrapper autosummary longtable docutils container">
 <table class="autosummary longtable docutils align-default">
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#cleanlab.datalab.datalab.Datalab" title="cleanlab.datalab.datalab.Datalab"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Datalab</span></code></a>(data[, label_name, verbosity])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#cleanlab.datalab.datalab.Datalab" title="cleanlab.datalab.datalab.Datalab"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Datalab</span></code></a>(data[, label_name, image_key, verbosity])</p></td>
 <td><p>A single object to automatically detect all kinds of issues in datasets.</p></td>
 </tr>
 </tbody>
@@ -528,7 +528,7 @@
 </div>
 <dl class="py class">
 <dt class="sig sig-object py" id="cleanlab.datalab.datalab.Datalab">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">cleanlab.datalab.datalab.</span></span><span class="sig-name descname"><span class="pre">Datalab</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">label_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbosity</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/cleanlab/datalab/datalab.html#Datalab"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cleanlab.datalab.datalab.Datalab" title="Permalink to this definition">#</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">cleanlab.datalab.datalab.</span></span><span class="sig-name descname"><span class="pre">Datalab</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">label_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">image_key</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbosity</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/cleanlab/datalab/datalab.html#Datalab"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cleanlab.datalab.datalab.Datalab" title="Permalink to this definition">#</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>A single object to automatically detect all kinds of issues in datasets.
 This is how we recommend you interface with the cleanlab library if you want to audit the quality of your data and detect issues within it.
@@ -556,7 +556,10 @@ Datalab tracks intermediate state (e.g. data statistics) from certain cleanlab f
 </dd>
 </dl>
 </p></li>
-<li><p><strong>label_name</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>) – The name of the label column in the dataset.</p></li>
+<li><p><strong>label_name</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <em>optional</em>) – The name of the label column in the dataset.</p></li>
+<li><p><strong>image_key</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <em>optional</em>) – Optional key that can be specified for image datasets to point to the field containing the actual images themselves.
+If specified, additional image-specific issue types can be detected in the dataset.
+See the CleanVision package <a class="reference external" href="https://cleanvision.readthedocs.io/en/latest/">documentation</a> for descriptions of these image-specific issue types.</p></li>
 <li><p><strong>verbosity</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>, <em>optional</em>) – The higher the verbosity level, the more information
 Datalab prints when auditing a dataset.
 Valid values are 0 through 4. Default is 1.</p></li>
@@ -982,7 +985,7 @@ The quality scores lie between 0-1 and are directly comparable between multiple 
 </div>
 <div class="admonition seealso">
 <p class="admonition-title">See also</p>
-<p><a class="reference internal" href="factory.html#cleanlab.datalab.factory.REGISTRY" title="cleanlab.datalab.factory.REGISTRY"><code class="xref py py-class docutils literal notranslate"><span class="pre">REGISTRY</span></code></a> : All available issue types and their corresponding issue managers can be found here.</p>
+<p><a class="reference internal" href="factory.html#cleanlab.datalab.issue_manager_factory.REGISTRY" title="cleanlab.datalab.issue_manager_factory.REGISTRY"><code class="xref py py-class docutils literal notranslate"><span class="pre">REGISTRY</span></code></a> : All available issue types and their corresponding issue managers can be found here.</p>
 </div>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
@@ -1002,7 +1005,7 @@ when <a class="reference internal" href="#cleanlab.datalab.datalab.Datalab.find_
 </div>
 <div class="admonition seealso">
 <p class="admonition-title">See also</p>
-<p><a class="reference internal" href="factory.html#cleanlab.datalab.factory.REGISTRY" title="cleanlab.datalab.factory.REGISTRY"><code class="xref py py-class docutils literal notranslate"><span class="pre">REGISTRY</span></code></a> : All available issue types and their corresponding issue managers can be found here.</p>
+<p><a class="reference internal" href="factory.html#cleanlab.datalab.issue_manager_factory.REGISTRY" title="cleanlab.datalab.issue_manager_factory.REGISTRY"><code class="xref py py-class docutils literal notranslate"><span class="pre">REGISTRY</span></code></a> : All available issue types and their corresponding issue managers can be found here.</p>
 </div>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
