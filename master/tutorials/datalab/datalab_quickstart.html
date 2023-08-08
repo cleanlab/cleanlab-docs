@@ -1253,6 +1253,7 @@ checked.</p>
 </table>
 </div></div>
 </div>
+<p>In the returned summary DataFrame: LOWER <code class="docutils literal notranslate"><span class="pre">score</span></code> values indicate types of issues that are MORE severe <em>overall</em> across the dataset (lower-quality data in terms of this issue), HIGHER <code class="docutils literal notranslate"><span class="pre">num_issues</span></code> values indicate types of issues that are MORE severe <em>overall</em> across the dataset (more datapoints appear to exhibit this issue).</p>
 <p>We can also only request the summary for a particular type of issue.</p>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[12]:
@@ -1301,7 +1302,7 @@ checked.</p>
 </table>
 </div></div>
 </div>
-<p>The <code class="docutils literal notranslate"><span class="pre">get_issues()</span></code> method returns information for each individual example in the dataset including: whether or not it is plagued by this issue, as well as a <em>quality score</em> quantifying how severe this issue appears to be for this particular example.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">get_issues()</span></code> method returns information for each <em>individual example</em> in the dataset including: whether or not it is plagued by this issue (Boolean), as well as a <em>quality score</em> (numeric value betweeen 0 to 1) quantifying how severe this issue appears to be for this particular example.</p>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[13]:
 </pre></div>
@@ -1403,8 +1404,9 @@ checked.</p>
 </table>
 </div></div>
 </div>
-<p>Similar to above, we can pass the type of issue as a argument to <code class="docutils literal notranslate"><span class="pre">get_issues()</span></code> to get the information for one particular issue.</p>
-<p>Each example receives a separate <em>quality score</em> (betweeen 0 to 1) for each issue type. Lower scores indicate more severe instances of the issue, so you can sort by these values to see the most concerning examples in your dataset for each type of issue. The quality scores are directly comparable between examples/datasets, but not across different issue types. Here we show an example of how to get the examples identified as having the most severe label issues.</p>
+<p>Each example receives a separate <em>quality score</em> for each issue type (eg. <code class="docutils literal notranslate"><span class="pre">outlier_score</span></code> is the <em>quality score</em> for the <code class="docutils literal notranslate"><span class="pre">outlier</span></code> issue type, quantifying <em>how typical</em> each datapoint appears to be). LOWER scores indicate MORE severe instances of the issue, so the most-concerning datapoints have the lowest quality scores. Sort by these scores to see the most-concerning examples in your dataset for each type of issue. The quality scores are directly comparable between examples/datasets, but
+not across different issue types.</p>
+<p>Similar to above, we can pass the type of issue as a argument to <code class="docutils literal notranslate"><span class="pre">get_issues()</span></code> to get the information for one particular type of issue. As an example, let’s see the examples identified as having the most severe <em>label</em> issues:</p>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[14]:
 </pre></div>
@@ -1488,10 +1490,10 @@ checked.</p>
 </table>
 </div></div>
 </div>
-<p>Looking at the labels for some of these top-ranked examples, we find their given label was indeed incorrect!</p>
+<p>Inspecting the labels for some of these top-ranked examples, we find their given label was indeed incorrect.</p>
 <section id="Get-additional-information">
 <h3>Get additional information<a class="headerlink" href="#Get-additional-information" title="Permalink to this heading">#</a></h3>
-<p>Additional information (statistics, intermediate results, etc) related to a particular issue type can be accessed via <code class="docutils literal notranslate"><span class="pre">get_info(issue_name)</span></code>.</p>
+<p>Miscellaneous additional information (statistics, intermediate results, etc) related to a particular issue type can be accessed via <code class="docutils literal notranslate"><span class="pre">get_info(issue_name)</span></code>.</p>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[15]:
 </pre></div>
@@ -1574,7 +1576,7 @@ computed it.</p>
 </section>
 <section id="Near-duplicate-issues">
 <h3>Near duplicate issues<a class="headerlink" href="#Near-duplicate-issues" title="Permalink to this heading">#</a></h3>
-<p>Let’s also inspect the examples flagged as (near) duplicates. For each such example, the <code class="docutils literal notranslate"><span class="pre">near_duplicate_sets</span></code> column below indicates which other examples in the dataset are highly similar to it (this value is empty for examples not flagged as nearly duplicated). The <code class="docutils literal notranslate"><span class="pre">near_duplicate_score</span></code> quantifies how similar each example is to its nearest neighbor in the dataset.</p>
+<p>Let’s also inspect the examples flagged as (near) duplicates. For each such example, the <code class="docutils literal notranslate"><span class="pre">near_duplicate_sets</span></code> column below indicates <em>which</em> other examples in the dataset are highly similar to it (this value is empty for examples not flagged as nearly duplicated). The <code class="docutils literal notranslate"><span class="pre">near_duplicate_score</span></code> quantifies <em>how similar</em> each example is to its nearest neighbor in the dataset.</p>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[16]:
 </pre></div>
