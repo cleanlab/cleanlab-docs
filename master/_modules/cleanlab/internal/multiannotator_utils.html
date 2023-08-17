@@ -539,33 +539,42 @@
 
 
 <div class="viewcode-block" id="assert_valid_inputs_multiannotator"><a class="viewcode-back" href="../../../cleanlab/internal/multiannotator_utils.html#cleanlab.internal.multiannotator_utils.assert_valid_inputs_multiannotator">[docs]</a><span class="k">def</span> <span class="nf">assert_valid_inputs_multiannotator</span><span class="p">(</span>
-    <span class="n">labels_multiannotator</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span>
+    <span class="n">labels_multiannotator</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
     <span class="n">pred_probs</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">ensemble</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
     <span class="n">allow_single_label</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="n">annotator_ids</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">pd</span><span class="o">.</span><span class="n">Index</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Validate format of multi-annotator labels&quot;&quot;&quot;</span>
+    <span class="c1"># Check that labels_multiannotator is a 2D array</span>
+    <span class="k">if</span> <span class="n">labels_multiannotator</span><span class="o">.</span><span class="n">ndim</span> <span class="o">!=</span> <span class="mi">2</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+            <span class="s2">&quot;labels_multiannotator must be a 2D array or dataframe, &quot;</span>
+            <span class="s2">&quot;each row represents an example and each column represents an annotator.&quot;</span>
+        <span class="p">)</span>
+
     <span class="c1"># Raise error if labels are not formatted properly</span>
-    <span class="k">if</span> <span class="nb">any</span><span class="p">([</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">label</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="k">for</span> <span class="n">label</span> <span class="ow">in</span> <span class="n">labels_multiannotator</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">ravel</span><span class="p">()]):</span>
+    <span class="k">if</span> <span class="nb">any</span><span class="p">([</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">label</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="k">for</span> <span class="n">label</span> <span class="ow">in</span> <span class="n">labels_multiannotator</span><span class="o">.</span><span class="n">ravel</span><span class="p">()]):</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
             <span class="s2">&quot;Labels cannot be strings, they must be zero-indexed integers corresponding to class indices.&quot;</span>
         <span class="p">)</span>
 
     <span class="c1"># Raise error if labels_multiannotator has NaN rows</span>
-    <span class="k">if</span> <span class="n">labels_multiannotator</span><span class="o">.</span><span class="n">isna</span><span class="p">()</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">any</span><span class="p">():</span>
-        <span class="n">nan_rows</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span>
-            <span class="n">labels_multiannotator</span><span class="p">[</span><span class="n">labels_multiannotator</span><span class="o">.</span><span class="n">isna</span><span class="p">()</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span> <span class="o">==</span> <span class="kc">True</span><span class="p">]</span><span class="o">.</span><span class="n">index</span>
-        <span class="p">)</span>
+    <span class="n">nan_row_mask</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">labels_multiannotator</span><span class="p">)</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">nan_row_mask</span><span class="o">.</span><span class="n">any</span><span class="p">():</span>
+        <span class="n">nan_rows</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">nan_row_mask</span><span class="p">)[</span><span class="mi">0</span><span class="p">])</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
             <span class="s2">&quot;labels_multiannotator cannot have rows with all NaN, each example must have at least one label.</span><span class="se">\n</span><span class="s2">&quot;</span>
             <span class="sa">f</span><span class="s2">&quot;Examples </span><span class="si">{</span><span class="n">nan_rows</span><span class="si">}</span><span class="s2"> do not have any labels.&quot;</span>
         <span class="p">)</span>
 
     <span class="c1"># Raise error if labels_multiannotator has NaN columns</span>
-    <span class="k">if</span> <span class="n">labels_multiannotator</span><span class="o">.</span><span class="n">isna</span><span class="p">()</span><span class="o">.</span><span class="n">all</span><span class="p">()</span><span class="o">.</span><span class="n">any</span><span class="p">():</span>
-        <span class="n">nan_columns</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span>
-            <span class="n">labels_multiannotator</span><span class="o">.</span><span class="n">columns</span><span class="p">[</span><span class="n">labels_multiannotator</span><span class="o">.</span><span class="n">isna</span><span class="p">()</span><span class="o">.</span><span class="n">all</span><span class="p">()</span> <span class="o">==</span> <span class="kc">True</span><span class="p">]</span>
-        <span class="p">)</span>
+    <span class="n">nan_col_mask</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">labels_multiannotator</span><span class="p">)</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">nan_col_mask</span><span class="o">.</span><span class="n">any</span><span class="p">():</span>
+        <span class="k">if</span> <span class="n">annotator_ids</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">nan_columns</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">annotator_ids</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">nan_col_mask</span><span class="p">)[</span><span class="mi">0</span><span class="p">]])</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">nan_columns</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">nan_col_mask</span><span class="p">)[</span><span class="mi">0</span><span class="p">])</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
             <span class="s2">&quot;labels_multiannotator cannot have columns with all NaN, each annotator must annotator at least one example.</span><span class="se">\n</span><span class="s2">&quot;</span>
             <span class="sa">f</span><span class="s2">&quot;Annotators </span><span class="si">{</span><span class="n">nan_columns</span><span class="si">}</span><span class="s2"> did not label any examples.&quot;</span>
@@ -573,14 +582,14 @@
 
     <span class="k">if</span> <span class="ow">not</span> <span class="n">allow_single_label</span><span class="p">:</span>
         <span class="c1"># Raise error if labels_multiannotator has &lt;= 1 column</span>
-        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">labels_multiannotator</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">labels_multiannotator</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="mi">1</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
                 <span class="s2">&quot;labels_multiannotator must have more than one column.</span><span class="se">\n</span><span class="s2">&quot;</span>
                 <span class="s2">&quot;If there is only one annotator, use cleanlab.rank.get_label_quality_scores instead&quot;</span>
             <span class="p">)</span>
 
         <span class="c1"># Raise error if labels_multiannotator only has 1 label per example</span>
-        <span class="k">if</span> <span class="n">labels_multiannotator</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">s</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">s</span><span class="o">.</span><span class="n">dropna</span><span class="p">())</span> <span class="o">==</span> <span class="mi">1</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">all</span><span class="p">():</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="o">~</span><span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">labels_multiannotator</span><span class="p">),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">all</span><span class="p">():</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
                 <span class="s2">&quot;Each example only has one label, collapse the labels into a 1-D array and use &quot;</span>
                 <span class="s2">&quot;cleanlab.rank.get_label_quality_scores instead&quot;</span>
@@ -588,13 +597,15 @@
 
         <span class="c1"># Raise warning if no examples with 2 or more annotators agree</span>
         <span class="c1"># TODO: might shift this later in the code to avoid extra compute</span>
-        <span class="k">if</span> <span class="n">labels_multiannotator</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span>
-            <span class="k">lambda</span> <span class="n">s</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array_equal</span><span class="p">(</span><span class="n">s</span><span class="o">.</span><span class="n">dropna</span><span class="p">()</span><span class="o">.</span><span class="n">unique</span><span class="p">(),</span> <span class="n">s</span><span class="o">.</span><span class="n">dropna</span><span class="p">()),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span>
+        <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">apply_along_axis</span><span class="p">(</span>
+            <span class="k">lambda</span> <span class="n">s</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array_equal</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">s</span><span class="p">[</span><span class="o">~</span><span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">s</span><span class="p">)]),</span> <span class="n">s</span><span class="p">[</span><span class="o">~</span><span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">s</span><span class="p">)]),</span>
+            <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+            <span class="n">arr</span><span class="o">=</span><span class="n">labels_multiannotator</span><span class="p">,</span>
         <span class="p">)</span><span class="o">.</span><span class="n">all</span><span class="p">():</span>
             <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s2">&quot;Annotators do not agree on any example. Check input data.&quot;</span><span class="p">)</span>
 
     <span class="c1"># Check labels</span>
-    <span class="n">all_labels_flatten</span> <span class="o">=</span> <span class="n">labels_multiannotator</span><span class="o">.</span><span class="n">replace</span><span class="p">({</span><span class="n">pd</span><span class="o">.</span><span class="n">NA</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">NaN</span><span class="p">})</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">float</span><span class="p">)</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">ravel</span><span class="p">()</span>
+    <span class="n">all_labels_flatten</span> <span class="o">=</span> <span class="n">labels_multiannotator</span><span class="o">.</span><span class="n">ravel</span><span class="p">()</span>
     <span class="n">all_labels_flatten</span> <span class="o">=</span> <span class="n">all_labels_flatten</span><span class="p">[</span><span class="o">~</span><span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">all_labels_flatten</span><span class="p">)]</span>
     <span class="n">assert_valid_class_labels</span><span class="p">(</span><span class="n">all_labels_flatten</span><span class="p">,</span> <span class="n">allow_one_class</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
@@ -614,7 +625,6 @@
                 <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;each pred_probs and labels_multiannotator must have same length.&quot;</span><span class="p">)</span>
 
             <span class="n">num_classes</span> <span class="o">=</span> <span class="n">pred_probs</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
-
         <span class="k">else</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">pred_probs</span><span class="o">.</span><span class="n">ndim</span> <span class="o">!=</span> <span class="mi">2</span><span class="p">:</span>
                 <span class="n">error_message</span> <span class="o">=</span> <span class="s2">&quot;pred_probs must be a 2d array.&quot;</span>
@@ -627,9 +637,7 @@
 
             <span class="n">num_classes</span> <span class="o">=</span> <span class="n">pred_probs</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
 
-        <span class="n">highest_class</span> <span class="o">=</span> <span class="p">(</span>
-            <span class="n">np</span><span class="o">.</span><span class="n">nanmax</span><span class="p">(</span><span class="n">labels_multiannotator</span><span class="o">.</span><span class="n">replace</span><span class="p">({</span><span class="n">pd</span><span class="o">.</span><span class="n">NA</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">NaN</span><span class="p">})</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">float</span><span class="p">)</span><span class="o">.</span><span class="n">values</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span>
-        <span class="p">)</span>
+        <span class="n">highest_class</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nanmax</span><span class="p">(</span><span class="n">labels_multiannotator</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span>
 
         <span class="c1"># this allows for missing labels, but not missing columns in pred_probs</span>
         <span class="k">if</span> <span class="n">num_classes</span> <span class="o">&lt;</span> <span class="n">highest_class</span><span class="p">:</span>
@@ -748,12 +756,12 @@
 
 
 <div class="viewcode-block" id="check_consensus_label_classes"><a class="viewcode-back" href="../../../cleanlab/internal/multiannotator_utils.html#cleanlab.internal.multiannotator_utils.check_consensus_label_classes">[docs]</a><span class="k">def</span> <span class="nf">check_consensus_label_classes</span><span class="p">(</span>
-    <span class="n">labels_multiannotator</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span>
+    <span class="n">labels_multiannotator</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
     <span class="n">consensus_label</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
     <span class="n">consensus_method</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Check if any classes no longer appear in the set of consensus labels (established using the consensus_method stated)&quot;&quot;&quot;</span>
-    <span class="n">unique_ma_labels</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">labels_multiannotator</span><span class="o">.</span><span class="n">replace</span><span class="p">({</span><span class="n">pd</span><span class="o">.</span><span class="n">NA</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">NaN</span><span class="p">})</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">float</span><span class="p">))</span>
+    <span class="n">unique_ma_labels</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">labels_multiannotator</span><span class="p">)</span>
     <span class="n">unique_ma_labels</span> <span class="o">=</span> <span class="n">unique_ma_labels</span><span class="p">[</span><span class="o">~</span><span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">unique_ma_labels</span><span class="p">)]</span>
     <span class="n">labels_set_difference</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">unique_ma_labels</span><span class="p">)</span> <span class="o">-</span> <span class="nb">set</span><span class="p">(</span><span class="n">consensus_label</span><span class="p">)</span>
 
@@ -768,18 +776,18 @@
 
 
 <div class="viewcode-block" id="compute_soft_cross_entropy"><a class="viewcode-back" href="../../../cleanlab/internal/multiannotator_utils.html#cleanlab.internal.multiannotator_utils.compute_soft_cross_entropy">[docs]</a><span class="k">def</span> <span class="nf">compute_soft_cross_entropy</span><span class="p">(</span>
-    <span class="n">labels_multiannotator</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span>
+    <span class="n">labels_multiannotator</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
     <span class="n">pred_probs</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Compute soft cross entropy between the annotators&#39; empirical label distribution and model pred_probs&quot;&quot;&quot;</span>
     <span class="n">num_classes</span> <span class="o">=</span> <span class="n">get_num_classes</span><span class="p">(</span><span class="n">pred_probs</span><span class="o">=</span><span class="n">pred_probs</span><span class="p">)</span>
 
     <span class="n">empirical_label_distribution</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">full</span><span class="p">((</span><span class="nb">len</span><span class="p">(</span><span class="n">labels_multiannotator</span><span class="p">),</span> <span class="n">num_classes</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">NaN</span><span class="p">)</span>
-    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">labels_multiannotator</span><span class="p">)):</span>
-        <span class="n">s</span> <span class="o">=</span> <span class="n">labels_multiannotator</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">labels</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">labels_multiannotator</span><span class="p">):</span>
+        <span class="n">labels_subset</span> <span class="o">=</span> <span class="n">labels</span><span class="p">[</span><span class="o">~</span><span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">labels</span><span class="p">)]</span>
         <span class="n">empirical_label_distribution</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">value_counts</span><span class="p">(</span>
-            <span class="n">s</span><span class="o">.</span><span class="n">dropna</span><span class="p">(),</span> <span class="n">num_classes</span><span class="o">=</span><span class="n">num_classes</span>
-        <span class="p">)</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">s</span><span class="o">.</span><span class="n">dropna</span><span class="p">())</span>
+            <span class="n">labels_subset</span><span class="p">,</span> <span class="n">num_classes</span><span class="o">=</span><span class="n">num_classes</span>
+        <span class="p">)</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">labels_subset</span><span class="p">)</span>
 
     <span class="n">clipped_pred_probs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">clip</span><span class="p">(</span><span class="n">pred_probs</span><span class="p">,</span> <span class="n">a_min</span><span class="o">=</span><span class="n">SMALL_CONST</span><span class="p">,</span> <span class="n">a_max</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
     <span class="n">soft_cross_entropy</span> <span class="o">=</span> <span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span>
@@ -790,7 +798,7 @@
 
 
 <div class="viewcode-block" id="find_best_temp_scaler"><a class="viewcode-back" href="../../../cleanlab/internal/multiannotator_utils.html#cleanlab.internal.multiannotator_utils.find_best_temp_scaler">[docs]</a><span class="k">def</span> <span class="nf">find_best_temp_scaler</span><span class="p">(</span>
-    <span class="n">labels_multiannotator</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span>
+    <span class="n">labels_multiannotator</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
     <span class="n">pred_probs</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
     <span class="n">coarse_search_range</span><span class="p">:</span> <span class="nb">list</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.2</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.8</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">8</span><span class="p">],</span>
     <span class="n">fine_search_size</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">4</span><span class="p">,</span>
@@ -799,8 +807,7 @@
 <span class="sd">    and model pred_probs&quot;&quot;&quot;</span>
 
     <span class="n">soft_cross_entropy_coarse</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">full</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">coarse_search_range</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">NaN</span><span class="p">)</span>
-    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">coarse_search_range</span><span class="p">)):</span>
-        <span class="n">curr_temp</span> <span class="o">=</span> <span class="n">coarse_search_range</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">curr_temp</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">coarse_search_range</span><span class="p">):</span>
         <span class="c1"># clip pred_probs to prevent taking log of 0</span>
         <span class="n">pred_probs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">clip</span><span class="p">(</span><span class="n">pred_probs</span><span class="p">,</span> <span class="n">a_min</span><span class="o">=</span><span class="n">SMALL_CONST</span><span class="p">,</span> <span class="n">a_max</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
         <span class="n">pred_probs</span> <span class="o">=</span> <span class="n">pred_probs</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">pred_probs</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)[:,</span> <span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">]</span>
@@ -834,8 +841,7 @@
             <span class="p">),</span>
         <span class="p">)</span>
     <span class="n">soft_cross_entropy_fine</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">full</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">fine_search_range</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">NaN</span><span class="p">)</span>
-    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">fine_search_range</span><span class="p">)):</span>
-        <span class="n">curr_temp</span> <span class="o">=</span> <span class="n">fine_search_range</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">curr_temp</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">fine_search_range</span><span class="p">):</span>
         <span class="n">log_pred_probs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">pred_probs</span><span class="p">)</span> <span class="o">/</span> <span class="n">curr_temp</span>
         <span class="n">scaled_pred_probs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">log_pred_probs</span><span class="p">)</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">log_pred_probs</span><span class="p">))</span>  <span class="c1"># softmax</span>
         <span class="n">soft_cross_entropy_fine</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span>
