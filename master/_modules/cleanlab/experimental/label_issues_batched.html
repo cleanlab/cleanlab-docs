@@ -576,6 +576,7 @@
     <span class="n">verbose</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
     <span class="n">quality_score_kwargs</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">dict</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">num_issue_kwargs</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">dict</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">return_mask</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Variant of :py:func:`filter.find_label_issues &lt;cleanlab.filter.find_label_issues&gt;`</span>
@@ -638,13 +639,18 @@
 <span class="sd">      Keyword arguments to :py:func:`count.num_label_issues &lt;cleanlab.count.num_label_issues&gt;`</span>
 <span class="sd">      to control estimation of the number of label issues.</span>
 <span class="sd">      The only supported kwarg here for now is: `estimation_method`.</span>
+<span class="sd">    return_mask : bool, optional</span>
+<span class="sd">       Determines what is returned by this method: If `return_mask=True`, return a boolean mask.</span>
+<span class="sd">       If `False`, return a list of indices specifying examples with label issues, sorted by label quality score.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
-<span class="sd">    issue_indices : np.ndarray</span>
-<span class="sd">      Indices of examples with label issues, sorted by label quality score.</span>
-
-<span class="sd">    Examples</span>
+<span class="sd">    label_issues : np.ndarray</span>
+<span class="sd">      If `return_mask` is `True`, returns a boolean **mask** for the entire dataset</span>
+<span class="sd">      where ``True`` represents a label issue and ``False`` represents an example that is</span>
+<span class="sd">      accurately labeled with high confidence.</span>
+<span class="sd">      If `return_mask` is `False`, returns an array containing **indices** of examples identified to have</span>
+<span class="sd">      label issues (i.e. those indices where the mask would be ``True``), sorted by likelihood that the corresponding label is correct.</span>
 <span class="sd">    --------</span>
 <span class="sd">    &gt;&gt;&gt; batch_size = 10000  # for efficiency, set this to as large of a value as your memory can handle</span>
 <span class="sd">    &gt;&gt;&gt; # Just demonstrating how to save your existing numpy labels, pred_probs arrays to compatible .npy files:</span>
@@ -736,7 +742,12 @@
     <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
         <span class="n">pbar</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
 
-    <span class="k">return</span> <span class="n">lab</span><span class="o">.</span><span class="n">get_label_issues</span><span class="p">()</span></div>
+    <span class="n">label_issues_indices</span> <span class="o">=</span> <span class="n">lab</span><span class="o">.</span><span class="n">get_label_issues</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">return_mask</span><span class="p">:</span>
+        <span class="n">label_issues_mask</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">labels</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">bool</span><span class="p">)</span>
+        <span class="n">label_issues_mask</span><span class="p">[</span><span class="n">label_issues_indices</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="k">return</span> <span class="n">label_issues_mask</span>
+    <span class="k">return</span> <span class="n">label_issues_indices</span></div>
 
 
 <div class="viewcode-block" id="LabelInspector"><a class="viewcode-back" href="../../../cleanlab/experimental/label_issues_batched.html#cleanlab.experimental.label_issues_batched.LabelInspector">[docs]</a><span class="k">class</span> <span class="nc">LabelInspector</span><span class="p">:</span>
