@@ -525,26 +525,32 @@
 
 <span class="sd">&quot;&quot;&quot;Methods to find label issues in an object detection dataset, where each annotated bounding box in an image receives its own class label.&quot;&quot;&quot;</span>
 
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Optional</span>
+<span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">defaultdict</span>
+<span class="kn">from</span> <span class="nn">multiprocessing</span> <span class="kn">import</span> <span class="n">Pool</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Tuple</span>
+
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 
 <span class="kn">from</span> <span class="nn">cleanlab.internal.constants</span> <span class="kn">import</span> <span class="p">(</span>
     <span class="n">ALPHA</span><span class="p">,</span>
-    <span class="n">LOW_PROBABILITY_THRESHOLD</span><span class="p">,</span>
     <span class="n">HIGH_PROBABILITY_THRESHOLD</span><span class="p">,</span>
-    <span class="n">OVERLOOKED_THRESHOLD</span><span class="p">,</span>
-    <span class="n">BADLOC_THRESHOLD</span><span class="p">,</span>
-    <span class="n">SWAP_THRESHOLD</span><span class="p">,</span>
+    <span class="n">LOW_PROBABILITY_THRESHOLD</span><span class="p">,</span>
+    <span class="n">OVERLOOKED_THRESHOLD_FACTOR</span><span class="p">,</span>
+    <span class="n">BADLOC_THRESHOLD_FACTOR</span><span class="p">,</span>
+    <span class="n">SWAP_THRESHOLD_FACTOR</span><span class="p">,</span>
+    <span class="n">AP_SCALE_FACTOR</span><span class="p">,</span>
 <span class="p">)</span>
 <span class="kn">from</span> <span class="nn">cleanlab.internal.object_detection_utils</span> <span class="kn">import</span> <span class="n">assert_valid_inputs</span>
-
 <span class="kn">from</span> <span class="nn">cleanlab.object_detection.rank</span> <span class="kn">import</span> <span class="p">(</span>
     <span class="n">_get_valid_inputs_for_compute_scores</span><span class="p">,</span>
-    <span class="n">compute_overlooked_box_scores</span><span class="p">,</span>
+    <span class="n">_separate_label</span><span class="p">,</span>
+    <span class="n">_separate_prediction</span><span class="p">,</span>
     <span class="n">compute_badloc_box_scores</span><span class="p">,</span>
+    <span class="n">compute_overlooked_box_scores</span><span class="p">,</span>
     <span class="n">compute_swap_box_scores</span><span class="p">,</span>
     <span class="n">get_label_quality_scores</span><span class="p">,</span>
     <span class="n">issues_from_scores</span><span class="p">,</span>
+    <span class="n">_get_overlap_matrix</span><span class="p">,</span>
 <span class="p">)</span>
 
 
@@ -639,13 +645,18 @@
     <span class="k">if</span> <span class="n">scoring_method</span> <span class="o">==</span> <span class="s2">&quot;objectlab&quot;</span><span class="p">:</span>
         <span class="n">auxiliary_inputs</span> <span class="o">=</span> <span class="n">_get_valid_inputs_for_compute_scores</span><span class="p">(</span><span class="n">ALPHA</span><span class="p">,</span> <span class="n">labels</span><span class="p">,</span> <span class="n">predictions</span><span class="p">)</span>
 
+        <span class="n">per_class_scores</span> <span class="o">=</span> <span class="n">_get_per_class_ap</span><span class="p">(</span><span class="n">labels</span><span class="p">,</span> <span class="n">predictions</span><span class="p">)</span>
+        <span class="n">lab_list</span> <span class="o">=</span> <span class="p">[</span><span class="n">_separate_label</span><span class="p">(</span><span class="n">label</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span> <span class="k">for</span> <span class="n">label</span> <span class="ow">in</span> <span class="n">labels</span><span class="p">]</span>
+        <span class="n">pred_list</span> <span class="o">=</span> <span class="p">[</span><span class="n">_separate_prediction</span><span class="p">(</span><span class="n">pred</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span> <span class="k">for</span> <span class="n">pred</span> <span class="ow">in</span> <span class="n">predictions</span><span class="p">]</span>
+        <span class="n">pred_thresholds_list</span> <span class="o">=</span> <span class="n">_process_class_list</span><span class="p">(</span><span class="n">pred_list</span><span class="p">,</span> <span class="n">per_class_scores</span><span class="p">)</span>
+        <span class="n">lab_thresholds_list</span> <span class="o">=</span> <span class="n">_process_class_list</span><span class="p">(</span><span class="n">lab_list</span><span class="p">,</span> <span class="n">per_class_scores</span><span class="p">)</span>
         <span class="n">overlooked_scores_per_box</span> <span class="o">=</span> <span class="n">compute_overlooked_box_scores</span><span class="p">(</span>
             <span class="n">alpha</span><span class="o">=</span><span class="n">ALPHA</span><span class="p">,</span>
             <span class="n">high_probability_threshold</span><span class="o">=</span><span class="n">HIGH_PROBABILITY_THRESHOLD</span><span class="p">,</span>
             <span class="n">auxiliary_inputs</span><span class="o">=</span><span class="n">auxiliary_inputs</span><span class="p">,</span>
         <span class="p">)</span>
         <span class="n">overlooked_issues_per_box</span> <span class="o">=</span> <span class="n">_find_label_issues_per_box</span><span class="p">(</span>
-            <span class="n">overlooked_scores_per_box</span><span class="p">,</span> <span class="n">OVERLOOKED_THRESHOLD</span>
+            <span class="n">overlooked_scores_per_box</span><span class="p">,</span> <span class="n">pred_thresholds_list</span><span class="p">,</span> <span class="n">OVERLOOKED_THRESHOLD_FACTOR</span>
         <span class="p">)</span>
         <span class="n">overlooked_issues_per_image</span> <span class="o">=</span> <span class="n">_pool_box_scores_per_image</span><span class="p">(</span><span class="n">overlooked_issues_per_box</span><span class="p">)</span>
 
@@ -654,7 +665,9 @@
             <span class="n">low_probability_threshold</span><span class="o">=</span><span class="n">LOW_PROBABILITY_THRESHOLD</span><span class="p">,</span>
             <span class="n">auxiliary_inputs</span><span class="o">=</span><span class="n">auxiliary_inputs</span><span class="p">,</span>
         <span class="p">)</span>
-        <span class="n">badloc_issues_per_box</span> <span class="o">=</span> <span class="n">_find_label_issues_per_box</span><span class="p">(</span><span class="n">badloc_scores_per_box</span><span class="p">,</span> <span class="n">BADLOC_THRESHOLD</span><span class="p">)</span>
+        <span class="n">badloc_issues_per_box</span> <span class="o">=</span> <span class="n">_find_label_issues_per_box</span><span class="p">(</span>
+            <span class="n">badloc_scores_per_box</span><span class="p">,</span> <span class="n">lab_thresholds_list</span><span class="p">,</span> <span class="n">BADLOC_THRESHOLD_FACTOR</span>
+        <span class="p">)</span>
         <span class="n">badloc_issues_per_image</span> <span class="o">=</span> <span class="n">_pool_box_scores_per_image</span><span class="p">(</span><span class="n">badloc_issues_per_box</span><span class="p">)</span>
 
         <span class="n">swap_scores_per_box</span> <span class="o">=</span> <span class="n">compute_swap_box_scores</span><span class="p">(</span>
@@ -663,7 +676,9 @@
             <span class="n">overlapping_label_check</span><span class="o">=</span><span class="n">overlapping_label_check</span><span class="p">,</span>
             <span class="n">auxiliary_inputs</span><span class="o">=</span><span class="n">auxiliary_inputs</span><span class="p">,</span>
         <span class="p">)</span>
-        <span class="n">swap_issues_per_box</span> <span class="o">=</span> <span class="n">_find_label_issues_per_box</span><span class="p">(</span><span class="n">swap_scores_per_box</span><span class="p">,</span> <span class="n">SWAP_THRESHOLD</span><span class="p">)</span>
+        <span class="n">swap_issues_per_box</span> <span class="o">=</span> <span class="n">_find_label_issues_per_box</span><span class="p">(</span>
+            <span class="n">swap_scores_per_box</span><span class="p">,</span> <span class="n">lab_thresholds_list</span><span class="p">,</span> <span class="n">SWAP_THRESHOLD_FACTOR</span>
+        <span class="p">)</span>
         <span class="n">swap_issues_per_image</span> <span class="o">=</span> <span class="n">_pool_box_scores_per_image</span><span class="p">(</span><span class="n">swap_issues_per_box</span><span class="p">)</span>
 
         <span class="n">issues_per_image</span> <span class="o">=</span> <span class="p">(</span>
@@ -690,10 +705,10 @@
 
 
 <span class="k">def</span> <span class="nf">_find_label_issues_per_box</span><span class="p">(</span>
-    <span class="n">scores_per_box</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">],</span> <span class="n">threshold</span><span class="p">:</span> <span class="nb">float</span>
+    <span class="n">scores_per_box</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">],</span> <span class="n">threshold_classes</span><span class="p">,</span> <span class="n">threshold_factor</span><span class="o">=</span><span class="mf">1.0</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Takes in a list of size ``N`` where each index is an array of scores for each bounding box in the `n-th` example</span>
-<span class="sd">    and a threshold. Each box below or equal to the threshold will be marked as an issue.</span>
+<span class="sd">    and a threshold. Each box below or equal to the corresponding threshold in threshold_classes will be marked as an issue.</span>
 
 <span class="sd">    Returns a list of size ``N`` where each index is a boolean array of length number of boxes per example `n`</span>
 <span class="sd">    marking if a specific box is an issue - 1 or not - 0.&quot;&quot;&quot;</span>
@@ -704,8 +719,12 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="n">score_per_box</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">score_per_box</span><span class="p">)]</span> <span class="o">=</span> <span class="mf">1.0</span>
             <span class="n">score_per_box</span> <span class="o">=</span> <span class="n">score_per_box</span>
-            <span class="n">issue_per_box</span> <span class="o">=</span> <span class="n">score_per_box</span> <span class="o">&lt;=</span> <span class="n">threshold</span>
-            <span class="n">is_issue_per_box</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">issue_per_box</span><span class="p">)</span>
+            <span class="n">issue_per_box</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">score_per_box</span><span class="p">)):</span>
+                <span class="n">issue_per_box</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                    <span class="n">score_per_box</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="n">threshold_classes</span><span class="p">[</span><span class="n">idx</span><span class="p">][</span><span class="n">i</span><span class="p">]</span> <span class="o">*</span> <span class="n">threshold_factor</span>
+                <span class="p">)</span>
+            <span class="n">is_issue_per_box</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">issue_per_box</span><span class="p">,</span> <span class="nb">bool</span><span class="p">))</span>
     <span class="k">return</span> <span class="n">is_issue_per_box</span>
 
 
@@ -726,6 +745,174 @@
         <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">issue_per_box</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
             <span class="n">is_issue</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
     <span class="k">return</span> <span class="n">is_issue</span>
+
+
+<span class="k">def</span> <span class="nf">_process_class_list</span><span class="p">(</span><span class="n">class_list</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">],</span> <span class="n">class_dict</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Converts a list of classes represented as numpy arrays using a class-to-float dictionary,</span>
+<span class="sd">    and returns a list where each class is replaced by its corresponding float value from the dictionary.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        class_list (List[np.ndarray]): A list of classes represented as numpy arrays.</span>
+<span class="sd">        class_dict (Dict[int, float]): A dictionary mapping class indices to their corresponding float values.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        List[float]: A list of float values corresponding to the classes in the input list.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">class_l2</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">class_list</span><span class="p">:</span>
+        <span class="n">l3</span> <span class="o">=</span> <span class="p">[</span><span class="n">class_dict</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">i</span><span class="p">]</span>
+        <span class="n">class_l2</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">l3</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">class_l2</span>
+
+
+<span class="k">def</span> <span class="nf">_calculate_ap_per_class</span><span class="p">(</span>
+    <span class="n">labels</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]],</span>
+    <span class="n">predictions</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">],</span>
+    <span class="o">*</span><span class="p">,</span>
+    <span class="n">iou_threshold</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.5</span><span class="p">,</span>
+    <span class="n">num_procs</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Computes the average precision for each class based on provided labels and predictions.</span>
+<span class="sd">    It uses an Intersection over Union (IoU) threshold and supports parallel processing with a specified number of processes.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">num_images</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">predictions</span><span class="p">)</span>
+    <span class="n">num_scale</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="n">num_classes</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">predictions</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+    <span class="k">if</span> <span class="n">num_images</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="n">num_procs</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">num_procs</span><span class="p">,</span> <span class="n">num_images</span><span class="p">)</span>
+        <span class="n">pool</span> <span class="o">=</span> <span class="n">Pool</span><span class="p">(</span><span class="n">num_procs</span><span class="p">)</span>
+    <span class="n">ap_per_class_list</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">class_num</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_classes</span><span class="p">):</span>
+        <span class="n">pred_bboxes</span><span class="p">,</span> <span class="n">lab_bboxes</span> <span class="o">=</span> <span class="n">_filter_by_class</span><span class="p">(</span><span class="n">labels</span><span class="p">,</span> <span class="n">predictions</span><span class="p">,</span> <span class="n">class_num</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">num_images</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">tpfp</span> <span class="o">=</span> <span class="n">pool</span><span class="o">.</span><span class="n">starmap</span><span class="p">(</span>
+                <span class="n">_calculate_true_positives_false_positives</span><span class="p">,</span>
+                <span class="nb">zip</span><span class="p">(</span><span class="n">pred_bboxes</span><span class="p">,</span> <span class="n">lab_bboxes</span><span class="p">,</span> <span class="p">[</span><span class="n">iou_threshold</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_images</span><span class="p">)]),</span>
+            <span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">tpfp</span> <span class="o">=</span> <span class="p">[</span>
+                <span class="n">_calculate_true_positives_false_positives</span><span class="p">(</span>
+                    <span class="n">pred_bboxes</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+                    <span class="n">lab_bboxes</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+                    <span class="n">iou_threshold</span><span class="p">,</span>
+                <span class="p">)</span>
+            <span class="p">]</span>
+        <span class="n">true_positives</span><span class="p">,</span> <span class="n">false_positives</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="o">*</span><span class="n">tpfp</span><span class="p">))</span>
+        <span class="n">num_gts</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">num_scale</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">int</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">j</span><span class="p">,</span> <span class="n">bbox</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">lab_bboxes</span><span class="p">):</span>
+            <span class="n">num_gts</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+=</span> <span class="n">bbox</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">pred_bboxes</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">(</span><span class="n">pred_bboxes</span><span class="p">)</span>
+        <span class="n">sort_inds</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argsort</span><span class="p">(</span><span class="o">-</span><span class="n">pred_bboxes</span><span class="p">[:,</span> <span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+        <span class="n">true_positives</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">hstack</span><span class="p">(</span><span class="n">true_positives</span><span class="p">)[:,</span> <span class="n">sort_inds</span><span class="p">]</span>
+        <span class="n">false_positives</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">hstack</span><span class="p">(</span><span class="n">false_positives</span><span class="p">)[:,</span> <span class="n">sort_inds</span><span class="p">]</span>
+        <span class="n">true_positives</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">cumsum</span><span class="p">(</span><span class="n">true_positives</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">false_positives</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">cumsum</span><span class="p">(</span><span class="n">false_positives</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">eps</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">finfo</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span><span class="o">.</span><span class="n">eps</span>
+        <span class="n">recalls</span> <span class="o">=</span> <span class="n">true_positives</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">maximum</span><span class="p">(</span><span class="n">num_gts</span><span class="p">[:,</span> <span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">],</span> <span class="n">eps</span><span class="p">)</span>
+        <span class="n">precisions</span> <span class="o">=</span> <span class="n">true_positives</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">maximum</span><span class="p">((</span><span class="n">true_positives</span> <span class="o">+</span> <span class="n">false_positives</span><span class="p">),</span> <span class="n">eps</span><span class="p">)</span>
+        <span class="n">recalls</span> <span class="o">=</span> <span class="n">recalls</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="p">:]</span>
+        <span class="n">precisions</span> <span class="o">=</span> <span class="n">precisions</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="p">:]</span>
+        <span class="n">ap</span> <span class="o">=</span> <span class="n">_calculate_average_precision</span><span class="p">(</span><span class="n">recalls</span><span class="p">,</span> <span class="n">precisions</span><span class="p">)</span>
+        <span class="n">ap_per_class_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ap</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">num_images</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="n">pool</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">ap_per_class_list</span>
+
+
+<span class="k">def</span> <span class="nf">_filter_by_class</span><span class="p">(</span>
+    <span class="n">labels</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]],</span> <span class="n">predictions</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">],</span> <span class="n">class_num</span><span class="p">:</span> <span class="nb">int</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">List</span><span class="p">,</span> <span class="n">List</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Filters predictions and labels based on a specific class number.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">pred_bboxes</span> <span class="o">=</span> <span class="p">[</span><span class="n">prediction</span><span class="p">[</span><span class="n">class_num</span><span class="p">]</span> <span class="k">for</span> <span class="n">prediction</span> <span class="ow">in</span> <span class="n">predictions</span><span class="p">]</span>
+    <span class="n">lab_bboxes</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">label</span> <span class="ow">in</span> <span class="n">labels</span><span class="p">:</span>
+        <span class="n">gt_inds</span> <span class="o">=</span> <span class="n">label</span><span class="p">[</span><span class="s2">&quot;labels&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="n">class_num</span>
+        <span class="n">lab_bboxes</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">label</span><span class="p">[</span><span class="s2">&quot;bboxes&quot;</span><span class="p">][</span><span class="n">gt_inds</span><span class="p">,</span> <span class="p">:])</span>
+    <span class="k">return</span> <span class="n">pred_bboxes</span><span class="p">,</span> <span class="n">lab_bboxes</span>
+
+
+<span class="k">def</span> <span class="nf">_calculate_true_positives_false_positives</span><span class="p">(</span>
+    <span class="n">pred_bboxes</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">lab_bboxes</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">iou_threshold</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.5</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Calculates true positives (TP) and false positives (FP) for object detection tasks.</span>
+<span class="sd">    It takes predicted bounding boxes, ground truth bounding boxes, and an optional Intersection over Union (IoU) threshold as inputs.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">num_preds</span> <span class="o">=</span> <span class="n">pred_bboxes</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">num_labels</span> <span class="o">=</span> <span class="n">lab_bboxes</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">num_scales</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="n">true_positives</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">num_scales</span><span class="p">,</span> <span class="n">num_preds</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+    <span class="n">false_positives</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">num_scales</span><span class="p">,</span> <span class="n">num_preds</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">lab_bboxes</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">false_positives</span><span class="p">[</span><span class="o">...</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="k">return</span> <span class="n">true_positives</span><span class="p">,</span> <span class="n">false_positives</span>
+    <span class="n">ious</span> <span class="o">=</span> <span class="n">_get_overlap_matrix</span><span class="p">(</span><span class="n">pred_bboxes</span><span class="p">,</span> <span class="n">lab_bboxes</span><span class="p">)</span>
+    <span class="n">ious_max</span> <span class="o">=</span> <span class="n">ious</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">ious_argmax</span> <span class="o">=</span> <span class="n">ious</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">sorted_indices</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argsort</span><span class="p">(</span><span class="o">-</span><span class="n">pred_bboxes</span><span class="p">[:,</span> <span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+    <span class="n">is_covered</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">num_labels</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">bool</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">index</span> <span class="ow">in</span> <span class="n">sorted_indices</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">ious_max</span><span class="p">[</span><span class="n">index</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="n">iou_threshold</span><span class="p">:</span>
+            <span class="n">matching_label</span> <span class="o">=</span> <span class="n">ious_argmax</span><span class="p">[</span><span class="n">index</span><span class="p">]</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">is_covered</span><span class="p">[</span><span class="n">matching_label</span><span class="p">]:</span>
+                <span class="n">is_covered</span><span class="p">[</span><span class="n">matching_label</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
+                <span class="n">true_positives</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="n">index</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">false_positives</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="n">index</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">false_positives</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="n">index</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="k">return</span> <span class="n">true_positives</span><span class="p">,</span> <span class="n">false_positives</span>
+
+
+<span class="k">def</span> <span class="nf">_calculate_average_precision</span><span class="p">(</span>
+    <span class="n">recall_values</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">precision_values</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Computes the average precision (AP) for a set of recall and precision values. It takes arrays of recall and precision values as inputs.&quot;&quot;&quot;</span>
+    <span class="n">recall_values</span> <span class="o">=</span> <span class="n">recall_values</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">,</span> <span class="p">:]</span>
+    <span class="n">precision_values</span> <span class="o">=</span> <span class="n">precision_values</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">,</span> <span class="p">:]</span>
+    <span class="n">num_scales</span> <span class="o">=</span> <span class="n">recall_values</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">average_precision</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">num_scales</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+    <span class="n">zeros_matrix</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">num_scales</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">recall_values</span><span class="o">.</span><span class="n">dtype</span><span class="p">)</span>
+    <span class="n">ones_matrix</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">((</span><span class="n">num_scales</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">recall_values</span><span class="o">.</span><span class="n">dtype</span><span class="p">)</span>
+    <span class="n">modified_recall</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">hstack</span><span class="p">((</span><span class="n">zeros_matrix</span><span class="p">,</span> <span class="n">recall_values</span><span class="p">,</span> <span class="n">ones_matrix</span><span class="p">))</span>
+    <span class="n">modified_precision</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">hstack</span><span class="p">((</span><span class="n">zeros_matrix</span><span class="p">,</span> <span class="n">precision_values</span><span class="p">,</span> <span class="n">zeros_matrix</span><span class="p">))</span>
+
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">modified_precision</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">):</span>
+        <span class="n">modified_precision</span><span class="p">[:,</span> <span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">maximum</span><span class="p">(</span>
+            <span class="n">modified_precision</span><span class="p">[:,</span> <span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">],</span> <span class="n">modified_precision</span><span class="p">[:,</span> <span class="n">i</span><span class="p">]</span>
+        <span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_scales</span><span class="p">):</span>
+        <span class="n">index</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">modified_recall</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="mi">1</span><span class="p">:]</span> <span class="o">!=</span> <span class="n">modified_recall</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">])[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">average_precision</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span>
+            <span class="p">(</span><span class="n">modified_recall</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">index</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">modified_recall</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">index</span><span class="p">])</span>
+            <span class="o">*</span> <span class="n">modified_precision</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">index</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span>
+        <span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">average_precision</span>
+
+
+<span class="k">def</span> <span class="nf">_get_per_class_ap</span><span class="p">(</span>
+    <span class="n">labels</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]],</span> <span class="n">predictions</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Computes the Average Precision (AP) for each class in an object detection task.</span>
+<span class="sd">    It takes a list of label dictionaries and a list of prediction arrays as inputs.</span>
+<span class="sd">    It calculates AP values for different Intersection over Union (IoU) thresholds, averages them per class, and then scales the AP values.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">iou_thrs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.95</span><span class="p">,</span> <span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">((</span><span class="mf">0.95</span> <span class="o">-</span> <span class="mf">0.5</span><span class="p">)</span> <span class="o">/</span> <span class="mf">0.05</span><span class="p">))</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">endpoint</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">class_num_to_iou_list</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">(</span><span class="nb">list</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">threshold</span> <span class="ow">in</span> <span class="n">iou_thrs</span><span class="p">:</span>
+        <span class="n">ap_per_class</span> <span class="o">=</span> <span class="n">_calculate_ap_per_class</span><span class="p">(</span><span class="n">labels</span><span class="p">,</span> <span class="n">predictions</span><span class="p">,</span> <span class="n">iou_threshold</span><span class="o">=</span><span class="n">threshold</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">class_num</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">ap_per_class</span><span class="p">)):</span>
+            <span class="n">class_num_to_iou_list</span><span class="p">[</span><span class="n">class_num</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ap_per_class</span><span class="p">[</span><span class="n">class_num</span><span class="p">])</span>
+    <span class="n">class_num_to_AP</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">for</span> <span class="n">class_num</span> <span class="ow">in</span> <span class="n">class_num_to_iou_list</span><span class="p">:</span>
+        <span class="n">class_num_to_AP</span><span class="p">[</span><span class="n">class_num</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">class_num_to_iou_list</span><span class="p">[</span><span class="n">class_num</span><span class="p">])</span> <span class="o">*</span> <span class="n">AP_SCALE_FACTOR</span>
+    <span class="k">return</span> <span class="n">class_num_to_AP</span>
 </pre></div> 
         </article>
       </div>
