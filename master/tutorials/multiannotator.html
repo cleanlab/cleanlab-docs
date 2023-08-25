@@ -16,7 +16,7 @@
     <link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="Find Label Errors in Multi-Label Classification Datasets" href="multilabel_classification.html" /><link rel="prev" title="Detect Outliers with Cleanlab and PyTorch Image Models (timm)" href="outliers.html" />
 
     <link rel="shortcut icon" href="https://raw.githubusercontent.com/cleanlab/assets/a4483476d449f2f05a4c7cde329e72358099cc07/cleanlab/cleanlab_favicon.svg"/><meta name="generator" content="sphinx-5.1.1, furo 2022.06.21"/>
-        <title>Improve Consensus Labels for Multiannotator Data - cleanlab</title>
+        <title>Estimate Consensus and Annotator Quality for Data Labeled by Multiple Annotators - cleanlab</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?digest=40978830699223671f4072448e654b5958f38b89" />
     <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
@@ -788,13 +788,13 @@ div.rendered_html tbody tr:hover {
         `);
     })
 
-</script><section id="Improve-Consensus-Labels-for-Multiannotator-Data">
-<h1>Improve Consensus Labels for Multiannotator Data<a class="headerlink" href="#Improve-Consensus-Labels-for-Multiannotator-Data" title="Permalink to this heading">#</a></h1>
-<p>This 5-minute quickstart tutorial shows how to use cleanlab for classification data that has been labeled by multiple annotators (where each example has been labeled by at least one annotator, but not every annotator has labeled every example). Compared to existing crowdsourcing tools, cleanlab helps you better analyze such data by leveraging a trained classifier model in addition to the raw annotations. With one line of code, you can automatically compute:</p>
+</script><section id="Estimate-Consensus-and-Annotator-Quality-for-Data-Labeled-by-Multiple-Annotators">
+<h1>Estimate Consensus and Annotator Quality for Data Labeled by Multiple Annotators<a class="headerlink" href="#Estimate-Consensus-and-Annotator-Quality-for-Data-Labeled-by-Multiple-Annotators" title="Permalink to this heading">#</a></h1>
+<p>This 5-minute quickstart tutorial shows how to use cleanlab for classification data that has been labeled by <em>multiple</em> annotators (where each example has been labeled by at least one annotator, but not every annotator has labeled every example). Compared to existing crowdsourcing tools, cleanlab helps you better analyze such data by leveraging a trained classifier model in addition to the raw annotations. With one line of code, you can automatically compute:</p>
 <ul class="simple">
 <li><p>A <strong>consensus label</strong> for each example (i.e. <em>truth inference</em>) that aggregates the individual annotations (more accurately than algorithms from crowdsourcing like majority-vote, Dawid-Skene, or GLAD).</p></li>
-<li><p>a <strong>quality score for each consensus label</strong> which measures our confidence that this label is correct (via well-calibrated estimates that account for the: number annotators which have labeled this example, overall quality of each annotator, and quality of our trained ML models).</p></li>
-<li><p>An analogous <strong>label quality score</strong> for each individual label chosen by one annotator for a particular example.</p></li>
+<li><p>A <strong>quality score for each consensus label</strong> which measures our confidence that this label is correct (via well-calibrated estimates that account for the: number of annotators which have labeled this example, overall quality of each annotator, and quality of our trained ML models).</p></li>
+<li><p>An analogous <strong>label quality score</strong> for each individual label chosen by one annotator for a particular example (to measure our confidence in alternate labels when annotators differ from the consensus).</p></li>
 <li><p>An <strong>overall quality score for each annotator</strong> which measures our confidence in the overall correctness of labels obtained from this annotator.</p></li>
 </ul>
 <p><strong>Overview of what we’ll do in this tutorial:</strong></p>
@@ -804,6 +804,9 @@ div.rendered_html tbody tr:hover {
 <li><p>Use cleanlab’s <code class="docutils literal notranslate"><span class="pre">multiannotator.get_label_quality_multiannotator</span></code> function to get improved consensus labels that more accurately reflect the ground truth.</p></li>
 <li><p>View other information about your multiannotator dataset, such as consensus and annotator quality scores, agreement between annotators, detailed label quality scores and more!</p></li>
 </ul>
+<p><strong>Consensus labels</strong> represent the best guess of the true label for each example and can be used for more reliable modeling/analytics. Cleanlab automatically produces enhanced estimates of consensus through the use of machine learning. <strong>Quality scores</strong> help us determine how much trust we can place in each: consensus label, individual annotator, and particular label from a particular annotator. These quality scores can help you determine which annotators are best/worst overall, as well as which
+current consensus labels are least trustworthy and should perhaps be verified via additional annotation.</p>
+<p>This tutorial uses a toy <em>tabular</em> dataset labeled with multiple annotators but <strong>these steps can easily be applied to image or text data</strong>.</p>
 <div class="admonition note">
 <p class="admonition-title">Quickstart</p>
 <p>Already have <code class="docutils literal notranslate"><span class="pre">multiannotator_labels</span></code> and (out-of-sample) <code class="docutils literal notranslate"><span class="pre">pred_probs</span></code> from a model trained on an existing set of consensus labels? Run the code below to get improved consensus labels and more information about the quality of your labels and annotators.</p>
@@ -931,7 +934,7 @@ div.rendered_html tbody tr:hover {
 </pre></div>
 </div>
 </div>
-<p>Let’s view the first few rows of the data used for this tutorial. Here are the labels selected by each annotator for the first few examples:</p>
+<p>Let’s view the first few rows of the data used for this tutorial. Here are the labels selected by each annotator for the first few examples (rows) in the dataset:</p>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
 </pre></div>
@@ -1134,7 +1137,7 @@ array([[ 5.60856743,  1.41693214],
        [ 4.37169848,  0.66031048]])
 </pre></div></div>
 </div>
-<p><code class="docutils literal notranslate"><span class="pre">multiannotator_labels</span></code> contains the class labels that each annotator chose for each example, with examples that a particular annotator did not label represented using <code class="docutils literal notranslate"><span class="pre">np.nan</span></code>. <code class="docutils literal notranslate"><span class="pre">X</span></code> contains the features for each example, which happen to be numeric in this tutorial but any feature modality can be used with <code class="docutils literal notranslate"><span class="pre">cleanlab.multiannotator</span></code>.</p>
+<p><code class="docutils literal notranslate"><span class="pre">multiannotator_labels</span></code> contains the class label that each annotator chose for each example in the dataset, with examples that a particular annotator did not label represented using <code class="docutils literal notranslate"><span class="pre">np.nan</span></code>. <code class="docutils literal notranslate"><span class="pre">X</span></code> contains the features for each example, which happen to be numeric in this tutorial but any feature modality can be used with <code class="docutils literal notranslate"><span class="pre">cleanlab.multiannotator</span></code>.</p>
 <div class="admonition note">
 <p class="admonition-title">Bringing Your Own Data (BYOD)?</p>
 <p>You can easily replace the above with your own multiannotator labels and features, then continue with the rest of the tutorial.</p>
@@ -1143,9 +1146,9 @@ array([[ 5.60856743,  1.41693214],
 <p>Your features can be represented however you like (since these are not inputs to <code class="docutils literal notranslate"><span class="pre">cleanlab.multiannotator</span></code> methods) as long as you are able to fit a classifer to them and obtain its predicted class probabilities!</p>
 </div>
 </section>
-<section id="3.-Get-majority-vote-labels-and-compute-out-of-sample-predicted-probabilities">
-<h2>3. Get majority vote labels and compute out-of-sample predicted probabilities<a class="headerlink" href="#3.-Get-majority-vote-labels-and-compute-out-of-sample-predicted-probabilities" title="Permalink to this heading">#</a></h2>
-<p>Before training a machine learning model, we must first obtain the consensus labels from the annotators that labeled the data. The simplest way to obtain an initial set of consensus labels is to select it using majority vote.</p>
+<section id="3.-Get-initial-consensus-labels-via-majority-vote-and-compute-out-of-sample-predicted-probabilities">
+<h2>3. Get initial consensus labels via majority vote and compute out-of-sample predicted probabilities<a class="headerlink" href="#3.-Get-initial-consensus-labels-via-majority-vote-and-compute-out-of-sample-predicted-probabilities" title="Permalink to this heading">#</a></h2>
+<p>Before training a machine learning model, we must first obtain initial consensus labels from the data annotations representing a crude guess of the best label for each example. The most straight forward way to obtain an initial set of consensus labels is via simple majority vote.</p>
 <div class="nbinput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
 </pre></div>
@@ -1154,7 +1157,9 @@ array([[ 5.60856743,  1.41693214],
 </pre></div>
 </div>
 </div>
-<p>Next, we will train a model on the consensus labels obtained using majority vote to compute out-of-sample predicted probabilities. Here, we use a simple logistic regression model.</p>
+<p>Majority vote consensus labels may not be very reliable, particularly for examples that were only labeled by one or a few annotators. To more reliably estimate consensus, we can account for the features associated with each example (based on which the annotations were derived in the first place). Fitting a classifier model serves as a natural way to account for these feature values, here we train a simple logistic regression model to get significantly more accurate estimates of consensus labels
+and associated quality scores.</p>
+<p>We fit the model with our initial consensus labels, and then get (out-of-sample) predicted class probabilities for each example in the dataset from the trained model. These predicted probabilities help us estimate the best consensus labels and associated confidence values in a statistically optimal manner that accounts for all the available information.</p>
 <div class="nbinput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
 </pre></div>
@@ -1171,7 +1176,8 @@ array([[ 5.60856743,  1.41693214],
 </section>
 <section id="4.-Use-cleanlab-to-get-better-consensus-labels-and-other-statistics">
 <h2>4. Use cleanlab to get better consensus labels and other statistics<a class="headerlink" href="#4.-Use-cleanlab-to-get-better-consensus-labels-and-other-statistics" title="Permalink to this heading">#</a></h2>
-<p>Using the annotators’ labels and the out-of-sample predicted probabilities from the model, cleanlab can help us obtain improved consensus labels for our data.</p>
+<p>Using the annotators’ labels and the (out-of-sample) predicted class probabilities from the model, cleanlab can estimate <strong>improved consensus labels</strong> for our data that are more accurate than our initial consensus labels were.</p>
+<p>Having accurate labels provides insight on each annotator’s label quality and is key for boosting model accuracy and achieving dependable real-world results.</p>
 <div class="nbinput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
 </pre></div>
@@ -1634,7 +1640,7 @@ Accuracy of 15 worst quality examples = 0.8
 Accuracy of better quality examples = 0.9893238434163701
 </pre></div></div>
 </div>
-<p>We observe that the 15 worst-consensus-quality-score examples have a lower average accuracy compared to the rest of the examples.</p>
+<p>We observe that the 15 worst-consensus-quality-score examples have a lower average accuracy compared to the rest of the examples. Cleanlab automatically determines which consensus labels are least trustworthy (perhaps want to have another annotator look at that data). Here we see these trustworthiness estimates really do correspond to the true quality of the consensus labels (which we know in this toy dataset because we have the true labels, unlike in your applications)</p>
 </section>
 </section>
 <section id="5.-Retrain-model-using-improved-consensus-labels">
@@ -1659,11 +1665,11 @@ Accuracy of better quality examples = 0.9893238434163701
 </section>
 <section id="Further-improvements">
 <h2>Further improvements<a class="headerlink" href="#Further-improvements" title="Permalink to this heading">#</a></h2>
-<p>You can also repeatedly iterate this process of getting better consensus labels using the model’s out-of-sample predicted probabilities and then retraining the model with the improved labels to get even better predicted probabilities! For details, see our <a class="reference external" href="https://github.com/cleanlab/examples">examples</a> notebook on <a class="reference external" href="https://github.com/cleanlab/examples/blob/master/multiannotator_cifar10/multiannotator_cifar10.ipynb">Iterative use of Cleanlab to Improve Classification Models (and Consensus Labels) from Data Labeled by Multiple
+<p>You can also repeat this process of getting better consensus labels using the model’s out-of-sample predicted probabilities and then retraining the model with the improved labels to get even better predicted class probabilities in a virtuous cycle! For details, see our <a class="reference external" href="https://github.com/cleanlab/examples">examples</a> notebook on <a class="reference external" href="https://github.com/cleanlab/examples/blob/master/multiannotator_cifar10/multiannotator_cifar10.ipynb">Iterative use of Cleanlab to Improve Classification Models (and Consensus Labels) from Data Labeled by Multiple
 Annotators</a>.</p>
 <p>If possible, the best way to improve your model is to collect additional labels for both previously annotated data and extra not-yet-labeled examples (i.e. <em>active learning</em>). To decide which data is most informative to label next, use <code class="docutils literal notranslate"><span class="pre">cleanlab.multiannotator.get_active_learning_scores()</span></code> rather than the methods from this tutorial. This is demonstrated in our examples notebook on <a class="reference external" href="https://github.com/cleanlab/examples/blob/master/active_learning_multiannotator/active_learning.ipynb">Active Learning with Multiple Data Annotators via
 ActiveLab</a>.</p>
-<p>While this notebook focused on analzying the labels of your data, Cleanlab can also check your data features for various issues. Learn how to do this by following our <a class="reference external" href="../tutorials/datalab/index.html">Datalab tutorials</a>, except you do not need to pass in <code class="docutils literal notranslate"><span class="pre">labels</span></code> now that you’ve already analyzed them with this notebook (or you can provide <code class="docutils literal notranslate"><span class="pre">labels</span></code> to Datalab as the consensus labels estimated here).</p>
+<p>While this notebook focused on analzying the labels of your data, cleanlab can also check your data features for various issues. Learn how to do this by following our <a class="reference external" href="../tutorials/datalab/index.html">Datalab tutorials</a>, except you do not need to pass in <code class="docutils literal notranslate"><span class="pre">labels</span></code> now that you’ve already analyzed them with this notebook (or you can provide <code class="docutils literal notranslate"><span class="pre">labels</span></code> to Datalab as the consensus labels estimated here).</p>
 </section>
 <section id="How-does-cleanlab.multiannotator-work?">
 <h2>How does cleanlab.multiannotator work?<a class="headerlink" href="#How-does-cleanlab.multiannotator-work?" title="Permalink to this heading">#</a></h2>
@@ -1747,10 +1753,10 @@ ActiveLab</a>.</p>
         <div class="toc-tree-container">
           <div class="toc-tree">
             <ul>
-<li><a class="reference internal" href="#">Improve Consensus Labels for Multiannotator Data</a><ul>
+<li><a class="reference internal" href="#">Estimate Consensus and Annotator Quality for Data Labeled by Multiple Annotators</a><ul>
 <li><a class="reference internal" href="#1.-Install-and-import-required-dependencies">1. Install and import required dependencies</a></li>
 <li><a class="reference internal" href="#2.-Create-the-data-(can-skip-these-details)">2. Create the data (can skip these details)</a></li>
-<li><a class="reference internal" href="#3.-Get-majority-vote-labels-and-compute-out-of-sample-predicted-probabilities">3. Get majority vote labels and compute out-of-sample predicted probabilities</a></li>
+<li><a class="reference internal" href="#3.-Get-initial-consensus-labels-via-majority-vote-and-compute-out-of-sample-predicted-probabilities">3. Get initial consensus labels via majority vote and compute out-of-sample predicted probabilities</a></li>
 <li><a class="reference internal" href="#4.-Use-cleanlab-to-get-better-consensus-labels-and-other-statistics">4. Use cleanlab to get better consensus labels and other statistics</a><ul>
 <li><a class="reference internal" href="#Comparing-improved-consensus-labels">Comparing improved consensus labels</a></li>
 <li><a class="reference internal" href="#Inspecting-consensus-quality-scores-to-find-potential-consensus-label-errors">Inspecting consensus quality scores to find potential consensus label errors</a></li>
