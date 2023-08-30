@@ -539,6 +539,7 @@
     <span class="n">_subtract_confident_thresholds</span><span class="p">,</span>
     <span class="n">get_normalized_entropy</span><span class="p">,</span>
 <span class="p">)</span>
+<span class="kn">from</span> <span class="nn">cleanlab.internal.numerics</span> <span class="kn">import</span> <span class="n">softmax</span>
 <span class="kn">from</span> <span class="nn">cleanlab.internal.outlier</span> <span class="kn">import</span> <span class="n">transform_distances_to_scores</span>
 <span class="kn">from</span> <span class="nn">cleanlab.internal.validation</span> <span class="kn">import</span> <span class="n">assert_valid_inputs</span><span class="p">,</span> <span class="n">labels_to_array</span>
 <span class="kn">from</span> <span class="nn">cleanlab.typing</span> <span class="kn">import</span> <span class="n">LabelLike</span>
@@ -593,24 +594,27 @@
 <span class="sd">             If False, you do not have to pass in `labels` later to fit this OOD estimator.</span>
 <span class="sd">             See `Northcutt et al., 2021 &lt;https://jair.org/index.php/jair/article/view/12125&gt;`_.</span>
 <span class="sd">       *  method : {&quot;entropy&quot;, &quot;least_confidence&quot;}, default=&quot;entropy&quot;</span>
-<span class="sd">             OOD scoring method.</span>
+<span class="sd">             Method to use when computing outlier scores based on `pred_probs`.</span>
 <span class="sd">             Letting length-K vector ``P = pred_probs[i]`` denote the given predicted class-probabilities</span>
-<span class="sd">             for the i-th particular example, its OOD score can either be:</span>
+<span class="sd">             for the i-th example in dataset, its outlier score can either be:</span>
 
 <span class="sd">             - ``&#39;entropy&#39;``: ``1 - sum_{j} P[j] * log(P[j]) / log(K)``</span>
-<span class="sd">             - ``&#39;least_confidence&#39;``: ``max(P)``</span>
+<span class="sd">             - ``&#39;least_confidence&#39;``: ``max(P)`` (equivalent to Maximum Softmax Probability method from the OOD detection literature)</span>
+<span class="sd">             - ``gen``: Generalized ENtropy score from the paper of Liu, Lochman, and Zach (https://openaccess.thecvf.com/content/CVPR2023/papers/Liu_GEN_Pushing_the_Limits_of_Softmax-Based_Out-of-Distribution_Detection_CVPR_2023_paper.pdf)</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">OUTLIER_PARAMS</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;k&quot;</span><span class="p">,</span> <span class="s2">&quot;t&quot;</span><span class="p">,</span> <span class="s2">&quot;knn&quot;</span><span class="p">}</span>
-    <span class="n">OOD_PARAMS</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;confident_thresholds&quot;</span><span class="p">,</span> <span class="s2">&quot;adjust_pred_probs&quot;</span><span class="p">,</span> <span class="s2">&quot;method&quot;</span><span class="p">}</span>
-    <span class="n">DEFAULT_PARAM_DICT</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]]</span> <span class="o">=</span> <span class="p">{</span>
-        <span class="s2">&quot;k&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>  <span class="c1"># ood features param</span>
-        <span class="s2">&quot;t&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>  <span class="c1"># ood features param</span>
-        <span class="s2">&quot;knn&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>  <span class="c1"># ood features param</span>
-        <span class="s2">&quot;adjust_pred_probs&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>  <span class="c1"># ood pred_probs param</span>
-        <span class="s2">&quot;method&quot;</span><span class="p">:</span> <span class="s2">&quot;entropy&quot;</span><span class="p">,</span>  <span class="c1"># ood pred_probs param</span>
-        <span class="s2">&quot;confident_thresholds&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>  <span class="c1"># ood pred_probs param</span>
+    <span class="n">OOD_PARAMS</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;confident_thresholds&quot;</span><span class="p">,</span> <span class="s2">&quot;adjust_pred_probs&quot;</span><span class="p">,</span> <span class="s2">&quot;method&quot;</span><span class="p">,</span> <span class="s2">&quot;M&quot;</span><span class="p">,</span> <span class="s2">&quot;gamma&quot;</span><span class="p">}</span>
+    <span class="n">DEFAULT_PARAM_DICT</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]]</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;k&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>  <span class="c1"># param for feature based outlier detection (number of neighbors)</span>
+        <span class="s2">&quot;t&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>  <span class="c1"># param for feature based outlier detection (controls transformation of outlier scores to 0-1 range)</span>
+        <span class="s2">&quot;knn&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>  <span class="c1"># param for features based outlier detection (precomputed nearest neighbors graph to use)</span>
+        <span class="s2">&quot;method&quot;</span><span class="p">:</span> <span class="s2">&quot;entropy&quot;</span><span class="p">,</span>  <span class="c1"># param specifying which pred_probs-based outlier detection method to use</span>
+        <span class="s2">&quot;adjust_pred_probs&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>  <span class="c1"># param for pred_probs based outlier detection (whether to adjust the probabilities by class thresholds or not)</span>
+        <span class="s2">&quot;confident_thresholds&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>  <span class="c1"># param for pred_probs based outlier detection (precomputed confident thresholds to use for adjustment)</span>
+        <span class="s2">&quot;M&quot;</span><span class="p">:</span> <span class="mi">100</span><span class="p">,</span>  <span class="c1"># param for GEN method for pred_probs based outlier detection</span>
+        <span class="s2">&quot;gamma&quot;</span><span class="p">:</span> <span class="mf">0.1</span><span class="p">,</span>  <span class="c1"># param for GEN method for pred_probs based outlier detection</span>
     <span class="p">}</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">params</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">dict</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
@@ -618,6 +622,11 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">params</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">DEFAULT_PARAM_DICT</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
         <span class="k">if</span> <span class="n">params</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">params</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s2">&quot;adjust_pred_probs&quot;</span><span class="p">]</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s2">&quot;method&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;gen&quot;</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span>
+                <span class="s2">&quot;CAUTION: GEN method is not recommended for use with adjusted pred_probs. &quot;</span>
+                <span class="s2">&quot;To use GEN, we recommend setting: params[&#39;adjust_pred_probs&#39;] = False&quot;</span>
+            <span class="p">)</span>
 
 <div class="viewcode-block" id="OutOfDistribution.fit_score"><a class="viewcode-back" href="../../cleanlab/outlier.html#cleanlab.outlier.OutOfDistribution.fit_score">[docs]</a>    <span class="k">def</span> <span class="nf">fit_score</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
@@ -961,6 +970,8 @@
     <span class="n">confident_thresholds</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">adjust_pred_probs</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
     <span class="n">method</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;entropy&quot;</span><span class="p">,</span>
+    <span class="n">M</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">100</span><span class="p">,</span>
+    <span class="n">gamma</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.1</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">Optional</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Return an OOD (out of distribution) score for each example based on it pred_prob values.</span>
 
@@ -980,9 +991,15 @@
 <span class="sd">      Account for class imbalance in the label-quality scoring.</span>
 <span class="sd">      For details, see key `adjust_pred_probs` in the params dict arg of `~cleanlab.outlier.OutOfDistribution`.</span>
 
-<span class="sd">    method : {&quot;entropy&quot;, &quot;least_confidence&quot;}, default=&quot;entropy&quot;</span>
-<span class="sd">      OOD scoring method.</span>
+<span class="sd">    method : {&quot;entropy&quot;, &quot;least_confidence&quot;, &quot;gen&quot;}, default=&quot;entropy&quot;</span>
+<span class="sd">      Which method to use for computing outlier scores based on pred_probs.</span>
 <span class="sd">      For details see key `method` in the params dict arg of `~cleanlab.outlier.OutOfDistribution`.</span>
+
+<span class="sd">    M : int, default=100</span>
+<span class="sd">      For GEN method only. Hyperparameter that controls the number of top classes to consider when calculating OOD scores.</span>
+
+<span class="sd">    gamma : float, default=0.1</span>
+<span class="sd">      For GEN method only. Hyperparameter that controls the weight of the second term in the GEN score.</span>
 
 
 <span class="sd">    Returns</span>
@@ -993,6 +1010,7 @@
     <span class="n">valid_methods</span> <span class="o">=</span> <span class="p">(</span>
         <span class="s2">&quot;entropy&quot;</span><span class="p">,</span>
         <span class="s2">&quot;least_confidence&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;gen&quot;</span><span class="p">,</span>
     <span class="p">)</span>
 
     <span class="k">if</span> <span class="p">(</span><span class="n">confident_thresholds</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">labels</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">adjust_pred_probs</span><span class="p">:</span>
@@ -1023,6 +1041,17 @@
         <span class="n">ood_predictions_scores</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="o">-</span> <span class="n">get_normalized_entropy</span><span class="p">(</span><span class="n">pred_probs</span><span class="p">)</span>
     <span class="k">elif</span> <span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;least_confidence&quot;</span><span class="p">:</span>
         <span class="n">ood_predictions_scores</span> <span class="o">=</span> <span class="n">pred_probs</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;gen&quot;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">pred_probs</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">M</span><span class="p">:</span>  <span class="c1"># pragma: no cover</span>
+            <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;GEN with the default hyperparameter settings is intended for datasets with at least </span><span class="si">{</span><span class="n">M</span><span class="si">}</span><span class="s2"> classes. You can adjust params[&#39;M&#39;] according to the number of classes in your dataset.&quot;</span><span class="p">,</span>
+                <span class="ne">UserWarning</span><span class="p">,</span>
+            <span class="p">)</span>
+        <span class="n">probs</span> <span class="o">=</span> <span class="n">softmax</span><span class="p">(</span><span class="n">pred_probs</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">probs_sorted</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">probs</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)[:,</span> <span class="o">-</span><span class="n">M</span><span class="p">:]</span>
+        <span class="n">ood_predictions_scores</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="mi">1</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">probs_sorted</span><span class="o">**</span><span class="n">gamma</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">probs_sorted</span><span class="p">)</span> <span class="o">**</span> <span class="p">(</span><span class="n">gamma</span><span class="p">),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span> <span class="o">/</span> <span class="n">M</span>
+        <span class="p">)</span>  <span class="c1"># Use 1 + original gen score/M to make the scores lie in 0-1</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
             <span class="sa">f</span><span class="s2">&quot;&quot;&quot;</span>

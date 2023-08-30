@@ -584,12 +584,13 @@ See <a class="reference external" href="https://jair.org/index.php/jair/article/
 </dl>
 </li>
 <li><dl class="simple">
-<dt>method<span class="classifier">{“entropy”, “least_confidence”}, default=”entropy”</span></dt><dd><p>OOD scoring method.
+<dt>method<span class="classifier">{“entropy”, “least_confidence”}, default=”entropy”</span></dt><dd><p>Method to use when computing outlier scores based on <code class="xref py py-obj docutils literal notranslate"><span class="pre">pred_probs</span></code>.
 Letting length-K vector <code class="docutils literal notranslate"><span class="pre">P</span> <span class="pre">=</span> <span class="pre">pred_probs[i]</span></code> denote the given predicted class-probabilities
-for the i-th particular example, its OOD score can either be:</p>
+for the i-th example in dataset, its outlier score can either be:</p>
 <ul>
 <li><p><code class="docutils literal notranslate"><span class="pre">'entropy'</span></code>: <code class="docutils literal notranslate"><span class="pre">1</span> <span class="pre">-</span> <span class="pre">sum_{j}</span> <span class="pre">P[j]</span> <span class="pre">*</span> <span class="pre">log(P[j])</span> <span class="pre">/</span> <span class="pre">log(K)</span></code></p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">'least_confidence'</span></code>: <code class="docutils literal notranslate"><span class="pre">max(P)</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">'least_confidence'</span></code>: <code class="docutils literal notranslate"><span class="pre">max(P)</span></code> (equivalent to Maximum Softmax Probability method from the OOD detection literature)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">gen</span></code>: Generalized ENtropy score from the paper of Liu, Lochman, and Zach (<a class="reference external" href="https://openaccess.thecvf.com/content/CVPR2023/papers/Liu_GEN_Pushing_the_Limits_of_Softmax-Based_Out-of-Distribution_Detection_CVPR_2023_paper.pdf">https://openaccess.thecvf.com/content/CVPR2023/papers/Liu_GEN_Pushing_the_Limits_of_Softmax-Based_Out-of-Distribution_Detection_CVPR_2023_paper.pdf</a>)</p></li>
 </ul>
 </dd>
 </dl>
