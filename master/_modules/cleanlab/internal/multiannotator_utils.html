@@ -533,6 +533,7 @@
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 <span class="kn">from</span> <span class="nn">cleanlab.internal.validation</span> <span class="kn">import</span> <span class="n">assert_valid_class_labels</span>
+<span class="kn">from</span> <span class="nn">cleanlab.internal.numerics</span> <span class="kn">import</span> <span class="n">softmax</span>
 <span class="kn">from</span> <span class="nn">cleanlab.internal.util</span> <span class="kn">import</span> <span class="n">get_num_classes</span><span class="p">,</span> <span class="n">value_counts</span>
 
 <span class="n">SMALL_CONST</span> <span class="o">=</span> <span class="mf">1e-30</span>
@@ -807,18 +808,32 @@
 <span class="sd">    and model pred_probs&quot;&quot;&quot;</span>
 
     <span class="n">soft_cross_entropy_coarse</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">full</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">coarse_search_range</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">NaN</span><span class="p">)</span>
+    <span class="n">log_pred_probs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span>
+        <span class="n">pred_probs</span><span class="p">,</span> <span class="n">where</span><span class="o">=</span><span class="n">pred_probs</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">,</span> <span class="n">out</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">full</span><span class="p">(</span><span class="n">pred_probs</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">inf</span><span class="p">)</span>
+    <span class="p">)</span>
     <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">curr_temp</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">coarse_search_range</span><span class="p">):</span>
-        <span class="c1"># clip pred_probs to prevent taking log of 0</span>
-        <span class="n">pred_probs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">clip</span><span class="p">(</span><span class="n">pred_probs</span><span class="p">,</span> <span class="n">a_min</span><span class="o">=</span><span class="n">SMALL_CONST</span><span class="p">,</span> <span class="n">a_max</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
-        <span class="n">pred_probs</span> <span class="o">=</span> <span class="n">pred_probs</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">pred_probs</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)[:,</span> <span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">]</span>
-
-        <span class="n">log_pred_probs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">pred_probs</span><span class="p">)</span> <span class="o">/</span> <span class="n">curr_temp</span>
-        <span class="n">scaled_pred_probs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">log_pred_probs</span><span class="p">)</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">log_pred_probs</span><span class="p">))</span>  <span class="c1"># softmax</span>
+        <span class="n">scaled_pred_probs</span> <span class="o">=</span> <span class="n">softmax</span><span class="p">(</span><span class="n">log_pred_probs</span><span class="p">,</span> <span class="n">temperature</span><span class="o">=</span><span class="n">curr_temp</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">shift</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
         <span class="n">soft_cross_entropy_coarse</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span>
             <span class="n">compute_soft_cross_entropy</span><span class="p">(</span><span class="n">labels_multiannotator</span><span class="p">,</span> <span class="n">scaled_pred_probs</span><span class="p">)</span>
         <span class="p">)</span>
 
     <span class="n">min_entropy_ind</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argmin</span><span class="p">(</span><span class="n">soft_cross_entropy_coarse</span><span class="p">)</span>
+    <span class="n">fine_search_range</span> <span class="o">=</span> <span class="n">_set_fine_search_range</span><span class="p">(</span>
+        <span class="n">coarse_search_range</span><span class="p">,</span> <span class="n">fine_search_size</span><span class="p">,</span> <span class="n">min_entropy_ind</span>
+    <span class="p">)</span>
+    <span class="n">soft_cross_entropy_fine</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">full</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">fine_search_range</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">NaN</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">curr_temp</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">fine_search_range</span><span class="p">):</span>
+        <span class="n">scaled_pred_probs</span> <span class="o">=</span> <span class="n">softmax</span><span class="p">(</span><span class="n">log_pred_probs</span><span class="p">,</span> <span class="n">temperature</span><span class="o">=</span><span class="n">curr_temp</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">shift</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        <span class="n">soft_cross_entropy_fine</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span>
+            <span class="n">compute_soft_cross_entropy</span><span class="p">(</span><span class="n">labels_multiannotator</span><span class="p">,</span> <span class="n">scaled_pred_probs</span><span class="p">)</span>
+        <span class="p">)</span>
+    <span class="n">best_temp</span> <span class="o">=</span> <span class="n">fine_search_range</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">argmin</span><span class="p">(</span><span class="n">soft_cross_entropy_fine</span><span class="p">)]</span>
+    <span class="k">return</span> <span class="n">best_temp</span></div>
+
+
+<span class="k">def</span> <span class="nf">_set_fine_search_range</span><span class="p">(</span>
+    <span class="n">coarse_search_range</span><span class="p">:</span> <span class="nb">list</span><span class="p">,</span> <span class="n">fine_search_size</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">min_entropy_ind</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">intp</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
     <span class="n">fine_search_range</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([])</span>
     <span class="k">if</span> <span class="n">min_entropy_ind</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
         <span class="n">fine_search_range</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
@@ -840,15 +855,7 @@
                 <span class="n">endpoint</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
             <span class="p">),</span>
         <span class="p">)</span>
-    <span class="n">soft_cross_entropy_fine</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">full</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">fine_search_range</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">NaN</span><span class="p">)</span>
-    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">curr_temp</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">fine_search_range</span><span class="p">):</span>
-        <span class="n">log_pred_probs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">pred_probs</span><span class="p">)</span> <span class="o">/</span> <span class="n">curr_temp</span>
-        <span class="n">scaled_pred_probs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">log_pred_probs</span><span class="p">)</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">log_pred_probs</span><span class="p">))</span>  <span class="c1"># softmax</span>
-        <span class="n">soft_cross_entropy_fine</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span>
-            <span class="n">compute_soft_cross_entropy</span><span class="p">(</span><span class="n">labels_multiannotator</span><span class="p">,</span> <span class="n">scaled_pred_probs</span><span class="p">)</span>
-        <span class="p">)</span>
-    <span class="n">best_temp</span> <span class="o">=</span> <span class="n">fine_search_range</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">argmin</span><span class="p">(</span><span class="n">soft_cross_entropy_fine</span><span class="p">)]</span>
-    <span class="k">return</span> <span class="n">best_temp</span></div>
+    <span class="k">return</span> <span class="n">fine_search_range</span>
 
 
 <div class="viewcode-block" id="temp_scale_pred_probs"><a class="viewcode-back" href="../../../cleanlab/internal/multiannotator_utils.html#cleanlab.internal.multiannotator_utils.temp_scale_pred_probs">[docs]</a><span class="k">def</span> <span class="nf">temp_scale_pred_probs</span><span class="p">(</span>
@@ -861,8 +868,7 @@
     <span class="n">pred_probs</span> <span class="o">=</span> <span class="n">pred_probs</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">pred_probs</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)[:,</span> <span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">]</span>
 
     <span class="c1"># apply temperate scale</span>
-    <span class="n">log_pred_probs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">pred_probs</span><span class="p">)</span> <span class="o">/</span> <span class="n">temp</span>
-    <span class="n">scaled_pred_probs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">log_pred_probs</span><span class="p">)</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">log_pred_probs</span><span class="p">))</span>  <span class="c1"># softmax</span>
+    <span class="n">scaled_pred_probs</span> <span class="o">=</span> <span class="n">softmax</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">pred_probs</span><span class="p">),</span> <span class="n">temperature</span><span class="o">=</span><span class="n">temp</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">shift</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
     <span class="n">scaled_pred_probs</span> <span class="o">=</span> <span class="p">(</span>
         <span class="n">scaled_pred_probs</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">scaled_pred_probs</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)[:,</span> <span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">]</span>
     <span class="p">)</span>  <span class="c1"># normalize</span>
