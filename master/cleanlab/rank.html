@@ -581,12 +581,16 @@ for datapoint <em>i</em>, its score can either be:</p>
 <li><p><code class="docutils literal notranslate"><span class="pre">'self_confidence'</span></code>: <code class="docutils literal notranslate"><span class="pre">P[k]</span></code></p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">'confidence_weighted_entropy'</span></code>: <code class="docutils literal notranslate"><span class="pre">entropy(P)</span> <span class="pre">/</span> <span class="pre">self_confidence</span></code></p></li>
 </ul>
-<p>Let <code class="docutils literal notranslate"><span class="pre">C</span> <span class="pre">=</span> <span class="pre">{0,</span> <span class="pre">1,</span> <span class="pre">...,</span> <span class="pre">K-1}</span></code> denote the specified set of classes for our classification task.</p>
-<p>The normalized_margin score works better for identifying class conditional label errors,
-i.e. examples for which another label in C is appropriate but the given label is not.</p>
-<p>The self_confidence score works better for identifying alternative label issues corresponding
-to bad examples that are: not from any of the classes in C, well-described by 2 or more labels in C,
-or generally just out-of-distribution (ie. anomalous outliers).</p>
+<p>Note: the actual label quality scores returned by this method
+may be transformed versions of the above, in order to ensure
+their values lie between 0-1 with lower values indicating more likely mislabeled data.</p>
+<p>Let <code class="docutils literal notranslate"><span class="pre">C</span> <span class="pre">=</span> <span class="pre">{0,</span> <span class="pre">1,</span> <span class="pre">...,</span> <span class="pre">K-1}</span></code> be the set of classes specified for our classification task.</p>
+<p>The <code class="xref py py-obj docutils literal notranslate"><span class="pre">normalized_margin</span></code> score works better for identifying class conditional label errors,
+i.e. examples for which another label in <code class="docutils literal notranslate"><span class="pre">C</span></code> is appropriate but the given label is not.</p>
+<p>The <code class="xref py py-obj docutils literal notranslate"><span class="pre">self_confidence</span></code> score works better for identifying alternative label issues
+corresponding to bad examples that are: not from any of the classes in <code class="docutils literal notranslate"><span class="pre">C</span></code>,
+well-described by 2 or more labels in <code class="docutils literal notranslate"><span class="pre">C</span></code>,
+or generally just out-of-distribution (i.e. anomalous outliers).</p>
 </p></li>
 <li><p><strong>adjust_pred_probs</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code>, <em>optional</em>) – Account for class imbalance in the label-quality scoring by adjusting predicted probabilities
 via subtraction of class confident thresholds and renormalization.
@@ -748,13 +752,15 @@ Lower scores indicate more likely mislabeled examples.</p>
 <dd><p>Returns the “normalized margin” label-quality score for each datapoint.</p>
 <p>This is a function to compute label-quality scores for classification datasets,
 where lower scores indicate labels less likely to be correct.</p>
-<p>Letting k denote the given label for a datapoint, the normalized margin is
+<p>Letting <code class="docutils literal notranslate"><span class="pre">k</span></code> denote the given label for a datapoint, the margin is
 <code class="docutils literal notranslate"><span class="pre">(p(label</span> <span class="pre">=</span> <span class="pre">k)</span> <span class="pre">-</span> <span class="pre">max(p(label</span> <span class="pre">!=</span> <span class="pre">k)))</span></code>, i.e. the probability
 of the given label minus the probability of the argmax label that is not
-the given label (<code class="docutils literal notranslate"><span class="pre">normalized_margin</span> <span class="pre">=</span> <span class="pre">prob_label</span> <span class="pre">-</span> <span class="pre">max_prob_not_label</span></code>).
+the given label (<code class="docutils literal notranslate"><span class="pre">margin</span> <span class="pre">=</span> <span class="pre">prob_label</span> <span class="pre">-</span> <span class="pre">max_prob_not_label</span></code>).
 This gives you an idea of how likely an example is BOTH its given label AND not another label,
-and therefore, scores its likelihood of being a good label or a label error.</p>
-<p>Normalized margin works better for finding class conditional label errors where
+and therefore, scores its likelihood of being a good label or a label error.
+The normalized margin is simply a transformed version of the margin,
+to ensure values between 0-1 with lower values indicating more likely mislabeled data.</p>
+<p>Normalized margin works best for finding class conditional label errors where
 there is another label in the set of classes that is clearly better than the given label.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -779,7 +785,9 @@ Lower scores indicate more likely mislabeled examples.</p>
 <dd><p>Returns the “confidence weighted entropy” label-quality score for each datapoint.</p>
 <p>This is a function to compute label-quality scores for classification datasets,
 where lower scores indicate labels less likely to be correct.</p>
-<p>“confidence weighted entropy” is the normalized entropy divided by “self-confidence”.</p>
+<p>“confidence weighted entropy” is defined as the normalized entropy divided by “self-confidence”.
+The returned values are a transformed version of this score, in order to
+ensure values between 0-1 with lower values indicating more likely mislabeled data.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">

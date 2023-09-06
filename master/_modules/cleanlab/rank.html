@@ -602,14 +602,19 @@
 <span class="sd">      - ``&#39;self_confidence&#39;``: ``P[k]``</span>
 <span class="sd">      - ``&#39;confidence_weighted_entropy&#39;``: ``entropy(P) / self_confidence``</span>
 
-<span class="sd">      Let ``C = {0, 1, ..., K-1}`` denote the specified set of classes for our classification task.</span>
+<span class="sd">      Note: the actual label quality scores returned by this method</span>
+<span class="sd">      may be transformed versions of the above, in order to ensure</span>
+<span class="sd">      their values lie between 0-1 with lower values indicating more likely mislabeled data.</span>
 
-<span class="sd">      The normalized_margin score works better for identifying class conditional label errors,</span>
-<span class="sd">      i.e. examples for which another label in C is appropriate but the given label is not.</span>
+<span class="sd">      Let ``C = {0, 1, ..., K-1}`` be the set of classes specified for our classification task.</span>
 
-<span class="sd">      The self_confidence score works better for identifying alternative label issues corresponding</span>
-<span class="sd">      to bad examples that are: not from any of the classes in C, well-described by 2 or more labels in C,</span>
-<span class="sd">      or generally just out-of-distribution (ie. anomalous outliers).</span>
+<span class="sd">      The `normalized_margin` score works better for identifying class conditional label errors,</span>
+<span class="sd">      i.e. examples for which another label in ``C`` is appropriate but the given label is not.</span>
+
+<span class="sd">      The `self_confidence` score works better for identifying alternative label issues</span>
+<span class="sd">      corresponding to bad examples that are: not from any of the classes in ``C``,</span>
+<span class="sd">      well-described by 2 or more labels in ``C``,</span>
+<span class="sd">      or generally just out-of-distribution (i.e. anomalous outliers).</span>
 
 <span class="sd">    adjust_pred_probs : bool, optional</span>
 <span class="sd">      Account for class imbalance in the label-quality scoring by adjusting predicted probabilities</span>
@@ -1027,14 +1032,16 @@
 <span class="sd">    This is a function to compute label-quality scores for classification datasets,</span>
 <span class="sd">    where lower scores indicate labels less likely to be correct.</span>
 
-<span class="sd">    Letting k denote the given label for a datapoint, the normalized margin is</span>
+<span class="sd">    Letting ``k`` denote the given label for a datapoint, the margin is</span>
 <span class="sd">    ``(p(label = k) - max(p(label != k)))``, i.e. the probability</span>
 <span class="sd">    of the given label minus the probability of the argmax label that is not</span>
-<span class="sd">    the given label (``normalized_margin = prob_label - max_prob_not_label``).</span>
+<span class="sd">    the given label (``margin = prob_label - max_prob_not_label``).</span>
 <span class="sd">    This gives you an idea of how likely an example is BOTH its given label AND not another label,</span>
 <span class="sd">    and therefore, scores its likelihood of being a good label or a label error.</span>
+<span class="sd">    The normalized margin is simply a transformed version of the margin,</span>
+<span class="sd">    to ensure values between 0-1 with lower values indicating more likely mislabeled data.</span>
 
-<span class="sd">    Normalized margin works better for finding class conditional label errors where</span>
+<span class="sd">    Normalized margin works best for finding class conditional label errors where</span>
 <span class="sd">    there is another label in the set of classes that is clearly better than the given label.</span>
 
 <span class="sd">    Parameters</span>
@@ -1068,7 +1075,9 @@
 <span class="sd">    This is a function to compute label-quality scores for classification datasets,</span>
 <span class="sd">    where lower scores indicate labels less likely to be correct.</span>
 
-<span class="sd">    &quot;confidence weighted entropy&quot; is the normalized entropy divided by &quot;self-confidence&quot;.</span>
+<span class="sd">    &quot;confidence weighted entropy&quot; is defined as the normalized entropy divided by &quot;self-confidence&quot;.</span>
+<span class="sd">    The returned values are a transformed version of this score, in order to</span>
+<span class="sd">    ensure values between 0-1 with lower values indicating more likely mislabeled data.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
