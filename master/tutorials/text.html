@@ -16,7 +16,7 @@
     <link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="Classification with Tabular Data using Scikit-Learn and Cleanlab" href="tabular.html" /><link rel="prev" title="Image Classification with PyTorch and Cleanlab" href="image.html" />
 
     <link rel="shortcut icon" href="https://raw.githubusercontent.com/cleanlab/assets/a4483476d449f2f05a4c7cde329e72358099cc07/cleanlab/cleanlab_favicon.svg"/><meta name="generator" content="sphinx-5.1.1, furo 2022.06.21"/>
-        <title>Text Classification with TensorFlow, Keras, and Cleanlab - cleanlab</title>
+        <title>Text Classification with Noisy Labels - cleanlab</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?digest=40978830699223671f4072448e654b5958f38b89" />
     <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
@@ -187,24 +187,24 @@
 <ul class="current">
 <li class="toctree-l1 has-children"><a class="reference internal" href="datalab/index.html">Datalab Tutorials</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="datalab/datalab_quickstart.html">Detecting Common Data Issues with Datalab</a></li>
-<li class="toctree-l2"><a class="reference internal" href="datalab/datalab_advanced.html">Perform Advanced Data Auditing with Datalab</a></li>
-<li class="toctree-l2"><a class="reference internal" href="datalab/text.html">Text Classification</a></li>
-<li class="toctree-l2"><a class="reference internal" href="datalab/tabular.html">Tabular Classification</a></li>
+<li class="toctree-l2"><a class="reference internal" href="datalab/datalab_advanced.html">Advanced Data Auditing with Datalab</a></li>
+<li class="toctree-l2"><a class="reference internal" href="datalab/text.html">Text Dataset</a></li>
+<li class="toctree-l2"><a class="reference internal" href="datalab/tabular.html">Tabular Data (Numeric/Categorical)</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="indepth_overview.html">Workflows of Data-Centric AI</a></li>
-<li class="toctree-l1"><a class="reference internal" href="image.html">Image Classification (pytorch)</a></li>
-<li class="toctree-l1 current current-page"><a class="current reference internal" href="#">Text Classification (transformers)</a></li>
-<li class="toctree-l1"><a class="reference internal" href="tabular.html">Tabular Classification (sklearn)</a></li>
-<li class="toctree-l1"><a class="reference internal" href="audio.html">Audio Classification (speechbrain)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="image.html">Image Classification</a></li>
+<li class="toctree-l1 current current-page"><a class="current reference internal" href="#">Text Classification</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tabular.html">Tabular Classification</a></li>
+<li class="toctree-l1"><a class="reference internal" href="audio.html">Audio Classification</a></li>
 <li class="toctree-l1"><a class="reference internal" href="dataset_health.html">Find Dataset-level Issues</a></li>
-<li class="toctree-l1"><a class="reference internal" href="outliers.html">Identifying Outliers (pytorch)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="outliers.html">Identifying Outliers</a></li>
 <li class="toctree-l1"><a class="reference internal" href="multiannotator.html">Improving Consensus Labels for Multiannotator Data</a></li>
 <li class="toctree-l1"><a class="reference internal" href="multilabel_classification.html">Multi-Label Classification</a></li>
 <li class="toctree-l1"><a class="reference internal" href="regression.html">Noisy Labels in Regression</a></li>
 <li class="toctree-l1"><a class="reference internal" href="token_classification.html">Token Classification (text)</a></li>
-<li class="toctree-l1"><a class="reference internal" href="segmentation.html">Semantic Segmentation (pytorch)</a></li>
-<li class="toctree-l1"><a class="reference internal" href="object_detection.html">Object Detection (detectron2)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="segmentation.html">Image Segmentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="object_detection.html">Object Detection</a></li>
 <li class="toctree-l1"><a class="reference internal" href="pred_probs_cross_val.html">Predicted Probabilities via Cross Validation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="faq.html">FAQ</a></li>
 </ul>
@@ -302,8 +302,12 @@
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Guides</span></p>
 <ul>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../cleanlab/datalab/guide/index.html">Datalab issue types</a><input class="toctree-checkbox" id="toctree-checkbox-15" name="toctree-checkbox-15" role="switch" type="checkbox"/><label for="toctree-checkbox-15"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../cleanlab/datalab/guide/issue_type_description.html">Datalab Issue Types</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../cleanlab/datalab/guide/custom_issue_manager.html">Creating Your Own Issues Manager</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference external" href="https://github.com/cleanlab/cleanlab/blob/master/CONTRIBUTING.md">How to contribute</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../migrating/migrate_v2.html">Migrating to v2.x</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Links</span></p>
 <ul>
@@ -788,20 +792,19 @@ div.rendered_html tbody tr:hover {
         `);
     })
 
-</script><section id="Text-Classification-with-TensorFlow,-Keras,-and-Cleanlab">
-<h1>Text Classification with TensorFlow, Keras, and Cleanlab<a class="headerlink" href="#Text-Classification-with-TensorFlow,-Keras,-and-Cleanlab" title="Permalink to this heading">#</a></h1>
+</script><section id="Text-Classification-with-Noisy-Labels">
+<h1>Text Classification with Noisy Labels<a class="headerlink" href="#Text-Classification-with-Noisy-Labels" title="Permalink to this heading">#</a></h1>
 <div class="admonition note">
 <p class="admonition-title">Consider Using Datalab</p>
-<p>If you are just interested in detecting a wide variety of issues in these datasets, check out the <a class="reference external" href="https://docs.cleanlab.ai/stable/tutorials/datalab/text.html">Datalab version of this text tutorial</a>.</p>
+<p>If you are interested in detecting a wide variety of issues in your text dataset, check out the <a class="reference external" href="https://docs.cleanlab.ai/stable/tutorials/datalab/text.html">Datalab text tutorial</a>.</p>
 </div>
 <p>In this 5-minute quickstart tutorial, we use cleanlab to find potential label errors in an intent classification dataset composed of (text) customer service requests at an online bank. We consider a subset of the <a class="reference external" href="https://arxiv.org/abs/2106.04564">Banking77-OOS Dataset</a> containing 1,000 customer service requests which can be classified into 10 categories corresponding to the intent of the request. cleanlab will shortlist examples that confuse our ML model the most; many of which are potential
-label errors, out-of-scope examples, or otherwise ambiguous examples.</p>
+label errors, out-of-scope examples, or otherwise ambiguous examples. The <code class="docutils literal notranslate"><span class="pre">CleanLearning</span></code> class allows us to detect and filter out such bad data automatically, in order to train a more robust version of any ML model without having to change your existing modeling code!</p>
 <p><strong>Overview of what we’ll do in this tutorial:</strong></p>
 <ul class="simple">
-<li><p>Use a pretrained transformer model to extract the text embeddings from the customer service requests.</p></li>
-<li><p>Train a simple Logistic Regression model on the text embeddings to compute out-of-sample predicted probabilities.</p></li>
-<li><p>Use <code class="docutils literal notranslate"><span class="pre">CleanLearning</span></code> to automatically compute out-of-sample preddicted probabilites and identify potential label errors with the <code class="docutils literal notranslate"><span class="pre">find_label_issues</span></code> method.</p></li>
-<li><p>Train a more robust version of the same model after dropping the identified label errors using <code class="docutils literal notranslate"><span class="pre">CleanLearning</span></code>.</p></li>
+<li><p>Define a ML model that can be trained on our dataset (here we use Logistic Regression applied to text embeddings from a pretrained Transformer network, you can use any text classifier model).</p></li>
+<li><p>Use <code class="docutils literal notranslate"><span class="pre">CleanLearning</span></code> to wrap this ML model and compute out-of-sample predicted class probabilites, which allow us to identify potential label errors in the dataset.</p></li>
+<li><p>Train a more robust version of the same ML model after dropping the detected label errors using <code class="docutils literal notranslate"><span class="pre">CleanLearning</span></code>.</p></li>
 </ul>
 <div class="admonition note">
 <p class="admonition-title">Quickstart</p>
@@ -951,7 +954,7 @@ label errors, out-of-scope examples, or otherwise ambiguous examples.</p>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
 This dataset has 10 classes.
-Classes: {&#39;lost_or_stolen_phone&#39;, &#39;cancel_transfer&#39;, &#39;supported_cards_and_currencies&#39;, &#39;card_payment_fee_charged&#39;, &#39;beneficiary_not_allowed&#39;, &#39;getting_spare_card&#39;, &#39;change_pin&#39;, &#39;card_about_to_expire&#39;, &#39;visa_or_mastercard&#39;, &#39;apple_pay_or_google_pay&#39;}
+Classes: {&#39;card_about_to_expire&#39;, &#39;card_payment_fee_charged&#39;, &#39;cancel_transfer&#39;, &#39;lost_or_stolen_phone&#39;, &#39;visa_or_mastercard&#39;, &#39;beneficiary_not_allowed&#39;, &#39;getting_spare_card&#39;, &#39;supported_cards_and_currencies&#39;, &#39;change_pin&#39;, &#39;apple_pay_or_google_pay&#39;}
 </pre></div></div>
 </div>
 <p>Let’s print the first example in the train set.</p>
@@ -1016,7 +1019,7 @@ Example Text: can i have another card in addition to my first one?
 <div class="output_area stderr docutils container">
 <div class="highlight"><pre>
 No sentence-transformers model found with name /home/runner/.cache/torch/sentence_transformers/google_electra-small-discriminator. Creating a new one with MEAN pooling.
-Some weights of the model checkpoint at /home/runner/.cache/torch/sentence_transformers/google_electra-small-discriminator were not used when initializing ElectraModel: [&#39;discriminator_predictions.dense_prediction.bias&#39;, &#39;discriminator_predictions.dense.weight&#39;, &#39;discriminator_predictions.dense.bias&#39;, &#39;discriminator_predictions.dense_prediction.weight&#39;]
+Some weights of the model checkpoint at /home/runner/.cache/torch/sentence_transformers/google_electra-small-discriminator were not used when initializing ElectraModel: [&#39;discriminator_predictions.dense_prediction.bias&#39;, &#39;discriminator_predictions.dense.bias&#39;, &#39;discriminator_predictions.dense_prediction.weight&#39;, &#39;discriminator_predictions.dense.weight&#39;]
 - This IS expected if you are initializing ElectraModel from the checkpoint of a model trained on another task or with another architecture (e.g. initializing a BertForSequenceClassification model from a BertForPreTraining model).
 - This IS NOT expected if you are initializing ElectraModel from the checkpoint of a model that you expect to be exactly identical (initializing a BertForSequenceClassification model from a BertForSequenceClassification model).
 </pre></div></div>
@@ -1385,7 +1388,7 @@ model during deployment.</p>
         <div class="toc-tree-container">
           <div class="toc-tree">
             <ul>
-<li><a class="reference internal" href="#">Text Classification with TensorFlow, Keras, and Cleanlab</a><ul>
+<li><a class="reference internal" href="#">Text Classification with Noisy Labels</a><ul>
 <li><a class="reference internal" href="#1.-Install-required-dependencies">1. Install required dependencies</a></li>
 <li><a class="reference internal" href="#2.-Load-and-format-the-text-dataset">2. Load and format the text dataset</a></li>
 <li><a class="reference internal" href="#3.-Define-a-classification-model-and-use-cleanlab-to-find-potential-label-errors">3. Define a classification model and use cleanlab to find potential label errors</a></li>
