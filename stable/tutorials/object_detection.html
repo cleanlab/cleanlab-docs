@@ -1,0 +1,1593 @@
+<!doctype html>
+<html class="no-js" lang="en">
+  <head><meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width,initial-scale=1"/>
+    <meta name="color-scheme" content="light dark"><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+        <script async src="https://www.googletagmanager.com/gtag/js?id=G-EV8RVEFX82"></script>
+        <script>
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            
+            gtag('config', 'G-EV8RVEFX82');
+            
+        </script>
+    <link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="Computing Out-of-Sample Predicted Probabilities with Cross-Validation" href="pred_probs_cross_val.html" /><link rel="prev" title="Find Label Errors in Semantic Segmentation Datasets" href="segmentation.html" />
+
+    <link rel="shortcut icon" href="https://raw.githubusercontent.com/cleanlab/assets/a4483476d449f2f05a4c7cde329e72358099cc07/cleanlab/cleanlab_favicon.svg"/><meta name="generator" content="sphinx-5.1.1, furo 2022.06.21"/>
+        <title>Finding Label Errors in Object Detection Datasets - cleanlab</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?digest=40978830699223671f4072448e654b5958f38b89" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/tabs.css" />
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/katex@0.13.11/dist/katex.min.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/katex-math.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?digest=30d1aed668e5c3a91c3e3bf6a60b675221979f0e" />
+    <link rel="stylesheet" type="text/css" href="../_static/css/custom.css" />
+    
+    
+
+
+<style>
+  body {
+    --color-code-background: #f8f8f8;
+  --color-code-foreground: black;
+  
+  }
+  @media not print {
+    body[data-theme="dark"] {
+      --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+    }
+    @media (prefers-color-scheme: dark) {
+      body:not([data-theme="light"]) {
+        --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+      }
+    }
+  }
+</style></head>
+  <body>
+    
+    <script>
+      document.body.dataset.theme = localStorage.getItem("theme") || "auto";
+    </script>
+    
+
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+  <symbol id="svg-toc" viewBox="0 0 24 24">
+    <title>Contents</title>
+    <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 1024 1024">
+      <path d="M408 442h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8zm-8 204c0 4.4 3.6 8 8 8h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56zm504-486H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zm0 632H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zM115.4 518.9L271.7 642c5.8 4.6 14.4.5 14.4-6.9V388.9c0-7.4-8.5-11.5-14.4-6.9L115.4 505.1a8.74 8.74 0 0 0 0 13.8z"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-menu" viewBox="0 0 24 24">
+    <title>Menu</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-menu">
+      <line x1="3" y1="12" x2="21" y2="12"></line>
+      <line x1="3" y1="6" x2="21" y2="6"></line>
+      <line x1="3" y1="18" x2="21" y2="18"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-arrow-right" viewBox="0 0 24 24">
+    <title>Expand</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-chevron-right">
+      <polyline points="9 18 15 12 9 6"></polyline>
+    </svg>
+  </symbol>
+  <symbol id="svg-sun" viewBox="0 0 24 24">
+    <title>Light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="feather-sun">
+      <circle cx="12" cy="12" r="5"></circle>
+      <line x1="12" y1="1" x2="12" y2="3"></line>
+      <line x1="12" y1="21" x2="12" y2="23"></line>
+      <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+      <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+      <line x1="1" y1="12" x2="3" y2="12"></line>
+      <line x1="21" y1="12" x2="23" y2="12"></line>
+      <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+      <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon" viewBox="0 0 24 24">
+    <title>Dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-moon">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454z" />
+    </svg>
+  </symbol>
+  <symbol id="svg-sun-half" viewBox="0 0 24 24">
+    <title>Auto light/dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-shadow">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+      <circle cx="12" cy="12" r="9" />
+      <path d="M13 12h5" />
+      <path d="M13 15h4" />
+      <path d="M13 18h1" />
+      <path d="M13 9h4" />
+      <path d="M13 6h1" />
+    </svg>
+  </symbol>
+</svg>
+
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation">
+<input type="checkbox" class="sidebar-toggle" name="__toc" id="__toc">
+<label class="overlay sidebar-overlay" for="__navigation">
+  <div class="visually-hidden">Hide navigation sidebar</div>
+</label>
+<label class="overlay toc-overlay" for="__toc">
+  <div class="visually-hidden">Hide table of contents sidebar</div>
+</label>
+
+
+
+<div class="page">
+  <header class="mobile-header">
+    <div class="header-left">
+      <label class="nav-overlay-icon" for="__navigation">
+        <div class="visually-hidden">Toggle site navigation sidebar</div>
+        <i class="icon"><svg><use href="#svg-menu"></use></svg></i>
+      </label>
+    </div>
+    <div class="header-center">
+      <a href="../index.html"><div class="brand">cleanlab</div></a>
+    </div>
+    <div class="header-right">
+      <div class="theme-toggle-container theme-toggle-header">
+        <button class="theme-toggle">
+          <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+          <svg class="theme-icon-when-auto"><use href="#svg-sun-half"></use></svg>
+          <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+          <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+        </button>
+      </div>
+      <label class="toc-overlay-icon toc-header-icon" for="__toc">
+        <div class="visually-hidden">Toggle table of contents sidebar</div>
+        <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+      </label>
+    </div>
+  </header>
+  <aside class="sidebar-drawer">
+    <div class="sidebar-container">
+      
+      <div class="sidebar-sticky"><a style="padding-bottom: 0px;" class="sidebar-brand centered" href="../index.html">
+    
+    <div class="sidebar-logo-container">
+        <img class="sidebar-logo" src="https://raw.githubusercontent.com/cleanlab/assets/master/cleanlab/cleanlab_logo_only.png" alt="Logo" />
+    </div>
+    
+    <span style="margin-bottom:0px" class="sidebar-brand-text">
+        cleanlab
+    </span>
+    
+</a>
+
+<div class="centered">
+    <a style="margin-top: 6px;" class="github-button" href="https://github.com/cleanlab/cleanlab" data-size="large" data-show-count="true"
+    aria-label="Star cleanlab/cleanlab on GitHub">Star</a>
+</div>
+<form class="sidebar-search-container" method="get" action="../search.html" role="search">
+  <input class="sidebar-search" placeholder=Search name="q" aria-label="Search">
+  <input type="hidden" name="check_keywords" value="yes">
+  <input type="hidden" name="area" value="default">
+</form>
+<div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
+  <ul>
+<li class="toctree-l1"><a class="reference internal" href="../index.html">Quickstart</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Tutorials</span></p>
+<ul class="current">
+<li class="toctree-l1 has-children"><a class="reference internal" href="datalab/index.html">Datalab Tutorials</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="datalab/datalab_quickstart.html">Detecting Common Data Issues with Datalab</a></li>
+<li class="toctree-l2"><a class="reference internal" href="datalab/datalab_advanced.html">Advanced Data Auditing with Datalab</a></li>
+<li class="toctree-l2"><a class="reference internal" href="datalab/text.html">Text Dataset</a></li>
+<li class="toctree-l2"><a class="reference internal" href="datalab/tabular.html">Tabular Data (Numeric/Categorical)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="indepth_overview.html">Workflows of Data-Centric AI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="image.html">Image Classification</a></li>
+<li class="toctree-l1"><a class="reference internal" href="text.html">Text Classification</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tabular.html">Tabular Classification</a></li>
+<li class="toctree-l1"><a class="reference internal" href="audio.html">Audio Classification</a></li>
+<li class="toctree-l1"><a class="reference internal" href="dataset_health.html">Find Dataset-level Issues</a></li>
+<li class="toctree-l1"><a class="reference internal" href="outliers.html">Identifying Outliers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="multiannotator.html">Improving Consensus Labels for Multiannotator Data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="multilabel_classification.html">Multi-Label Classification</a></li>
+<li class="toctree-l1"><a class="reference internal" href="regression.html">Noisy Labels in Regression</a></li>
+<li class="toctree-l1"><a class="reference internal" href="token_classification.html">Token Classification (text)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="segmentation.html">Image Segmentation</a></li>
+<li class="toctree-l1 current current-page"><a class="current reference internal" href="#">Object Detection</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pred_probs_cross_val.html">Predicted Probabilities via Cross Validation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="faq.html">FAQ</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API Reference</span></p>
+<ul>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../cleanlab/datalab/index.html">datalab</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../cleanlab/datalab/guide/index.html">Datalab guides</a><input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" role="switch" type="checkbox"/><label for="toctree-checkbox-3"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../cleanlab/datalab/guide/issue_type_description.html">Datalab Issue Types</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../cleanlab/datalab/guide/custom_issue_manager.html">Creating Your Own Issues Manager</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../cleanlab/datalab/datalab.html">datalab</a></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../cleanlab/datalab/internal/index.html">internal</a><input class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" role="switch" type="checkbox"/><label for="toctree-checkbox-4"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../cleanlab/datalab/internal/data.html">data</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../cleanlab/datalab/internal/data_issues.html">data_issues</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../cleanlab/datalab/internal/issue_finder.html">issue_finder</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../cleanlab/datalab/internal/factory.html">factory</a></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../cleanlab/datalab/internal/issue_manager/index.html">issue_manager</a><input class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" role="switch" type="checkbox"/><label for="toctree-checkbox-5"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="../cleanlab/datalab/internal/issue_manager/issue_manager.html">Base issue_manager module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../cleanlab/datalab/internal/issue_manager/label.html">label</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../cleanlab/datalab/internal/issue_manager/outlier.html">outlier</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../cleanlab/datalab/internal/issue_manager/duplicate.html">duplicate</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../cleanlab/datalab/internal/issue_manager/noniid.html">noniid</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../cleanlab/datalab/internal/issue_manager/imbalance.html">imbalance</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../cleanlab/datalab/internal/report.html">report</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../cleanlab/classification.html">classification</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cleanlab/filter.html">filter</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cleanlab/rank.html">rank</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cleanlab/count.html">count</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cleanlab/dataset.html">dataset</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cleanlab/outlier.html">outlier</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cleanlab/multiannotator.html">multiannotator</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../cleanlab/multilabel_classification/index.html">multilabel_classification</a><input class="toctree-checkbox" id="toctree-checkbox-6" name="toctree-checkbox-6" role="switch" type="checkbox"/><label for="toctree-checkbox-6"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../cleanlab/multilabel_classification/filter.html">filter</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../cleanlab/multilabel_classification/rank.html">rank</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../cleanlab/multilabel_classification/dataset.html">dataset</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../cleanlab/regression/index.html">regression</a><input class="toctree-checkbox" id="toctree-checkbox-7" name="toctree-checkbox-7" role="switch" type="checkbox"/><label for="toctree-checkbox-7"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../cleanlab/regression/rank.html">regression.rank</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../cleanlab/regression/learn.html">regression.learn</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../cleanlab/token_classification/index.html">token_classification</a><input class="toctree-checkbox" id="toctree-checkbox-8" name="toctree-checkbox-8" role="switch" type="checkbox"/><label for="toctree-checkbox-8"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../cleanlab/token_classification/filter.html">filter</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../cleanlab/token_classification/rank.html">rank</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../cleanlab/token_classification/summary.html">summary</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../cleanlab/segmentation/index.html">segmentation</a><input class="toctree-checkbox" id="toctree-checkbox-9" name="toctree-checkbox-9" role="switch" type="checkbox"/><label for="toctree-checkbox-9"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../cleanlab/segmentation/rank.html">rank</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../cleanlab/segmentation/filter.html">filter</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../cleanlab/segmentation/summary.html">summary</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../cleanlab/object_detection/index.html">object_detection</a><input class="toctree-checkbox" id="toctree-checkbox-10" name="toctree-checkbox-10" role="switch" type="checkbox"/><label for="toctree-checkbox-10"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../cleanlab/object_detection/rank.html">rank</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../cleanlab/object_detection/filter.html">filter</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../cleanlab/object_detection/summary.html">summary</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../cleanlab/benchmarking/index.html">benchmarking</a><input class="toctree-checkbox" id="toctree-checkbox-11" name="toctree-checkbox-11" role="switch" type="checkbox"/><label for="toctree-checkbox-11"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../cleanlab/benchmarking/noise_generation.html">noise_generation</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../cleanlab/models/index.html">models</a><input class="toctree-checkbox" id="toctree-checkbox-12" name="toctree-checkbox-12" role="switch" type="checkbox"/><label for="toctree-checkbox-12"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../cleanlab/models/keras.html">keras</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../cleanlab/models/fasttext.html">fasttext</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../cleanlab/experimental/index.html">experimental</a><input class="toctree-checkbox" id="toctree-checkbox-13" name="toctree-checkbox-13" role="switch" type="checkbox"/><label for="toctree-checkbox-13"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../cleanlab/experimental/label_issues_batched.html">label_issues_batched</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../cleanlab/experimental/mnist_pytorch.html">mnist_pytorch</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../cleanlab/experimental/coteaching.html">coteaching</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../cleanlab/experimental/cifar_cnn.html">cifar_cnn</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../cleanlab/internal/index.html">internal</a><input class="toctree-checkbox" id="toctree-checkbox-14" name="toctree-checkbox-14" role="switch" type="checkbox"/><label for="toctree-checkbox-14"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../cleanlab/internal/util.html">util</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../cleanlab/internal/latent_algebra.html">latent_algebra</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../cleanlab/internal/label_quality_utils.html">label_quality_utils</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../cleanlab/internal/multilabel_utils.html">multilabel_utils</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../cleanlab/internal/multilabel_scorer.html">multilabel_scorer</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../cleanlab/internal/outlier.html">outlier</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../cleanlab/internal/token_classification_utils.html">token_classification_utils</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../cleanlab/internal/validation.html">validation</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Guides</span></p>
+<ul>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../cleanlab/datalab/guide/index.html">Datalab issue types</a><input class="toctree-checkbox" id="toctree-checkbox-15" name="toctree-checkbox-15" role="switch" type="checkbox"/><label for="toctree-checkbox-15"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../cleanlab/datalab/guide/issue_type_description.html">Datalab Issue Types</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../cleanlab/datalab/guide/custom_issue_manager.html">Creating Your Own Issues Manager</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/cleanlab/cleanlab/blob/master/CONTRIBUTING.md">How to contribute</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Links</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference external" href="https://cleanlab.ai">Website</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/cleanlab/cleanlab">GitHub</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://pypi.org/project/cleanlab/">PyPI</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://anaconda.org/Cleanlab/cleanlab">Conda</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://cleanlab.ai/blog/data-centric-ai/">Cleanlab Studio</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://help.cleanlab.ai">Cleanlab Studio Docs</a></li>
+</ul>
+
+</div>
+
+
+<!-- Start of versioning -->
+
+<div class="sidebar-tree">
+    <p class="caption" role="heading">
+        <span class="caption-text">Versions</span>
+    </p>
+    <ul>
+        <li class="toctree-l1">
+            <a
+                id="version_number"
+                class="reference internal"
+                href="/"
+                >stable</a
+            >
+        </li>
+        <li class="toctree-l1">
+            <a
+                id="commit_hash"
+                class="reference internal"
+                href="/master/"
+                >developer</a
+            >
+        </li>
+        
+        <li class="toctree-l1">
+            <a
+                id="v2.5.0"
+                class="reference internal"
+                href="/v2.5.0/"
+                >v2.5.0</a
+            >
+        </li>
+        
+        <li class="toctree-l1">
+            <a
+                id="v2.4.0"
+                class="reference internal"
+                href="/v2.4.0/"
+                >v2.4.0</a
+            >
+        </li>
+        
+        <li class="toctree-l1">
+            <a
+                id="v2.3.1"
+                class="reference internal"
+                href="/v2.3.1/"
+                >v2.3.1</a
+            >
+        </li>
+        
+        <li class="toctree-l1">
+            <a
+                id="v2.3.0"
+                class="reference internal"
+                href="/v2.3.0/"
+                >v2.3.0</a
+            >
+        </li>
+        
+        <li class="toctree-l1">
+            <a
+                id="v2.2.0"
+                class="reference internal"
+                href="/v2.2.0/"
+                >v2.2.0</a
+            >
+        </li>
+        
+        <li class="toctree-l1">
+            <a
+                id="v2.1.0"
+                class="reference internal"
+                href="/v2.1.0/"
+                >v2.1.0</a
+            >
+        </li>
+        
+        <li class="toctree-l1">
+            <a
+                id="v2.0.0"
+                class="reference internal"
+                href="/v2.0.0/"
+                >v2.0.0</a
+            >
+        </li>
+        
+        <li class="toctree-l1">
+            <a
+                id="v1.0.1"
+                class="reference internal"
+                href="/v1.0.1/"
+                >v1.0.1</a
+            >
+        </li>
+        
+    </ul>
+</div>
+
+<br>
+<br>
+
+<script
+    type="text/javascript"
+    src="/versioning.js"
+></script>
+
+<script type="text/javascript">
+    window.addEventListener("load", () => {
+        const version_number = Version.version_number;
+        const commit_hash = Version.commit_hash;
+
+        document.getElementById("version_number").innerHTML =
+            "stable <code class='docutils literal notranslate'><span class='pre'> (" +
+            version_number +
+            ")</span></code>";
+        document.getElementById("commit_hash").innerHTML =
+            "master <code class='docutils literal notranslate'><span class='pre'> (" +
+            commit_hash.slice(0, 7) +
+            "&hellip;)</span></code>";
+    });
+</script>
+
+<!-- End of versioning -->
+
+</div>
+      </div>
+      
+    </div>
+  </aside>
+  <div class="main">
+    <div class="content">
+      <div class="article-container">
+        <a href="#" class="back-to-top muted-link">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12z"></path>
+          </svg>
+          <span>Back to top</span>
+        </a>
+        <div class="content-icon-container">
+          <div class="theme-toggle-container theme-toggle-content">
+            <button class="theme-toggle">
+              <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+              <svg class="theme-icon-when-auto"><use href="#svg-sun-half"></use></svg>
+              <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+              <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+            </button>
+          </div>
+          <label class="toc-overlay-icon toc-content-icon" for="__toc">
+            <div class="visually-hidden">Toggle table of contents sidebar</div>
+            <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+          </label>
+        </div>
+        <article role="main">
+          
+
+<noscript>
+  <div class="admonition warning">
+    <p class="admonition-title">Warning</p>
+    <p>Parts of this site uses JavaScript, but your browser does not support it.</p>
+  </div>
+</noscript>
+
+
+
+<!-- Start of Version Warning Banner -->
+
+<p id="doc_ver_warning"></p>
+
+<script
+    type="text/javascript"
+    src="/versioning.js"
+></script>
+<script type="text/javascript">
+    window.addEventListener("load", () => {
+        const version_number = Version.version_number;
+        const path_arr = window.location.pathname.split("/");
+
+        if (path_arr.includes("master")) {
+            document.getElementById("doc_ver_warning").innerHTML =
+            `<div class="admonition warning">
+            <p class="admonition-title">Warning</p>
+            <p>This version of the documentation corresponds to the master branch of <code class="docutils literal notranslate"><span class="pre">cleanlab</span></code> source code from <a href="https://github.com/cleanlab/cleanlab/">GitHub</a>. To see the documentation for the latest <code class="docutils literal notranslate"><span class="pre">pip</span></code>-installed version, click <a href="/">here</a>.</p>
+            </div>`;
+        } else if (!path_arr.includes(version_number) && !path_arr.includes("stable")) {
+            document.getElementById("doc_ver_warning").innerHTML =
+            `<div class="admonition warning">
+            <p class="admonition-title">Warning</p>
+            <p>This documentation is for an old version (<code class="docutils literal notranslate"><span class="pre">v2.5.0</span></code>) of <code class="docutils literal notranslate"><span class="pre">cleanlab</span></code>. To see the documentation for the latest stable version (<code class="docutils literal notranslate"><span class="pre">` + version_number + `</span></code>), click <a href="/">here</a>.</p>
+            </div>`;
+        } else {
+            document.getElementById("doc_ver_warning").remove();
+        }
+    });
+</script>
+
+<!-- End of Version Warning Banner -->
+
+ 
+<style>
+/* CSS for nbsphinx extension */
+
+/* remove conflicting styling from Sphinx themes */
+div.nbinput.container div.prompt *,
+div.nboutput.container div.prompt *,
+div.nbinput.container div.input_area pre,
+div.nboutput.container div.output_area pre,
+div.nbinput.container div.input_area .highlight,
+div.nboutput.container div.output_area .highlight {
+    border: none;
+    padding: 0;
+    margin: 0;
+    box-shadow: none;
+}
+
+div.nbinput.container > div[class*=highlight],
+div.nboutput.container > div[class*=highlight] {
+    margin: 0;
+}
+
+div.nbinput.container div.prompt *,
+div.nboutput.container div.prompt * {
+    background: none;
+}
+
+div.nboutput.container div.output_area .highlight,
+div.nboutput.container div.output_area pre {
+    background: unset;
+}
+
+div.nboutput.container div.output_area div.highlight {
+    color: unset;  /* override Pygments text color */
+}
+
+/* avoid gaps between output lines */
+div.nboutput.container div[class*=highlight] pre {
+    line-height: normal;
+}
+
+/* input/output containers */
+div.nbinput.container,
+div.nboutput.container {
+    display: -webkit-flex;
+    display: flex;
+    align-items: flex-start;
+    margin: 0;
+    width: 100%;
+}
+@media (max-width: 540px) {
+    div.nbinput.container,
+    div.nboutput.container {
+        flex-direction: column;
+    }
+}
+
+/* input container */
+div.nbinput.container {
+    padding-top: 5px;
+}
+
+/* last container */
+div.nblast.container {
+    padding-bottom: 5px;
+}
+
+/* input prompt */
+div.nbinput.container div.prompt pre {
+    color: #307FC1;
+}
+
+/* output prompt */
+div.nboutput.container div.prompt pre {
+    color: #BF5B3D;
+}
+
+/* all prompts */
+div.nbinput.container div.prompt,
+div.nboutput.container div.prompt {
+    width: 4.5ex;
+    padding-top: 5px;
+    position: relative;
+    user-select: none;
+}
+
+div.nbinput.container div.prompt > div,
+div.nboutput.container div.prompt > div {
+    position: absolute;
+    right: 0;
+    margin-right: 0.3ex;
+}
+
+@media (max-width: 540px) {
+    div.nbinput.container div.prompt,
+    div.nboutput.container div.prompt {
+        width: unset;
+        text-align: left;
+        padding: 0.4em;
+    }
+    div.nboutput.container div.prompt.empty {
+        padding: 0;
+    }
+
+    div.nbinput.container div.prompt > div,
+    div.nboutput.container div.prompt > div {
+        position: unset;
+    }
+}
+
+/* disable scrollbars on prompts */
+div.nbinput.container div.prompt pre,
+div.nboutput.container div.prompt pre {
+    overflow: hidden;
+}
+
+/* input/output area */
+div.nbinput.container div.input_area,
+div.nboutput.container div.output_area {
+    -webkit-flex: 1;
+    flex: 1;
+    overflow: auto;
+}
+@media (max-width: 540px) {
+    div.nbinput.container div.input_area,
+    div.nboutput.container div.output_area {
+        width: 100%;
+    }
+}
+
+/* input area */
+div.nbinput.container div.input_area {
+    border: 1px solid #e0e0e0;
+    border-radius: 2px;
+    /*background: #f5f5f5;*/
+}
+
+/* override MathJax center alignment in output cells */
+div.nboutput.container div[class*=MathJax] {
+    text-align: left !important;
+}
+
+/* override sphinx.ext.imgmath center alignment in output cells */
+div.nboutput.container div.math p {
+    text-align: left;
+}
+
+/* standard error */
+div.nboutput.container div.output_area.stderr {
+    background: #fdd;
+}
+
+/* ANSI colors */
+.ansi-black-fg { color: #3E424D; }
+.ansi-black-bg { background-color: #3E424D; }
+.ansi-black-intense-fg { color: #282C36; }
+.ansi-black-intense-bg { background-color: #282C36; }
+.ansi-red-fg { color: #E75C58; }
+.ansi-red-bg { background-color: #E75C58; }
+.ansi-red-intense-fg { color: #B22B31; }
+.ansi-red-intense-bg { background-color: #B22B31; }
+.ansi-green-fg { color: #00A250; }
+.ansi-green-bg { background-color: #00A250; }
+.ansi-green-intense-fg { color: #007427; }
+.ansi-green-intense-bg { background-color: #007427; }
+.ansi-yellow-fg { color: #DDB62B; }
+.ansi-yellow-bg { background-color: #DDB62B; }
+.ansi-yellow-intense-fg { color: #B27D12; }
+.ansi-yellow-intense-bg { background-color: #B27D12; }
+.ansi-blue-fg { color: #208FFB; }
+.ansi-blue-bg { background-color: #208FFB; }
+.ansi-blue-intense-fg { color: #0065CA; }
+.ansi-blue-intense-bg { background-color: #0065CA; }
+.ansi-magenta-fg { color: #D160C4; }
+.ansi-magenta-bg { background-color: #D160C4; }
+.ansi-magenta-intense-fg { color: #A03196; }
+.ansi-magenta-intense-bg { background-color: #A03196; }
+.ansi-cyan-fg { color: #60C6C8; }
+.ansi-cyan-bg { background-color: #60C6C8; }
+.ansi-cyan-intense-fg { color: #258F8F; }
+.ansi-cyan-intense-bg { background-color: #258F8F; }
+.ansi-white-fg { color: #C5C1B4; }
+.ansi-white-bg { background-color: #C5C1B4; }
+.ansi-white-intense-fg { color: #A1A6B2; }
+.ansi-white-intense-bg { background-color: #A1A6B2; }
+
+.ansi-default-inverse-fg { color: #FFFFFF; }
+.ansi-default-inverse-bg { background-color: #000000; }
+
+.ansi-bold { font-weight: bold; }
+.ansi-underline { text-decoration: underline; }
+
+
+div.nbinput.container div.input_area div[class*=highlight] > pre,
+div.nboutput.container div.output_area div[class*=highlight] > pre,
+div.nboutput.container div.output_area div[class*=highlight].math,
+div.nboutput.container div.output_area.rendered_html,
+div.nboutput.container div.output_area > div.output_javascript,
+div.nboutput.container div.output_area:not(.rendered_html) > img{
+    padding: 5px;
+    margin: 0;
+}
+
+/* fix copybtn overflow problem in chromium (needed for 'sphinx_copybutton') */
+div.nbinput.container div.input_area > div[class^='highlight'],
+div.nboutput.container div.output_area > div[class^='highlight']{
+    overflow-y: hidden;
+}
+
+/* hide copybtn icon on prompts (needed for 'sphinx_copybutton') */
+.prompt .copybtn {
+    display: none;
+}
+
+/* Some additional styling taken form the Jupyter notebook CSS */
+div.rendered_html table {
+  border: none;
+  border-collapse: collapse;
+  border-spacing: 0;
+  color: black;
+  font-size: 12px;
+  table-layout: fixed;
+}
+div.rendered_html thead {
+  border-bottom: 1px solid black;
+  vertical-align: bottom;
+}
+div.rendered_html tr,
+div.rendered_html th,
+div.rendered_html td {
+  text-align: right;
+  vertical-align: middle;
+  padding: 0.5em 0.5em;
+  line-height: normal;
+  white-space: normal;
+  max-width: none;
+  border: none;
+}
+div.rendered_html th {
+  font-weight: bold;
+}
+div.rendered_html tbody tr:nth-child(odd) {
+  background: #f5f5f5;
+}
+div.rendered_html tbody tr:hover {
+  background: rgba(66, 165, 245, 0.2);
+}
+</style>
+<style>
+    .nbinput .prompt,
+    .nboutput .prompt {
+        display: none;
+    }
+
+    .output_area {
+        max-height: 300px;
+        overflow: auto;
+    }
+
+    .dataframe {
+        background: #D7D7D7;
+    }
+
+    th {
+        color:black;
+    }
+</style>
+
+<script type="text/javascript">
+    window.addEventListener('load', () => {
+        const h1_element = document.getElementsByTagName("h1");
+        h1_element[0].insertAdjacentHTML("afterend", `
+        <p>
+            <a style="background-color:white;color:black;padding:4px 12px;text-decoration:none;display:inline-block;border-radius:8px;box-shadow:0 2px 4px 0 rgba(0, 0, 0, 0.2), 0 3px 10px 0 rgba(0, 0, 0, 0.19)" href="https://colab.research.google.com/github/cleanlab/cleanlab-docs/blob/master/v2.5.0/tutorials/object_detection.ipynb" target="_blank">
+            <img src="https://colab.research.google.com/img/colab_favicon_256px.png" alt="" style="width:40px;height:40px;vertical-align:middle">
+            <span style="vertical-align:middle">Run in Google Colab</span>
+            </a>
+        </p>
+        `);
+    })
+
+</script><section id="Finding-Label-Errors-in-Object-Detection-Datasets">
+<h1>Finding Label Errors in Object Detection Datasets<a class="headerlink" href="#Finding-Label-Errors-in-Object-Detection-Datasets" title="Permalink to this heading">#</a></h1>
+<p>This 5-minute quickstart tutorial demonstrates how to find potential label errors in object detection datasets. In object detection data, each image is annotated with multiple bounding boxes. Each bounding box surrounds a physical object within an image scene, and is annotated with a given class label.</p>
+<p>Using such labeled data, we train a model to predict the locations and classes of objects in an image. An example notebook to train the object detection model whose predictions we rely on in this tutorial is available <a class="reference external" href="https://github.com/cleanlab/examples/blob/master/object_detection/detectron2_training.ipynb">here</a>. These predictions can subsequently be input to cleanlab in order to identify mislabeled images and a quality score quantifying our confidence in the overall annotations for each
+image.</p>
+<p>After correcting these label issues, <strong>you can train an even better version of your model without changing your training code!</strong></p>
+<p>This tutorial uses a subset of the <a class="reference external" href="https://cocodataset.org/#home">COCO (Common Objects in Context)</a> dataset which has images of everyday scenes and considers objects from the 5 most popular classes: car, chair, cup, person, traffic light.</p>
+<p><strong>Overview of what we we’ll do in this tutorial</strong></p>
+<ul class="simple">
+<li><p>Score images based on their overall label quality (i.e. our confidence each image is correctly labeled) using <code class="docutils literal notranslate"><span class="pre">cleanlab.object_detection.rank.get_label_quality_scores</span></code></p></li>
+<li><p>Estimate which images have label issues using <code class="docutils literal notranslate"><span class="pre">cleanlab.object_detection.filter.find_label_issues</span></code></p></li>
+<li><p>Visually review images + labels using <code class="docutils literal notranslate"><span class="pre">cleanlab.object_detection.summary.visualize</span></code></p></li>
+</ul>
+<div class="admonition note">
+<p class="admonition-title">Quickstart</p>
+<p>Already have <code class="docutils literal notranslate"><span class="pre">labels</span></code> and <code class="docutils literal notranslate"><span class="pre">predictions</span></code> in the proper format? Just run the code below to find label issues in your object detection dataset.</p>
+<div class="markdown" style="background:white;margin:16px"><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">cleanlab.object_detection.filter</span> <span class="kn">import</span> <span class="n">find_label_issues</span>
+<span class="kn">from</span> <span class="nn">cleanlab.object_detection.rank</span> <span class="kn">import</span> <span class="n">get_label_quality_scores</span>
+
+<span class="c1"># To get boolean vector of label issues for all images</span>
+<span class="n">is_label_issue</span> <span class="o">=</span> <span class="n">find_label_issues</span><span class="p">(</span><span class="n">labels</span><span class="p">,</span> <span class="n">predictions</span><span class="p">)</span>
+
+<span class="c1"># To get label quality scores for all images</span>
+<span class="n">label_quality_scores</span> <span class="o">=</span> <span class="n">get_label_quality_scores</span><span class="p">(</span><span class="n">labels</span><span class="p">,</span> <span class="n">predictions</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div><section id="1.-Install-required-dependencies-and-download-data">
+<h2>1. Install required dependencies and download data<a class="headerlink" href="#1.-Install-required-dependencies-and-download-data" title="Permalink to this heading">#</a></h2>
+<p>You can use <code class="docutils literal notranslate"><span class="pre">pip</span></code> to install all packages required for this tutorial as follows</p>
+<div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="o">!</span>pip<span class="w"> </span>install<span class="w"> </span>matplotlib
+<span class="o">!</span>pip<span class="w"> </span>insall<span class="w"> </span>cleanlab
+<span class="c1"># Make sure to install the version corresponding to this tutorial</span>
+<span class="c1"># E.g. if viewing master branch documentation:</span>
+<span class="c1">#     !pip install git+https://github.com/cleanlab/cleanlab.git</span>
+</pre></div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>%%capture
+
+!wget -nc &#39;https://cleanlab-public.s3.amazonaws.com/ObjectDetectionBenchmarking/tutorial_obj/predictions.pkl&#39;
+!wget -nc &#39;https://cleanlab-public.s3.amazonaws.com/ObjectDetectionBenchmarking/tutorial_obj/labels.pkl&#39;
+!wget -nc &#39;https://cleanlab-public.s3.amazonaws.com/ObjectDetectionBenchmarking/tutorial_obj/example_images.zip&#39; &amp;&amp; unzip -q -o example_images.zip
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pickle</span>
+
+<span class="kn">from</span> <span class="nn">cleanlab.object_detection.rank</span> <span class="kn">import</span> <span class="n">get_label_quality_scores</span><span class="p">,</span> <span class="n">issues_from_scores</span>
+<span class="kn">from</span> <span class="nn">cleanlab.object_detection.filter</span> <span class="kn">import</span> <span class="n">find_label_issues</span>
+<span class="kn">from</span> <span class="nn">cleanlab.object_detection.summary</span> <span class="kn">import</span> <span class="n">visualize</span>
+</pre></div>
+</div>
+</div>
+</section>
+<section id="2.-Format-data,-labels,-and-model-predictions">
+<h2>2. Format data, labels, and model predictions<a class="headerlink" href="#2.-Format-data,-labels,-and-model-predictions" title="Permalink to this heading">#</a></h2>
+<p>We begin by loading <code class="docutils literal notranslate"><span class="pre">labels</span></code> and <code class="docutils literal notranslate"><span class="pre">predictions</span></code> for our dataset, which are the only inputs required to find label issues with cleanlab. Note that the predictions should be <strong>out-of-sample</strong>, which can be obtained for every image in a dataset via K-fold cross-validation.</p>
+<p>In a separate <a class="reference external" href="https://github.com/cleanlab/examples">example</a> notebook (<a class="reference external" href="https://github.com/cleanlab/examples/blob/master/object_detection/detectron2_training.ipynb">link</a>), we trained a Detectron2 object detection model and used it to obtain predictions on a held-out validation dataset whose <code class="docutils literal notranslate"><span class="pre">labels</span></code> we audit here.</p>
+<p><strong>Note:</strong> If you want to find all the mislabeled images across the entire COCO dataset, you can first execute our <a class="reference external" href="https://github.com/cleanlab/examples/blob/master/object_detection/detectron2_training-kfold.ipynb">other example notebook</a> that uses K-fold cross-validation to produce <strong>out-of-sample</strong> predictions for every image, then use those labels and predictions below.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">IMAGE_PATH</span> <span class="o">=</span> <span class="s1">&#39;./example_images/&#39;</span>  <span class="c1"># path to raw image files downloaded above</span>
+<span class="n">predictions</span> <span class="o">=</span> <span class="n">pickle</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="nb">open</span><span class="p">(</span><span class="s2">&quot;predictions.pkl&quot;</span><span class="p">,</span> <span class="s2">&quot;rb&quot;</span><span class="p">))</span>
+<span class="n">labels</span> <span class="o">=</span> <span class="n">pickle</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="nb">open</span><span class="p">(</span><span class="s2">&quot;labels.pkl&quot;</span><span class="p">,</span> <span class="s2">&quot;rb&quot;</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<p>In object detection datasets, each given label is a made up of bounding box coordinates and a class label. A model prediction is also made up of a bounding box and predicted class label, as well as the model confidence (probability estimate) in its prediction. To detect label issues, cleanlab requires given labels for each image, and the corresponding model predictions for the image (but not the image itself).</p>
+<p>Here’s what an example looks like in our dataset. We visualize the given and predicted labels (in red and blue) for this image using the <code class="docutils literal notranslate"><span class="pre">cleanlab.object_detection.summary.visualize</span></code> method.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">image_to_visualize</span> <span class="o">=</span> <span class="mi">8</span>  <span class="c1"># change this to view other images</span>
+<span class="n">image_path</span> <span class="o">=</span> <span class="n">IMAGE_PATH</span> <span class="o">+</span> <span class="n">labels</span><span class="p">[</span><span class="n">image_to_visualize</span><span class="p">][</span><span class="s1">&#39;seg_map&#39;</span><span class="p">]</span>
+<span class="n">visualize</span><span class="p">(</span><span class="n">image_path</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="n">labels</span><span class="p">[</span><span class="n">image_to_visualize</span><span class="p">],</span> <span class="n">prediction</span><span class="o">=</span><span class="n">predictions</span><span class="p">[</span><span class="n">image_to_visualize</span><span class="p">],</span> <span class="n">overlay</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/tutorials_object_detection_8_0.png" src="../_images/tutorials_object_detection_8_0.png" />
+</div>
+</div>
+<p>The required format of these <code class="docutils literal notranslate"><span class="pre">labels</span></code> and <code class="docutils literal notranslate"><span class="pre">predictions</span></code> matches what popular object detection frameworks like <a class="reference external" href="https://github.com/open-mmlab/mmdetection">MMDetection</a> and <a class="reference external" href="https://github.com/facebookresearch/detectron2/">Detectron2</a> expect. Recall the 5 possible class labels in our dataset are: car, chair, cup, person, traffic light. These classes are represented as (zero-indexed) integers 0,1,…,4.</p>
+<p><code class="docutils literal notranslate"><span class="pre">labels</span></code> is a list where for the i-th image in our dataset, <code class="docutils literal notranslate"><span class="pre">labels[i]</span></code> is a dictionary containing: key <code class="docutils literal notranslate"><span class="pre">labels</span></code> – a list of class labels for each bounding box in this image and key <code class="docutils literal notranslate"><span class="pre">bboxes</span></code> – a numpy array of the bounding boxes’ coordinates. Each bounding box in <code class="docutils literal notranslate"><span class="pre">labels[i]['bboxes']</span></code> is in the format <code class="docutils literal notranslate"><span class="pre">[x1,y1,x2,y2]</span></code> where <code class="docutils literal notranslate"><span class="pre">(x1,y1)</span></code> corresponds to the bottom-left corner of the box and <code class="docutils literal notranslate"><span class="pre">(x2,y2)</span></code> the top-right.</p>
+<p>Let’s see what <code class="docutils literal notranslate"><span class="pre">labels[i]</span></code> looks like for our previous example image:</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">labels</span><span class="p">[</span><span class="n">image_to_visualize</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+{&#39;bboxes&#39;: array([[201.96, 101.71, 334.78, 334.68]], dtype=float32),
+ &#39;labels&#39;: array([3]),
+ &#39;bboxes_ignore&#39;: array([], shape=(0, 4), dtype=float32),
+ &#39;masks&#39;: [[[290.44,
+    200.04,
+    286.59,
+    213.5,
+    285.63,
+    224.08,
+    290.44,
+    231.77,
+    293.32,
+    235.62,
+    289.48,
+    251.97,
+    282.74,
+    266.39,
+    281.78,
+    271.2,
+    280.82,
+    277.93,
+    279.86,
+    287.55,
+    277.93,
+    299.09,
+    276.97,
+    307.75,
+    276.97,
+    321.21,
+    281.78,
+    326.02,
+    290.44,
+    330.83,
+    286.59,
+    333.71,
+    263.51,
+    334.68,
+    261.59,
+    319.29,
+    257.74,
+    295.25,
+    251.97,
+    290.44,
+    251.97,
+    283.7,
+    250.05,
+    283.7,
+    243.31,
+    303.9,
+    243.31,
+    316.4,
+    243.31,
+    319.29,
+    247.16,
+    323.14,
+    251.01,
+    326.02,
+    249.08,
+    328.91,
+    227.93,
+    327.94,
+    226.0,
+    323.14,
+    226.96,
+    313.52,
+    226.96,
+    303.9,
+    226.0,
+    293.32,
+    216.39,
+    283.7,
+    226.0,
+    236.58,
+    228.89,
+    226.96,
+    232.73,
+    219.27,
+    239.47,
+    216.39,
+    240.43,
+    209.65,
+    242.35,
+    202.92,
+    240.43,
+    185.61,
+    230.81,
+    198.11,
+    219.27,
+    215.42,
+    218.31,
+    224.08,
+    220.23,
+    229.85,
+    217.35,
+    237.54,
+    213.5,
+    238.5,
+    207.73,
+    239.47,
+    204.84,
+    239.47,
+    201.96,
+    237.54,
+    201.96,
+    228.89,
+    205.81,
+    224.08,
+    206.77,
+    220.23,
+    218.31,
+    191.38,
+    219.27,
+    185.61,
+    223.12,
+    180.8,
+    226.0,
+    175.03,
+    229.85,
+    167.34,
+    231.77,
+    159.64,
+    236.86,
+    153.25,
+    240.46,
+    151.71,
+    253.35,
+    149.13,
+    254.9,
+    147.07,
+    250.26,
+    143.46,
+    247.16,
+    140.88,
+    244.59,
+    124.39,
+    244.59,
+    115.11,
+    246.65,
+    109.44,
+    249.74,
+    104.81,
+    256.44,
+    102.23,
+    262.11,
+    101.71,
+    268.29,
+    101.71,
+    273.96,
+    101.71,
+    277.06,
+    101.71,
+    283.76,
+    108.41,
+    284.79,
+    110.48,
+    287.88,
+    119.24,
+    286.85,
+    122.33,
+    286.85,
+    126.97,
+    286.85,
+    132.64,
+    286.85,
+    136.76,
+    285.82,
+    145.52,
+    284.27,
+    150.16,
+    286.33,
+    151.71,
+    290.97,
+    155.83,
+    293.03,
+    173.35,
+    297.67,
+    180.05,
+    317.25,
+    190.87,
+    319.32,
+    191.9,
+    326.53,
+    192.42,
+    329.62,
+    192.93,
+    332.2,
+    196.03,
+    334.26,
+    201.18,
+    334.78,
+    207.88,
+    329.11,
+    209.94,
+    326.53,
+    205.82,
+    324.47,
+    203.24,
+    323.44,
+    202.21,
+    320.86,
+    202.21,
+    316.22,
+    203.76,
+    314.68,
+    203.24,
+    313.65,
+    200.67,
+    307.46,
+    199.63,
+    297.67,
+    198.6,
+    294.58,
+    197.06,
+    291.49,
+    197.06,
+    290.97,
+    196.03]]],
+ &#39;seg_map&#39;: &#39;000000481413.jpg&#39;}
+</pre></div></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">predictions</span></code> is a list where the predictions output by our model for the i-th image: <code class="docutils literal notranslate"><span class="pre">predictions[i]</span></code> is a list/array of shape <code class="docutils literal notranslate"><span class="pre">(K,)</span></code>. Here <code class="docutils literal notranslate"><span class="pre">K</span></code> is the number of classes in the dataset (same for every image) and <code class="docutils literal notranslate"><span class="pre">predictions[i][k]</span></code> is of shape <code class="docutils literal notranslate"><span class="pre">(M,5)</span></code>, where <code class="docutils literal notranslate"><span class="pre">M</span></code> is the number of bounding boxes predicted to contain objects of class <code class="docutils literal notranslate"><span class="pre">k</span></code> (in image i, differs between images). The five columns of <code class="docutils literal notranslate"><span class="pre">predictions[i][k]</span></code> correspond to <code class="docutils literal notranslate"><span class="pre">[x1,y1,x2,y2,pred_prob]</span></code> for each bounding box
+predicted by the model. <code class="docutils literal notranslate"><span class="pre">pred_prob</span></code> is the model confidence in its predicted label for this box. Since our dataset has <code class="docutils literal notranslate"><span class="pre">K</span> <span class="pre">=</span> <span class="pre">5</span></code> classes, we have: <code class="docutils literal notranslate"><span class="pre">predictions[i].shape</span> <span class="pre">=</span> <span class="pre">(5,)</span></code>.</p>
+<p>Let’s see what <code class="docutils literal notranslate"><span class="pre">predictions[i]</span></code> looks like for our previous example image:</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">predictions</span><span class="p">[</span><span class="n">image_to_visualize</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+array([array([], shape=(0, 5), dtype=float32),
+       array([], shape=(0, 5), dtype=float32),
+       array([], shape=(0, 5), dtype=float32),
+       array([[204.42398  , 103.44503  , 337.29968  , 336.21005  ,   0.9978472]],
+             dtype=float32)                                                      ,
+       array([], shape=(0, 5), dtype=float32)], dtype=object)
+</pre></div></div>
+</div>
+<p>Once you have <code class="docutils literal notranslate"><span class="pre">labels</span></code> and <code class="docutils literal notranslate"><span class="pre">predictions</span></code> in the appropriate formats, you can <strong>find label issues with cleanlab for any object detection dataset</strong>!</p>
+</section>
+<section id="3.-Use-cleanlab-to-find-label-issues">
+<h2>3. Use cleanlab to find label issues<a class="headerlink" href="#3.-Use-cleanlab-to-find-label-issues" title="Permalink to this heading">#</a></h2>
+<p>Given <code class="docutils literal notranslate"><span class="pre">labels</span></code> and <code class="docutils literal notranslate"><span class="pre">predictions</span></code> from our trained model, cleanlab can automatically find mislabeled images in the dataset. In object detection, we consider an image mislabeled if <strong>any</strong> of its bounding boxes or their class labels are incorrect (including if the image contains any overlooked objects which should’ve been annotated with a box)</p>
+<p>Images may be mislabeled because annotators:</p>
+<ul class="simple">
+<li><p>overlooked an object (forgot to annotate a bounding box around a depicted object)</p></li>
+<li><p>chose the wrong class label for an annotated box in the correct location</p></li>
+<li><p>imperfectly drew the bounding box such that its location is incorrect</p></li>
+</ul>
+<p>Cleanlab is expected to flag images that exhibit <strong>any</strong> of these annotation errors as having label issues. More severe annotation errors are expected to produce lower cleanlab label quality scores closer to 0. Let’s first estimate which images have label issues:</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">label_issue_idx</span> <span class="o">=</span> <span class="n">find_label_issues</span><span class="p">(</span><span class="n">labels</span><span class="p">,</span> <span class="n">predictions</span><span class="p">,</span> <span class="n">return_indices_ranked_by_score</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="n">num_examples_to_show</span> <span class="o">=</span> <span class="mi">5</span> <span class="c1"># view this many images flagged with the most severe label issues</span>
+<span class="n">label_issue_idx</span><span class="p">[:</span><span class="n">num_examples_to_show</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Pruning 0 predictions out of 113 using threshold==0.0. These predictions are no longer considered as potential candidates for identifying label issues as their similarity with the given labels is no longer considered.
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+array([50, 16, 31, 29, 45])
+</pre></div></div>
+</div>
+<p>The above code identifies <em>which</em> images have label issues, returning a list of their indices. This is because we specified the <code class="docutils literal notranslate"><span class="pre">return_indices_ranked_by_score</span></code> argument which sorts these indices by the estimated label quality of each image. Below we describe how to directly estimate the label quality scores of each image.</p>
+<p><strong>Note:</strong> You can omit the <code class="docutils literal notranslate"><span class="pre">return_indices_ranked_by_score</span></code> argument for <code class="docutils literal notranslate"><span class="pre">find_label_issues()</span></code> to instead return a Boolean mask for the entire dataset (True entries in this mask correspond to images with label issues)</p>
+<section id="Get-label-quality-scores">
+<h3>Get label quality scores<a class="headerlink" href="#Get-label-quality-scores" title="Permalink to this heading">#</a></h3>
+<p>Cleanlab can also compute scores for each image to estimate our confidence that it has been correctly labeled. These label quality scores range between 0 and 1, with <em>smaller</em> values indicating examples whose annotation is <em>more</em> likely to be wrong in some way.</p>
+<p>Each image in the dataset receives a label quality score. These scores are useful for prioritizing which images to review; if you have too little time, first review the images with the lowest label quality scores.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">scores</span> <span class="o">=</span> <span class="n">get_label_quality_scores</span><span class="p">(</span><span class="n">labels</span><span class="p">,</span> <span class="n">predictions</span><span class="p">)</span>
+<span class="n">scores</span><span class="p">[:</span><span class="n">num_examples_to_show</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Pruning 0 predictions out of 113 using threshold==0.0. These predictions are no longer considered as potential candidates for identifying label issues as their similarity with the given labels is no longer considered.
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+array([0.97489622, 0.70610878, 0.98764951, 0.88899237, 0.99085805])
+</pre></div></div>
+</div>
+<p>We can also use the label quality scores to flag <em>which</em> images have label issues based on a threshold. Here we convert these per-image scores into an array of indices corresponding to images flagged with label issues, sorted by label quality score, in the same format returned by <code class="docutils literal notranslate"><span class="pre">find_label_issues()</span></code></p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">issue_idx</span> <span class="o">=</span> <span class="n">issues_from_scores</span><span class="p">(</span><span class="n">scores</span><span class="p">,</span> <span class="n">threshold</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>  <span class="c1"># lower threshold will return fewer (but more confident) label issues</span>
+<span class="n">issue_idx</span><span class="p">[:</span><span class="n">num_examples_to_show</span><span class="p">],</span> <span class="n">scores</span><span class="p">[</span><span class="n">issue_idx</span><span class="p">][:</span><span class="n">num_examples_to_show</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+(array([50, 16, 31, 29, 45]),
+ array([6.95569726e-05, 9.03354841e-05, 8.57510169e-04, 1.58447666e-03,
+        2.39755858e-01]))
+</pre></div></div>
+</div>
+</section>
+</section>
+<section id="4.-Use-ObjectLab-to-visualize-label-issues">
+<h2>4. Use ObjectLab to visualize label issues<a class="headerlink" href="#4.-Use-ObjectLab-to-visualize-label-issues" title="Permalink to this heading">#</a></h2>
+<p>Finally, we can visualize images with potential label errors via cleanlab’s <code class="docutils literal notranslate"><span class="pre">visualize()</span></code> function. To enhance the visualization, you can supply a <code class="docutils literal notranslate"><span class="pre">class_names</span></code> dictionary to include as a legend and turn off <code class="docutils literal notranslate"><span class="pre">overlay</span></code> to see the given and predicted labels side by side.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">issue_to_visualize</span> <span class="o">=</span> <span class="n">issue_idx</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>  <span class="c1"># change this to view other images</span>
+<span class="n">class_names</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;0&quot;</span><span class="p">:</span> <span class="s2">&quot;car&quot;</span><span class="p">,</span> <span class="s2">&quot;1&quot;</span><span class="p">:</span> <span class="s2">&quot;chair&quot;</span><span class="p">,</span> <span class="s2">&quot;2&quot;</span><span class="p">:</span> <span class="s2">&quot;cup&quot;</span><span class="p">,</span> <span class="s2">&quot;3&quot;</span><span class="p">:</span><span class="s2">&quot;person&quot;</span><span class="p">,</span> <span class="s2">&quot;4&quot;</span><span class="p">:</span> <span class="s2">&quot;traffic light&quot;</span><span class="p">}</span>
+
+<span class="n">label</span> <span class="o">=</span> <span class="n">labels</span><span class="p">[</span><span class="n">issue_to_visualize</span><span class="p">]</span>
+<span class="n">prediction</span> <span class="o">=</span> <span class="n">predictions</span><span class="p">[</span><span class="n">issue_to_visualize</span><span class="p">]</span>
+<span class="n">score</span> <span class="o">=</span> <span class="n">scores</span><span class="p">[</span><span class="n">issue_to_visualize</span><span class="p">]</span>
+<span class="n">image_path</span> <span class="o">=</span> <span class="n">IMAGE_PATH</span> <span class="o">+</span> <span class="n">label</span><span class="p">[</span><span class="s1">&#39;seg_map&#39;</span><span class="p">]</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">image_path</span><span class="p">,</span> <span class="s1">&#39;| idx&#39;</span><span class="p">,</span> <span class="n">issue_to_visualize</span> <span class="p">,</span> <span class="s1">&#39;| label quality score:&#39;</span><span class="p">,</span> <span class="n">score</span><span class="p">,</span> <span class="s1">&#39;| is issue: True&#39;</span><span class="p">)</span>
+<span class="n">visualize</span><span class="p">(</span><span class="n">image_path</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="n">label</span><span class="p">,</span> <span class="n">prediction</span><span class="o">=</span><span class="n">prediction</span><span class="p">,</span> <span class="n">class_names</span><span class="o">=</span><span class="n">class_names</span><span class="p">,</span> <span class="n">overlay</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+./example_images/000000009483.jpg | idx 50 | label quality score: 6.95569726168054e-05 | is issue: True
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/tutorials_object_detection_22_1.png" src="../_images/tutorials_object_detection_22_1.png" />
+</div>
+</div>
+<p>The visualization depicts the given label (original image annotation which cleanlab identified as problematic) in red on the left and the model-predicted label in blue on the right. Each bounding box contains a class-index number in the top corner indicating which object class that bounding box was annotated/predicted to contain.</p>
+<p>This image has a <strong>low</strong> label quality score and is marked as an error. On closer inspection we notice the annotator missed the reflection of the person in the mirror that the model identified. Additionally, the chairs visible in the reflection were not annotated.</p>
+<p>Notice examples where the predictions and labels are more similar have higher quality scores than those that are missmatched, and are less likeley to be marked as issues and the number of boxes is agnostic to the score.</p>
+<p>Better trained models will lead to better label error detection but you don’t need a near perfect model to identify label issues.</p>
+<section id="Different-kinds-of-label-issues-identified-by-ObjectLab">
+<h3>Different kinds of label issues identified by ObjectLab<a class="headerlink" href="#Different-kinds-of-label-issues-identified-by-ObjectLab" title="Permalink to this heading">#</a></h3>
+<p>Now lets view the first few images in our vaidation dataset that are clearly marked as issues and see what various inconsistencies between the <code class="docutils literal notranslate"><span class="pre">given</span></code> and <code class="docutils literal notranslate"><span class="pre">predicted</span></code> label we can spot.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[12]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">issue_to_visualize</span> <span class="o">=</span> <span class="n">issue_idx</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+<span class="n">label</span> <span class="o">=</span> <span class="n">labels</span><span class="p">[</span><span class="n">issue_to_visualize</span><span class="p">]</span>
+<span class="n">prediction</span> <span class="o">=</span> <span class="n">predictions</span><span class="p">[</span><span class="n">issue_to_visualize</span><span class="p">]</span>
+<span class="n">score</span> <span class="o">=</span> <span class="n">scores</span><span class="p">[</span><span class="n">issue_to_visualize</span><span class="p">]</span>
+
+<span class="n">image_path</span> <span class="o">=</span> <span class="n">IMAGE_PATH</span> <span class="o">+</span> <span class="n">label</span><span class="p">[</span><span class="s1">&#39;seg_map&#39;</span><span class="p">]</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">image_path</span><span class="p">,</span> <span class="s1">&#39;| idx&#39;</span><span class="p">,</span> <span class="n">issue_to_visualize</span> <span class="p">,</span> <span class="s1">&#39;| label quality score:&#39;</span><span class="p">,</span> <span class="n">score</span><span class="p">,</span> <span class="s1">&#39;| is issue: True&#39;</span><span class="p">)</span>
+<span class="n">visualize</span><span class="p">(</span><span class="n">image_path</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="n">label</span><span class="p">,</span> <span class="n">prediction</span><span class="o">=</span><span class="n">prediction</span><span class="p">,</span> <span class="n">class_names</span><span class="o">=</span><span class="n">class_names</span><span class="p">,</span> <span class="n">overlay</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+./example_images/000000395701.jpg | idx 16 | label quality score: 9.033548411774308e-05 | is issue: True
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/tutorials_object_detection_24_1.png" src="../_images/tutorials_object_detection_24_1.png" />
+</div>
+</div>
+<p>Notice the armchair to the left of the TV is missing an annotation.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[13]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">issue_to_visualize</span> <span class="o">=</span> <span class="n">issue_idx</span><span class="p">[</span><span class="mi">6</span><span class="p">]</span>
+<span class="n">label</span> <span class="o">=</span> <span class="n">labels</span><span class="p">[</span><span class="n">issue_to_visualize</span><span class="p">]</span>
+<span class="n">prediction</span> <span class="o">=</span> <span class="n">predictions</span><span class="p">[</span><span class="n">issue_to_visualize</span><span class="p">]</span>
+<span class="n">score</span> <span class="o">=</span> <span class="n">scores</span><span class="p">[</span><span class="n">issue_to_visualize</span><span class="p">]</span>
+
+<span class="n">image_path</span> <span class="o">=</span> <span class="n">IMAGE_PATH</span> <span class="o">+</span> <span class="n">label</span><span class="p">[</span><span class="s1">&#39;seg_map&#39;</span><span class="p">]</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">image_path</span><span class="p">,</span> <span class="s1">&#39;| idx&#39;</span><span class="p">,</span> <span class="n">issue_to_visualize</span> <span class="p">,</span> <span class="s1">&#39;| label quality score:&#39;</span><span class="p">,</span> <span class="n">score</span><span class="p">,</span> <span class="s1">&#39;| is issue: True&#39;</span><span class="p">)</span>
+<span class="n">visualize</span><span class="p">(</span><span class="n">image_path</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="n">label</span><span class="p">,</span> <span class="n">prediction</span><span class="o">=</span><span class="n">prediction</span><span class="p">,</span> <span class="n">class_names</span><span class="o">=</span><span class="n">class_names</span><span class="p">,</span> <span class="n">overlay</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+./example_images/000000154004.jpg | idx 62 | label quality score: 0.38300759625496356 | is issue: True
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/tutorials_object_detection_26_1.png" src="../_images/tutorials_object_detection_26_1.png" />
+</div>
+</div>
+<p>Similarly, the woman in a red jacket in the foreground is missing an annotation.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[14]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">issue_to_visualize</span> <span class="o">=</span> <span class="n">issue_idx</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+<span class="n">label</span> <span class="o">=</span> <span class="n">labels</span><span class="p">[</span><span class="n">issue_to_visualize</span><span class="p">]</span>
+<span class="n">prediction</span> <span class="o">=</span> <span class="n">predictions</span><span class="p">[</span><span class="n">issue_to_visualize</span><span class="p">]</span>
+<span class="n">score</span> <span class="o">=</span> <span class="n">scores</span><span class="p">[</span><span class="n">issue_to_visualize</span><span class="p">]</span>
+
+<span class="n">image_path</span> <span class="o">=</span> <span class="n">IMAGE_PATH</span> <span class="o">+</span> <span class="n">label</span><span class="p">[</span><span class="s1">&#39;seg_map&#39;</span><span class="p">]</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">image_path</span><span class="p">,</span> <span class="s1">&#39;| idx&#39;</span><span class="p">,</span> <span class="n">issue_to_visualize</span> <span class="p">,</span> <span class="s1">&#39;| label quality score:&#39;</span><span class="p">,</span> <span class="n">score</span><span class="p">,</span> <span class="s1">&#39;| is issue: True&#39;</span><span class="p">)</span>
+<span class="n">visualize</span><span class="p">(</span><span class="n">image_path</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="n">label</span><span class="p">,</span> <span class="n">prediction</span><span class="o">=</span><span class="n">prediction</span><span class="p">,</span> <span class="n">class_names</span><span class="o">=</span><span class="n">class_names</span><span class="p">,</span> <span class="n">overlay</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+./example_images/000000448410.jpg | idx 31 | label quality score: 0.0008575101690203273 | is issue: True
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/tutorials_object_detection_28_1.png" src="../_images/tutorials_object_detection_28_1.png" />
+</div>
+</div>
+<p>The people in this image should have had individual bounding boxes around each persons (the COCO guidelines state only groups with 10+ objects of the same type can be a “crowd” bounded by a single box). Individuals in the back are missing annotations.</p>
+<p>All of these examples received low label quality scores reflecting their low annotation quality in the original dataset.</p>
+</section>
+<section id="Other-uses-of-visualize">
+<h3>Other uses of visualize<a class="headerlink" href="#Other-uses-of-visualize" title="Permalink to this heading">#</a></h3>
+<p>The <code class="docutils literal notranslate"><span class="pre">visualize()</span></code> function can also depict non-issue images, labels or predictions alone, or just the image itself. Let’s explore this with a few images in our dataset.</p>
+<p>We can save a visualization to file via the <code class="docutils literal notranslate"><span class="pre">save_path</span></code> argument. Note the label quality score is high for this example and it is marked as a non-issue. The given and predicted labels closely resemble each other contributing to the high score.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[15]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">image_to_visualize</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="n">image_path</span> <span class="o">=</span> <span class="n">IMAGE_PATH</span> <span class="o">+</span> <span class="n">labels</span><span class="p">[</span><span class="n">image_to_visualize</span><span class="p">][</span><span class="s1">&#39;seg_map&#39;</span><span class="p">]</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">image_path</span><span class="p">,</span> <span class="s1">&#39;| idx&#39;</span><span class="p">,</span> <span class="n">image_to_visualize</span> <span class="p">,</span> <span class="s1">&#39;| label quality score:&#39;</span><span class="p">,</span> <span class="n">scores</span><span class="p">[</span><span class="n">image_to_visualize</span><span class="p">],</span> <span class="s1">&#39;| is issue:&#39;</span><span class="p">,</span> <span class="n">image_to_visualize</span> <span class="ow">in</span> <span class="n">issue_idx</span><span class="p">)</span>
+<span class="n">visualize</span><span class="p">(</span><span class="n">image_path</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="n">labels</span><span class="p">[</span><span class="n">image_to_visualize</span><span class="p">],</span> <span class="n">prediction</span><span class="o">=</span><span class="n">predictions</span><span class="p">[</span><span class="n">image_to_visualize</span><span class="p">],</span> <span class="n">class_names</span><span class="o">=</span><span class="n">class_names</span><span class="p">,</span> <span class="n">save_path</span><span class="o">=</span><span class="s1">&#39;./example_image.png&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+./example_images/000000499768.jpg | idx 0 | label quality score: 0.9748962231208227 | is issue: False
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/tutorials_object_detection_31_1.png" src="../_images/tutorials_object_detection_31_1.png" />
+</div>
+</div>
+<p>For the next example, notice how we are only passing in the given labels to visualize. We can limit visualization to either labels, predictions, or neither.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[16]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">image_to_visualize</span> <span class="o">=</span> <span class="mi">3</span>
+<span class="n">image_path</span> <span class="o">=</span> <span class="n">IMAGE_PATH</span> <span class="o">+</span> <span class="n">labels</span><span class="p">[</span><span class="n">image_to_visualize</span><span class="p">][</span><span class="s1">&#39;seg_map&#39;</span><span class="p">]</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">image_path</span><span class="p">,</span> <span class="s1">&#39;| idx&#39;</span><span class="p">,</span> <span class="n">image_to_visualize</span> <span class="p">,</span> <span class="s1">&#39;| label quality score:&#39;</span><span class="p">,</span> <span class="n">scores</span><span class="p">[</span><span class="n">image_to_visualize</span><span class="p">],</span> <span class="s1">&#39;| is issue:&#39;</span><span class="p">,</span> <span class="n">image_to_visualize</span> <span class="ow">in</span> <span class="n">issue_idx</span><span class="p">)</span>
+<span class="n">visualize</span><span class="p">(</span><span class="n">image_path</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="n">labels</span><span class="p">[</span><span class="n">image_to_visualize</span><span class="p">],</span> <span class="n">class_names</span><span class="o">=</span><span class="n">class_names</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+./example_images/000000521141.jpg | idx 3 | label quality score: 0.8889923658893665 | is issue: False
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/tutorials_object_detection_33_1.png" src="../_images/tutorials_object_detection_33_1.png" />
+</div>
+</div>
+<p>For completeness, let’s just look at an image alone.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[17]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">image_to_visualize</span> <span class="o">=</span> <span class="mi">2</span>
+<span class="n">image_path</span> <span class="o">=</span> <span class="n">IMAGE_PATH</span> <span class="o">+</span> <span class="n">labels</span><span class="p">[</span><span class="n">image_to_visualize</span><span class="p">][</span><span class="s1">&#39;seg_map&#39;</span><span class="p">]</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">image_path</span><span class="p">,</span> <span class="s1">&#39;| idx&#39;</span><span class="p">,</span> <span class="n">image_to_visualize</span> <span class="p">,</span> <span class="s1">&#39;| label quality score:&#39;</span><span class="p">,</span> <span class="n">scores</span><span class="p">[</span><span class="n">image_to_visualize</span><span class="p">],</span> <span class="s1">&#39;| is issue:&#39;</span><span class="p">,</span> <span class="n">image_to_visualize</span> <span class="ow">in</span> <span class="n">issue_idx</span><span class="p">)</span>
+<span class="n">visualize</span><span class="p">(</span><span class="n">image_path</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+./example_images/000000143931.jpg | idx 2 | label quality score: 0.9876495074395956 | is issue: False
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/tutorials_object_detection_35_1.png" src="../_images/tutorials_object_detection_35_1.png" />
+</div>
+</div>
+</section>
+</section>
+</section>
+ 
+        </article>
+      </div>
+      <footer>
+         
+        <div class="related-pages">
+          <a class="next-page" href="pred_probs_cross_val.html">
+              <div class="page-info">
+                <div class="context">
+                  <span>Next</span>
+                </div>
+                <div class="title">Computing Out-of-Sample Predicted Probabilities with Cross-Validation</div>
+              </div>
+              <svg><use href="#svg-arrow-right"></use></svg>
+            </a>
+          <a class="prev-page" href="segmentation.html">
+              <svg><use href="#svg-arrow-right"></use></svg>
+              <div class="page-info">
+                <div class="context">
+                  <span>Previous</span>
+                </div>
+                
+                <div class="title">Find Label Errors in Semantic Segmentation Datasets</div>
+                
+              </div>
+            </a>
+        </div>
+        <div class="bottom-of-page">
+          <div class="left-details">
+            <div class="copyright">
+                Copyright &#169; 2023, Cleanlab Inc.
+            </div>
+            Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
+            
+            <a href="https://github.com/pradyunsg/furo">Furo</a>
+            
+          </div>
+          <div class="right-details">
+            <div class="icons">
+              <a class="muted-link " href="https://github.com/cleanlab/cleanlab" aria-label="GitHub">
+                <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 16 16">
+                    <path fill-rule="evenodd" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0 0 16 8c0-4.42-3.58-8-8-8z"></path>
+                </svg>
+            </a>
+              
+            </div>
+          </div>
+        </div>
+        
+
+<script type="text/javascript">
+    window.addEventListener("load", () => {
+        let elements = document.getElementsByClassName("left-details");
+
+        elements[0].insertAdjacentHTML(
+            "afterbegin",
+            `<code class="docutils literal notranslate"><span class="pre">cleanlab</span></code> is distributed on <a href="https://pypi.org/project/cleanlab/">PyPI</a> and <a href="https://anaconda.org/conda-forge/cleanlab">conda</a>.`
+        );
+    });
+</script>
+
+
+      </footer>
+    </div>
+    <aside class="toc-drawer">
+      
+      
+      <div class="toc-sticky toc-scroll">
+        <div class="toc-title-container">
+          <span class="toc-title">
+            Contents
+          </span>
+        </div>
+        <div class="toc-tree-container">
+          <div class="toc-tree">
+            <ul>
+<li><a class="reference internal" href="#">Finding Label Errors in Object Detection Datasets</a><ul>
+<li><a class="reference internal" href="#1.-Install-required-dependencies-and-download-data">1. Install required dependencies and download data</a></li>
+<li><a class="reference internal" href="#2.-Format-data,-labels,-and-model-predictions">2. Format data, labels, and model predictions</a></li>
+<li><a class="reference internal" href="#3.-Use-cleanlab-to-find-label-issues">3. Use cleanlab to find label issues</a><ul>
+<li><a class="reference internal" href="#Get-label-quality-scores">Get label quality scores</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#4.-Use-ObjectLab-to-visualize-label-issues">4. Use ObjectLab to visualize label issues</a><ul>
+<li><a class="reference internal" href="#Different-kinds-of-label-issues-identified-by-ObjectLab">Different kinds of label issues identified by ObjectLab</a></li>
+<li><a class="reference internal" href="#Other-uses-of-visualize">Other uses of visualize</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+          </div>
+        </div>
+      </div>
+      
+      
+    </aside>
+  </div>
+</div><script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/scripts/furo.js"></script>
+    <script src="../_static/clipboard.min.js"></script>
+    <script src="../_static/copybutton.js"></script>
+    <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script src="https://unpkg.com/@jupyter-widgets/html-manager@^0.20.0/dist/embed-amd.js"></script>
+    
+<script async defer src="https://buttons.github.io/buttons.js"></script>
+</body>
+</html>

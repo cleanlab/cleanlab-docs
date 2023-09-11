@@ -55,7 +55,7 @@ cleanlab automatically detects various issues in *any dataset that a classifier 
 
     lab = Datalab(data=your_dataset, label_name="column_name_of_labels")
     lab.find_issues(features=feature_embeddings, pred_probs=pred_probs)
-    lab.report()  # summarize issues in dataset, how severe they are, ... 
+    lab.report()  # summarize issues in dataset, how severe they are, ...
 
 
 3. Handle label errors and train robust models with noisy labels
@@ -126,6 +126,15 @@ As cleanlab is an open-source project, we welcome contributions from the communi
 
 Please see our `contributing guidelines <https://github.com/cleanlab/cleanlab/blob/master/CONTRIBUTING.md>`_ for more information.
 
+Easy Mode
+---------
+
+While this open-source library **finds** data issues, its utility depends on you having a good ML model and  interface to efficiently **fix** these issues in your dataset. Providing all these pieces, `Cleanlab Studio <https://cleanlab.ai/studio/?utm_source=github&utm_medium=readme&utm_campaign=clostostudio>`_ is a *no-code* platform to **find and fix** problems in image/text/tabular datasets. Cleanlab Studio integrates the data quality algorithms from this library on top of cutting-edge AutoML & Foundation models fit to your data, and presents detected issues in a smart data editing interface. `There is no easier way <https://cleanlab.ai/blog/data-centric-ai/>`_ to turn *unreliable* raw data into *reliable* models/analytics. `Try it for free! <https://cleanlab.ai/signup/>`_
+
+.. image:: https://raw.githubusercontent.com/cleanlab/assets/master/cleanlab/full-automated-ai-pipeline.jpg
+   :width: 800
+   :alt: Stages of modern AI pipeline that can now be automated with Cleanlab Studio
+
 
 .. toctree::
    :hidden:
@@ -138,15 +147,18 @@ Please see our `contributing guidelines <https://github.com/cleanlab/cleanlab/bl
 
    Datalab Tutorials <tutorials/datalab/index>
    Workflows of Data-Centric AI <tutorials/indepth_overview>
-   Image Classification (pytorch) <tutorials/image>
-   Text Classification (transformers) <tutorials/text>
-   Tabular Classification (sklearn) <tutorials/tabular>
-   Audio Classification (speechbrain) <tutorials/audio>
+   Image Classification <tutorials/image>
+   Text Classification <tutorials/text>
+   Tabular Classification <tutorials/tabular>
+   Audio Classification <tutorials/audio>
    Find Dataset-level Issues <tutorials/dataset_health>
-   Identifying Outliers (pytorch) <tutorials/outliers>
+   Identifying Outliers <tutorials/outliers>
    Improving Consensus Labels for Multiannotator Data <tutorials/multiannotator>
    Multi-Label Classification <tutorials/multilabel_classification>
+   Noisy Labels in Regression <tutorials/regression>
    Token Classification (text) <tutorials/token_classification>
+   Image Segmentation <tutorials/segmentation>
+   Object Detection <tutorials/object_detection>
    Predicted Probabilities via Cross Validation <tutorials/pred_probs_cross_val>
    FAQ <tutorials/faq>
 
@@ -155,6 +167,7 @@ Please see our `contributing guidelines <https://github.com/cleanlab/cleanlab/bl
    :hidden:
    :maxdepth: 3
 
+   cleanlab/datalab/index
    cleanlab/classification
    cleanlab/filter
    cleanlab/rank
@@ -163,8 +176,10 @@ Please see our `contributing guidelines <https://github.com/cleanlab/cleanlab/bl
    cleanlab/outlier
    cleanlab/multiannotator
    cleanlab/multilabel_classification/index
+   cleanlab/regression/index
    cleanlab/token_classification/index
-   cleanlab/datalab/index
+   cleanlab/segmentation/index
+   cleanlab/object_detection/index
    cleanlab/benchmarking/index
    cleanlab/models/index
    cleanlab/experimental/index
@@ -174,8 +189,8 @@ Please see our `contributing guidelines <https://github.com/cleanlab/cleanlab/bl
    :caption: Guides
    :hidden:
 
+   Datalab issue types <cleanlab/datalab/guide/index>
    How to contribute <https://github.com/cleanlab/cleanlab/blob/master/CONTRIBUTING.md>
-   Migrating to v2.x <migrating/migrate_v2>
 
 .. toctree::
    :caption: Links
@@ -185,4 +200,5 @@ Please see our `contributing guidelines <https://github.com/cleanlab/cleanlab/bl
    GitHub <https://github.com/cleanlab/cleanlab>
    PyPI <https://pypi.org/project/cleanlab/>
    Conda <https://anaconda.org/Cleanlab/cleanlab>
-   Cleanlab Studio <https://cleanlab.ai/studio/?utm_source=github&utm_medium=docs&utm_campaign=clostostudio>
+   Cleanlab Studio <https://cleanlab.ai/blog/data-centric-ai/>
+   Cleanlab Studio Docs <https://help.cleanlab.ai>
