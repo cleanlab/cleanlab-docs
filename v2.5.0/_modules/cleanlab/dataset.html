@@ -1,0 +1,1106 @@
+<!doctype html>
+<html class="no-js" lang="en">
+  <head><meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width,initial-scale=1"/>
+    <meta name="color-scheme" content="light dark">
+        <script async src="https://www.googletagmanager.com/gtag/js?id=G-EV8RVEFX82"></script>
+        <script>
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            
+            gtag('config', 'G-EV8RVEFX82');
+            
+        </script>
+    <link rel="index" title="Index" href="../../genindex.html" /><link rel="search" title="Search" href="../../search.html" />
+
+    <link rel="shortcut icon" href="https://raw.githubusercontent.com/cleanlab/assets/a4483476d449f2f05a4c7cde329e72358099cc07/cleanlab/cleanlab_favicon.svg"/><meta name="generator" content="sphinx-5.1.1, furo 2022.06.21"/>
+        <title>cleanlab.dataset - cleanlab</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/styles/furo.css?digest=40978830699223671f4072448e654b5958f38b89" />
+    <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/tabs.css" />
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/katex@0.13.11/dist/katex.min.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/katex-math.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/styles/furo-extensions.css?digest=30d1aed668e5c3a91c3e3bf6a60b675221979f0e" />
+    <link rel="stylesheet" type="text/css" href="../../_static/css/custom.css" />
+    
+    
+
+
+<style>
+  body {
+    --color-code-background: #f8f8f8;
+  --color-code-foreground: black;
+  
+  }
+  @media not print {
+    body[data-theme="dark"] {
+      --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+    }
+    @media (prefers-color-scheme: dark) {
+      body:not([data-theme="light"]) {
+        --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+      }
+    }
+  }
+</style></head>
+  <body>
+    
+    <script>
+      document.body.dataset.theme = localStorage.getItem("theme") || "auto";
+    </script>
+    
+
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+  <symbol id="svg-toc" viewBox="0 0 24 24">
+    <title>Contents</title>
+    <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 1024 1024">
+      <path d="M408 442h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8zm-8 204c0 4.4 3.6 8 8 8h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56zm504-486H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zm0 632H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zM115.4 518.9L271.7 642c5.8 4.6 14.4.5 14.4-6.9V388.9c0-7.4-8.5-11.5-14.4-6.9L115.4 505.1a8.74 8.74 0 0 0 0 13.8z"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-menu" viewBox="0 0 24 24">
+    <title>Menu</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-menu">
+      <line x1="3" y1="12" x2="21" y2="12"></line>
+      <line x1="3" y1="6" x2="21" y2="6"></line>
+      <line x1="3" y1="18" x2="21" y2="18"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-arrow-right" viewBox="0 0 24 24">
+    <title>Expand</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-chevron-right">
+      <polyline points="9 18 15 12 9 6"></polyline>
+    </svg>
+  </symbol>
+  <symbol id="svg-sun" viewBox="0 0 24 24">
+    <title>Light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="feather-sun">
+      <circle cx="12" cy="12" r="5"></circle>
+      <line x1="12" y1="1" x2="12" y2="3"></line>
+      <line x1="12" y1="21" x2="12" y2="23"></line>
+      <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+      <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+      <line x1="1" y1="12" x2="3" y2="12"></line>
+      <line x1="21" y1="12" x2="23" y2="12"></line>
+      <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+      <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon" viewBox="0 0 24 24">
+    <title>Dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-moon">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454z" />
+    </svg>
+  </symbol>
+  <symbol id="svg-sun-half" viewBox="0 0 24 24">
+    <title>Auto light/dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-shadow">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+      <circle cx="12" cy="12" r="9" />
+      <path d="M13 12h5" />
+      <path d="M13 15h4" />
+      <path d="M13 18h1" />
+      <path d="M13 9h4" />
+      <path d="M13 6h1" />
+    </svg>
+  </symbol>
+</svg>
+
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation">
+<input type="checkbox" class="sidebar-toggle" name="__toc" id="__toc">
+<label class="overlay sidebar-overlay" for="__navigation">
+  <div class="visually-hidden">Hide navigation sidebar</div>
+</label>
+<label class="overlay toc-overlay" for="__toc">
+  <div class="visually-hidden">Hide table of contents sidebar</div>
+</label>
+
+
+
+<div class="page">
+  <header class="mobile-header">
+    <div class="header-left">
+      <label class="nav-overlay-icon" for="__navigation">
+        <div class="visually-hidden">Toggle site navigation sidebar</div>
+        <i class="icon"><svg><use href="#svg-menu"></use></svg></i>
+      </label>
+    </div>
+    <div class="header-center">
+      <a href="../../index.html"><div class="brand">cleanlab</div></a>
+    </div>
+    <div class="header-right">
+      <div class="theme-toggle-container theme-toggle-header">
+        <button class="theme-toggle">
+          <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+          <svg class="theme-icon-when-auto"><use href="#svg-sun-half"></use></svg>
+          <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+          <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+        </button>
+      </div>
+      <label class="toc-overlay-icon toc-header-icon no-toc" for="__toc">
+        <div class="visually-hidden">Toggle table of contents sidebar</div>
+        <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+      </label>
+    </div>
+  </header>
+  <aside class="sidebar-drawer">
+    <div class="sidebar-container">
+      
+      <div class="sidebar-sticky"><a style="padding-bottom: 0px;" class="sidebar-brand centered" href="../../index.html">
+    
+    <div class="sidebar-logo-container">
+        <img class="sidebar-logo" src="https://raw.githubusercontent.com/cleanlab/assets/master/cleanlab/cleanlab_logo_only.png" alt="Logo" />
+    </div>
+    
+    <span style="margin-bottom:0px" class="sidebar-brand-text">
+        cleanlab
+    </span>
+    
+</a>
+
+<div class="centered">
+    <a style="margin-top: 6px;" class="github-button" href="https://github.com/cleanlab/cleanlab" data-size="large" data-show-count="true"
+    aria-label="Star cleanlab/cleanlab on GitHub">Star</a>
+</div>
+<form class="sidebar-search-container" method="get" action="../../search.html" role="search">
+  <input class="sidebar-search" placeholder=Search name="q" aria-label="Search">
+  <input type="hidden" name="check_keywords" value="yes">
+  <input type="hidden" name="area" value="default">
+</form>
+<div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
+  <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../index.html">Quickstart</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Tutorials</span></p>
+<ul>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../tutorials/datalab/index.html">Datalab Tutorials</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../tutorials/datalab/datalab_quickstart.html">Detecting Common Data Issues with Datalab</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../tutorials/datalab/datalab_advanced.html">Advanced Data Auditing with Datalab</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../tutorials/datalab/text.html">Text Dataset</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../tutorials/datalab/tabular.html">Tabular Data (Numeric/Categorical)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorials/indepth_overview.html">Workflows of Data-Centric AI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorials/image.html">Image Classification</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorials/text.html">Text Classification</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorials/tabular.html">Tabular Classification</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorials/audio.html">Audio Classification</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorials/dataset_health.html">Find Dataset-level Issues</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorials/outliers.html">Identifying Outliers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorials/multiannotator.html">Improving Consensus Labels for Multiannotator Data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorials/multilabel_classification.html">Multi-Label Classification</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorials/regression.html">Noisy Labels in Regression</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorials/token_classification.html">Token Classification (text)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorials/segmentation.html">Image Segmentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorials/object_detection.html">Object Detection</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorials/pred_probs_cross_val.html">Predicted Probabilities via Cross Validation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorials/faq.html">FAQ</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API Reference</span></p>
+<ul>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../cleanlab/datalab/index.html">datalab</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../cleanlab/datalab/guide/index.html">Datalab guides</a><input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" role="switch" type="checkbox"/><label for="toctree-checkbox-3"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../cleanlab/datalab/guide/issue_type_description.html">Datalab Issue Types</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../cleanlab/datalab/guide/custom_issue_manager.html">Creating Your Own Issues Manager</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../cleanlab/datalab/datalab.html">datalab</a></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../cleanlab/datalab/internal/index.html">internal</a><input class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" role="switch" type="checkbox"/><label for="toctree-checkbox-4"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../cleanlab/datalab/internal/data.html">data</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../cleanlab/datalab/internal/data_issues.html">data_issues</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../cleanlab/datalab/internal/issue_finder.html">issue_finder</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../cleanlab/datalab/internal/factory.html">factory</a></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../../cleanlab/datalab/internal/issue_manager/index.html">issue_manager</a><input class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" role="switch" type="checkbox"/><label for="toctree-checkbox-5"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../cleanlab/datalab/internal/issue_manager/issue_manager.html">Base issue_manager module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../cleanlab/datalab/internal/issue_manager/label.html">label</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../cleanlab/datalab/internal/issue_manager/outlier.html">outlier</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../cleanlab/datalab/internal/issue_manager/duplicate.html">duplicate</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../cleanlab/datalab/internal/issue_manager/noniid.html">noniid</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../cleanlab/datalab/internal/issue_manager/imbalance.html">imbalance</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../cleanlab/datalab/internal/report.html">report</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../cleanlab/classification.html">classification</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../cleanlab/filter.html">filter</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../cleanlab/rank.html">rank</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../cleanlab/count.html">count</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../cleanlab/dataset.html">dataset</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../cleanlab/outlier.html">outlier</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../cleanlab/multiannotator.html">multiannotator</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../cleanlab/multilabel_classification/index.html">multilabel_classification</a><input class="toctree-checkbox" id="toctree-checkbox-6" name="toctree-checkbox-6" role="switch" type="checkbox"/><label for="toctree-checkbox-6"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../cleanlab/multilabel_classification/filter.html">filter</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cleanlab/multilabel_classification/rank.html">rank</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cleanlab/multilabel_classification/dataset.html">dataset</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../cleanlab/regression/index.html">regression</a><input class="toctree-checkbox" id="toctree-checkbox-7" name="toctree-checkbox-7" role="switch" type="checkbox"/><label for="toctree-checkbox-7"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../cleanlab/regression/rank.html">regression.rank</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cleanlab/regression/learn.html">regression.learn</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../cleanlab/token_classification/index.html">token_classification</a><input class="toctree-checkbox" id="toctree-checkbox-8" name="toctree-checkbox-8" role="switch" type="checkbox"/><label for="toctree-checkbox-8"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../cleanlab/token_classification/filter.html">filter</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cleanlab/token_classification/rank.html">rank</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cleanlab/token_classification/summary.html">summary</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../cleanlab/segmentation/index.html">segmentation</a><input class="toctree-checkbox" id="toctree-checkbox-9" name="toctree-checkbox-9" role="switch" type="checkbox"/><label for="toctree-checkbox-9"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../cleanlab/segmentation/rank.html">rank</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cleanlab/segmentation/filter.html">filter</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cleanlab/segmentation/summary.html">summary</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../cleanlab/object_detection/index.html">object_detection</a><input class="toctree-checkbox" id="toctree-checkbox-10" name="toctree-checkbox-10" role="switch" type="checkbox"/><label for="toctree-checkbox-10"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../cleanlab/object_detection/rank.html">rank</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cleanlab/object_detection/filter.html">filter</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cleanlab/object_detection/summary.html">summary</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../cleanlab/benchmarking/index.html">benchmarking</a><input class="toctree-checkbox" id="toctree-checkbox-11" name="toctree-checkbox-11" role="switch" type="checkbox"/><label for="toctree-checkbox-11"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../cleanlab/benchmarking/noise_generation.html">noise_generation</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../cleanlab/models/index.html">models</a><input class="toctree-checkbox" id="toctree-checkbox-12" name="toctree-checkbox-12" role="switch" type="checkbox"/><label for="toctree-checkbox-12"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../cleanlab/models/keras.html">keras</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cleanlab/models/fasttext.html">fasttext</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../cleanlab/experimental/index.html">experimental</a><input class="toctree-checkbox" id="toctree-checkbox-13" name="toctree-checkbox-13" role="switch" type="checkbox"/><label for="toctree-checkbox-13"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../cleanlab/experimental/label_issues_batched.html">label_issues_batched</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cleanlab/experimental/mnist_pytorch.html">mnist_pytorch</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cleanlab/experimental/coteaching.html">coteaching</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cleanlab/experimental/cifar_cnn.html">cifar_cnn</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../cleanlab/internal/index.html">internal</a><input class="toctree-checkbox" id="toctree-checkbox-14" name="toctree-checkbox-14" role="switch" type="checkbox"/><label for="toctree-checkbox-14"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../cleanlab/internal/util.html">util</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cleanlab/internal/latent_algebra.html">latent_algebra</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cleanlab/internal/label_quality_utils.html">label_quality_utils</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cleanlab/internal/multilabel_utils.html">multilabel_utils</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cleanlab/internal/multilabel_scorer.html">multilabel_scorer</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cleanlab/internal/outlier.html">outlier</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cleanlab/internal/token_classification_utils.html">token_classification_utils</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cleanlab/internal/validation.html">validation</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Guides</span></p>
+<ul>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../cleanlab/datalab/guide/index.html">Datalab issue types</a><input class="toctree-checkbox" id="toctree-checkbox-15" name="toctree-checkbox-15" role="switch" type="checkbox"/><label for="toctree-checkbox-15"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../cleanlab/datalab/guide/issue_type_description.html">Datalab Issue Types</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cleanlab/datalab/guide/custom_issue_manager.html">Creating Your Own Issues Manager</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/cleanlab/cleanlab/blob/master/CONTRIBUTING.md">How to contribute</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Links</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference external" href="https://cleanlab.ai">Website</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/cleanlab/cleanlab">GitHub</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://pypi.org/project/cleanlab/">PyPI</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://anaconda.org/Cleanlab/cleanlab">Conda</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://cleanlab.ai/blog/data-centric-ai/">Cleanlab Studio</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://help.cleanlab.ai">Cleanlab Studio Docs</a></li>
+</ul>
+
+</div>
+
+
+<!-- Start of versioning -->
+
+<div class="sidebar-tree">
+    <p class="caption" role="heading">
+        <span class="caption-text">Versions</span>
+    </p>
+    <ul>
+        <li class="toctree-l1">
+            <a
+                id="version_number"
+                class="reference internal"
+                href="/"
+                >stable</a
+            >
+        </li>
+        <li class="toctree-l1">
+            <a
+                id="commit_hash"
+                class="reference internal"
+                href="/master/"
+                >developer</a
+            >
+        </li>
+        
+        <li class="toctree-l1">
+            <a
+                id="v2.5.0"
+                class="reference internal"
+                href="/v2.5.0/"
+                >v2.5.0</a
+            >
+        </li>
+        
+        <li class="toctree-l1">
+            <a
+                id="v2.4.0"
+                class="reference internal"
+                href="/v2.4.0/"
+                >v2.4.0</a
+            >
+        </li>
+        
+        <li class="toctree-l1">
+            <a
+                id="v2.3.1"
+                class="reference internal"
+                href="/v2.3.1/"
+                >v2.3.1</a
+            >
+        </li>
+        
+        <li class="toctree-l1">
+            <a
+                id="v2.3.0"
+                class="reference internal"
+                href="/v2.3.0/"
+                >v2.3.0</a
+            >
+        </li>
+        
+        <li class="toctree-l1">
+            <a
+                id="v2.2.0"
+                class="reference internal"
+                href="/v2.2.0/"
+                >v2.2.0</a
+            >
+        </li>
+        
+        <li class="toctree-l1">
+            <a
+                id="v2.1.0"
+                class="reference internal"
+                href="/v2.1.0/"
+                >v2.1.0</a
+            >
+        </li>
+        
+        <li class="toctree-l1">
+            <a
+                id="v2.0.0"
+                class="reference internal"
+                href="/v2.0.0/"
+                >v2.0.0</a
+            >
+        </li>
+        
+        <li class="toctree-l1">
+            <a
+                id="v1.0.1"
+                class="reference internal"
+                href="/v1.0.1/"
+                >v1.0.1</a
+            >
+        </li>
+        
+    </ul>
+</div>
+
+<br>
+<br>
+
+<script
+    type="text/javascript"
+    src="/versioning.js"
+></script>
+
+<script type="text/javascript">
+    window.addEventListener("load", () => {
+        const version_number = Version.version_number;
+        const commit_hash = Version.commit_hash;
+
+        document.getElementById("version_number").innerHTML =
+            "stable <code class='docutils literal notranslate'><span class='pre'> (" +
+            version_number +
+            ")</span></code>";
+        document.getElementById("commit_hash").innerHTML =
+            "master <code class='docutils literal notranslate'><span class='pre'> (" +
+            commit_hash.slice(0, 7) +
+            "&hellip;)</span></code>";
+    });
+</script>
+
+<!-- End of versioning -->
+
+</div>
+      </div>
+      
+    </div>
+  </aside>
+  <div class="main">
+    <div class="content">
+      <div class="article-container">
+        <a href="#" class="back-to-top muted-link">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12z"></path>
+          </svg>
+          <span>Back to top</span>
+        </a>
+        <div class="content-icon-container">
+          <div class="theme-toggle-container theme-toggle-content">
+            <button class="theme-toggle">
+              <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+              <svg class="theme-icon-when-auto"><use href="#svg-sun-half"></use></svg>
+              <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+              <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+            </button>
+          </div>
+          <label class="toc-overlay-icon toc-content-icon no-toc" for="__toc">
+            <div class="visually-hidden">Toggle table of contents sidebar</div>
+            <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+          </label>
+        </div>
+        <article role="main">
+          
+
+<noscript>
+  <div class="admonition warning">
+    <p class="admonition-title">Warning</p>
+    <p>Parts of this site uses JavaScript, but your browser does not support it.</p>
+  </div>
+</noscript>
+
+
+
+<!-- Start of Version Warning Banner -->
+
+<p id="doc_ver_warning"></p>
+
+<script
+    type="text/javascript"
+    src="/versioning.js"
+></script>
+<script type="text/javascript">
+    window.addEventListener("load", () => {
+        const version_number = Version.version_number;
+        const path_arr = window.location.pathname.split("/");
+
+        if (path_arr.includes("master")) {
+            document.getElementById("doc_ver_warning").innerHTML =
+            `<div class="admonition warning">
+            <p class="admonition-title">Warning</p>
+            <p>This version of the documentation corresponds to the master branch of <code class="docutils literal notranslate"><span class="pre">cleanlab</span></code> source code from <a href="https://github.com/cleanlab/cleanlab/">GitHub</a>. To see the documentation for the latest <code class="docutils literal notranslate"><span class="pre">pip</span></code>-installed version, click <a href="/">here</a>.</p>
+            </div>`;
+        } else if (!path_arr.includes(version_number) && !path_arr.includes("stable")) {
+            document.getElementById("doc_ver_warning").innerHTML =
+            `<div class="admonition warning">
+            <p class="admonition-title">Warning</p>
+            <p>This documentation is for an old version (<code class="docutils literal notranslate"><span class="pre">v2.5.0</span></code>) of <code class="docutils literal notranslate"><span class="pre">cleanlab</span></code>. To see the documentation for the latest stable version (<code class="docutils literal notranslate"><span class="pre">` + version_number + `</span></code>), click <a href="/">here</a>.</p>
+            </div>`;
+        } else {
+            document.getElementById("doc_ver_warning").remove();
+        }
+    });
+</script>
+
+<!-- End of Version Warning Banner -->
+
+ <h1>Source code for cleanlab.dataset</h1><div class="highlight"><pre>
+<span></span><span class="c1"># Copyright (C) 2017-2023  Cleanlab Inc.</span>
+<span class="c1"># This file is part of cleanlab.</span>
+<span class="c1">#</span>
+<span class="c1"># cleanlab is free software: you can redistribute it and/or modify</span>
+<span class="c1"># it under the terms of the GNU Affero General Public License as published</span>
+<span class="c1"># by the Free Software Foundation, either version 3 of the License, or</span>
+<span class="c1"># (at your option) any later version.</span>
+<span class="c1">#</span>
+<span class="c1"># cleanlab is distributed in the hope that it will be useful,</span>
+<span class="c1"># but WITHOUT ANY WARRANTY; without even the implied warranty of</span>
+<span class="c1"># MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the</span>
+<span class="c1"># GNU Affero General Public License for more details.</span>
+<span class="c1">#</span>
+<span class="c1"># You should have received a copy of the GNU Affero General Public License</span>
+<span class="c1"># along with cleanlab.  If not, see &lt;https://www.gnu.org/licenses/&gt;.</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Provides dataset-level and class-level overviews of issues in your classification dataset.</span>
+<span class="sd">If your task allows you to modify the classes in your dataset, this module can help you determine</span>
+<span class="sd">which classes to remove (see :py:func:`rank_classes_by_label_quality &lt;cleanlab.dataset.rank_classes_by_label_quality&gt;`)</span>
+<span class="sd">and which classes to merge (see :py:func:`find_overlapping_classes &lt;cleanlab.dataset.find_overlapping_classes&gt;`).</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">cast</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">from</span> <span class="nn">cleanlab.count</span> <span class="kn">import</span> <span class="n">estimate_joint</span>
+
+
+<div class="viewcode-block" id="rank_classes_by_label_quality"><a class="viewcode-back" href="../../cleanlab/dataset.html#cleanlab.dataset.rank_classes_by_label_quality">[docs]</a><span class="k">def</span> <span class="nf">rank_classes_by_label_quality</span><span class="p">(</span>
+    <span class="n">labels</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">pred_probs</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="o">*</span><span class="p">,</span>
+    <span class="n">class_names</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">num_examples</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">joint</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">confident_joint</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">multi_label</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Returns a Pandas DataFrame with all classes and three overall class label quality scores</span>
+<span class="sd">    (details about each score are listed in the Returns parameter). By default, classes are ordered</span>
+<span class="sd">    by &quot;Label Quality Score&quot;, ascending, so the most problematic classes are reported first.</span>
+
+<span class="sd">    Score values are unnormalized and may tend to be very small. What matters is their relative</span>
+<span class="sd">    ranking across the classes.</span>
+
+<span class="sd">    This method works by providing any one (and only one) of the following inputs:</span>
+
+<span class="sd">    1. ``labels`` and ``pred_probs``, or</span>
+<span class="sd">    2. ``joint`` and ``num_examples``, or</span>
+<span class="sd">    3. ``confident_joint``</span>
+
+<span class="sd">    Only provide **exactly one of the above input options**, do not provide a combination.</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    &gt;&gt;&gt; from cleanlab.dataset import rank_classes_by_label_quality</span>
+<span class="sd">    &gt;&gt;&gt; from sklearn.linear_model import LogisticRegression</span>
+<span class="sd">    &gt;&gt;&gt; from sklearn.model_selection import cross_val_predict</span>
+<span class="sd">    &gt;&gt;&gt; data, labels = get_data_labels_from_dataset()</span>
+<span class="sd">    &gt;&gt;&gt; yourFavoriteModel = LogisticRegression()</span>
+<span class="sd">    &gt;&gt;&gt; pred_probs = cross_val_predict(yourFavoriteModel, data, labels, cv=3, method=&quot;predict_proba&quot;)</span>
+<span class="sd">    &gt;&gt;&gt; df = rank_classes_by_label_quality(labels=labels, pred_probs=pred_probs)</span>
+
+<span class="sd">    **Parameters**: For parameter info, see the docstring of :py:func:`find_overlapping_classes &lt;cleanlab.dataset.find_overlapping_classes&gt;`.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    overall_label_quality : pd.DataFrame</span>
+<span class="sd">        Pandas DataFrame with cols &quot;Class Index&quot;, &quot;Label Issues&quot;, &quot;Inverse Label Issues&quot;,</span>
+<span class="sd">        &quot;Label Issues&quot;, &quot;Inverse Label Noise&quot;, &quot;Label Quality Score&quot;,</span>
+<span class="sd">        with a description of each of these columns below.</span>
+<span class="sd">        The length of the DataFrame is ``num_classes`` (one row per class).</span>
+<span class="sd">        Noise scores are between 0 and 1, where 0 implies no label issues</span>
+<span class="sd">        in the class. The &quot;Label Quality Score&quot; is also between 0 and 1 where 1 implies</span>
+<span class="sd">        perfect quality. Columns:</span>
+
+<span class="sd">        * *Class Index*: The index of the class in 0, 1, ..., K-1.</span>
+<span class="sd">        * *Label Issues*: ``count(given_label = k, true_label != k)``, estimated number of examples in the dataset that are labeled as class k but should have a different label.</span>
+<span class="sd">        * *Inverse Label Issues*: ``count(given_label != k, true_label = k)``, estimated number of examples in the dataset that should actually be labeled as class k but have been given another label.</span>
+<span class="sd">        * *Label Noise*: ``prob(true_label != k | given_label = k)``, estimated proportion of examples in the dataset that are labeled as class k but should have a different label. For each class k: this is computed by dividing the number of examples with &quot;Label Issues&quot; that were labeled as class k by the total number of examples labeled as class k.</span>
+<span class="sd">        * *Inverse Label Noise*: ``prob(given_label != k | true_label = k)``, estimated proportion of examples in the dataset that should actually be labeled as class k but have been given another label.</span>
+<span class="sd">        * *Label Quality Score*: ``p(true_label = k | given_label = k)``. This is the proportion of examples with given label k that have been labeled correctly, i.e. ``1 - label_noise``.</span>
+
+<span class="sd">        By default, the DataFrame is ordered by &quot;Label Quality Score&quot;, ascending.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">multi_label</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+            <span class="s2">&quot;For multilabel data, please instead call:  multilabel_classification.dataset.overall_multilabel_health_score()&quot;</span>
+        <span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">joint</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">joint</span> <span class="o">=</span> <span class="n">estimate_joint</span><span class="p">(</span>
+            <span class="n">labels</span><span class="o">=</span><span class="n">labels</span><span class="p">,</span>
+            <span class="n">pred_probs</span><span class="o">=</span><span class="n">pred_probs</span><span class="p">,</span>
+            <span class="n">confident_joint</span><span class="o">=</span><span class="n">confident_joint</span><span class="p">,</span>
+        <span class="p">)</span>
+    <span class="k">if</span> <span class="n">num_examples</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">num_examples</span> <span class="o">=</span> <span class="n">_get_num_examples</span><span class="p">(</span><span class="n">labels</span><span class="o">=</span><span class="n">labels</span><span class="p">)</span>
+    <span class="n">given_label_noise</span> <span class="o">=</span> <span class="n">joint</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span> <span class="o">-</span> <span class="n">joint</span><span class="o">.</span><span class="n">diagonal</span><span class="p">()</span>  <span class="c1"># p(s=k) - p(s=k,y=k) = p(y!=k, s=k)</span>
+    <span class="n">true_label_noise</span> <span class="o">=</span> <span class="n">joint</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span> <span class="o">-</span> <span class="n">joint</span><span class="o">.</span><span class="n">diagonal</span><span class="p">()</span>  <span class="c1"># p(y=k) - p(s=k,y=k) = p(s!=k,y=k)</span>
+    <span class="n">given_conditional_noise</span> <span class="o">=</span> <span class="n">given_label_noise</span> <span class="o">/</span> <span class="n">joint</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>  <span class="c1"># p(y!=k, s=k) / p(s=k)</span>
+    <span class="n">true_conditional_noise</span> <span class="o">=</span> <span class="n">true_label_noise</span> <span class="o">/</span> <span class="n">joint</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>  <span class="c1"># p(s!=k, y=k) / p(y=k)</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
+        <span class="p">{</span>
+            <span class="s2">&quot;Class Index&quot;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">joint</span><span class="p">)),</span>
+            <span class="s2">&quot;Label Issues&quot;</span><span class="p">:</span> <span class="p">(</span><span class="n">given_label_noise</span> <span class="o">*</span> <span class="n">num_examples</span><span class="p">)</span><span class="o">.</span><span class="n">round</span><span class="p">()</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">),</span>
+            <span class="s2">&quot;Inverse Label Issues&quot;</span><span class="p">:</span> <span class="p">(</span><span class="n">true_label_noise</span> <span class="o">*</span> <span class="n">num_examples</span><span class="p">)</span><span class="o">.</span><span class="n">round</span><span class="p">()</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">),</span>
+            <span class="s2">&quot;Label Noise&quot;</span><span class="p">:</span> <span class="n">given_conditional_noise</span><span class="p">,</span>  <span class="c1"># p(y!=k | s=k)</span>
+            <span class="s2">&quot;Inverse Label Noise&quot;</span><span class="p">:</span> <span class="n">true_conditional_noise</span><span class="p">,</span>  <span class="c1"># p(s!=k | y=k)</span>
+            <span class="c1"># Below could equivalently be computed as: joint.diagonal() / joint.sum(axis=1)</span>
+            <span class="s2">&quot;Label Quality Score&quot;</span><span class="p">:</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">given_conditional_noise</span><span class="p">,</span>  <span class="c1"># p(y=k | s=k)</span>
+        <span class="p">}</span>
+    <span class="p">)</span>
+    <span class="k">if</span> <span class="n">class_names</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">df</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">column</span><span class="o">=</span><span class="s2">&quot;Class Name&quot;</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="n">class_names</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">df</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="n">by</span><span class="o">=</span><span class="s2">&quot;Label Quality Score&quot;</span><span class="p">,</span> <span class="n">ascending</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="find_overlapping_classes"><a class="viewcode-back" href="../../cleanlab/dataset.html#cleanlab.dataset.find_overlapping_classes">[docs]</a><span class="k">def</span> <span class="nf">find_overlapping_classes</span><span class="p">(</span>
+    <span class="n">labels</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">pred_probs</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="o">*</span><span class="p">,</span>
+    <span class="n">asymmetric</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="n">class_names</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">num_examples</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">joint</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">confident_joint</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">multi_label</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Returns the pairs of classes that are often mislabeled as one another.</span>
+<span class="sd">    Consider merging the top pairs of classes returned by this method each into a single class.</span>
+<span class="sd">    If the dataset is labeled by human annotators, consider clearly defining the</span>
+<span class="sd">    difference between the classes prior to having annotators label the data.</span>
+
+<span class="sd">    This method provides two scores in the Pandas DataFrame that is returned:</span>
+
+<span class="sd">    * **Num Overlapping Examples**: The number of examples where the two classes overlap</span>
+<span class="sd">    * **Joint Probability**: `(num overlapping examples / total number of examples in the dataset`).</span>
+
+<span class="sd">    This method works by providing any one (and only one) of the following inputs:</span>
+
+<span class="sd">    1. ``labels`` and ``pred_probs``, or</span>
+<span class="sd">    2. ``joint`` and ``num_examples``, or</span>
+<span class="sd">    3. ``confident_joint``</span>
+
+<span class="sd">    Only provide **exactly one of the above input options**, do not provide a combination.</span>
+
+<span class="sd">    This method uses the joint distribution of noisy and true labels to compute ontological</span>
+<span class="sd">    issues via the approach published in `Northcutt et al.,</span>
+<span class="sd">    2021 &lt;https://jair.org/index.php/jair/article/view/12125&gt;`_.</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    &gt;&gt;&gt; from cleanlab.dataset import find_overlapping_classes</span>
+<span class="sd">    &gt;&gt;&gt; from sklearn.linear_model import LogisticRegression</span>
+<span class="sd">    &gt;&gt;&gt; from sklearn.model_selection import cross_val_predict</span>
+<span class="sd">    &gt;&gt;&gt; data, labels = get_data_labels_from_dataset()</span>
+<span class="sd">    &gt;&gt;&gt; yourFavoriteModel = LogisticRegression()</span>
+<span class="sd">    &gt;&gt;&gt; pred_probs = cross_val_predict(yourFavoriteModel, data, labels, cv=3, method=&quot;predict_proba&quot;)</span>
+<span class="sd">    &gt;&gt;&gt; df = find_overlapping_classes(labels=labels, pred_probs=pred_probs)</span>
+
+<span class="sd">    Note</span>
+<span class="sd">    ----</span>
+<span class="sd">    The joint distribution of noisy and true labels is asymmetric, and therefore the joint</span>
+<span class="sd">    probability ``p(given=&quot;vehicle&quot;, true=&quot;truck&quot;) != p(true=&quot;truck&quot;, given=&quot;vehicle&quot;)``.</span>
+<span class="sd">    This is intuitive. Images of trucks (true label) are much more likely to be labeled as a car</span>
+<span class="sd">    (given label) than images of cars (true label) being frequently mislabeled as truck (given</span>
+<span class="sd">    label). cleanlab takes these differences into account for you automatically via the joint</span>
+<span class="sd">    distribution. If you do not want this behavior, simply set ``asymmetric=False``.</span>
+
+<span class="sd">    This method estimates how often the annotators confuse two classes.</span>
+<span class="sd">    This differs from just using a similarity matrix or confusion matrix,</span>
+<span class="sd">    as these summarize characteristics of the predictive model rather than the data labelers (i.e. annotators).</span>
+<span class="sd">    Instead, this method works even if the model that generated `pred_probs` tends to be more confident in some classes than others.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    labels : np.ndarray or list, optional</span>
+<span class="sd">      An array_like (of length N) of noisy labels for the classification dataset, i.e. some labels may be erroneous.</span>
+<span class="sd">      Elements must be integers in the set 0, 1, ..., K-1, where K is the number of classes.</span>
+<span class="sd">      All the classes (0, 1, ..., and K-1) should be present in ``labels``, such that</span>
+<span class="sd">      ``len(set(labels)) == pred_probs.shape[1]`` for standard multi-class classification with single-labeled data (e.g. ``labels =  [1,0,2,1,1,0...]``).</span>
+<span class="sd">      For multi-label classification where each example can belong to multiple classes (e.g. ``labels = [[1,2],[1],[0],[],...]``),</span>
+<span class="sd">      your labels should instead satisfy: ``len(set(k for l in labels for k in l)) == pred_probs.shape[1])``.</span>
+
+<span class="sd">    pred_probs : np.ndarray, optional</span>
+<span class="sd">      An array of shape ``(N, K)`` of model-predicted probabilities,</span>
+<span class="sd">      ``P(label=k|x)``. Each row of this matrix corresponds</span>
+<span class="sd">      to an example `x` and contains the model-predicted probabilities that</span>
+<span class="sd">      `x` belongs to each possible class, for each of the K classes. The</span>
+<span class="sd">      columns must be ordered such that these probabilities correspond to</span>
+<span class="sd">      class 0, 1, ..., K-1. `pred_probs` should have been computed using 3 (or</span>
+<span class="sd">      higher) fold cross-validation.</span>
+
+<span class="sd">    asymmetric : bool, optional</span>
+<span class="sd">      If ``asymmetric=True``, returns separate estimates for both pairs (class1, class2) and (class2, class1). Use this</span>
+<span class="sd">      for finding &quot;is a&quot; relationships where for example &quot;class1 is a class2&quot;.</span>
+<span class="sd">      In this case, num overlapping examples counts the number of examples that have been labeled as class1 which should actually have been labeled as class2.</span>
+<span class="sd">      If ``asymmetric=False``, the pair (class1, class2) will only be returned once with an arbitrary order.</span>
+<span class="sd">      In this case, their estimated score is the sum: ``score(class1, class2) + score(class2, class1))``.</span>
+
+<span class="sd">    class_names : Iterable[str]</span>
+<span class="sd">        A list or other iterable of the string class names. The list should be in the order that</span>
+<span class="sd">        matches the class indices. So if class 0 is &#39;dog&#39; and class 1 is &#39;cat&#39;, then</span>
+<span class="sd">        ``class_names = [&#39;dog&#39;, &#39;cat&#39;]``.</span>
+
+<span class="sd">    num_examples : int or None, optional</span>
+<span class="sd">        The number of examples in the dataset, i.e. ``len(labels)``. You only need to provide this if</span>
+<span class="sd">        you use this function with the joint, e.g. ``find_overlapping_classes(joint=joint)``, otherwise</span>
+<span class="sd">        this is automatically computed via ``sum(confident_joint)`` or ``len(labels)``.</span>
+
+<span class="sd">    joint : np.ndarray, optional</span>
+<span class="sd">        An array of shape ``(K, K)``, where K is the number of classes,</span>
+<span class="sd">        representing the estimated joint distribution of the noisy labels and</span>
+<span class="sd">        true labels. The sum of all entries in this matrix must be 1 (valid</span>
+<span class="sd">        probability distribution). Each entry in the matrix captures the co-occurence joint</span>
+<span class="sd">        probability of a true label and a noisy label, i.e. ``p(noisy_label=i, true_label=j)``.</span>
+<span class="sd">        **Important**. If you input the joint, you must also input `num_examples`.</span>
+
+<span class="sd">    confident_joint : np.ndarray, optional</span>
+<span class="sd">      An array of shape ``(K, K)`` representing the confident joint, the matrix used for identifying label issues, which</span>
+<span class="sd">      estimates a confident subset of the joint distribution of the noisy and true labels, ``P_{noisy label, true label}``.</span>
+<span class="sd">      Entry ``(j, k)`` in the matrix is the number of examples confidently counted into the pair of ``(noisy label=j, true label=k)`` classes.</span>
+<span class="sd">      The `confident_joint` can be computed using :py:func:`count.compute_confident_joint &lt;cleanlab.count.compute_confident_joint&gt;`.</span>
+<span class="sd">      If not provided, it is computed from the given (noisy) `labels` and `pred_probs`.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    overlapping_classes : pd.DataFrame</span>
+<span class="sd">        Pandas DataFrame with columns &quot;Class Index A&quot;, &quot;Class Index B&quot;,</span>
+<span class="sd">        &quot;Num Overlapping Examples&quot;, &quot;Joint Probability&quot; and a description of each below.</span>
+<span class="sd">        Each row corresponds to a pair of classes.</span>
+
+<span class="sd">        * *Class Index A*: the index of a class in 0, 1, ..., K-1.</span>
+<span class="sd">        * *Class Index B*: the index of a different class (from Class A) in 0, 1, ..., K-1.</span>
+<span class="sd">        * *Num Overlapping Examples*: estimated number of labels overlapping between the two classes.</span>
+<span class="sd">        * *Joint Probability*: the *Num Overlapping Examples* divided by the number of examples in the dataset.</span>
+
+<span class="sd">        By default, the DataFrame is ordered by &quot;Joint Probability&quot; descending.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">_2d_matrix_to_row_column_value_list</span><span class="p">(</span><span class="n">matrix</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Create a list&lt;tuple&gt; [(row_index, col_index, value)] representation of matrix.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        matrix : np.ndarray&lt;float&gt;</span>
+<span class="sd">            Any valid np.ndarray 2-d dimensional matrix.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        list&lt;tuple&gt;</span>
+<span class="sd">            A [(row_index, col_index, value)] representation of matrix.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="p">[(</span><span class="o">*</span><span class="n">i</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">np</span><span class="o">.</span><span class="n">ndenumerate</span><span class="p">(</span><span class="n">matrix</span><span class="p">)]</span>
+
+    <span class="k">if</span> <span class="n">multi_label</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+            <span class="s2">&quot;For multilabel data, please instead call: multilabel_classification.dataset.common_multilabel_issues()&quot;</span>
+        <span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">joint</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">joint</span> <span class="o">=</span> <span class="n">estimate_joint</span><span class="p">(</span>
+            <span class="n">labels</span><span class="o">=</span><span class="n">labels</span><span class="p">,</span>
+            <span class="n">pred_probs</span><span class="o">=</span><span class="n">pred_probs</span><span class="p">,</span>
+            <span class="n">confident_joint</span><span class="o">=</span><span class="n">confident_joint</span><span class="p">,</span>
+        <span class="p">)</span>
+    <span class="k">if</span> <span class="n">num_examples</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">num_examples</span> <span class="o">=</span> <span class="n">_get_num_examples</span><span class="p">(</span><span class="n">labels</span><span class="o">=</span><span class="n">labels</span><span class="p">,</span> <span class="n">confident_joint</span><span class="o">=</span><span class="n">confident_joint</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">asymmetric</span><span class="p">:</span>
+        <span class="n">rcv_list</span> <span class="o">=</span> <span class="n">_2d_matrix_to_row_column_value_list</span><span class="p">(</span><span class="n">joint</span><span class="p">)</span>
+        <span class="c1"># Remove diagonal elements</span>
+        <span class="n">rcv_list</span> <span class="o">=</span> <span class="p">[</span><span class="n">tup</span> <span class="k">for</span> <span class="n">tup</span> <span class="ow">in</span> <span class="n">rcv_list</span> <span class="k">if</span> <span class="n">tup</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">!=</span> <span class="n">tup</span><span class="p">[</span><span class="mi">1</span><span class="p">]]</span>
+    <span class="k">else</span><span class="p">:</span>  <span class="c1"># symmetric</span>
+        <span class="c1"># Sum the upper and lower triangles and remove the lower triangle and the diagonal</span>
+        <span class="n">sym_joint</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">triu</span><span class="p">(</span><span class="n">joint</span><span class="p">)</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">tril</span><span class="p">(</span><span class="n">joint</span><span class="p">)</span><span class="o">.</span><span class="n">T</span>
+        <span class="n">rcv_list</span> <span class="o">=</span> <span class="n">_2d_matrix_to_row_column_value_list</span><span class="p">(</span><span class="n">sym_joint</span><span class="p">)</span>
+        <span class="c1"># Provide values only in (the upper triangle) of the matrix.</span>
+        <span class="n">rcv_list</span> <span class="o">=</span> <span class="p">[</span><span class="n">tup</span> <span class="k">for</span> <span class="n">tup</span> <span class="ow">in</span> <span class="n">rcv_list</span> <span class="k">if</span> <span class="n">tup</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">tup</span><span class="p">[</span><span class="mi">1</span><span class="p">]]</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">rcv_list</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;Class Index A&quot;</span><span class="p">,</span> <span class="s2">&quot;Class Index B&quot;</span><span class="p">,</span> <span class="s2">&quot;Joint Probability&quot;</span><span class="p">])</span>
+    <span class="n">num_overlapping</span> <span class="o">=</span> <span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s2">&quot;Joint Probability&quot;</span><span class="p">]</span> <span class="o">*</span> <span class="n">num_examples</span><span class="p">)</span><span class="o">.</span><span class="n">round</span><span class="p">()</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
+    <span class="n">df</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">column</span><span class="o">=</span><span class="s2">&quot;Num Overlapping Examples&quot;</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="n">num_overlapping</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">class_names</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">df</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span>
+            <span class="n">loc</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">column</span><span class="o">=</span><span class="s2">&quot;Class Name A&quot;</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="n">df</span><span class="p">[</span><span class="s2">&quot;Class Index A&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">class_names</span><span class="p">[</span><span class="n">x</span><span class="p">])</span>
+        <span class="p">)</span>
+        <span class="n">df</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span>
+            <span class="n">loc</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">column</span><span class="o">=</span><span class="s2">&quot;Class Name B&quot;</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="n">df</span><span class="p">[</span><span class="s2">&quot;Class Index B&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">class_names</span><span class="p">[</span><span class="n">x</span><span class="p">])</span>
+        <span class="p">)</span>
+    <span class="k">return</span> <span class="n">df</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="n">by</span><span class="o">=</span><span class="s2">&quot;Joint Probability&quot;</span><span class="p">,</span> <span class="n">ascending</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="overall_label_health_score"><a class="viewcode-back" href="../../cleanlab/dataset.html#cleanlab.dataset.overall_label_health_score">[docs]</a><span class="k">def</span> <span class="nf">overall_label_health_score</span><span class="p">(</span>
+    <span class="n">labels</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">pred_probs</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="o">*</span><span class="p">,</span>
+    <span class="n">num_examples</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">joint</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">confident_joint</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">multi_label</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Returns a single score between 0 and 1 measuring the overall quality of all labels in a dataset.</span>
+<span class="sd">    Intuitively, the score is the average correctness of the given labels across all examples in the</span>
+<span class="sd">    dataset. So a score of 1 suggests your data is perfectly labeled and a score of 0.5 suggests</span>
+<span class="sd">    half of the examples in the dataset may be incorrectly labeled. Thus, a higher</span>
+<span class="sd">    score implies a higher quality dataset.</span>
+
+<span class="sd">    This method works by providing any one (and only one) of the following inputs:</span>
+
+<span class="sd">    1. ``labels`` and ``pred_probs``, or</span>
+<span class="sd">    2. ``joint`` and ``num_examples``, or</span>
+<span class="sd">    3. ``confident_joint``</span>
+
+<span class="sd">    Only provide **exactly one of the above input options**, do not provide a combination.</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    &gt;&gt;&gt; from cleanlab.dataset import overall_label_health_score</span>
+<span class="sd">    &gt;&gt;&gt; from sklearn.linear_model import LogisticRegression</span>
+<span class="sd">    &gt;&gt;&gt; from sklearn.model_selection import cross_val_predict</span>
+<span class="sd">    &gt;&gt;&gt; data, labels = get_data_labels_from_dataset()</span>
+<span class="sd">    &gt;&gt;&gt; yourFavoriteModel = LogisticRegression()</span>
+<span class="sd">    &gt;&gt;&gt; pred_probs = cross_val_predict(yourFavoriteModel, data, labels, cv=3, method=&quot;predict_proba&quot;)</span>
+<span class="sd">    &gt;&gt;&gt; score = overall_label_health_score(labels=labels, pred_probs=pred_probs)  # doctest: +SKIP</span>
+
+<span class="sd">    **Parameters**: For parameter info, see the docstring of :py:func:`find_overlapping_classes &lt;cleanlab.dataset.find_overlapping_classes&gt;`.</span>
+
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    health_score : float</span>
+<span class="sd">        A score between 0 and 1, where 1 implies all labels in the dataset are estimated to be correct.</span>
+<span class="sd">        A score of 0.5 implies that half of the dataset&#39;s labels are estimated to have issues.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">multi_label</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+            <span class="s2">&quot;For multilabel data, please instead call: multilabel_classification.dataset.overall_multilabel_health_score()&quot;</span>
+        <span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">joint</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">joint</span> <span class="o">=</span> <span class="n">estimate_joint</span><span class="p">(</span>
+            <span class="n">labels</span><span class="o">=</span><span class="n">labels</span><span class="p">,</span>
+            <span class="n">pred_probs</span><span class="o">=</span><span class="n">pred_probs</span><span class="p">,</span>
+            <span class="n">confident_joint</span><span class="o">=</span><span class="n">confident_joint</span><span class="p">,</span>
+        <span class="p">)</span>
+    <span class="k">if</span> <span class="n">num_examples</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">num_examples</span> <span class="o">=</span> <span class="n">_get_num_examples</span><span class="p">(</span><span class="n">labels</span><span class="o">=</span><span class="n">labels</span><span class="p">)</span>
+    <span class="n">joint_trace</span> <span class="o">=</span> <span class="n">joint</span><span class="o">.</span><span class="n">trace</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+        <span class="n">num_issues</span> <span class="o">=</span> <span class="p">(</span><span class="n">num_examples</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">joint_trace</span><span class="p">))</span><span class="o">.</span><span class="n">round</span><span class="p">()</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot; * Overall, about </span><span class="si">{</span><span class="mi">1</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">joint_trace</span><span class="si">:</span><span class="s2">.0%</span><span class="si">}</span><span class="s2"> (</span><span class="si">{</span><span class="n">num_issues</span><span class="si">:</span><span class="s2">,</span><span class="si">}</span><span class="s2"> of the </span><span class="si">{</span><span class="n">num_examples</span><span class="si">:</span><span class="s2">,</span><span class="si">}</span><span class="s2">) &quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;labels in your dataset have potential issues.</span><span class="se">\n</span><span class="s2">&quot;</span>
+            <span class="sa">f</span><span class="s2">&quot; ** The overall label health score for this dataset is: </span><span class="si">{</span><span class="n">joint_trace</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">.&quot;</span>
+        <span class="p">)</span>
+    <span class="k">return</span> <span class="n">joint_trace</span></div>
+
+
+<div class="viewcode-block" id="health_summary"><a class="viewcode-back" href="../../cleanlab/dataset.html#cleanlab.dataset.health_summary">[docs]</a><span class="k">def</span> <span class="nf">health_summary</span><span class="p">(</span>
+    <span class="n">labels</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">pred_probs</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="o">*</span><span class="p">,</span>
+    <span class="n">asymmetric</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="n">class_names</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">num_examples</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">joint</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">confident_joint</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">multi_label</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Prints a health summary of your dataset.</span>
+
+<span class="sd">    This summary includes useful statistics like:</span>
+
+<span class="sd">    * The classes with the most and least label issues.</span>
+<span class="sd">    * Classes that overlap and could potentially be merged.</span>
+<span class="sd">    * Overall label quality scores, summarizing how accurate the labels appear overall.</span>
+
+<span class="sd">    This method works by providing any one (and only one) of the following inputs:</span>
+
+<span class="sd">    1. ``labels`` and ``pred_probs``, or</span>
+<span class="sd">    2. ``joint`` and ``num_examples``, or</span>
+<span class="sd">    3. ``confident_joint``</span>
+
+<span class="sd">    Only provide **exactly one of the above input options**, do not provide a combination.</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    &gt;&gt;&gt; from cleanlab.dataset import health_summary</span>
+<span class="sd">    &gt;&gt;&gt; from sklearn.linear_model import LogisticRegression</span>
+<span class="sd">    &gt;&gt;&gt; from sklearn.model_selection import cross_val_predict</span>
+<span class="sd">    &gt;&gt;&gt; data, labels = get_data_labels_from_dataset()</span>
+<span class="sd">    &gt;&gt;&gt; yourFavoriteModel = LogisticRegression()</span>
+<span class="sd">    &gt;&gt;&gt; pred_probs = cross_val_predict(yourFavoriteModel, data, labels, cv=3, method=&quot;predict_proba&quot;)</span>
+<span class="sd">    &gt;&gt;&gt; summary = health_summary(labels=labels, pred_probs=pred_probs)  # doctest: +SKIP</span>
+
+<span class="sd">    **Parameters**: For parameter info, see the docstring of :py:func:`find_overlapping_classes &lt;cleanlab.dataset.find_overlapping_classes&gt;`.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    summary : dict</span>
+<span class="sd">        A dictionary containing keys (see the corresponding functions&#39; documentation to understand the values):</span>
+
+<span class="sd">        - ``&quot;overall_label_health_score&quot;``, corresponding to :py:func:`overall_label_health_score &lt;cleanlab.dataset.overall_label_health_score&gt;`</span>
+<span class="sd">        - ``&quot;joint&quot;``, corresponding to :py:func:`estimate_joint &lt;cleanlab.count.estimate_joint&gt;`</span>
+<span class="sd">        - ``&quot;classes_by_label_quality&quot;``, corresponding to :py:func:`rank_classes_by_label_quality &lt;cleanlab.dataset.rank_classes_by_label_quality&gt;`</span>
+<span class="sd">        - ``&quot;overlapping_classes&quot;``, corresponding to :py:func:`find_overlapping_classes &lt;cleanlab.dataset.find_overlapping_classes&gt;`</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="kn">from</span> <span class="nn">cleanlab.internal.util</span> <span class="kn">import</span> <span class="n">smart_display_dataframe</span>
+
+    <span class="k">if</span> <span class="n">multi_label</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+            <span class="s2">&quot;For multilabel data, please call multilabel_classification.dataset.health_summary&quot;</span>
+        <span class="p">)</span>
+    <span class="k">if</span> <span class="n">joint</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">joint</span> <span class="o">=</span> <span class="n">estimate_joint</span><span class="p">(</span>
+            <span class="n">labels</span><span class="o">=</span><span class="n">labels</span><span class="p">,</span>
+            <span class="n">pred_probs</span><span class="o">=</span><span class="n">pred_probs</span><span class="p">,</span>
+            <span class="n">confident_joint</span><span class="o">=</span><span class="n">confident_joint</span><span class="p">,</span>
+        <span class="p">)</span>
+    <span class="k">if</span> <span class="n">num_examples</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">num_examples</span> <span class="o">=</span> <span class="n">_get_num_examples</span><span class="p">(</span><span class="n">labels</span><span class="o">=</span><span class="n">labels</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+        <span class="n">longest_line</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;|   for your dataset with </span><span class="si">{</span><span class="n">num_examples</span><span class="si">:</span><span class="s2">,</span><span class="si">}</span><span class="s2"> examples &quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;and </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">joint</span><span class="p">)</span><span class="si">:</span><span class="s2">,</span><span class="si">}</span><span class="s2"> classes.  |</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span>
+            <span class="s2">&quot;-&quot;</span> <span class="o">*</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">longest_line</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+            <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span>
+            <span class="o">+</span> <span class="sa">f</span><span class="s2">&quot;|  Generating a Cleanlab Dataset Health Summary</span><span class="si">{</span><span class="s1">&#39; &#39;</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">longest_line</span><span class="p">)</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">49</span><span class="p">)</span><span class="si">}</span><span class="s2">|</span><span class="se">\n</span><span class="s2">&quot;</span>
+            <span class="o">+</span> <span class="n">longest_line</span>
+            <span class="o">+</span> <span class="sa">f</span><span class="s2">&quot;|  Note, Cleanlab is not a medical doctor... yet.</span><span class="si">{</span><span class="s1">&#39; &#39;</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">longest_line</span><span class="p">)</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">51</span><span class="p">)</span><span class="si">}</span><span class="s2">|</span><span class="se">\n</span><span class="s2">&quot;</span>
+            <span class="o">+</span> <span class="s2">&quot;-&quot;</span> <span class="o">*</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">longest_line</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+            <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">,</span>
+        <span class="p">)</span>
+
+    <span class="n">df_class_label_quality</span> <span class="o">=</span> <span class="n">rank_classes_by_label_quality</span><span class="p">(</span>
+        <span class="n">labels</span><span class="o">=</span><span class="n">labels</span><span class="p">,</span>
+        <span class="n">pred_probs</span><span class="o">=</span><span class="n">pred_probs</span><span class="p">,</span>
+        <span class="n">class_names</span><span class="o">=</span><span class="n">class_names</span><span class="p">,</span>
+        <span class="n">num_examples</span><span class="o">=</span><span class="n">num_examples</span><span class="p">,</span>
+        <span class="n">joint</span><span class="o">=</span><span class="n">joint</span><span class="p">,</span>
+        <span class="n">confident_joint</span><span class="o">=</span><span class="n">confident_joint</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Overall Class Quality and Noise across your dataset (below)&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;-&quot;</span> <span class="o">*</span> <span class="mi">60</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">flush</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">smart_display_dataframe</span><span class="p">(</span><span class="n">df_class_label_quality</span><span class="p">)</span>
+
+    <span class="n">df_overlapping_classes</span> <span class="o">=</span> <span class="n">find_overlapping_classes</span><span class="p">(</span>
+        <span class="n">labels</span><span class="o">=</span><span class="n">labels</span><span class="p">,</span>
+        <span class="n">pred_probs</span><span class="o">=</span><span class="n">pred_probs</span><span class="p">,</span>
+        <span class="n">asymmetric</span><span class="o">=</span><span class="n">asymmetric</span><span class="p">,</span>
+        <span class="n">class_names</span><span class="o">=</span><span class="n">class_names</span><span class="p">,</span>
+        <span class="n">num_examples</span><span class="o">=</span><span class="n">num_examples</span><span class="p">,</span>
+        <span class="n">joint</span><span class="o">=</span><span class="n">joint</span><span class="p">,</span>
+        <span class="n">confident_joint</span><span class="o">=</span><span class="n">confident_joint</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span>
+            <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Class Overlap. In some cases, you may want to merge classes in the top rows (below)&quot;</span>
+            <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span>
+            <span class="o">+</span> <span class="s2">&quot;-&quot;</span> <span class="o">*</span> <span class="mi">83</span>
+            <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">,</span>
+            <span class="n">flush</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="n">smart_display_dataframe</span><span class="p">(</span><span class="n">df_overlapping_classes</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">()</span>
+
+    <span class="n">health_score</span> <span class="o">=</span> <span class="n">overall_label_health_score</span><span class="p">(</span>
+        <span class="n">labels</span><span class="o">=</span><span class="n">labels</span><span class="p">,</span>
+        <span class="n">pred_probs</span><span class="o">=</span><span class="n">pred_probs</span><span class="p">,</span>
+        <span class="n">num_examples</span><span class="o">=</span><span class="n">num_examples</span><span class="p">,</span>
+        <span class="n">joint</span><span class="o">=</span><span class="n">joint</span><span class="p">,</span>
+        <span class="n">confident_joint</span><span class="o">=</span><span class="n">confident_joint</span><span class="p">,</span>
+        <span class="n">verbose</span><span class="o">=</span><span class="n">verbose</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Generated with &lt;3 from Cleanlab.</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="p">{</span>
+        <span class="s2">&quot;overall_label_health_score&quot;</span><span class="p">:</span> <span class="n">health_score</span><span class="p">,</span>
+        <span class="s2">&quot;joint&quot;</span><span class="p">:</span> <span class="n">joint</span><span class="p">,</span>
+        <span class="s2">&quot;classes_by_label_quality&quot;</span><span class="p">:</span> <span class="n">df_class_label_quality</span><span class="p">,</span>
+        <span class="s2">&quot;overlapping_classes&quot;</span><span class="p">:</span> <span class="n">df_overlapping_classes</span><span class="p">,</span>
+    <span class="p">}</span></div>
+
+
+<span class="k">def</span> <span class="nf">_get_num_examples</span><span class="p">(</span><span class="n">labels</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">confident_joint</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Helper method that finds the number of examples from the parameters or throws an error</span>
+<span class="sd">    if neither parameter is provided.</span>
+
+<span class="sd">    **Parameters:** For information about the arguments to this method, see the documentation of `dataset.find_overlapping_classes`</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    num_examples : int</span>
+<span class="sd">        The number of examples in the dataset.</span>
+
+<span class="sd">    Raises</span>
+<span class="sd">    ------</span>
+<span class="sd">    ValueError</span>
+<span class="sd">        If `labels` is None.&quot;&quot;&quot;</span>
+
+    <span class="k">if</span> <span class="n">labels</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">confident_joint</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+            <span class="s2">&quot;Error: num_examples is None. You must either provide confident_joint, &quot;</span>
+            <span class="s2">&quot;or provide both num_example and joint as input parameters.&quot;</span>
+        <span class="p">)</span>
+    <span class="n">_confident_joint</span> <span class="o">=</span> <span class="n">cast</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">confident_joint</span><span class="p">)</span>
+    <span class="n">num_examples</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">labels</span><span class="p">)</span> <span class="k">if</span> <span class="n">labels</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">cast</span><span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">_confident_joint</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">num_examples</span>
+</pre></div> 
+        </article>
+      </div>
+      <footer>
+         
+        <div class="related-pages">
+          
+          
+        </div>
+        <div class="bottom-of-page">
+          <div class="left-details">
+            <div class="copyright">
+                Copyright &#169; 2023, Cleanlab Inc.
+            </div>
+            Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
+            
+            <a href="https://github.com/pradyunsg/furo">Furo</a>
+            
+          </div>
+          <div class="right-details">
+            <div class="icons">
+              <a class="muted-link " href="https://github.com/cleanlab/cleanlab" aria-label="GitHub">
+                <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 16 16">
+                    <path fill-rule="evenodd" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0 0 16 8c0-4.42-3.58-8-8-8z"></path>
+                </svg>
+            </a>
+              
+            </div>
+          </div>
+        </div>
+        
+
+<script type="text/javascript">
+    window.addEventListener("load", () => {
+        let elements = document.getElementsByClassName("left-details");
+
+        elements[0].insertAdjacentHTML(
+            "afterbegin",
+            `<code class="docutils literal notranslate"><span class="pre">cleanlab</span></code> is distributed on <a href="https://pypi.org/project/cleanlab/">PyPI</a> and <a href="https://anaconda.org/conda-forge/cleanlab">conda</a>.`
+        );
+    });
+</script>
+
+
+      </footer>
+    </div>
+    <aside class="toc-drawer no-toc">
+      
+      
+      
+    </aside>
+  </div>
+</div><script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/scripts/furo.js"></script>
+    <script src="../../_static/clipboard.min.js"></script>
+    <script src="../../_static/copybutton.js"></script>
+    <script src="../../_static/tabs.js"></script>
+    <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script src="https://unpkg.com/@jupyter-widgets/html-manager@^0.20.0/dist/embed-amd.js"></script>
+    
+<script async defer src="https://buttons.github.io/buttons.js"></script>
+</body>
+</html>
