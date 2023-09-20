@@ -1031,9 +1031,9 @@
 <span class="sd">      Lower scores indicate more likely mislabeled examples.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="c1"># To make this work for multi-label (but it will slow down runtime), replace:</span>
-    <span class="c1"># pred_probs[i, l] -&gt; np.mean(pred_probs[i, l])</span>
-    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">pred_probs</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">l</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">l</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">labels</span><span class="p">)])</span></div>
+    <span class="c1"># To make this work for multi-label (but it will slow down runtime), return:</span>
+    <span class="c1"># np.array([np.mean(pred_probs[i, l]) for i, l in enumerate(labels)])</span>
+    <span class="k">return</span> <span class="n">pred_probs</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">labels</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span> <span class="n">labels</span><span class="p">]</span></div>
 
 
 <div class="viewcode-block" id="get_normalized_margin_for_each_label"><a class="viewcode-back" href="../../cleanlab/rank.html#cleanlab.rank.get_normalized_margin_for_each_label">[docs]</a><span class="k">def</span> <span class="nf">get_normalized_margin_for_each_label</span><span class="p">(</span>
@@ -1073,8 +1073,10 @@
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">self_confidence</span> <span class="o">=</span> <span class="n">get_self_confidence_for_each_label</span><span class="p">(</span><span class="n">labels</span><span class="p">,</span> <span class="n">pred_probs</span><span class="p">)</span>
-    <span class="n">max_prob_not_label</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>
-        <span class="p">[</span><span class="nb">max</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="n">pred_probs</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">l</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">))</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">l</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">labels</span><span class="p">)]</span>
+    <span class="n">N</span><span class="p">,</span> <span class="n">K</span> <span class="o">=</span> <span class="n">pred_probs</span><span class="o">.</span><span class="n">shape</span>
+    <span class="n">del_indices</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">N</span><span class="p">)</span> <span class="o">*</span> <span class="n">K</span> <span class="o">+</span> <span class="n">labels</span>
+    <span class="n">max_prob_not_label</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span>
+        <span class="n">np</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="n">pred_probs</span><span class="p">,</span> <span class="n">del_indices</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">N</span><span class="p">,</span> <span class="n">K</span> <span class="o">-</span> <span class="mi">1</span><span class="p">),</span> <span class="n">axis</span><span class="o">=-</span><span class="mi">1</span>
     <span class="p">)</span>
     <span class="n">label_quality_scores</span> <span class="o">=</span> <span class="p">(</span><span class="n">self_confidence</span> <span class="o">-</span> <span class="n">max_prob_not_label</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span>
     <span class="k">return</span> <span class="n">label_quality_scores</span></div>
