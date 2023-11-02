@@ -228,6 +228,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../cleanlab/datalab/internal/issue_manager/duplicate.html">duplicate</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../cleanlab/datalab/internal/issue_manager/noniid.html">noniid</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../cleanlab/datalab/internal/issue_manager/imbalance.html">imbalance</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../cleanlab/datalab/internal/issue_manager/null.html">null</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../cleanlab/datalab/internal/report.html">report</a></li>
@@ -546,7 +547,7 @@
 <span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">cast</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
-<span class="kn">from</span> <span class="nn">cleanlab.count</span> <span class="kn">import</span> <span class="n">estimate_joint</span>
+<span class="kn">from</span> <span class="nn">cleanlab.count</span> <span class="kn">import</span> <span class="n">estimate_joint</span><span class="p">,</span> <span class="n">num_label_issues</span>
 
 
 <div class="viewcode-block" id="rank_classes_by_label_quality"><a class="viewcode-back" href="../../cleanlab/dataset.html#cleanlab.dataset.rank_classes_by_label_quality">[docs]</a><span class="k">def</span> <span class="nf">rank_classes_by_label_quality</span><span class="p">(</span>
@@ -820,8 +821,8 @@
     <span class="n">pred_probs</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
     <span class="o">*</span><span class="p">,</span>
     <span class="n">num_examples</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-    <span class="n">joint</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
     <span class="n">confident_joint</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">joint</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
     <span class="n">multi_label</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
     <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
@@ -862,24 +863,32 @@
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
             <span class="s2">&quot;For multilabel data, please instead call: multilabel_classification.dataset.overall_multilabel_health_score()&quot;</span>
         <span class="p">)</span>
-
-    <span class="k">if</span> <span class="n">joint</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">joint</span> <span class="o">=</span> <span class="n">estimate_joint</span><span class="p">(</span>
-            <span class="n">labels</span><span class="o">=</span><span class="n">labels</span><span class="p">,</span>
-            <span class="n">pred_probs</span><span class="o">=</span><span class="n">pred_probs</span><span class="p">,</span>
-            <span class="n">confident_joint</span><span class="o">=</span><span class="n">confident_joint</span><span class="p">,</span>
-        <span class="p">)</span>
     <span class="k">if</span> <span class="n">num_examples</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">num_examples</span> <span class="o">=</span> <span class="n">_get_num_examples</span><span class="p">(</span><span class="n">labels</span><span class="o">=</span><span class="n">labels</span><span class="p">)</span>
-    <span class="n">joint_trace</span> <span class="o">=</span> <span class="n">joint</span><span class="o">.</span><span class="n">trace</span><span class="p">()</span>
-    <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+        <span class="n">num_examples</span> <span class="o">=</span> <span class="n">_get_num_examples</span><span class="p">(</span><span class="n">labels</span><span class="o">=</span><span class="n">labels</span><span class="p">,</span> <span class="n">confident_joint</span><span class="o">=</span><span class="n">confident_joint</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">pred_probs</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">labels</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">joint</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">joint</span> <span class="o">=</span> <span class="n">estimate_joint</span><span class="p">(</span>
+                <span class="n">labels</span><span class="o">=</span><span class="n">labels</span><span class="p">,</span>
+                <span class="n">pred_probs</span><span class="o">=</span><span class="n">pred_probs</span><span class="p">,</span>
+                <span class="n">confident_joint</span><span class="o">=</span><span class="n">confident_joint</span><span class="p">,</span>
+            <span class="p">)</span>
+        <span class="n">joint_trace</span> <span class="o">=</span> <span class="n">joint</span><span class="o">.</span><span class="n">trace</span><span class="p">()</span>
         <span class="n">num_issues</span> <span class="o">=</span> <span class="p">(</span><span class="n">num_examples</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">joint_trace</span><span class="p">))</span><span class="o">.</span><span class="n">round</span><span class="p">()</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
-        <span class="nb">print</span><span class="p">(</span>
-            <span class="sa">f</span><span class="s2">&quot; * Overall, about </span><span class="si">{</span><span class="mi">1</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">joint_trace</span><span class="si">:</span><span class="s2">.0%</span><span class="si">}</span><span class="s2"> (</span><span class="si">{</span><span class="n">num_issues</span><span class="si">:</span><span class="s2">,</span><span class="si">}</span><span class="s2"> of the </span><span class="si">{</span><span class="n">num_examples</span><span class="si">:</span><span class="s2">,</span><span class="si">}</span><span class="s2">) &quot;</span>
-            <span class="sa">f</span><span class="s2">&quot;labels in your dataset have potential issues.</span><span class="se">\n</span><span class="s2">&quot;</span>
-            <span class="sa">f</span><span class="s2">&quot; ** The overall label health score for this dataset is: </span><span class="si">{</span><span class="n">joint_trace</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">.&quot;</span>
+        <span class="n">health_score</span> <span class="o">=</span> <span class="n">joint_trace</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">num_issues</span> <span class="o">=</span> <span class="n">num_label_issues</span><span class="p">(</span>
+            <span class="n">labels</span><span class="o">=</span><span class="n">labels</span><span class="p">,</span> <span class="n">pred_probs</span><span class="o">=</span><span class="n">pred_probs</span><span class="p">,</span> <span class="n">confident_joint</span><span class="o">=</span><span class="n">confident_joint</span>
         <span class="p">)</span>
-    <span class="k">return</span> <span class="n">joint_trace</span></div>
+        <span class="n">health_score</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">num_issues</span> <span class="o">/</span> <span class="n">num_examples</span>
+
+    <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot; * Overall, about </span><span class="si">{</span><span class="p">(</span><span class="mi">1</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">health_score</span><span class="p">)</span><span class="si">:</span><span class="s2">.0%</span><span class="si">}</span><span class="s2"> (</span><span class="si">{</span><span class="n">num_issues</span><span class="si">:</span><span class="s2">,</span><span class="si">}</span><span class="s2"> of the </span><span class="si">{</span><span class="n">num_examples</span><span class="si">:</span><span class="s2">,</span><span class="si">}</span><span class="s2">) &quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;labels in your dataset have potential issues.</span><span class="se">\n</span><span class="s2">&quot;</span>
+            <span class="sa">f</span><span class="s2">&quot; ** The overall label health score for this dataset is: </span><span class="si">{</span><span class="n">health_score</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">.&quot;</span>
+        <span class="p">)</span>
+    <span class="k">return</span> <span class="n">health_score</span></div>
 
 
 <div class="viewcode-block" id="health_summary"><a class="viewcode-back" href="../../cleanlab/dataset.html#cleanlab.dataset.health_summary">[docs]</a><span class="k">def</span> <span class="nf">health_summary</span><span class="p">(</span>
@@ -999,7 +1008,6 @@
         <span class="n">labels</span><span class="o">=</span><span class="n">labels</span><span class="p">,</span>
         <span class="n">pred_probs</span><span class="o">=</span><span class="n">pred_probs</span><span class="p">,</span>
         <span class="n">num_examples</span><span class="o">=</span><span class="n">num_examples</span><span class="p">,</span>
-        <span class="n">joint</span><span class="o">=</span><span class="n">joint</span><span class="p">,</span>
         <span class="n">confident_joint</span><span class="o">=</span><span class="n">confident_joint</span><span class="p">,</span>
         <span class="n">verbose</span><span class="o">=</span><span class="n">verbose</span><span class="p">,</span>
     <span class="p">)</span>

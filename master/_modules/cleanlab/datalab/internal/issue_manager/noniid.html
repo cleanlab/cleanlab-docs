@@ -228,6 +228,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../../../cleanlab/datalab/internal/issue_manager/duplicate.html">duplicate</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../../cleanlab/datalab/internal/issue_manager/noniid.html">noniid</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../../cleanlab/datalab/internal/issue_manager/imbalance.html">imbalance</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../cleanlab/datalab/internal/issue_manager/null.html">null</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../cleanlab/datalab/internal/report.html">report</a></li>
@@ -646,38 +647,119 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">seed</span> <span class="o">=</span> <span class="n">seed</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">significance_threshold</span> <span class="o">=</span> <span class="n">significance_threshold</span>
 
-<div class="viewcode-block" id="NonIIDIssueManager.find_issues"><a class="viewcode-back" href="../../../../../cleanlab/datalab/internal/issue_manager/noniid.html#cleanlab.datalab.internal.issue_manager.noniid.NonIIDIssueManager.find_issues">[docs]</a>    <span class="k">def</span> <span class="nf">find_issues</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">features</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">npt</span><span class="o">.</span><span class="n">NDArray</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="c1"># TODO: Temporary flag introduced to decide on storing knn graphs based on pred_probs.</span>
+        <span class="c1"># Revisit and finalize the implementation.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_skip_storing_knn_graph_for_pred_probs</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">_determine_features</span><span class="p">(</span>
+        <span class="n">features</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">npt</span><span class="o">.</span><span class="n">NDArray</span><span class="p">],</span>
+        <span class="n">pred_probs</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">],</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">npt</span><span class="o">.</span><span class="n">NDArray</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Determines the feature array to be used for the non-IID check. Prioritizing the original features array over pred_probs.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        features :</span>
+<span class="sd">            Original feature array or None.</span>
+
+<span class="sd">        pred_probs :</span>
+<span class="sd">            Predicted probabilities array or None.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        features_to_use :</span>
+<span class="sd">            Either the original feature array or the predicted probabilities array,</span>
+<span class="sd">            intended to be used for the non-IID check.</span>
+
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+<span class="sd">        ValueError :</span>
+<span class="sd">            If both `features` and `pred_probs` are None.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">features</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">features</span>
+
+        <span class="k">if</span> <span class="n">pred_probs</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">pred_probs</span>
+
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+            <span class="s2">&quot;If a knn_graph is not provided, either &#39;features&#39; or &#39;pred_probs&#39; must be provided to fit a new knn.&quot;</span>
+        <span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_setup_knn</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">features</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">npt</span><span class="o">.</span><span class="n">NDArray</span><span class="p">],</span>
+        <span class="n">pred_probs</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">],</span>
+        <span class="n">knn_graph</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">csr_matrix</span><span class="p">],</span>
+        <span class="n">metric_changes</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">NearestNeighbors</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Selects features (or pred_probs if features are None) and sets up a NearestNeighbors object if needed.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        features :</span>
+<span class="sd">            Original feature array or None.</span>
+
+<span class="sd">        pred_probs :</span>
+<span class="sd">            Predicted probabilities array or None.</span>
+
+<span class="sd">        knn_graph :</span>
+<span class="sd">            A precomputed KNN-graph stored in a csr_matrix or None. If None, a new NearestNeighbors object will be created.</span>
+
+<span class="sd">        metric_changes :</span>
+<span class="sd">            Whether the metric used to compute the KNN-graph has changed.</span>
+<span class="sd">            This is a result of comparing the metric of a pre-existing KNN-graph and the metric specified by the user.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        knn :</span>
+<span class="sd">            A NearestNeighbors object or None.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">features</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">pred_probs</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_skip_storing_knn_graph_for_pred_probs</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="n">features_to_use</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_determine_features</span><span class="p">(</span><span class="n">features</span><span class="p">,</span> <span class="n">pred_probs</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">metric</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">metric</span> <span class="o">=</span> <span class="s2">&quot;cosine&quot;</span> <span class="k">if</span> <span class="n">features_to_use</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">3</span> <span class="k">else</span> <span class="s2">&quot;euclidean&quot;</span>
+
+        <span class="k">if</span> <span class="n">knn_graph</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">metric_changes</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">None</span>
+
+        <span class="n">knn</span> <span class="o">=</span> <span class="n">NearestNeighbors</span><span class="p">(</span><span class="n">n_neighbors</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">k</span><span class="p">,</span> <span class="n">metric</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">metric</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">metric</span> <span class="o">!=</span> <span class="n">knn</span><span class="o">.</span><span class="n">metric</span><span class="p">:</span>
+            <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;Metric </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">metric</span><span class="si">}</span><span class="s2"> does not match metric </span><span class="si">{</span><span class="n">knn</span><span class="o">.</span><span class="n">metric</span><span class="si">}</span><span class="s2"> used to fit knn. &quot;</span>
+                <span class="s2">&quot;Most likely an existing NearestNeighbors object was passed in, but a different &quot;</span>
+                <span class="s2">&quot;metric was specified.&quot;</span>
+            <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">metric</span> <span class="o">=</span> <span class="n">knn</span><span class="o">.</span><span class="n">metric</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">check_is_fitted</span><span class="p">(</span><span class="n">knn</span><span class="p">)</span>
+        <span class="k">except</span> <span class="n">NotFittedError</span><span class="p">:</span>
+            <span class="n">knn</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">features_to_use</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">knn</span>
+
+<div class="viewcode-block" id="NonIIDIssueManager.find_issues"><a class="viewcode-back" href="../../../../../cleanlab/datalab/internal/issue_manager/noniid.html#cleanlab.datalab.internal.issue_manager.noniid.NonIIDIssueManager.find_issues">[docs]</a>    <span class="k">def</span> <span class="nf">find_issues</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">features</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">npt</span><span class="o">.</span><span class="n">NDArray</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">pred_probs</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">knn_graph</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_process_knn_graph_from_inputs</span><span class="p">(</span><span class="n">kwargs</span><span class="p">)</span>
         <span class="n">old_knn_metric</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">datalab</span><span class="o">.</span><span class="n">get_info</span><span class="p">(</span><span class="s2">&quot;statistics&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;knn_metric&quot;</span><span class="p">)</span>
-        <span class="n">metric_changes</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">metric</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">metric</span> <span class="o">!=</span> <span class="n">old_knn_metric</span>
-
-        <span class="n">knn</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># Won&#39;t be used if knn_graph is not None</span>
+        <span class="n">metric_changes</span> <span class="o">=</span> <span class="nb">bool</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">metric</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">metric</span> <span class="o">!=</span> <span class="n">old_knn_metric</span><span class="p">)</span>
+        <span class="n">knn</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_setup_knn</span><span class="p">(</span><span class="n">features</span><span class="p">,</span> <span class="n">pred_probs</span><span class="p">,</span> <span class="n">knn_graph</span><span class="p">,</span> <span class="n">metric_changes</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="n">knn_graph</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">metric_changes</span><span class="p">:</span>
-            <span class="k">if</span> <span class="n">features</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-                    <span class="s2">&quot;If a knn_graph is not provided, features must be provided to fit a new knn.&quot;</span>
-                <span class="p">)</span>
-
-            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">metric</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">metric</span> <span class="o">=</span> <span class="s2">&quot;cosine&quot;</span> <span class="k">if</span> <span class="n">features</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">3</span> <span class="k">else</span> <span class="s2">&quot;euclidean&quot;</span>
-            <span class="n">knn</span> <span class="o">=</span> <span class="n">NearestNeighbors</span><span class="p">(</span><span class="n">n_neighbors</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">k</span><span class="p">,</span> <span class="n">metric</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">metric</span><span class="p">)</span>
-
-            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">metric</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">metric</span> <span class="o">!=</span> <span class="n">knn</span><span class="o">.</span><span class="n">metric</span><span class="p">:</span>
-                <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
-                    <span class="sa">f</span><span class="s2">&quot;Metric </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">metric</span><span class="si">}</span><span class="s2"> does not match metric </span><span class="si">{</span><span class="n">knn</span><span class="o">.</span><span class="n">metric</span><span class="si">}</span><span class="s2"> used to fit knn. &quot;</span>
-                    <span class="s2">&quot;Most likely an existing NearestNeighbors object was passed in, but a different &quot;</span>
-                    <span class="s2">&quot;metric was specified.&quot;</span>
-                <span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">metric</span> <span class="o">=</span> <span class="n">knn</span><span class="o">.</span><span class="n">metric</span>
-
-            <span class="k">try</span><span class="p">:</span>
-                <span class="n">check_is_fitted</span><span class="p">(</span><span class="n">knn</span><span class="p">)</span>
-            <span class="k">except</span> <span class="n">NotFittedError</span><span class="p">:</span>
-                <span class="n">knn</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">features</span><span class="p">)</span>
-
             <span class="bp">self</span><span class="o">.</span><span class="n">neighbor_index_choices</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_neighbors</span><span class="p">(</span><span class="n">knn</span><span class="o">=</span><span class="n">knn</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_skip_storing_knn_graph_for_pred_probs</span> <span class="o">=</span> <span class="kc">False</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">neighbor_index_choices</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_neighbors</span><span class="p">(</span><span class="n">knn_graph</span><span class="o">=</span><span class="n">knn_graph</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">num_neighbors</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">k</span>
@@ -756,6 +838,8 @@
     <span class="k">def</span> <span class="nf">_build_statistics_dictionary</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">knn_graph</span><span class="p">:</span> <span class="n">csr_matrix</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]:</span>
         <span class="n">statistics_dict</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;statistics&quot;</span><span class="p">:</span> <span class="p">{}}</span>
 
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_skip_storing_knn_graph_for_pred_probs</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">statistics_dict</span>
         <span class="c1"># Add the knn graph as a statistic if necessary</span>
         <span class="n">graph_key</span> <span class="o">=</span> <span class="s2">&quot;weighted_knn_graph&quot;</span>
         <span class="n">old_knn_graph</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">datalab</span><span class="o">.</span><span class="n">get_info</span><span class="p">(</span><span class="s2">&quot;statistics&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">graph_key</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>

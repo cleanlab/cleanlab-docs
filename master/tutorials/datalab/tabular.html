@@ -229,6 +229,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../cleanlab/datalab/internal/issue_manager/duplicate.html">duplicate</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../cleanlab/datalab/internal/issue_manager/noniid.html">noniid</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../cleanlab/datalab/internal/issue_manager/imbalance.html">imbalance</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../cleanlab/datalab/internal/issue_manager/null.html">null</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../cleanlab/datalab/internal/report.html">report</a></li>
@@ -1046,10 +1047,8 @@ Finding label issues ...
 Finding outlier issues ...
 Finding near_duplicate issues ...
 Finding non_iid issues ...
-Error in non_iid: If a knn_graph is not provided, features must be provided to fit a new knn.
-Failed to check for these issue types: [NonIIDIssueManager]
 
-Audit complete. 357 issues found in the dataset.
+Audit complete. 358 issues found in the dataset.
 </pre></div></div>
 </div>
 <div class="nbinput docutils container">
@@ -1071,6 +1070,7 @@ Here is a summary of the different kinds of issues found in the data:
          label         294
        outlier          46
 near_duplicate          17
+       non_iid           1
 
 Dataset Information: num_examples: 941, num_classes: 5
 
@@ -1083,7 +1083,7 @@ About this issue:
 
 
 Number of examples with this issue: 294
-Overall dataset quality in terms of this issue: 0.6578
+Overall dataset quality in terms of this issue: 0.7109
 
 Examples representing most severe instances of this issue:
      is_label_issue  label_score given_label predicted_label
@@ -1128,11 +1128,37 @@ Overall dataset quality in terms of this issue: 0.2169
 
 Examples representing most severe instances of this issue:
      is_near_duplicate_issue  near_duplicate_score near_duplicate_sets  distance_to_nearest_neighbor
-915                     True                   0.0               [168]                           0.0
-294                     True                   0.0               [691]                           0.0
-12                      True                   0.0        [2, 1, 6, 9]                           0.0
-9                       True                   0.0       [2, 12, 1, 6]                           0.0
+690                     True                   0.0               [246]                           0.0
 185                     True                   0.0               [582]                           0.0
+691                     True                   0.0               [294]                           0.0
+168                     True                   0.0               [915]                           0.0
+187                     True                   0.0                [27]                           0.0
+
+
+---------------------- non_iid issues ----------------------
+
+About this issue:
+        Whether the dataset exhibits statistically significant
+    violations of the IID assumption like:
+    changepoints or shift, drift, autocorrelation, etc.
+    The specific violation considered is whether the
+    examples are ordered such that almost adjacent examples
+    tend to have more similar feature values.
+
+
+Number of examples with this issue: 1
+Overall dataset quality in terms of this issue: 0.0014
+
+Examples representing most severe instances of this issue:
+     is_non_iid_issue  non_iid_score
+595              True       0.702427
+147             False       0.711186
+157             False       0.721394
+771             False       0.731979
+898             False       0.740335
+
+Additional Information:
+p-value: 0.0014153602099278074
 </pre></div></div>
 </div>
 <section id="Label-issues">
@@ -1443,31 +1469,10 @@ Examples representing most severe instances of this issue:
   </thead>
   <tbody>
     <tr>
-      <th>915</th>
+      <th>690</th>
       <td>True</td>
       <td>0.0</td>
-      <td>[168]</td>
-      <td>0.0</td>
-    </tr>
-    <tr>
-      <th>294</th>
-      <td>True</td>
-      <td>0.0</td>
-      <td>[691]</td>
-      <td>0.0</td>
-    </tr>
-    <tr>
-      <th>12</th>
-      <td>True</td>
-      <td>0.0</td>
-      <td>[2, 1, 6, 9]</td>
-      <td>0.0</td>
-    </tr>
-    <tr>
-      <th>9</th>
-      <td>True</td>
-      <td>0.0</td>
-      <td>[2, 12, 1, 6]</td>
+      <td>[246]</td>
       <td>0.0</td>
     </tr>
     <tr>
@@ -1475,6 +1480,27 @@ Examples representing most severe instances of this issue:
       <td>True</td>
       <td>0.0</td>
       <td>[582]</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>691</th>
+      <td>True</td>
+      <td>0.0</td>
+      <td>[294]</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>168</th>
+      <td>True</td>
+      <td>0.0</td>
+      <td>[915]</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>187</th>
+      <td>True</td>
+      <td>0.0</td>
+      <td>[27]</td>
       <td>0.0</td>
     </tr>
   </tbody>
