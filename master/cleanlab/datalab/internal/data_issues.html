@@ -536,7 +536,7 @@ We recommend using that method instead of this module, which is just intended fo
 <div class="table-wrapper autosummary longtable docutils container">
 <table class="autosummary longtable docutils align-default">
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#cleanlab.datalab.internal.data_issues.DataIssues" title="cleanlab.datalab.internal.data_issues.DataIssues"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DataIssues</span></code></a>(data)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#cleanlab.datalab.internal.data_issues.DataIssues" title="cleanlab.datalab.internal.data_issues.DataIssues"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DataIssues</span></code></a>(data, strategy)</p></td>
 <td><p>Class that collects and stores information and statistics on issues found in a dataset.</p></td>
 </tr>
 </tbody>
@@ -554,20 +554,89 @@ We recommend using that method instead of this module, which is just intended fo
 </div>
 <dl class="py class">
 <dt class="sig sig-object py" id="cleanlab.datalab.internal.data_issues.DataIssues">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">cleanlab.datalab.internal.data_issues.</span></span><span class="sig-name descname"><span class="pre">DataIssues</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/cleanlab/datalab/internal/data_issues.html#DataIssues"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cleanlab.datalab.internal.data_issues.DataIssues" title="Permalink to this definition">#</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">cleanlab.datalab.internal.data_issues.</span></span><span class="sig-name descname"><span class="pre">DataIssues</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">strategy</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/cleanlab/datalab/internal/data_issues.html#DataIssues"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cleanlab.datalab.internal.data_issues.DataIssues" title="Permalink to this definition">#</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Class that collects and stores information and statistics on issues found in a dataset.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>data</strong> (<a class="reference internal" href="data.html#cleanlab.datalab.internal.data.Data" title="cleanlab.datalab.internal.data.Data"><code class="xref py py-class docutils literal notranslate"><span class="pre">Data</span></code></a>) – The data object for which the issues are being collected.</p></li>
-<li><p><strong>issues</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">pd.DataFrame</span></code>) – Stores information about each individual issue found in the data,
-on a per-example basis.</p></li>
-<li><p><strong>issue_summary</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">pd.DataFrame</span></code>) – Summarizes the overall statistics for each issue type.</p></li>
-<li><p><strong>info</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code>) – A dictionary that contains information and statistics about the data and each issue type.</p></li>
+<li><p><strong>strategy</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">_InfoStrategy</span></code>) – Strategy used for processing info dictionaries.</p></li>
 </ul>
 </dd>
 </dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="cleanlab.datalab.internal.data_issues.DataIssues.issues">
+<span class="sig-name descname"><span class="pre">issues</span></span><a class="headerlink" href="#cleanlab.datalab.internal.data_issues.DataIssues.issues" title="Permalink to this definition">#</a></dt>
+<dd><p>Stores information about each individual issue found in the data,
+on a per-example basis.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">pd.DataFrame</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="cleanlab.datalab.internal.data_issues.DataIssues.issue_summary">
+<span class="sig-name descname"><span class="pre">issue_summary</span></span><a class="headerlink" href="#cleanlab.datalab.internal.data_issues.DataIssues.issue_summary" title="Permalink to this definition">#</a></dt>
+<dd><p>Summarizes the overall statistics for each issue type.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">pd.DataFrame</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="cleanlab.datalab.internal.data_issues.DataIssues.info">
+<span class="sig-name descname"><span class="pre">info</span></span><a class="headerlink" href="#cleanlab.datalab.internal.data_issues.DataIssues.info" title="Permalink to this definition">#</a></dt>
+<dd><p>A dictionary that contains information and statistics about the data and each issue type.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<p><strong>Methods:</strong></p>
+<div class="table-wrapper autosummary longtable docutils container">
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#cleanlab.datalab.internal.data_issues.DataIssues.get_info" title="cleanlab.datalab.internal.data_issues.DataIssues.get_info"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_info</span></code></a>([issue_name])</p></td>
+<td><p><dl class="field-list simple">
+<dt class="field-odd">rtype<span class="colon">:</span></dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code>]</p>
+</dd>
+</dl>
+</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#cleanlab.datalab.internal.data_issues.DataIssues.get_issues" title="cleanlab.datalab.internal.data_issues.DataIssues.get_issues"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_issues</span></code></a>([issue_name])</p></td>
+<td><p>Use this after finding issues to see which examples suffer from which types of issues.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#cleanlab.datalab.internal.data_issues.DataIssues.get_issue_summary" title="cleanlab.datalab.internal.data_issues.DataIssues.get_issue_summary"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_issue_summary</span></code></a>([issue_name])</p></td>
+<td><p>Summarize the issues found in dataset of a particular type, including how severe this type of issue is overall across the dataset.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#cleanlab.datalab.internal.data_issues.DataIssues.collect_statistics" title="cleanlab.datalab.internal.data_issues.DataIssues.collect_statistics"><code class="xref py py-obj docutils literal notranslate"><span class="pre">collect_statistics</span></code></a>(issue_manager)</p></td>
+<td><p>Update the statistics in the info dictionary.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#cleanlab.datalab.internal.data_issues.DataIssues.collect_issues_from_issue_manager" title="cleanlab.datalab.internal.data_issues.DataIssues.collect_issues_from_issue_manager"><code class="xref py py-obj docutils literal notranslate"><span class="pre">collect_issues_from_issue_manager</span></code></a>(issue_manager)</p></td>
+<td><p>Collects results from an IssueManager and update the corresponding attributes of the Datalab object.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#cleanlab.datalab.internal.data_issues.DataIssues.collect_issues_from_imagelab" title="cleanlab.datalab.internal.data_issues.DataIssues.collect_issues_from_imagelab"><code class="xref py py-obj docutils literal notranslate"><span class="pre">collect_issues_from_imagelab</span></code></a>(imagelab, ...)</p></td>
+<td><p><dl class="field-list simple">
+<dt class="field-odd">rtype<span class="colon">:</span></dt>
+<dd class="field-odd"><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></p>
+</dd>
+</dl>
+</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#cleanlab.datalab.internal.data_issues.DataIssues.set_health_score" title="cleanlab.datalab.internal.data_issues.DataIssues.set_health_score"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_health_score</span></code></a>()</p></td>
+<td><p>Set the health score for the dataset based on the issue summary.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
 <p><strong>Attributes:</strong></p>
 <div class="table-wrapper autosummary longtable docutils container">
 <table class="autosummary longtable docutils align-default">
@@ -578,31 +647,16 @@ on a per-example basis.</p></li>
 </tbody>
 </table>
 </div>
-<p><strong>Methods:</strong></p>
-<div class="table-wrapper autosummary longtable docutils container">
-<table class="autosummary longtable docutils align-default">
-<tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#cleanlab.datalab.internal.data_issues.DataIssues.get_issues" title="cleanlab.datalab.internal.data_issues.DataIssues.get_issues"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_issues</span></code></a>([issue_name])</p></td>
-<td><p>Use this after finding issues to see which examples suffer from which types of issues.</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#cleanlab.datalab.internal.data_issues.DataIssues.get_issue_summary" title="cleanlab.datalab.internal.data_issues.DataIssues.get_issue_summary"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_issue_summary</span></code></a>([issue_name])</p></td>
-<td><p>Summarize the issues found in dataset of a particular type, including how severe this type of issue is overall across the dataset.</p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#cleanlab.datalab.internal.data_issues.DataIssues.get_info" title="cleanlab.datalab.internal.data_issues.DataIssues.get_info"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_info</span></code></a>([issue_name])</p></td>
-<td><p>Get the info for the issue_name key.</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#cleanlab.datalab.internal.data_issues.DataIssues.collect_statistics" title="cleanlab.datalab.internal.data_issues.DataIssues.collect_statistics"><code class="xref py py-obj docutils literal notranslate"><span class="pre">collect_statistics</span></code></a>(issue_manager)</p></td>
-<td><p>Update the statistics in the info dictionary.</p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#cleanlab.datalab.internal.data_issues.DataIssues.collect_issues_from_issue_manager" title="cleanlab.datalab.internal.data_issues.DataIssues.collect_issues_from_issue_manager"><code class="xref py py-obj docutils literal notranslate"><span class="pre">collect_issues_from_issue_manager</span></code></a>(issue_manager)</p></td>
-<td><p>Collects results from an IssueManager and update the corresponding attributes of the Datalab object.</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#cleanlab.datalab.internal.data_issues.DataIssues.set_health_score" title="cleanlab.datalab.internal.data_issues.DataIssues.set_health_score"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_health_score</span></code></a>()</p></td>
-<td><p>Set the health score for the dataset based on the issue summary.</p></td>
-</tr>
-</tbody>
-</table>
-</div>
+<dl class="py method">
+<dt class="sig sig-object py" id="cleanlab.datalab.internal.data_issues.DataIssues.get_info">
+<span class="sig-name descname"><span class="pre">get_info</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">issue_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/cleanlab/datalab/internal/data_issues.html#DataIssues.get_info"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cleanlab.datalab.internal.data_issues.DataIssues.get_info" title="Permalink to this definition">#</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code>]</p>
+</dd>
+</dl>
+</dd></dl>
+
 <dl class="py property">
 <dt class="sig sig-object py" id="cleanlab.datalab.internal.data_issues.DataIssues.statistics">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">statistics</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#cleanlab.datalab.internal.data_issues.DataIssues.statistics" title="Permalink to this definition">#</a></dt>
@@ -651,27 +705,9 @@ including how severe this type of issue is overall across the dataset.</p>
 <dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code></p>
 </dd>
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">issue_summary</span></code> – DataFrame where each row corresponds to a type of issue, and columns quantify:
+<dd class="field-odd"><p><a class="reference internal" href="#cleanlab.datalab.internal.data_issues.DataIssues.issue_summary" title="cleanlab.datalab.internal.data_issues.DataIssues.issue_summary"><code class="xref py py-class docutils literal notranslate"><span class="pre">issue_summary</span></code></a> – DataFrame where each row corresponds to a type of issue, and columns quantify:
 the number of examples in the dataset estimated to exhibit this type of issue,
 and the overall severity of the issue across the dataset (via a numeric quality score where lower values indicate that the issue is overall more severe).</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="cleanlab.datalab.internal.data_issues.DataIssues.get_info">
-<span class="sig-name descname"><span class="pre">get_info</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">issue_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/cleanlab/datalab/internal/data_issues.html#DataIssues.get_info"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cleanlab.datalab.internal.data_issues.DataIssues.get_info" title="Permalink to this definition">#</a></dt>
-<dd><p>Get the info for the issue_name key.</p>
-<p>This function is used to get the info for a specific issue_name. If the info is not computed yet, it will raise an error.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>issue_name</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]) – The issue name for which the info is required.</p>
-</dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code>]</p>
-</dd>
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">info</span></code> – The info for the issue_name.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -716,6 +752,16 @@ attributes of the Datalab object.</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cleanlab.datalab.internal.data_issues.DataIssues.collect_issues_from_imagelab">
+<span class="sig-name descname"><span class="pre">collect_issues_from_imagelab</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">imagelab</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">issue_types</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/cleanlab/datalab/internal/data_issues.html#DataIssues.collect_issues_from_imagelab"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cleanlab.datalab.internal.data_issues.DataIssues.collect_issues_from_imagelab" title="Permalink to this definition">#</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></p>
 </dd>
 </dl>
 </dd></dl>

@@ -539,7 +539,7 @@
 <div class="table-wrapper autosummary longtable docutils container">
 <table class="autosummary longtable docutils align-default">
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#cleanlab.datalab.datalab.Datalab" title="cleanlab.datalab.datalab.Datalab"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Datalab</span></code></a>(data[, label_name, image_key, verbosity])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#cleanlab.datalab.datalab.Datalab" title="cleanlab.datalab.datalab.Datalab"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Datalab</span></code></a>(data[, task, label_name, image_key, ...])</p></td>
 <td><p>A single object to automatically detect all kinds of issues in datasets.</p></td>
 </tr>
 </tbody>
@@ -547,7 +547,7 @@
 </div>
 <dl class="py class">
 <dt class="sig sig-object py" id="cleanlab.datalab.datalab.Datalab">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">cleanlab.datalab.datalab.</span></span><span class="sig-name descname"><span class="pre">Datalab</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">label_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">image_key</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbosity</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/cleanlab/datalab/datalab.html#Datalab"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cleanlab.datalab.datalab.Datalab" title="Permalink to this definition">#</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">cleanlab.datalab.datalab.</span></span><span class="sig-name descname"><span class="pre">Datalab</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">task</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'classification'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">label_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">image_key</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbosity</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/cleanlab/datalab/datalab.html#Datalab"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cleanlab.datalab.datalab.Datalab" title="Permalink to this definition">#</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>A single object to automatically detect all kinds of issues in datasets.
 This is how we recommend you interface with the cleanlab library if you want to audit the quality of your data and detect issues within it.
@@ -575,6 +575,8 @@ Datalab tracks intermediate state (e.g. data statistics) from certain cleanlab f
 </dd>
 </dl>
 </p></li>
+<li><p><strong>task</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>) – The type of machine learning task that the dataset is used for.
+By default, this is set to “classification”, but you can also set it to “regression” if you are working with a regression dataset.</p></li>
 <li><p><strong>label_name</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <em>optional</em>) – The name of the label column in the dataset.</p></li>
 <li><p><strong>image_key</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <em>optional</em>) – Optional key that can be specified for image datasets to point to the field containing the actual images themselves.
 If specified, additional image-specific issue types can be detected in the dataset.
@@ -600,7 +602,7 @@ Valid values are 0 through 4. Default is 1.</p></li>
 <td><p>Labels of the dataset, in a [0, 1, ..., K-1] format.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#cleanlab.datalab.datalab.Datalab.has_labels" title="cleanlab.datalab.datalab.Datalab.has_labels"><code class="xref py py-obj docutils literal notranslate"><span class="pre">has_labels</span></code></a></p></td>
-<td><p>Whether the dataset has labels.</p></td>
+<td><p>Whether the dataset has labels, and that they are in a [0, 1, ..., K-1] format.</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="#cleanlab.datalab.datalab.Datalab.class_names" title="cleanlab.datalab.datalab.Datalab.class_names"><code class="xref py py-obj docutils literal notranslate"><span class="pre">class_names</span></code></a></p></td>
 <td><p>Names of the classes in the dataset.</p></td>
@@ -665,7 +667,7 @@ Valid values are 0 through 4. Default is 1.</p></li>
 <dl class="py property">
 <dt class="sig sig-object py" id="cleanlab.datalab.datalab.Datalab.has_labels">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">has_labels</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><a class="headerlink" href="#cleanlab.datalab.datalab.Datalab.has_labels" title="Permalink to this definition">#</a></dt>
-<dd><p>Whether the dataset has labels.</p>
+<dd><p>Whether the dataset has labels, and that they are in a [0, 1, …, K-1] format.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></p>
@@ -995,12 +997,12 @@ The quality scores lie between 0-1 and are directly comparable between multiple 
 
 <dl class="py method">
 <dt class="sig sig-object py" id="cleanlab.datalab.datalab.Datalab.list_possible_issue_types">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">list_possible_issue_types</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/cleanlab/datalab/datalab.html#Datalab.list_possible_issue_types"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cleanlab.datalab.datalab.Datalab.list_possible_issue_types" title="Permalink to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">list_possible_issue_types</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/cleanlab/datalab/datalab.html#Datalab.list_possible_issue_types"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cleanlab.datalab.datalab.Datalab.list_possible_issue_types" title="Permalink to this definition">#</a></dt>
 <dd><p>Returns a list of all registered issue types.</p>
 <p>Any issue type that is not in this list cannot be used in the <a class="reference internal" href="#cleanlab.datalab.datalab.Datalab.find_issues" title="cleanlab.datalab.datalab.Datalab.find_issues"><code class="xref py py-meth docutils literal notranslate"><span class="pre">find_issues()</span></code></a> method.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>This method is a wrapper around <a class="reference internal" href="internal/issue_finder.html#cleanlab.datalab.internal.issue_finder.IssueFinder.list_possible_issue_types" title="cleanlab.datalab.internal.issue_finder.IssueFinder.list_possible_issue_types"><code class="xref py py-meth docutils literal notranslate"><span class="pre">IssueFinder.list_possible_issue_types</span></code></a>.</p>
+<p>This method is a wrapper around <code class="xref py py-meth docutils literal notranslate"><span class="pre">IssueFinder.list_possible_issue_types</span></code>.</p>
 </div>
 <div class="admonition seealso">
 <p class="admonition-title">See also</p>
@@ -1015,12 +1017,12 @@ The quality scores lie between 0-1 and are directly comparable between multiple 
 
 <dl class="py method">
 <dt class="sig sig-object py" id="cleanlab.datalab.datalab.Datalab.list_default_issue_types">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">list_default_issue_types</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/cleanlab/datalab/datalab.html#Datalab.list_default_issue_types"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cleanlab.datalab.datalab.Datalab.list_default_issue_types" title="Permalink to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">list_default_issue_types</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/cleanlab/datalab/datalab.html#Datalab.list_default_issue_types"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cleanlab.datalab.datalab.Datalab.list_default_issue_types" title="Permalink to this definition">#</a></dt>
 <dd><p>Returns a list of the issue types that are run by default
 when <a class="reference internal" href="#cleanlab.datalab.datalab.Datalab.find_issues" title="cleanlab.datalab.datalab.Datalab.find_issues"><code class="xref py py-meth docutils literal notranslate"><span class="pre">find_issues()</span></code></a> is called without specifying <code class="xref py py-obj docutils literal notranslate"><span class="pre">issue_types</span></code>.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>This method is a wrapper around <a class="reference internal" href="internal/issue_finder.html#cleanlab.datalab.internal.issue_finder.IssueFinder.list_default_issue_types" title="cleanlab.datalab.internal.issue_finder.IssueFinder.list_default_issue_types"><code class="xref py py-meth docutils literal notranslate"><span class="pre">IssueFinder.list_default_issue_types</span></code></a>.</p>
+<p>This method is a wrapper around <code class="xref py py-meth docutils literal notranslate"><span class="pre">IssueFinder.list_default_issue_types</span></code>.</p>
 </div>
 <div class="admonition seealso">
 <p class="admonition-title">See also</p>

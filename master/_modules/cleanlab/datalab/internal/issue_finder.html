@@ -553,16 +553,109 @@
 <span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">annotations</span>
 
 <span class="kn">import</span> <span class="nn">warnings</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">TYPE_CHECKING</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">TYPE_CHECKING</span><span class="p">,</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Optional</span>
 
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">from</span> <span class="nn">scipy.sparse</span> <span class="kn">import</span> <span class="n">csr_matrix</span>
 
-<span class="kn">from</span> <span class="nn">cleanlab.datalab.internal.issue_manager_factory</span> <span class="kn">import</span> <span class="n">_IssueManagerFactory</span><span class="p">,</span> <span class="n">REGISTRY</span>
+<span class="kn">from</span> <span class="nn">cleanlab.datalab.internal.issue_manager_factory</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">_IssueManagerFactory</span><span class="p">,</span>
+    <span class="n">list_default_issue_types</span><span class="p">,</span>
+<span class="p">)</span>
 
 <span class="k">if</span> <span class="n">TYPE_CHECKING</span><span class="p">:</span>  <span class="c1"># pragma: no cover</span>
     <span class="kn">import</span> <span class="nn">numpy.typing</span> <span class="k">as</span> <span class="nn">npt</span>
+    <span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Callable</span>
+
     <span class="kn">from</span> <span class="nn">cleanlab.datalab.datalab</span> <span class="kn">import</span> <span class="n">Datalab</span>
+
+
+<span class="n">_CLASSIFICATION_ARGS_DICT</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;label&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;pred_probs&quot;</span><span class="p">,</span> <span class="s2">&quot;features&quot;</span><span class="p">],</span>
+    <span class="s2">&quot;outlier&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;pred_probs&quot;</span><span class="p">,</span> <span class="s2">&quot;features&quot;</span><span class="p">,</span> <span class="s2">&quot;knn_graph&quot;</span><span class="p">],</span>
+    <span class="s2">&quot;near_duplicate&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;features&quot;</span><span class="p">,</span> <span class="s2">&quot;knn_graph&quot;</span><span class="p">],</span>
+    <span class="s2">&quot;non_iid&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;pred_probs&quot;</span><span class="p">,</span> <span class="s2">&quot;features&quot;</span><span class="p">,</span> <span class="s2">&quot;knn_graph&quot;</span><span class="p">],</span>
+    <span class="s2">&quot;data_valuation&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;knn_graph&quot;</span><span class="p">],</span>
+<span class="p">}</span>
+<span class="n">_REGRESSION_ARGS_DICT</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;label&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;features&quot;</span><span class="p">],</span>
+<span class="p">}</span>
+
+
+<span class="k">def</span> <span class="nf">_resolve_required_args_for_classification</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Resolves the required arguments for each issue type intended for classification tasks.&quot;&quot;&quot;</span>
+    <span class="n">initial_args_dict</span> <span class="o">=</span> <span class="n">_CLASSIFICATION_ARGS_DICT</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+    <span class="n">args_dict</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="n">issue_type</span><span class="p">:</span> <span class="p">{</span><span class="n">arg</span><span class="p">:</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">arg</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span> <span class="k">for</span> <span class="n">arg</span> <span class="ow">in</span> <span class="n">initial_args_dict</span><span class="p">[</span><span class="n">issue_type</span><span class="p">]}</span>
+        <span class="k">for</span> <span class="n">issue_type</span> <span class="ow">in</span> <span class="n">initial_args_dict</span>
+    <span class="p">}</span>
+
+    <span class="c1"># Remove None values from argument list, rely on default values in IssueManager</span>
+    <span class="n">args_dict</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="n">k</span><span class="p">:</span> <span class="p">{</span><span class="n">k2</span><span class="p">:</span> <span class="n">v2</span> <span class="k">for</span> <span class="n">k2</span><span class="p">,</span> <span class="n">v2</span> <span class="ow">in</span> <span class="n">v</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="k">if</span> <span class="n">v2</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">}</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">args_dict</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="k">if</span> <span class="n">v</span>
+    <span class="p">}</span>
+
+    <span class="c1"># Prefer `knn_graph` over `features` if both are provided.</span>
+    <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">args_dict</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
+        <span class="k">if</span> <span class="s2">&quot;knn_graph&quot;</span> <span class="ow">in</span> <span class="n">v</span> <span class="ow">and</span> <span class="s2">&quot;features&quot;</span> <span class="ow">in</span> <span class="n">v</span><span class="p">:</span>
+            <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
+                <span class="s2">&quot;Both `features` and `knn_graph` were provided. &quot;</span>
+                <span class="s2">&quot;Most issue managers will likely prefer using `knn_graph` &quot;</span>
+                <span class="s2">&quot;instead of `features` for efficiency.&quot;</span>
+            <span class="p">)</span>
+
+    <span class="c1"># Only keep issue types that have at least one argument</span>
+    <span class="n">args_dict</span> <span class="o">=</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="n">v</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">args_dict</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="k">if</span> <span class="n">v</span><span class="p">}</span>
+
+    <span class="k">return</span> <span class="n">args_dict</span>
+
+
+<span class="k">def</span> <span class="nf">_resolve_required_args_for_regression</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Resolves the required arguments for each issue type intended for regression tasks.&quot;&quot;&quot;</span>
+    <span class="n">initial_args_dict</span> <span class="o">=</span> <span class="n">_REGRESSION_ARGS_DICT</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+    <span class="n">args_dict</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="n">issue_type</span><span class="p">:</span> <span class="p">{</span><span class="n">arg</span><span class="p">:</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">arg</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span> <span class="k">for</span> <span class="n">arg</span> <span class="ow">in</span> <span class="n">initial_args_dict</span><span class="p">[</span><span class="n">issue_type</span><span class="p">]}</span>
+        <span class="k">for</span> <span class="n">issue_type</span> <span class="ow">in</span> <span class="n">initial_args_dict</span>
+    <span class="p">}</span>
+
+    <span class="c1"># Remove None values from argument list, rely on default values in IssueManager</span>
+    <span class="n">args_dict</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="n">k</span><span class="p">:</span> <span class="p">{</span><span class="n">k2</span><span class="p">:</span> <span class="n">v2</span> <span class="k">for</span> <span class="n">k2</span><span class="p">,</span> <span class="n">v2</span> <span class="ow">in</span> <span class="n">v</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="k">if</span> <span class="n">v2</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">}</span>
+        <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">args_dict</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">v</span> <span class="ow">or</span> <span class="n">k</span> <span class="o">==</span> <span class="s2">&quot;label&quot;</span>  <span class="c1"># Allow label issues to require no arguments</span>
+    <span class="p">}</span>
+
+    <span class="k">return</span> <span class="n">args_dict</span>
+
+
+<span class="k">def</span> <span class="nf">_select_strategy_for_resolving_required_args</span><span class="p">(</span><span class="n">task</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Callable</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Helper function that selects the strategy for resolving required arguments for each issue type.</span>
+
+<span class="sd">    Each strategy resolves the required arguments for each issue type.</span>
+
+<span class="sd">    This is a helper function that filters out any issue manager</span>
+<span class="sd">    that does not have the required arguments.</span>
+
+<span class="sd">    This does not consider custom hyperparameters for each issue type.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    task : str</span>
+<span class="sd">        The type of machine learning task that the dataset is used for.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    args_dict :</span>
+<span class="sd">        Dictionary of required arguments for each issue type, if available.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">strategies</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;classification&quot;</span><span class="p">:</span> <span class="n">_resolve_required_args_for_classification</span><span class="p">,</span>
+        <span class="s2">&quot;regression&quot;</span><span class="p">:</span> <span class="n">_resolve_required_args_for_regression</span><span class="p">,</span>
+    <span class="p">}</span>
+    <span class="n">selected_strategy</span> <span class="o">=</span> <span class="n">strategies</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">task</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">selected_strategy</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;No strategy for resolving required arguments for task &#39;</span><span class="si">{</span><span class="n">task</span><span class="si">}</span><span class="s2">&#39;&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">selected_strategy</span>
 
 
 <div class="viewcode-block" id="IssueFinder"><a class="viewcode-back" href="../../../../cleanlab/datalab/internal/issue_finder.html#cleanlab.datalab.internal.issue_finder.IssueFinder">[docs]</a><span class="k">class</span> <span class="nc">IssueFinder</span><span class="p">:</span>
@@ -584,6 +677,9 @@
 <span class="sd">    datalab : Datalab</span>
 <span class="sd">        The Datalab instance associated with this IssueFinder.</span>
 
+<span class="sd">    task : str</span>
+<span class="sd">        The type of machine learning task that the dataset is used for.</span>
+
 <span class="sd">    verbosity : int</span>
 <span class="sd">        Controls the verbosity of the output during the issue finding process.</span>
 
@@ -593,8 +689,9 @@
 <span class="sd">    `Datalab.find_issues` method which internally utilizes an IssueFinder instance.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">datalab</span><span class="p">:</span> <span class="s2">&quot;Datalab&quot;</span><span class="p">,</span> <span class="n">verbosity</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">datalab</span><span class="p">:</span> <span class="s2">&quot;Datalab&quot;</span><span class="p">,</span> <span class="n">task</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">verbosity</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">datalab</span> <span class="o">=</span> <span class="n">datalab</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">task</span> <span class="o">=</span> <span class="n">task</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">verbosity</span> <span class="o">=</span> <span class="n">verbosity</span>
 
 <div class="viewcode-block" id="IssueFinder.find_issues"><a class="viewcode-back" href="../../../../cleanlab/datalab/internal/issue_finder.html#cleanlab.datalab.internal.issue_finder.IssueFinder.find_issues">[docs]</a>    <span class="k">def</span> <span class="nf">find_issues</span><span class="p">(</span>
@@ -674,7 +771,9 @@
 
         <span class="n">new_issue_managers</span> <span class="o">=</span> <span class="p">[</span>
             <span class="n">factory</span><span class="p">(</span><span class="n">datalab</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">datalab</span><span class="p">,</span> <span class="o">**</span><span class="n">issue_types_copy</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">factory</span><span class="o">.</span><span class="n">issue_name</span><span class="p">,</span> <span class="p">{}))</span>
-            <span class="k">for</span> <span class="n">factory</span> <span class="ow">in</span> <span class="n">_IssueManagerFactory</span><span class="o">.</span><span class="n">from_list</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">issue_types_copy</span><span class="o">.</span><span class="n">keys</span><span class="p">()))</span>
+            <span class="k">for</span> <span class="n">factory</span> <span class="ow">in</span> <span class="n">_IssueManagerFactory</span><span class="o">.</span><span class="n">from_list</span><span class="p">(</span>
+                <span class="nb">list</span><span class="p">(</span><span class="n">issue_types_copy</span><span class="o">.</span><span class="n">keys</span><span class="p">()),</span> <span class="n">task</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">task</span>
+            <span class="p">)</span>
         <span class="p">]</span>
 
         <span class="n">failed_managers</span> <span class="o">=</span> <span class="p">[]</span>
@@ -692,56 +791,6 @@
         <span class="k">if</span> <span class="n">failed_managers</span><span class="p">:</span>
             <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Failed to check for these issue types: </span><span class="si">{</span><span class="n">failed_managers</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
         <span class="n">data_issues</span><span class="o">.</span><span class="n">set_health_score</span><span class="p">()</span></div>
-
-    <span class="k">def</span> <span class="nf">_resolve_required_args</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pred_probs</span><span class="p">,</span> <span class="n">features</span><span class="p">,</span> <span class="n">knn_graph</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Resolves the required arguments for each issue type.</span>
-
-<span class="sd">        This is a helper function that filters out any issue manager</span>
-<span class="sd">        that does not have the required arguments.</span>
-
-<span class="sd">        This does not consider custom hyperparameters for each issue type.</span>
-
-
-<span class="sd">        Parameters</span>
-<span class="sd">        ----------</span>
-<span class="sd">        pred_probs :</span>
-<span class="sd">            Out-of-sample predicted probabilities made on the data.</span>
-
-<span class="sd">        features :</span>
-<span class="sd">            Name of column containing precomputed embeddings.</span>
-
-<span class="sd">        knn_graph :</span>
-<span class="sd">            Sparse matrix representing distances between examples in the dataset in a k nearest neighbor graph.</span>
-
-<span class="sd">        Returns</span>
-<span class="sd">        -------</span>
-<span class="sd">        args_dict :</span>
-<span class="sd">            Dictionary of required arguments for each issue type, if available.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">args_dict</span> <span class="o">=</span> <span class="p">{</span>
-            <span class="s2">&quot;label&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;pred_probs&quot;</span><span class="p">:</span> <span class="n">pred_probs</span><span class="p">,</span> <span class="s2">&quot;features&quot;</span><span class="p">:</span> <span class="n">features</span><span class="p">},</span>
-            <span class="s2">&quot;outlier&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;pred_probs&quot;</span><span class="p">:</span> <span class="n">pred_probs</span><span class="p">,</span> <span class="s2">&quot;features&quot;</span><span class="p">:</span> <span class="n">features</span><span class="p">,</span> <span class="s2">&quot;knn_graph&quot;</span><span class="p">:</span> <span class="n">knn_graph</span><span class="p">},</span>
-            <span class="s2">&quot;near_duplicate&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;features&quot;</span><span class="p">:</span> <span class="n">features</span><span class="p">,</span> <span class="s2">&quot;knn_graph&quot;</span><span class="p">:</span> <span class="n">knn_graph</span><span class="p">},</span>
-            <span class="s2">&quot;non_iid&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;pred_probs&quot;</span><span class="p">:</span> <span class="n">pred_probs</span><span class="p">,</span> <span class="s2">&quot;features&quot;</span><span class="p">:</span> <span class="n">features</span><span class="p">,</span> <span class="s2">&quot;knn_graph&quot;</span><span class="p">:</span> <span class="n">knn_graph</span><span class="p">},</span>
-            <span class="s2">&quot;data_valuation&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;knn_graph&quot;</span><span class="p">:</span> <span class="n">knn_graph</span><span class="p">},</span>
-        <span class="p">}</span>
-
-        <span class="n">args_dict</span> <span class="o">=</span> <span class="p">{</span>
-            <span class="n">k</span><span class="p">:</span> <span class="p">{</span><span class="n">k2</span><span class="p">:</span> <span class="n">v2</span> <span class="k">for</span> <span class="n">k2</span><span class="p">,</span> <span class="n">v2</span> <span class="ow">in</span> <span class="n">v</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="k">if</span> <span class="n">v2</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">}</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">args_dict</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="k">if</span> <span class="n">v</span>
-        <span class="p">}</span>
-
-        <span class="c1"># Prefer `knn_graph` over `features` if both are provided.</span>
-        <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">args_dict</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
-            <span class="k">if</span> <span class="s2">&quot;knn_graph&quot;</span> <span class="ow">in</span> <span class="n">v</span> <span class="ow">and</span> <span class="s2">&quot;features&quot;</span> <span class="ow">in</span> <span class="n">v</span><span class="p">:</span>
-                <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
-                    <span class="s2">&quot;Both `features` and `knn_graph` were provided. &quot;</span>
-                    <span class="s2">&quot;Most issue managers will likely prefer using `knn_graph` &quot;</span>
-                    <span class="s2">&quot;instead of `features` for efficiency.&quot;</span>
-                <span class="p">)</span>
-
-        <span class="n">args_dict</span> <span class="o">=</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="n">v</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">args_dict</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="k">if</span> <span class="n">v</span><span class="p">}</span>
-
-        <span class="k">return</span> <span class="n">args_dict</span>
 
     <span class="k">def</span> <span class="nf">_set_issue_types</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
@@ -777,7 +826,7 @@
             <span class="c1"># keep only default issue types</span>
             <span class="n">issue_types_copy</span> <span class="o">=</span> <span class="p">{</span>
                 <span class="n">issue</span><span class="p">:</span> <span class="n">issue_types_copy</span><span class="p">[</span><span class="n">issue</span><span class="p">]</span>
-                <span class="k">for</span> <span class="n">issue</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">list_default_issue_types</span><span class="p">()</span>
+                <span class="k">for</span> <span class="n">issue</span> <span class="ow">in</span> <span class="n">list_default_issue_types</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">task</span><span class="p">)</span>
                 <span class="k">if</span> <span class="n">issue</span> <span class="ow">in</span> <span class="n">issue_types_copy</span>
             <span class="p">}</span>
 
@@ -817,29 +866,6 @@
                 <span class="n">error_message</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot;Required argument </span><span class="si">{</span><span class="n">missing_required_args</span><span class="si">}</span><span class="s2"> for issue type </span><span class="si">{</span><span class="n">issue_name</span><span class="si">}</span><span class="s2"> was not provided.</span><span class="se">\n</span><span class="s2">&quot;</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="n">error_message</span><span class="p">)</span>
 
-<div class="viewcode-block" id="IssueFinder.list_possible_issue_types"><a class="viewcode-back" href="../../../../cleanlab/datalab/internal/issue_finder.html#cleanlab.datalab.internal.issue_finder.IssueFinder.list_possible_issue_types">[docs]</a>    <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">list_possible_issue_types</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns a list of all registered issue types.</span>
-
-<span class="sd">        Any issue type that is not in this list cannot be used in the :py:meth:`find_issues` method.</span>
-
-<span class="sd">        See Also</span>
-<span class="sd">        --------</span>
-<span class="sd">        :py:class:`REGISTRY &lt;cleanlab.datalab.internal.issue_manager_factory.REGISTRY&gt;` : All available issue types and their corresponding issue managers can be found here.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="n">REGISTRY</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span></div>
-
-<div class="viewcode-block" id="IssueFinder.list_default_issue_types"><a class="viewcode-back" href="../../../../cleanlab/datalab/internal/issue_finder.html#cleanlab.datalab.internal.issue_finder.IssueFinder.list_default_issue_types">[docs]</a>    <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">list_default_issue_types</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns a list of the issue types that are run by default</span>
-<span class="sd">        when :py:meth:`find_issues` is called without specifying `issue_types`.</span>
-
-<span class="sd">        See Also</span>
-<span class="sd">        --------</span>
-<span class="sd">        :py:class:`REGISTRY &lt;cleanlab.datalab.internal.issue_manager_factory.REGISTRY&gt;` : All available issue types and their corresponding issue managers can be found here.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="p">[</span><span class="s2">&quot;label&quot;</span><span class="p">,</span> <span class="s2">&quot;outlier&quot;</span><span class="p">,</span> <span class="s2">&quot;near_duplicate&quot;</span><span class="p">,</span> <span class="s2">&quot;non_iid&quot;</span><span class="p">]</span></div>
-
 <div class="viewcode-block" id="IssueFinder.get_available_issue_types"><a class="viewcode-back" href="../../../../cleanlab/datalab/internal/issue_finder.html#cleanlab.datalab.internal.issue_finder.IssueFinder.get_available_issue_types">[docs]</a>    <span class="k">def</span> <span class="nf">get_available_issue_types</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns a dictionary of issue types that can be used in :py:meth:`Datalab.find_issues</span>
 <span class="sd">        &lt;cleanlab.datalab.datalab.Datalab.find_issues&gt;` method.&quot;&quot;&quot;</span>
@@ -850,19 +876,24 @@
         <span class="n">issue_types</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;issue_types&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
 
         <span class="c1"># Determine which parameters are required for each issue type</span>
-        <span class="n">required_args_per_issue_type</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_resolve_required_args</span><span class="p">(</span><span class="n">pred_probs</span><span class="p">,</span> <span class="n">features</span><span class="p">,</span> <span class="n">knn_graph</span><span class="p">)</span>
+        <span class="n">strategy_for_resolving_required_args</span> <span class="o">=</span> <span class="n">_select_strategy_for_resolving_required_args</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">task</span>
+        <span class="p">)</span>
+        <span class="n">required_args_per_issue_type</span> <span class="o">=</span> <span class="n">strategy_for_resolving_required_args</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
         <span class="n">issue_types_copy</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_set_issue_types</span><span class="p">(</span><span class="n">issue_types</span><span class="p">,</span> <span class="n">required_args_per_issue_type</span><span class="p">)</span>
-
         <span class="k">if</span> <span class="n">issue_types</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="c1"># Only run default issue types if no issue types are specified</span>
             <span class="n">issue_types_copy</span> <span class="o">=</span> <span class="p">{</span>
                 <span class="n">issue</span><span class="p">:</span> <span class="n">issue_types_copy</span><span class="p">[</span><span class="n">issue</span><span class="p">]</span>
-                <span class="k">for</span> <span class="n">issue</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">list_default_issue_types</span><span class="p">()</span>
+                <span class="k">for</span> <span class="n">issue</span> <span class="ow">in</span> <span class="n">list_default_issue_types</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">task</span><span class="p">)</span>
                 <span class="k">if</span> <span class="n">issue</span> <span class="ow">in</span> <span class="n">issue_types_copy</span>
             <span class="p">}</span>
-
-        <span class="n">drop_label_check</span> <span class="o">=</span> <span class="s2">&quot;label&quot;</span> <span class="ow">in</span> <span class="n">issue_types_copy</span> <span class="ow">and</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">datalab</span><span class="o">.</span><span class="n">has_labels</span>
+        <span class="n">drop_label_check</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="s2">&quot;label&quot;</span> <span class="ow">in</span> <span class="n">issue_types_copy</span>
+            <span class="ow">and</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">datalab</span><span class="o">.</span><span class="n">has_labels</span>
+            <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">task</span> <span class="o">!=</span> <span class="s2">&quot;regression&quot;</span>
+        <span class="p">)</span>
         <span class="k">if</span> <span class="n">drop_label_check</span><span class="p">:</span>
             <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s2">&quot;No labels were provided. &quot;</span> <span class="s2">&quot;The &#39;label&#39; issue type will not be run.&quot;</span><span class="p">)</span>
             <span class="n">issue_types_copy</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;label&quot;</span><span class="p">)</span>

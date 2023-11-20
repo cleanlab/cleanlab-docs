@@ -551,17 +551,18 @@
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 
 <span class="kn">import</span> <span class="nn">cleanlab</span>
-<span class="kn">from</span> <span class="nn">cleanlab.datalab.internal.adapter.imagelab</span> <span class="kn">import</span> <span class="p">(</span>
-    <span class="n">create_imagelab</span><span class="p">,</span>
-<span class="p">)</span>
+<span class="kn">from</span> <span class="nn">cleanlab.datalab.internal.adapter.imagelab</span> <span class="kn">import</span> <span class="n">create_imagelab</span>
 <span class="kn">from</span> <span class="nn">cleanlab.datalab.internal.data</span> <span class="kn">import</span> <span class="n">Data</span>
 <span class="kn">from</span> <span class="nn">cleanlab.datalab.internal.display</span> <span class="kn">import</span> <span class="n">_Displayer</span>
 <span class="kn">from</span> <span class="nn">cleanlab.datalab.internal.helper_factory</span> <span class="kn">import</span> <span class="p">(</span>
-    <span class="n">data_issues_factory</span><span class="p">,</span>
+    <span class="n">_DataIssuesBuilder</span><span class="p">,</span>
     <span class="n">issue_finder_factory</span><span class="p">,</span>
     <span class="n">report_factory</span><span class="p">,</span>
 <span class="p">)</span>
-<span class="kn">from</span> <span class="nn">cleanlab.datalab.internal.issue_finder</span> <span class="kn">import</span> <span class="n">IssueFinder</span>
+<span class="kn">from</span> <span class="nn">cleanlab.datalab.internal.issue_manager_factory</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">list_default_issue_types</span> <span class="k">as</span> <span class="n">_list_default_issue_types</span><span class="p">,</span>
+    <span class="n">list_possible_issue_types</span> <span class="k">as</span> <span class="n">_list_possible_issue_types</span><span class="p">,</span>
+<span class="p">)</span>
 <span class="kn">from</span> <span class="nn">cleanlab.datalab.internal.serialize</span> <span class="kn">import</span> <span class="n">_Serializer</span>
 
 <span class="k">if</span> <span class="n">TYPE_CHECKING</span><span class="p">:</span>  <span class="c1"># pragma: no cover</span>
@@ -570,6 +571,7 @@
     <span class="kn">from</span> <span class="nn">scipy.sparse</span> <span class="kn">import</span> <span class="n">csr_matrix</span>
 
     <span class="n">DatasetLike</span> <span class="o">=</span> <span class="n">Union</span><span class="p">[</span><span class="n">Dataset</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span> <span class="n">List</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]],</span> <span class="nb">str</span><span class="p">]</span>
+
 
 <span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;Datalab&quot;</span><span class="p">]</span>
 
@@ -599,6 +601,10 @@
 <span class="sd">            - path to a local file: Text (.txt), CSV (.csv), JSON (.json)</span>
 <span class="sd">            - or a dataset identifier on the Hugging Face Hub</span>
 
+<span class="sd">    task : str</span>
+<span class="sd">        The type of machine learning task that the dataset is used for.</span>
+<span class="sd">        By default, this is set to &quot;classification&quot;, but you can also set it to &quot;regression&quot; if you are working with a regression dataset.</span>
+
 <span class="sd">    label_name : str, optional</span>
 <span class="sd">        The name of the label column in the dataset.</span>
 
@@ -623,12 +629,18 @@
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">data</span><span class="p">:</span> <span class="s2">&quot;DatasetLike&quot;</span><span class="p">,</span>
+        <span class="n">task</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;classification&quot;</span><span class="p">,</span>
         <span class="n">label_name</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">image_key</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">verbosity</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_data</span> <span class="o">=</span> <span class="n">Data</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">label_name</span><span class="p">)</span>
+        <span class="c1"># Assume continuous values of labels for regression task</span>
+        <span class="c1"># Map labels to integers for classification task</span>
+        <span class="n">map_labels_to_int</span> <span class="o">=</span> <span class="n">task</span> <span class="o">==</span> <span class="s2">&quot;classification&quot;</span>  <span class="c1"># TODO: handle more generally</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_data</span> <span class="o">=</span> <span class="n">Data</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">label_name</span><span class="p">,</span> <span class="n">map_to_int</span><span class="o">=</span><span class="n">map_labels_to_int</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="o">.</span><span class="n">_data</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">task</span> <span class="o">=</span> <span class="n">task</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_labels</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="o">.</span><span class="n">labels</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_label_map</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_labels</span><span class="o">.</span><span class="n">label_map</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">label_name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_labels</span><span class="o">.</span><span class="n">label_name</span>
@@ -636,7 +648,11 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">cleanlab_version</span> <span class="o">=</span> <span class="n">cleanlab</span><span class="o">.</span><span class="n">version</span><span class="o">.</span><span class="n">__version__</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">verbosity</span> <span class="o">=</span> <span class="n">verbosity</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_imagelab</span> <span class="o">=</span> <span class="n">create_imagelab</span><span class="p">(</span><span class="n">dataset</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="n">image_key</span><span class="o">=</span><span class="n">image_key</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">data_issues</span> <span class="o">=</span> <span class="n">data_issues_factory</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_imagelab</span><span class="p">)(</span><span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="p">)</span>
+
+        <span class="c1"># Create the builder for DataIssues</span>
+        <span class="n">builder</span> <span class="o">=</span> <span class="n">_DataIssuesBuilder</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="p">)</span>
+        <span class="n">builder</span><span class="o">.</span><span class="n">set_imagelab</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_imagelab</span><span class="p">)</span><span class="o">.</span><span class="n">set_task</span><span class="p">(</span><span class="n">task</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">data_issues</span> <span class="o">=</span> <span class="n">builder</span><span class="o">.</span><span class="n">build</span><span class="p">()</span>
 
     <span class="c1"># todo: check displayer methods</span>
     <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
@@ -652,7 +668,7 @@
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">has_labels</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Whether the dataset has labels.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Whether the dataset has labels, and that they are in a [0, 1, ..., K-1] format.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_labels</span><span class="o">.</span><span class="n">is_available</span>
 
     <span class="nd">@property</span>
@@ -813,14 +829,16 @@
                 <span class="s2">&quot;No issue types were specified so no issues will be found in the dataset. Set `issue_types` as None to consider a default set of issues.&quot;</span>
             <span class="p">)</span>
             <span class="k">return</span> <span class="kc">None</span>
-
-        <span class="n">issue_finder</span> <span class="o">=</span> <span class="n">issue_finder_factory</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_imagelab</span><span class="p">)(</span><span class="n">datalab</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">verbosity</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">verbosity</span><span class="p">)</span>
+        <span class="n">issue_finder</span> <span class="o">=</span> <span class="n">issue_finder_factory</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_imagelab</span><span class="p">)(</span>
+            <span class="n">datalab</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">task</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">task</span><span class="p">,</span> <span class="n">verbosity</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">verbosity</span>
+        <span class="p">)</span>
         <span class="n">issue_finder</span><span class="o">.</span><span class="n">find_issues</span><span class="p">(</span>
             <span class="n">pred_probs</span><span class="o">=</span><span class="n">pred_probs</span><span class="p">,</span>
             <span class="n">features</span><span class="o">=</span><span class="n">features</span><span class="p">,</span>
             <span class="n">knn_graph</span><span class="o">=</span><span class="n">knn_graph</span><span class="p">,</span>
             <span class="n">issue_types</span><span class="o">=</span><span class="n">issue_types</span><span class="p">,</span>
         <span class="p">)</span>
+
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">verbosity</span><span class="p">:</span>
             <span class="nb">print</span><span class="p">(</span>
                 <span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Audit complete. </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">data_issues</span><span class="o">.</span><span class="n">issue_summary</span><span class="p">[</span><span class="s1">&#39;num_issues&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span><span class="si">}</span><span class="s2"> issues found in the dataset.&quot;</span>
@@ -862,6 +880,7 @@
 
         <span class="n">reporter</span> <span class="o">=</span> <span class="n">report_factory</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_imagelab</span><span class="p">)(</span>
             <span class="n">data_issues</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">data_issues</span><span class="p">,</span>
+            <span class="n">task</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">task</span><span class="p">,</span>
             <span class="n">verbosity</span><span class="o">=</span><span class="n">verbosity</span><span class="p">,</span>
             <span class="n">include_description</span><span class="o">=</span><span class="n">include_description</span><span class="p">,</span>
             <span class="n">show_summary_score</span><span class="o">=</span><span class="n">show_summary_score</span><span class="p">,</span>
@@ -1008,8 +1027,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">data_issues</span><span class="o">.</span><span class="n">get_info</span><span class="p">(</span><span class="n">issue_name</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="Datalab.list_possible_issue_types"><a class="viewcode-back" href="../../../cleanlab/datalab/datalab.html#cleanlab.datalab.datalab.Datalab.list_possible_issue_types">[docs]</a>    <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">list_possible_issue_types</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+<div class="viewcode-block" id="Datalab.list_possible_issue_types"><a class="viewcode-back" href="../../../cleanlab/datalab/datalab.html#cleanlab.datalab.datalab.Datalab.list_possible_issue_types">[docs]</a>    <span class="k">def</span> <span class="nf">list_possible_issue_types</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns a list of all registered issue types.</span>
 
 <span class="sd">        Any issue type that is not in this list cannot be used in the :py:meth:`find_issues` method.</span>
@@ -1022,10 +1040,9 @@
 <span class="sd">        --------</span>
 <span class="sd">        :py:class:`REGISTRY &lt;cleanlab.datalab.internal.issue_manager_factory.REGISTRY&gt;` : All available issue types and their corresponding issue managers can be found here.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="n">IssueFinder</span><span class="o">.</span><span class="n">list_possible_issue_types</span><span class="p">()</span></div>
+        <span class="k">return</span> <span class="n">_list_possible_issue_types</span><span class="p">(</span><span class="n">task</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">task</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="Datalab.list_default_issue_types"><a class="viewcode-back" href="../../../cleanlab/datalab/datalab.html#cleanlab.datalab.datalab.Datalab.list_default_issue_types">[docs]</a>    <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">list_default_issue_types</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+<div class="viewcode-block" id="Datalab.list_default_issue_types"><a class="viewcode-back" href="../../../cleanlab/datalab/datalab.html#cleanlab.datalab.datalab.Datalab.list_default_issue_types">[docs]</a>    <span class="k">def</span> <span class="nf">list_default_issue_types</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns a list of the issue types that are run by default</span>
 <span class="sd">        when :py:meth:`find_issues` is called without specifying `issue_types`.</span>
 
@@ -1037,7 +1054,7 @@
 <span class="sd">        --------</span>
 <span class="sd">        :py:class:`REGISTRY &lt;cleanlab.datalab.internal.issue_manager_factory.REGISTRY&gt;` : All available issue types and their corresponding issue managers can be found here.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="n">IssueFinder</span><span class="o">.</span><span class="n">list_default_issue_types</span><span class="p">()</span></div>
+        <span class="k">return</span> <span class="n">_list_default_issue_types</span><span class="p">(</span><span class="n">task</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">task</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="Datalab.save"><a class="viewcode-back" href="../../../cleanlab/datalab/datalab.html#cleanlab.datalab.datalab.Datalab.save">[docs]</a>    <span class="k">def</span> <span class="nf">save</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">force</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Saves this Datalab object to file (all files are in folder at `path/`).</span>

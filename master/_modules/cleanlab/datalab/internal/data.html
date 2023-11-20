@@ -639,6 +639,10 @@
 <span class="sd">    label_name : Union[str, List[str]]</span>
 <span class="sd">        Name of the label column in the dataset.</span>
 
+<span class="sd">    map_to_int : bool</span>
+<span class="sd">        Whether to map the labels to integers, e.g. [0, 1, ..., K-1] where K is the number of classes.</span>
+<span class="sd">        If False, the labels are not mapped to integers, e.g. for regression tasks.</span>
+
 <span class="sd">    Warnings</span>
 <span class="sd">    --------</span>
 <span class="sd">    Optional dependencies:</span>
@@ -649,11 +653,13 @@
 <span class="sd">        :py:class:`Datalab &lt;cleanlab.datalab.datalab.Datalab&gt;` to work.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="s2">&quot;DatasetLike&quot;</span><span class="p">,</span> <span class="n">label_name</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="s2">&quot;DatasetLike&quot;</span><span class="p">,</span> <span class="n">label_name</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">map_to_int</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_validate_data</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_load_data</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_data_hash</span> <span class="o">=</span> <span class="nb">hash</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">labels</span> <span class="o">=</span> <span class="n">Label</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="p">,</span> <span class="n">label_name</span><span class="o">=</span><span class="n">label_name</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">labels</span> <span class="o">=</span> <span class="n">Label</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="p">,</span> <span class="n">label_name</span><span class="o">=</span><span class="n">label_name</span><span class="p">,</span> <span class="n">map_to_int</span><span class="o">=</span><span class="n">map_to_int</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">_load_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="s2">&quot;DatasetLike&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dataset</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Checks the type of dataset and uses the correct loader method and</span>
@@ -741,17 +747,31 @@
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Class to represent labels in a dataset.</span>
 
+<span class="sd">    It stores the labels as a numpy array and maps them to integers if necessary.</span>
+<span class="sd">    If a mapping is not necessary, e.g. for regression tasks, the mapping will be an empty dictionary.</span>
+
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
+<span class="sd">    data :</span>
+<span class="sd">        A Hugging Face Dataset object.</span>
+
+<span class="sd">    label_name : str</span>
+<span class="sd">        Name of the label column in the dataset.</span>
+
+<span class="sd">    map_to_int : bool</span>
+<span class="sd">        Whether to map the labels to integers, e.g. [0, 1, ..., K-1] where K is the number of classes.</span>
+<span class="sd">        If False, the labels are not mapped to integers, e.g. for regression tasks.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">Dataset</span><span class="p">,</span> <span class="n">label_name</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">Dataset</span><span class="p">,</span> <span class="n">label_name</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">map_to_int</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_data</span> <span class="o">=</span> <span class="n">data</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">label_name</span> <span class="o">=</span> <span class="n">label_name</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">labels</span> <span class="o">=</span> <span class="n">labels_to_array</span><span class="p">([])</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">label_map</span><span class="p">:</span> <span class="n">Mapping</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="k">if</span> <span class="n">label_name</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">labels</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">label_map</span> <span class="o">=</span> <span class="n">_extract_labels</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">label_name</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">labels</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">label_map</span> <span class="o">=</span> <span class="n">_extract_labels</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">label_name</span><span class="p">,</span> <span class="n">map_to_int</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_validate_labels</span><span class="p">()</span>
 
     <span class="k">def</span> <span class="fm">__len__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
@@ -796,7 +816,7 @@
         <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">labels</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="p">)</span></div>
 
 
-<span class="k">def</span> <span class="nf">_extract_labels</span><span class="p">(</span><span class="n">data</span><span class="p">:</span> <span class="n">Dataset</span><span class="p">,</span> <span class="n">label_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">Mapping</span><span class="p">]:</span>
+<span class="k">def</span> <span class="nf">_extract_labels</span><span class="p">(</span><span class="n">data</span><span class="p">:</span> <span class="n">Dataset</span><span class="p">,</span> <span class="n">label_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">map_to_int</span><span class="p">:</span> <span class="nb">bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">Mapping</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Picks out labels from the dataset and formats them to be [0, 1, ..., K-1]</span>
 <span class="sd">    where K is the number of classes. Also returns a mapping from the formatted</span>
@@ -808,9 +828,15 @@
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
+<span class="sd">    data : datasets.Dataset</span>
+<span class="sd">        A Hugging Face Dataset object.</span>
+
 <span class="sd">    label_name : str</span>
 <span class="sd">        Name of the column in the dataset that contains the labels.</span>
 
+<span class="sd">    map_to_int : bool</span>
+<span class="sd">        Whether to map the labels to integers, e.g. [0, 1, ..., K-1] where K is the number of classes.</span>
+<span class="sd">        If False, the labels are not mapped to integers, e.g. for regression tasks.</span>
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
 <span class="sd">    formatted_labels : np.ndarray</span>
@@ -824,6 +850,9 @@
     <span class="k">if</span> <span class="n">labels</span><span class="o">.</span><span class="n">ndim</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;labels must be 1D numpy array.&quot;</span><span class="p">)</span>
 
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">map_to_int</span><span class="p">:</span>
+        <span class="c1"># Don&#39;t map labels to integers, e.g. for regression tasks</span>
+        <span class="k">return</span> <span class="n">labels</span><span class="p">,</span> <span class="p">{}</span>
     <span class="n">label_name_feature</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">features</span><span class="p">[</span><span class="n">label_name</span><span class="p">]</span>
     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">label_name_feature</span><span class="p">,</span> <span class="n">ClassLabel</span><span class="p">):</span>
         <span class="n">label_map</span> <span class="o">=</span> <span class="p">{</span><span class="n">label</span><span class="p">:</span> <span class="n">label_name_feature</span><span class="o">.</span><span class="n">str2int</span><span class="p">(</span><span class="n">label</span><span class="p">)</span> <span class="k">for</span> <span class="n">label</span> <span class="ow">in</span> <span class="n">label_name_feature</span><span class="o">.</span><span class="n">names</span><span class="p">}</span>

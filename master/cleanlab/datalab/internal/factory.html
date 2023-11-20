@@ -556,15 +556,21 @@ and provides detailed documentation on how to use the API.</p>
 <div class="table-wrapper autosummary longtable docutils container">
 <table class="autosummary longtable docutils align-default">
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#cleanlab.datalab.internal.issue_manager_factory.register" title="cleanlab.datalab.internal.issue_manager_factory.register"><code class="xref py py-obj docutils literal notranslate"><span class="pre">register</span></code></a>(cls)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#cleanlab.datalab.internal.issue_manager_factory.register" title="cleanlab.datalab.internal.issue_manager_factory.register"><code class="xref py py-obj docutils literal notranslate"><span class="pre">register</span></code></a>(cls[, task])</p></td>
 <td><p>Registers the issue manager factory.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#cleanlab.datalab.internal.issue_manager_factory.list_possible_issue_types" title="cleanlab.datalab.internal.issue_manager_factory.list_possible_issue_types"><code class="xref py py-obj docutils literal notranslate"><span class="pre">list_possible_issue_types</span></code></a>(task)</p></td>
+<td><p>Returns a list of all registered issue types.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#cleanlab.datalab.internal.issue_manager_factory.list_default_issue_types" title="cleanlab.datalab.internal.issue_manager_factory.list_default_issue_types"><code class="xref py py-obj docutils literal notranslate"><span class="pre">list_default_issue_types</span></code></a>(task)</p></td>
+<td><p>Returns a list of the issue types that are run by default when <code class="xref py py-meth docutils literal notranslate"><span class="pre">find_issues()</span></code> is called without specifying <code class="xref py py-obj docutils literal notranslate"><span class="pre">issue_types</span></code>.</p></td>
 </tr>
 </tbody>
 </table>
 </div>
 <dl class="py data">
 <dt class="sig sig-object py" id="cleanlab.datalab.internal.issue_manager_factory.REGISTRY">
-<span class="sig-prename descclassname"><span class="pre">cleanlab.datalab.internal.issue_manager_factory.</span></span><span class="sig-name descname"><span class="pre">REGISTRY</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Type</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="issue_manager/issue_manager.html#cleanlab.datalab.internal.issue_manager.issue_manager.IssueManager" title="cleanlab.datalab.internal.issue_manager.issue_manager.IssueManager"><span class="pre">IssueManager</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#cleanlab.datalab.internal.issue_manager_factory.REGISTRY" title="Permalink to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">cleanlab.datalab.internal.issue_manager_factory.</span></span><span class="sig-name descname"><span class="pre">REGISTRY</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Type</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="issue_manager/issue_manager.html#cleanlab.datalab.internal.issue_manager.issue_manager.IssueManager" title="cleanlab.datalab.internal.issue_manager.issue_manager.IssueManager"><span class="pre">IssueManager</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#cleanlab.datalab.internal.issue_manager_factory.REGISTRY" title="Permalink to this definition">#</a></dt>
 <dd><p>Registry of issue managers that can be constructed from a string
 and used in the Datalab class.</p>
 <dl class="field-list simple">
@@ -572,7 +578,6 @@ and used in the Datalab class.</p>
 <p>Currently, the following issue managers are registered by default:</p>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">&quot;outlier&quot;</span></code>: <a class="reference internal" href="issue_manager/outlier.html#cleanlab.datalab.internal.issue_manager.outlier.OutlierIssueManager" title="cleanlab.datalab.internal.issue_manager.outlier.OutlierIssueManager"><code class="xref py py-class docutils literal notranslate"><span class="pre">OutlierIssueManager</span></code></a></p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">&quot;label&quot;</span></code>: <a class="reference internal" href="issue_manager/label.html#cleanlab.datalab.internal.issue_manager.label.LabelIssueManager" title="cleanlab.datalab.internal.issue_manager.label.LabelIssueManager"><code class="xref py py-class docutils literal notranslate"><span class="pre">LabelIssueManager</span></code></a></p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">&quot;near_duplicate&quot;</span></code>: <a class="reference internal" href="issue_manager/duplicate.html#cleanlab.datalab.internal.issue_manager.duplicate.NearDuplicateIssueManager" title="cleanlab.datalab.internal.issue_manager.duplicate.NearDuplicateIssueManager"><code class="xref py py-class docutils literal notranslate"><span class="pre">NearDuplicateIssueManager</span></code></a></p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">&quot;non_iid&quot;</span></code>: <a class="reference internal" href="issue_manager/noniid.html#cleanlab.datalab.internal.issue_manager.noniid.NonIIDIssueManager" title="cleanlab.datalab.internal.issue_manager.noniid.NonIIDIssueManager"><code class="xref py py-class docutils literal notranslate"><span class="pre">NonIIDIssueManager</span></code></a></p></li>
 </ul>
@@ -584,12 +589,15 @@ and used in the Datalab class.</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="cleanlab.datalab.internal.issue_manager_factory.register">
-<span class="sig-prename descclassname"><span class="pre">cleanlab.datalab.internal.issue_manager_factory.</span></span><span class="sig-name descname"><span class="pre">register</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cls</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/cleanlab/datalab/internal/issue_manager_factory.html#register"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cleanlab.datalab.internal.issue_manager_factory.register" title="Permalink to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">cleanlab.datalab.internal.issue_manager_factory.</span></span><span class="sig-name descname"><span class="pre">register</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cls</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">task</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'classification'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/cleanlab/datalab/internal/issue_manager_factory.html#register"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cleanlab.datalab.internal.issue_manager_factory.register" title="Permalink to this definition">#</a></dt>
 <dd><p>Registers the issue manager factory.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>cls</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">Type</span></code>[<a class="reference internal" href="issue_manager/issue_manager.html#cleanlab.datalab.internal.issue_manager.issue_manager.IssueManager" title="cleanlab.datalab.internal.issue_manager.issue_manager.IssueManager"><code class="xref py py-class docutils literal notranslate"><span class="pre">IssueManager</span></code></a>]) – A subclass of
-<a class="reference internal" href="issue_manager/issue_manager.html#cleanlab.datalab.internal.issue_manager.issue_manager.IssueManager" title="cleanlab.datalab.internal.issue_manager.issue_manager.IssueManager"><code class="xref py py-class docutils literal notranslate"><span class="pre">IssueManager</span></code></a>.</p>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>cls</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">Type</span></code>[<a class="reference internal" href="issue_manager/issue_manager.html#cleanlab.datalab.internal.issue_manager.issue_manager.IssueManager" title="cleanlab.datalab.internal.issue_manager.issue_manager.IssueManager"><code class="xref py py-class docutils literal notranslate"><span class="pre">IssueManager</span></code></a>]) – A subclass of
+<a class="reference internal" href="issue_manager/issue_manager.html#cleanlab.datalab.internal.issue_manager.issue_manager.IssueManager" title="cleanlab.datalab.internal.issue_manager.issue_manager.IssueManager"><code class="xref py py-class docutils literal notranslate"><span class="pre">IssueManager</span></code></a>.</p></li>
+<li><p><strong>task</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>) – Specific machine learning task like classification or regression.</p></li>
+</ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">Type</span></code>[<a class="reference internal" href="issue_manager/issue_manager.html#cleanlab.datalab.internal.issue_manager.issue_manager.IssueManager" title="cleanlab.datalab.internal.issue_manager.issue_manager.IssueManager"><code class="xref py py-class docutils literal notranslate"><span class="pre">IssueManager</span></code></a>]</p>
@@ -623,9 +631,41 @@ you can register it like so:</p>
         <span class="c1"># Some logic to find issues</span>
         <span class="k">pass</span>
 
-<span class="n">register</span><span class="p">(</span><span class="n">MyIssueManager</span><span class="p">)</span>
+<span class="n">register</span><span class="p">(</span><span class="n">MyIssueManager</span><span class="p">,</span> <span class="n">task</span><span class="o">=</span><span class="s2">&quot;classification&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="cleanlab.datalab.internal.issue_manager_factory.list_possible_issue_types">
+<span class="sig-prename descclassname"><span class="pre">cleanlab.datalab.internal.issue_manager_factory.</span></span><span class="sig-name descname"><span class="pre">list_possible_issue_types</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">task</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/cleanlab/datalab/internal/issue_manager_factory.html#list_possible_issue_types"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cleanlab.datalab.internal.issue_manager_factory.list_possible_issue_types" title="Permalink to this definition">#</a></dt>
+<dd><p>Returns a list of all registered issue types.</p>
+<p>Any issue type that is not in this list cannot be used in the <code class="xref py py-meth docutils literal notranslate"><span class="pre">find_issues()</span></code> method.</p>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<p><a class="reference internal" href="#cleanlab.datalab.internal.issue_manager_factory.REGISTRY" title="cleanlab.datalab.internal.issue_manager_factory.REGISTRY"><code class="xref py py-class docutils literal notranslate"><span class="pre">REGISTRY</span></code></a> : All available issue types and their corresponding issue managers can be found here.</p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="cleanlab.datalab.internal.issue_manager_factory.list_default_issue_types">
+<span class="sig-prename descclassname"><span class="pre">cleanlab.datalab.internal.issue_manager_factory.</span></span><span class="sig-name descname"><span class="pre">list_default_issue_types</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">task</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/cleanlab/datalab/internal/issue_manager_factory.html#list_default_issue_types"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cleanlab.datalab.internal.issue_manager_factory.list_default_issue_types" title="Permalink to this definition">#</a></dt>
+<dd><p>Returns a list of the issue types that are run by default
+when <code class="xref py py-meth docutils literal notranslate"><span class="pre">find_issues()</span></code> is called without specifying <code class="xref py py-obj docutils literal notranslate"><span class="pre">issue_types</span></code>.</p>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<p><a class="reference internal" href="#cleanlab.datalab.internal.issue_manager_factory.REGISTRY" title="cleanlab.datalab.internal.issue_manager_factory.REGISTRY"><code class="xref py py-class docutils literal notranslate"><span class="pre">REGISTRY</span></code></a> : All available issue types and their corresponding issue managers can be found here.</p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]</p>
+</dd>
+</dl>
 </dd></dl>
 
 </section>

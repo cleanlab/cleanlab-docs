@@ -564,22 +564,28 @@
 <span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Type</span>
 
 <span class="kn">from</span> <span class="nn">cleanlab.datalab.internal.issue_manager</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">ClassImbalanceIssueManager</span><span class="p">,</span>
+    <span class="n">DataValuationIssueManager</span><span class="p">,</span>
     <span class="n">IssueManager</span><span class="p">,</span>
     <span class="n">LabelIssueManager</span><span class="p">,</span>
     <span class="n">NearDuplicateIssueManager</span><span class="p">,</span>
-    <span class="n">OutlierIssueManager</span><span class="p">,</span>
     <span class="n">NonIIDIssueManager</span><span class="p">,</span>
-    <span class="n">ClassImbalanceIssueManager</span><span class="p">,</span>
-    <span class="n">DataValuationIssueManager</span><span class="p">,</span>
+    <span class="n">OutlierIssueManager</span><span class="p">,</span>
 <span class="p">)</span>
+<span class="kn">from</span> <span class="nn">cleanlab.datalab.internal.issue_manager.regression</span> <span class="kn">import</span> <span class="n">RegressionLabelIssueManager</span>
 
-<span class="n">REGISTRY</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Type</span><span class="p">[</span><span class="n">IssueManager</span><span class="p">]]</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="s2">&quot;outlier&quot;</span><span class="p">:</span> <span class="n">OutlierIssueManager</span><span class="p">,</span>
-    <span class="s2">&quot;label&quot;</span><span class="p">:</span> <span class="n">LabelIssueManager</span><span class="p">,</span>
-    <span class="s2">&quot;near_duplicate&quot;</span><span class="p">:</span> <span class="n">NearDuplicateIssueManager</span><span class="p">,</span>
-    <span class="s2">&quot;non_iid&quot;</span><span class="p">:</span> <span class="n">NonIIDIssueManager</span><span class="p">,</span>
-    <span class="s2">&quot;class_imbalance&quot;</span><span class="p">:</span> <span class="n">ClassImbalanceIssueManager</span><span class="p">,</span>
-    <span class="s2">&quot;data_valuation&quot;</span><span class="p">:</span> <span class="n">DataValuationIssueManager</span><span class="p">,</span>
+<span class="n">REGISTRY</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Type</span><span class="p">[</span><span class="n">IssueManager</span><span class="p">]]]</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;classification&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">&quot;outlier&quot;</span><span class="p">:</span> <span class="n">OutlierIssueManager</span><span class="p">,</span>
+        <span class="s2">&quot;label&quot;</span><span class="p">:</span> <span class="n">LabelIssueManager</span><span class="p">,</span>
+        <span class="s2">&quot;near_duplicate&quot;</span><span class="p">:</span> <span class="n">NearDuplicateIssueManager</span><span class="p">,</span>
+        <span class="s2">&quot;non_iid&quot;</span><span class="p">:</span> <span class="n">NonIIDIssueManager</span><span class="p">,</span>
+        <span class="s2">&quot;class_imbalance&quot;</span><span class="p">:</span> <span class="n">ClassImbalanceIssueManager</span><span class="p">,</span>
+        <span class="s2">&quot;data_valuation&quot;</span><span class="p">:</span> <span class="n">DataValuationIssueManager</span><span class="p">,</span>
+    <span class="p">},</span>
+    <span class="s2">&quot;regression&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">&quot;label&quot;</span><span class="p">:</span> <span class="n">RegressionLabelIssueManager</span><span class="p">,</span>
+    <span class="p">},</span>
 <span class="p">}</span>
 <span class="sd">&quot;&quot;&quot;Registry of issue managers that can be constructed from a string</span>
 <span class="sd">and used in the Datalab class.</span>
@@ -589,7 +595,6 @@
 <span class="sd">Currently, the following issue managers are registered by default:</span>
 
 <span class="sd">- ``&quot;outlier&quot;``: :py:class:`OutlierIssueManager &lt;cleanlab.datalab.internal.issue_manager.outlier.OutlierIssueManager&gt;`</span>
-<span class="sd">- ``&quot;label&quot;``: :py:class:`LabelIssueManager &lt;cleanlab.datalab.internal.issue_manager.label.LabelIssueManager&gt;`</span>
 <span class="sd">- ``&quot;near_duplicate&quot;``: :py:class:`NearDuplicateIssueManager &lt;cleanlab.datalab.internal.issue_manager.duplicate.NearDuplicateIssueManager&gt;`</span>
 <span class="sd">- ``&quot;non_iid&quot;``: :py:class:`NonIIDIssueManager &lt;cleanlab.datalab.internal.issue_manager.noniid.NonIIDIssueManager&gt;`</span>
 
@@ -604,23 +609,27 @@
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Factory class for constructing concrete issue managers.&quot;&quot;&quot;</span>
 
     <span class="nd">@classmethod</span>
-    <span class="k">def</span> <span class="nf">from_str</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">issue_type</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Type</span><span class="p">[</span><span class="n">IssueManager</span><span class="p">]:</span>
+    <span class="k">def</span> <span class="nf">from_str</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">issue_type</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">task</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Type</span><span class="p">[</span><span class="n">IssueManager</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Constructs a concrete issue manager class from a string.&quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">issue_type</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
                 <span class="s2">&quot;issue_type must be a string, not a list. Try using from_list instead.&quot;</span>
             <span class="p">)</span>
-        <span class="k">if</span> <span class="n">issue_type</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">REGISTRY</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Invalid issue type: </span><span class="si">{</span><span class="n">issue_type</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">REGISTRY</span><span class="p">[</span><span class="n">issue_type</span><span class="p">]</span>
+
+        <span class="k">if</span> <span class="n">task</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">REGISTRY</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Invalid task type: </span><span class="si">{</span><span class="n">task</span><span class="si">}</span><span class="s2">, must be in </span><span class="si">{</span><span class="nb">list</span><span class="p">(</span><span class="n">REGISTRY</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">issue_type</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">REGISTRY</span><span class="p">[</span><span class="n">task</span><span class="p">]:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Invalid issue type: </span><span class="si">{</span><span class="n">issue_type</span><span class="si">}</span><span class="s2"> for task </span><span class="si">{</span><span class="n">task</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">REGISTRY</span><span class="p">[</span><span class="n">task</span><span class="p">][</span><span class="n">issue_type</span><span class="p">]</span>
 
     <span class="nd">@classmethod</span>
-    <span class="k">def</span> <span class="nf">from_list</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">issue_types</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Type</span><span class="p">[</span><span class="n">IssueManager</span><span class="p">]]:</span>
+    <span class="k">def</span> <span class="nf">from_list</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">issue_types</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">task</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Type</span><span class="p">[</span><span class="n">IssueManager</span><span class="p">]]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Constructs a list of concrete issue manager classes from a list of strings.&quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="p">[</span><span class="bp">cls</span><span class="o">.</span><span class="n">from_str</span><span class="p">(</span><span class="n">issue_type</span><span class="p">)</span> <span class="k">for</span> <span class="n">issue_type</span> <span class="ow">in</span> <span class="n">issue_types</span><span class="p">]</span>
+        <span class="k">return</span> <span class="p">[</span><span class="bp">cls</span><span class="o">.</span><span class="n">from_str</span><span class="p">(</span><span class="n">issue_type</span><span class="p">,</span> <span class="n">task</span><span class="p">)</span> <span class="k">for</span> <span class="n">issue_type</span> <span class="ow">in</span> <span class="n">issue_types</span><span class="p">]</span>
 
 
-<div class="viewcode-block" id="register"><a class="viewcode-back" href="../../../../cleanlab/datalab/internal/factory.html#cleanlab.datalab.internal.issue_manager_factory.register">[docs]</a><span class="k">def</span> <span class="nf">register</span><span class="p">(</span><span class="bp">cls</span><span class="p">:</span> <span class="n">Type</span><span class="p">[</span><span class="n">IssueManager</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Type</span><span class="p">[</span><span class="n">IssueManager</span><span class="p">]:</span>
+<div class="viewcode-block" id="register"><a class="viewcode-back" href="../../../../cleanlab/datalab/internal/factory.html#cleanlab.datalab.internal.issue_manager_factory.register">[docs]</a><span class="k">def</span> <span class="nf">register</span><span class="p">(</span><span class="bp">cls</span><span class="p">:</span> <span class="n">Type</span><span class="p">[</span><span class="n">IssueManager</span><span class="p">],</span> <span class="n">task</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;classification&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Type</span><span class="p">[</span><span class="n">IssueManager</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Registers the issue manager factory.</span>
 
 <span class="sd">    Parameters</span>
@@ -628,6 +637,9 @@
 <span class="sd">    cls :</span>
 <span class="sd">        A subclass of</span>
 <span class="sd">        :py:class:`IssueManager &lt;cleanlab.datalab.internal.issue_manager.issue_manager.IssueManager&gt;`.</span>
+
+<span class="sd">    task :</span>
+<span class="sd">        Specific machine learning task like classification or regression.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
@@ -666,19 +678,57 @@
 <span class="sd">                # Some logic to find issues</span>
 <span class="sd">                pass</span>
 
-<span class="sd">        register(MyIssueManager)</span>
+<span class="sd">        register(MyIssueManager, task=&quot;classification&quot;)</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="bp">cls</span><span class="o">.</span><span class="n">issue_name</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">REGISTRY</span><span class="p">:</span>
-        <span class="c1"># Warn user that they are overwriting an existing issue manager</span>
-        <span class="nb">print</span><span class="p">(</span>
-            <span class="sa">f</span><span class="s2">&quot;Warning: Overwriting existing issue manager </span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2"> with </span><span class="si">{</span><span class="bp">cls</span><span class="si">}</span><span class="s2">. &quot;</span>
-            <span class="s2">&quot;This may cause unexpected behavior.&quot;</span>
-        <span class="p">)</span>
+
     <span class="k">if</span> <span class="ow">not</span> <span class="nb">issubclass</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">IssueManager</span><span class="p">):</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Class </span><span class="si">{</span><span class="bp">cls</span><span class="si">}</span><span class="s2"> must be a subclass of IssueManager&quot;</span><span class="p">)</span>
-    <span class="n">REGISTRY</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="bp">cls</span>
+
+    <span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="bp">cls</span><span class="o">.</span><span class="n">issue_name</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">task</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">REGISTRY</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Invalid task type: </span><span class="si">{</span><span class="n">task</span><span class="si">}</span><span class="s2">, must be in </span><span class="si">{</span><span class="nb">list</span><span class="p">(</span><span class="n">REGISTRY</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">REGISTRY</span><span class="p">[</span><span class="n">task</span><span class="p">]:</span>
+        <span class="nb">print</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;Warning: Overwriting existing issue manager </span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2"> with </span><span class="si">{</span><span class="bp">cls</span><span class="si">}</span><span class="s2"> for task </span><span class="si">{</span><span class="n">task</span><span class="si">}</span><span class="s2">.&quot;</span>
+            <span class="s2">&quot;This may cause unexpected behavior.&quot;</span>
+        <span class="p">)</span>
+
+    <span class="n">REGISTRY</span><span class="p">[</span><span class="n">task</span><span class="p">][</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="bp">cls</span>
     <span class="k">return</span> <span class="bp">cls</span></div>
+
+
+<div class="viewcode-block" id="list_possible_issue_types"><a class="viewcode-back" href="../../../../cleanlab/datalab/internal/factory.html#cleanlab.datalab.internal.issue_manager_factory.list_possible_issue_types">[docs]</a><span class="k">def</span> <span class="nf">list_possible_issue_types</span><span class="p">(</span><span class="n">task</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Returns a list of all registered issue types.</span>
+
+<span class="sd">    Any issue type that is not in this list cannot be used in the :py:meth:`find_issues` method.</span>
+
+<span class="sd">    See Also</span>
+<span class="sd">    --------</span>
+<span class="sd">    :py:class:`REGISTRY &lt;cleanlab.datalab.internal.issue_manager_factory.REGISTRY&gt;` : All available issue types and their corresponding issue managers can be found here.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="n">REGISTRY</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">task</span><span class="p">,</span> <span class="p">[]))</span></div>
+
+
+<div class="viewcode-block" id="list_default_issue_types"><a class="viewcode-back" href="../../../../cleanlab/datalab/internal/factory.html#cleanlab.datalab.internal.issue_manager_factory.list_default_issue_types">[docs]</a><span class="k">def</span> <span class="nf">list_default_issue_types</span><span class="p">(</span><span class="n">task</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Returns a list of the issue types that are run by default</span>
+<span class="sd">    when :py:meth:`find_issues` is called without specifying `issue_types`.</span>
+
+<span class="sd">    See Also</span>
+<span class="sd">    --------</span>
+<span class="sd">    :py:class:`REGISTRY &lt;cleanlab.datalab.internal.issue_manager_factory.REGISTRY&gt;` : All available issue types and their corresponding issue managers can be found here.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">task</span> <span class="o">==</span> <span class="s2">&quot;regression&quot;</span><span class="p">:</span>
+        <span class="n">default_issue_types</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;label&quot;</span><span class="p">]</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">default_issue_types</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="s2">&quot;label&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;outlier&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;near_duplicate&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;non_iid&quot;</span><span class="p">,</span>
+        <span class="p">]</span>
+    <span class="k">return</span> <span class="n">default_issue_types</span></div>
 </pre></div> 
         </article>
       </div>
