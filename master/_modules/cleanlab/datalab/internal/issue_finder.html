@@ -575,6 +575,7 @@
     <span class="s2">&quot;outlier&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;pred_probs&quot;</span><span class="p">,</span> <span class="s2">&quot;features&quot;</span><span class="p">,</span> <span class="s2">&quot;knn_graph&quot;</span><span class="p">],</span>
     <span class="s2">&quot;near_duplicate&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;features&quot;</span><span class="p">,</span> <span class="s2">&quot;knn_graph&quot;</span><span class="p">],</span>
     <span class="s2">&quot;non_iid&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;pred_probs&quot;</span><span class="p">,</span> <span class="s2">&quot;features&quot;</span><span class="p">,</span> <span class="s2">&quot;knn_graph&quot;</span><span class="p">],</span>
+    <span class="s2">&quot;underperforming_group&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;pred_probs&quot;</span><span class="p">,</span> <span class="s2">&quot;features&quot;</span><span class="p">,</span> <span class="s2">&quot;knn_graph&quot;</span><span class="p">,</span> <span class="s2">&quot;cluster_ids&quot;</span><span class="p">],</span>
     <span class="s2">&quot;data_valuation&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;knn_graph&quot;</span><span class="p">],</span>
 <span class="p">}</span>
 <span class="n">_REGRESSION_ARGS_DICT</span> <span class="o">=</span> <span class="p">{</span>
@@ -597,6 +598,13 @@
 
     <span class="c1"># Prefer `knn_graph` over `features` if both are provided.</span>
     <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">args_dict</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
+        <span class="k">if</span> <span class="s2">&quot;cluster_ids&quot;</span> <span class="ow">in</span> <span class="n">v</span> <span class="ow">and</span> <span class="p">(</span><span class="s2">&quot;knn_graph&quot;</span> <span class="ow">in</span> <span class="n">v</span> <span class="ow">or</span> <span class="s2">&quot;features&quot;</span> <span class="ow">in</span> <span class="n">v</span><span class="p">):</span>
+            <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
+                <span class="s2">&quot;`cluster_ids` have been provided with `knn_graph` or `features`.&quot;</span>
+                <span class="s2">&quot;Issue managers that require cluster labels will prefer&quot;</span>
+                <span class="s2">&quot;`cluster_ids` over computation of cluster labels using&quot;</span>
+                <span class="s2">&quot;`knn_graph` or `features`. &quot;</span>
+            <span class="p">)</span>
         <span class="k">if</span> <span class="s2">&quot;knn_graph&quot;</span> <span class="ow">in</span> <span class="n">v</span> <span class="ow">and</span> <span class="s2">&quot;features&quot;</span> <span class="ow">in</span> <span class="n">v</span><span class="p">:</span>
             <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
                 <span class="s2">&quot;Both `features` and `knn_graph` were provided. &quot;</span>
@@ -870,7 +878,6 @@
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns a dictionary of issue types that can be used in :py:meth:`Datalab.find_issues</span>
 <span class="sd">        &lt;cleanlab.datalab.datalab.Datalab.find_issues&gt;` method.&quot;&quot;&quot;</span>
 
-        <span class="n">pred_probs</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;pred_probs&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
         <span class="n">features</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;features&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
         <span class="n">knn_graph</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;knn_graph&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
         <span class="n">issue_types</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;issue_types&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
