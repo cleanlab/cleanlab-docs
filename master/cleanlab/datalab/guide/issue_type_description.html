@@ -229,6 +229,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../internal/issue_manager/duplicate.html">duplicate</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../internal/issue_manager/noniid.html">noniid</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../internal/issue_manager/imbalance.html">imbalance</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../internal/issue_manager/underperforming_group.html">underperforming_group</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../internal/issue_manager/null.html">null</a></li>
 <li class="toctree-l4 has-children"><a class="reference internal" href="../internal/issue_manager/regression/index.html">regression</a><input class="toctree-checkbox" id="toctree-checkbox-6" name="toctree-checkbox-6" role="switch" type="checkbox"/><label for="toctree-checkbox-6"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l5"><a class="reference internal" href="../internal/issue_manager/regression/label.html">label</a></li>
@@ -622,6 +623,15 @@ More generally, examples which happen to be duplicated can affect the final mod
 Specifically, low-quality images which are too: dark/bright, blurry, low information, abnormally sized, etc.
 Descriptions of these image-specific issues are provided in the <a class="reference external" href="https://github.com/cleanlab/cleanvision">CleanVision package</a> and its documentation.</p>
 </section>
+<section id="underperforming-group-issue">
+<h3>Underperforming Group Issue<a class="headerlink" href="#underperforming-group-issue" title="Permalink to this heading">#</a></h3>
+<p>An underperforming group refers to a cluster of similar examples (i.e. a slice) in the dataset for which the ML model predictions are poor.  The examples in this underperforming group may have noisy labels or feature values, or the trained ML model may not have learned how to properly handle them (consider collecting more data from this subpopulation or up-weighting the existing data from this group).</p>
+<p>Underperforming Group issues are detected based on provided <code class="xref py py-obj docutils literal notranslate"><span class="pre">features</span></code>  and <code class="xref py py-obj docutils literal notranslate"><span class="pre">pred_probs</span></code>.
+If you do not provide both these arguments, this type of issue will not be considered.</p>
+<p>To find the underperforming group, Cleanlab clusters the data using the provided <code class="xref py py-obj docutils literal notranslate"><span class="pre">features</span></code> and determines the cluster <code class="xref py py-obj docutils literal notranslate"><span class="pre">c</span></code> with the lowest average model predictive performance. Model predictive performance is evaluated via the model’s self-confidence of the given labels, calculated using <a class="reference internal" href="../../rank.html#cleanlab.rank.get_self_confidence_for_each_label" title="cleanlab.rank.get_self_confidence_for_each_label"><code class="xref py py-func docutils literal notranslate"><span class="pre">rank.get_self_confidence_for_each_label</span></code></a>. Suppose the average predictive power across the full dataset is <code class="xref py py-obj docutils literal notranslate"><span class="pre">r</span></code> and is <code class="xref py py-obj docutils literal notranslate"><span class="pre">q</span></code> within a cluster of examples. This cluster is considered to be an underperforming group if <code class="xref py py-obj docutils literal notranslate"><span class="pre">q/r</span></code> falls below a threshold. A dataset suffers from the Underperforming Group issue if there exists such a cluster within it.
+The underperforming group quality score is equal to <code class="xref py py-obj docutils literal notranslate"><span class="pre">q/r</span></code> for examples belonging to the underperforming group, and is equal to 1 for all other examples.
+Advanced users:  If you have pre-computed cluster assignments for each example in the dataset, you can pass them explicitly to <a class="reference internal" href="../datalab.html#cleanlab.datalab.datalab.Datalab.find_issues" title="cleanlab.datalab.datalab.Datalab.find_issues"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Datalab.find_issues</span></code></a> using the <code class="xref py py-obj docutils literal notranslate"><span class="pre">cluster_ids</span></code> key in the <code class="xref py py-obj docutils literal notranslate"><span class="pre">issue_types</span></code> dict argument.  This is useful for tabular datasets where you want to group/slice the data based on a categorical column. An integer encoding of the categorical column can be passed as cluster assignments for finding the underperforming group, based on the data slices you define.</p>
+</section>
 </section>
 <section id="optional-issue-parameters">
 <h2>Optional Issue Parameters<a class="headerlink" href="#optional-issue-parameters" title="Permalink to this heading">#</a></h2>
@@ -631,7 +641,7 @@ Appropriate defaults are used for any parameters you do not specify, so no need 
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">possible_issue_types</span> <span class="o">=</span> <span class="p">{</span>
     <span class="s2">&quot;label&quot;</span><span class="p">:</span> <span class="n">label_kwargs</span><span class="p">,</span> <span class="s2">&quot;outlier&quot;</span><span class="p">:</span> <span class="n">outlier_kwargs</span><span class="p">,</span>
     <span class="s2">&quot;near_duplicate&quot;</span><span class="p">:</span> <span class="n">near_duplicate_kwargs</span><span class="p">,</span> <span class="s2">&quot;non_iid&quot;</span><span class="p">:</span> <span class="n">non_iid_kwargs</span><span class="p">,</span>
-    <span class="s2">&quot;class_imbalance&quot;</span><span class="p">:</span> <span class="n">class_imbalance_kwargs</span>
+    <span class="s2">&quot;class_imbalance&quot;</span><span class="p">:</span> <span class="n">class_imbalance_kwargs</span><span class="p">,</span> <span class="s2">&quot;underperforming_group&quot;</span><span class="p">:</span> <span class="n">underperforming_group_kwargs</span>
 <span class="p">}</span>
 </pre></div>
 </div>
@@ -730,6 +740,27 @@ Appropriate defaults are used for any parameters you do not specify, so no need 
 <p>For more information, view the source code of:  <a class="reference internal" href="../internal/issue_manager/imbalance.html#cleanlab.datalab.internal.issue_manager.imbalance.ClassImbalanceIssueManager" title="cleanlab.datalab.internal.issue_manager.imbalance.ClassImbalanceIssueManager"><code class="xref py py-class docutils literal notranslate"><span class="pre">datalab.internal.issue_manager.imbalance.ClassImbalanceIssueManager</span></code></a>.</p>
 </div>
 </section>
+<section id="underperforming-group-issue-parameters">
+<h3>Underperforming Group Issue Parameters<a class="headerlink" href="#underperforming-group-issue-parameters" title="Permalink to this heading">#</a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">underperforming_group_kwargs</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="c1"># Constructor arguments for `UnderperformingGroupIssueManager`</span>
+    <span class="s2">&quot;threshold&quot;</span><span class="p">:</span> <span class="c1"># Non-negative floating value between 0 and 1 used for determinining group of points with low confidence.</span>
+    <span class="s2">&quot;metric&quot;</span><span class="p">:</span> <span class="c1"># String for the distance metric used for nearest neighbors search if necessary. `metric` argument to constructor of `sklearn.neighbors.NearestNeighbors`.</span>
+    <span class="s2">&quot;k&quot;</span><span class="p">:</span> <span class="c1"># Integer representing the number of nearest neighbors for constructing the nearest neighbour graph. `n_neighbors` argument to constructor of `sklearn.neighbors.NearestNeighbors`.</span>
+    <span class="s2">&quot;min_cluster_samples&quot;</span><span class="p">:</span> <span class="c1"># Non-negative integer value specifying the minimum number of examples required for a cluster to be considered as the underperforming group. Used in `UnderperformingGroupIssueManager.filter_cluster_ids`.</span>
+    <span class="s2">&quot;clustering_kwargs&quot;</span><span class="p">:</span> <span class="c1"># Key-value pairs representing arguments for the constructor of the clustering algorithm class (e.g. `sklearn.cluster.DBSCAN`).</span>
+
+    <span class="c1"># Argument for the find_issues() method of UnderperformingGroupIssueManager</span>
+    <span class="s2">&quot;cluster_ids&quot;</span><span class="p">:</span> <span class="c1"># A 1-D numpy array containing cluster labels for each sample in the dataset. If passed, these cluster labels are used for determining the underperforming group.</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>For more information, view the source code of:  <a class="reference internal" href="../internal/issue_manager/underperforming_group.html#cleanlab.datalab.internal.issue_manager.underperforming_group.UnderperformingGroupIssueManager" title="cleanlab.datalab.internal.issue_manager.underperforming_group.UnderperformingGroupIssueManager"><code class="xref py py-class docutils literal notranslate"><span class="pre">datalab.internal.issue_manager.underperforming_group.UnderperformingGroupIssueManager</span></code></a>.</p>
+<p>For more information on generating <code class="xref py py-obj docutils literal notranslate"><span class="pre">cluster_ids</span></code> for this issue manager, refer to this <a class="reference external" href="../../../tutorials/faq.html#How-do-I-specify-pre-computed-data-slices/clusters-when-detecting-the-Underperforming-Group-Issue?">FAQ Section</a>.</p>
+</div>
+</section>
 </section>
 </section>
  
@@ -817,6 +848,7 @@ Appropriate defaults are used for any parameters you do not specify, so no need 
 <li><a class="reference internal" href="#non-iid-issue">Non-IID Issue</a></li>
 <li><a class="reference internal" href="#class-imbalance-issue">Class-Imbalance Issue</a></li>
 <li><a class="reference internal" href="#image-specific-issues">Image-specific Issues</a></li>
+<li><a class="reference internal" href="#underperforming-group-issue">Underperforming Group Issue</a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#optional-issue-parameters">Optional Issue Parameters</a><ul>
@@ -825,6 +857,7 @@ Appropriate defaults are used for any parameters you do not specify, so no need 
 <li><a class="reference internal" href="#duplicate-issue-parameters">Duplicate Issue Parameters</a></li>
 <li><a class="reference internal" href="#non-iid-issue-parameters">Non-IID Issue Parameters</a></li>
 <li><a class="reference internal" href="#imbalance-issue-parameters">Imbalance Issue Parameters</a></li>
+<li><a class="reference internal" href="#underperforming-group-issue-parameters">Underperforming Group Issue Parameters</a></li>
 </ul>
 </li>
 </ul>
