@@ -583,6 +583,7 @@
     <span class="s2">&quot;non_iid&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;pred_probs&quot;</span><span class="p">,</span> <span class="s2">&quot;features&quot;</span><span class="p">,</span> <span class="s2">&quot;knn_graph&quot;</span><span class="p">],</span>
     <span class="s2">&quot;underperforming_group&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;pred_probs&quot;</span><span class="p">,</span> <span class="s2">&quot;features&quot;</span><span class="p">,</span> <span class="s2">&quot;knn_graph&quot;</span><span class="p">,</span> <span class="s2">&quot;cluster_ids&quot;</span><span class="p">],</span>
     <span class="s2">&quot;data_valuation&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;knn_graph&quot;</span><span class="p">],</span>
+    <span class="s2">&quot;class_imbalance&quot;</span><span class="p">:</span> <span class="p">[],</span>
 <span class="p">}</span>
 <span class="n">_REGRESSION_ARGS_DICT</span> <span class="o">=</span> <span class="p">{</span>
     <span class="s2">&quot;label&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;features&quot;</span><span class="p">,</span> <span class="s2">&quot;predictions&quot;</span><span class="p">],</span>
@@ -597,9 +598,15 @@
         <span class="k">for</span> <span class="n">issue_type</span> <span class="ow">in</span> <span class="n">initial_args_dict</span>
     <span class="p">}</span>
 
+    <span class="c1"># Some issue types (like class-imbalance) have no required args.</span>
+    <span class="c1"># This conditional lambda is used to include them in args dict.</span>
+    <span class="n">keep_empty_argument</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">k</span><span class="p">:</span> <span class="ow">not</span> <span class="nb">len</span><span class="p">(</span><span class="n">_CLASSIFICATION_ARGS_DICT</span><span class="p">[</span><span class="n">k</span><span class="p">])</span>
+
     <span class="c1"># Remove None values from argument list, rely on default values in IssueManager</span>
     <span class="n">args_dict</span> <span class="o">=</span> <span class="p">{</span>
-        <span class="n">k</span><span class="p">:</span> <span class="p">{</span><span class="n">k2</span><span class="p">:</span> <span class="n">v2</span> <span class="k">for</span> <span class="n">k2</span><span class="p">,</span> <span class="n">v2</span> <span class="ow">in</span> <span class="n">v</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="k">if</span> <span class="n">v2</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">}</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">args_dict</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="k">if</span> <span class="n">v</span>
+        <span class="n">k</span><span class="p">:</span> <span class="p">{</span><span class="n">k2</span><span class="p">:</span> <span class="n">v2</span> <span class="k">for</span> <span class="n">k2</span><span class="p">,</span> <span class="n">v2</span> <span class="ow">in</span> <span class="n">v</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="k">if</span> <span class="n">v2</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">}</span>
+        <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">args_dict</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">v</span> <span class="ow">or</span> <span class="n">keep_empty_argument</span><span class="p">(</span><span class="n">k</span><span class="p">))</span>
     <span class="p">}</span>
 
     <span class="c1"># Prefer `knn_graph` over `features` if both are provided.</span>
@@ -619,7 +626,8 @@
             <span class="p">)</span>
 
     <span class="c1"># Only keep issue types that have at least one argument</span>
-    <span class="n">args_dict</span> <span class="o">=</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="n">v</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">args_dict</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="k">if</span> <span class="n">v</span><span class="p">}</span>
+    <span class="c1"># or those that require no arguments.</span>
+    <span class="n">args_dict</span> <span class="o">=</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="n">v</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">args_dict</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="k">if</span> <span class="p">(</span><span class="n">v</span> <span class="ow">or</span> <span class="n">keep_empty_argument</span><span class="p">(</span><span class="n">k</span><span class="p">))}</span>
 
     <span class="k">return</span> <span class="n">args_dict</span>
 
@@ -631,12 +639,15 @@
         <span class="n">issue_type</span><span class="p">:</span> <span class="p">{</span><span class="n">arg</span><span class="p">:</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">arg</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span> <span class="k">for</span> <span class="n">arg</span> <span class="ow">in</span> <span class="n">initial_args_dict</span><span class="p">[</span><span class="n">issue_type</span><span class="p">]}</span>
         <span class="k">for</span> <span class="n">issue_type</span> <span class="ow">in</span> <span class="n">initial_args_dict</span>
     <span class="p">}</span>
+    <span class="c1"># Some issue types have no required args.</span>
+    <span class="c1"># This conditional lambda is used to include them in args dict.</span>
+    <span class="n">keep_empty_argument</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">k</span><span class="p">:</span> <span class="ow">not</span> <span class="nb">len</span><span class="p">(</span><span class="n">_REGRESSION_ARGS_DICT</span><span class="p">[</span><span class="n">k</span><span class="p">])</span>
 
     <span class="c1"># Remove None values from argument list, rely on default values in IssueManager</span>
     <span class="n">args_dict</span> <span class="o">=</span> <span class="p">{</span>
         <span class="n">k</span><span class="p">:</span> <span class="p">{</span><span class="n">k2</span><span class="p">:</span> <span class="n">v2</span> <span class="k">for</span> <span class="n">k2</span><span class="p">,</span> <span class="n">v2</span> <span class="ow">in</span> <span class="n">v</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="k">if</span> <span class="n">v2</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">}</span>
         <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">args_dict</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
-        <span class="k">if</span> <span class="n">v</span> <span class="ow">or</span> <span class="n">k</span> <span class="o">==</span> <span class="s2">&quot;label&quot;</span>  <span class="c1"># Allow label issues to require no arguments</span>
+        <span class="k">if</span> <span class="n">v</span> <span class="ow">or</span> <span class="n">k</span> <span class="o">==</span> <span class="s2">&quot;label&quot;</span> <span class="ow">or</span> <span class="n">keep_empty_argument</span><span class="p">(</span><span class="n">k</span><span class="p">)</span>  <span class="c1"># Allow label issues to require no arguments</span>
     <span class="p">}</span>
 
     <span class="k">return</span> <span class="n">args_dict</span>
