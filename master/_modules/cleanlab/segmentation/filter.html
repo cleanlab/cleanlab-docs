@@ -547,7 +547,7 @@
 
 <span class="sd">&quot;&quot;&quot;</span>
 
-<span class="kn">from</span> <span class="nn">cleanlab.experimental.label_issues_batched</span> <span class="kn">import</span> <span class="n">find_label_issues_batched</span>
+<span class="kn">from</span> <span class="nn">cleanlab.experimental.label_issues_batched</span> <span class="kn">import</span> <span class="n">LabelInspector</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Optional</span>
 
@@ -653,20 +653,78 @@
 
         <span class="k">return</span> <span class="n">labels_flat</span><span class="p">,</span> <span class="n">pred_probs_flat</span><span class="o">.</span><span class="n">T</span>
 
+    <span class="k">def</span> <span class="nf">get_images_to_load</span><span class="p">(</span><span class="n">pre_pred_probs</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="n">batch_size</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        This function loads images until the batch size is reached or the end of the dataset is reached.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">images_to_load</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="k">while</span> <span class="p">(</span>
+            <span class="n">np</span><span class="o">.</span><span class="n">prod</span><span class="p">(</span><span class="n">pre_pred_probs</span><span class="p">[</span><span class="n">i</span> <span class="p">:</span> <span class="n">i</span> <span class="o">+</span> <span class="n">images_to_load</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">:])</span> <span class="o">&lt;</span> <span class="n">batch_size</span>
+            <span class="ow">and</span> <span class="n">i</span> <span class="o">+</span> <span class="n">images_to_load</span> <span class="o">&lt;</span> <span class="n">n</span>
+        <span class="p">):</span>
+            <span class="n">images_to_load</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="k">return</span> <span class="n">images_to_load</span>
+
     <span class="c1">##</span>
     <span class="n">_check_input</span><span class="p">(</span><span class="n">labels</span><span class="p">,</span> <span class="n">pred_probs</span><span class="p">)</span>
 
     <span class="c1"># Added Downsampling</span>
     <span class="n">pre_labels</span><span class="p">,</span> <span class="n">pre_pred_probs</span> <span class="o">=</span> <span class="n">downsample_arrays</span><span class="p">(</span><span class="n">labels</span><span class="p">,</span> <span class="n">pred_probs</span><span class="p">,</span> <span class="n">downsample</span><span class="p">)</span>
 
-    <span class="n">num_image</span><span class="p">,</span> <span class="n">num_classes</span><span class="p">,</span> <span class="n">h</span><span class="p">,</span> <span class="n">w</span> <span class="o">=</span> <span class="n">pre_pred_probs</span><span class="o">.</span><span class="n">shape</span>
-    <span class="c1"># flatten images just preps labels and pred_probs</span>
+    <span class="n">num_image</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">h</span><span class="p">,</span> <span class="n">w</span> <span class="o">=</span> <span class="n">pre_pred_probs</span><span class="o">.</span><span class="n">shape</span>
 
-    <span class="n">pre_labels</span><span class="p">,</span> <span class="n">pre_pred_probs</span> <span class="o">=</span> <span class="n">flatten_and_preprocess_masks</span><span class="p">(</span><span class="n">pre_labels</span><span class="p">,</span> <span class="n">pre_pred_probs</span><span class="p">)</span>
-
-    <span class="n">ranked_label_issues</span> <span class="o">=</span> <span class="n">find_label_issues_batched</span><span class="p">(</span>
-        <span class="n">pre_labels</span><span class="p">,</span> <span class="n">pre_pred_probs</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="n">batch_size</span><span class="p">,</span> <span class="n">n_jobs</span><span class="o">=</span><span class="n">n_jobs</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="n">verbose</span>
+    <span class="c1">### This section is a modified version of find_label_issues_batched(), old code is commented out</span>
+    <span class="c1"># ranked_label_issues = find_label_issues_batched(</span>
+    <span class="c1">#     pre_labels, pre_pred_probs, batch_size=batch_size, n_jobs=n_jobs, verbose=verbose</span>
+    <span class="c1"># )</span>
+    <span class="n">lab</span> <span class="o">=</span> <span class="n">LabelInspector</span><span class="p">(</span>
+        <span class="n">num_class</span><span class="o">=</span><span class="n">pre_pred_probs</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>
+        <span class="n">verbose</span><span class="o">=</span><span class="n">verbose</span><span class="p">,</span>
+        <span class="n">n_jobs</span><span class="o">=</span><span class="n">n_jobs</span><span class="p">,</span>
+        <span class="n">quality_score_kwargs</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">num_issue_kwargs</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
     <span class="p">)</span>
+    <span class="n">n</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">pre_labels</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+        <span class="kn">from</span> <span class="nn">tqdm.auto</span> <span class="kn">import</span> <span class="n">tqdm</span>
+
+        <span class="n">pbar</span> <span class="o">=</span> <span class="n">tqdm</span><span class="p">(</span><span class="n">desc</span><span class="o">=</span><span class="s2">&quot;number of examples processed for estimating thresholds&quot;</span><span class="p">,</span> <span class="n">total</span><span class="o">=</span><span class="n">n</span><span class="p">)</span>
+
+    <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">while</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">n</span><span class="p">:</span>
+        <span class="n">images_to_load</span> <span class="o">=</span> <span class="n">get_images_to_load</span><span class="p">(</span><span class="n">pre_pred_probs</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="n">batch_size</span><span class="p">)</span>
+        <span class="n">end_index</span> <span class="o">=</span> <span class="n">i</span> <span class="o">+</span> <span class="n">images_to_load</span>
+        <span class="n">labels_batch</span><span class="p">,</span> <span class="n">pred_probs_batch</span> <span class="o">=</span> <span class="n">flatten_and_preprocess_masks</span><span class="p">(</span>
+            <span class="n">pre_labels</span><span class="p">[</span><span class="n">i</span><span class="p">:</span><span class="n">end_index</span><span class="p">],</span> <span class="n">pre_pred_probs</span><span class="p">[</span><span class="n">i</span><span class="p">:</span><span class="n">end_index</span><span class="p">]</span>
+        <span class="p">)</span>
+        <span class="n">i</span> <span class="o">=</span> <span class="n">end_index</span>
+        <span class="n">lab</span><span class="o">.</span><span class="n">update_confident_thresholds</span><span class="p">(</span><span class="n">labels_batch</span><span class="p">,</span> <span class="n">pred_probs_batch</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+            <span class="n">pbar</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">images_to_load</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+        <span class="n">pbar</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+        <span class="n">pbar</span> <span class="o">=</span> <span class="n">tqdm</span><span class="p">(</span><span class="n">desc</span><span class="o">=</span><span class="s2">&quot;number of examples processed for checking labels&quot;</span><span class="p">,</span> <span class="n">total</span><span class="o">=</span><span class="n">n</span><span class="p">)</span>
+
+    <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">while</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">n</span><span class="p">:</span>
+        <span class="n">images_to_load</span> <span class="o">=</span> <span class="n">get_images_to_load</span><span class="p">(</span><span class="n">pre_pred_probs</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="n">batch_size</span><span class="p">)</span>
+
+        <span class="n">end_index</span> <span class="o">=</span> <span class="n">i</span> <span class="o">+</span> <span class="n">images_to_load</span>
+        <span class="n">labels_batch</span><span class="p">,</span> <span class="n">pred_probs_batch</span> <span class="o">=</span> <span class="n">flatten_and_preprocess_masks</span><span class="p">(</span>
+            <span class="n">pre_labels</span><span class="p">[</span><span class="n">i</span><span class="p">:</span><span class="n">end_index</span><span class="p">],</span> <span class="n">pre_pred_probs</span><span class="p">[</span><span class="n">i</span><span class="p">:</span><span class="n">end_index</span><span class="p">]</span>
+        <span class="p">)</span>
+        <span class="n">i</span> <span class="o">=</span> <span class="n">end_index</span>
+        <span class="n">_</span> <span class="o">=</span> <span class="n">lab</span><span class="o">.</span><span class="n">score_label_quality</span><span class="p">(</span><span class="n">labels_batch</span><span class="p">,</span> <span class="n">pred_probs_batch</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+            <span class="n">pbar</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">images_to_load</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+        <span class="n">pbar</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+    <span class="n">ranked_label_issues</span> <span class="o">=</span> <span class="n">lab</span><span class="o">.</span><span class="n">get_label_issues</span><span class="p">()</span>
+    <span class="c1">### End find_label_issues_batched() section</span>
 
     <span class="c1"># Finding the right indicies</span>
     <span class="n">relative_index</span> <span class="o">=</span> <span class="n">ranked_label_issues</span> <span class="o">%</span> <span class="p">(</span><span class="n">h</span> <span class="o">*</span> <span class="n">w</span><span class="p">)</span>
