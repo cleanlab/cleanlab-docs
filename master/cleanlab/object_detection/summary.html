@@ -555,6 +555,12 @@ Here each image can have multiple objects, each with its own bounding box and cl
 <tr class="row-odd"><td><p><a class="reference internal" href="#cleanlab.object_detection.summary.visualize" title="cleanlab.object_detection.summary.visualize"><code class="xref py py-obj docutils literal notranslate"><span class="pre">visualize</span></code></a>(image, *[, label, prediction, ...])</p></td>
 <td><p>Display the annotated bounding boxes (given labels) and predicted bounding boxes (model predictions) for a particular image.</p></td>
 </tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#cleanlab.object_detection.summary.get_average_per_class_confusion_matrix" title="cleanlab.object_detection.summary.get_average_per_class_confusion_matrix"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_average_per_class_confusion_matrix</span></code></a>(...)</p></td>
+<td><p>Compute a confusion matrix dictionary for each class containing the average number of True Positive, False Positive, and False Negative detections from the object detection model across a range of Intersection over Union thresholds.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#cleanlab.object_detection.summary.calculate_per_class_metrics" title="cleanlab.object_detection.summary.calculate_per_class_metrics"><code class="xref py py-obj docutils literal notranslate"><span class="pre">calculate_per_class_metrics</span></code></a>(labels, predictions)</p></td>
+<td><p>Calculate the object detection model's precision, recall, and F1 score for each class in the dataset.</p></td>
+</tr>
 </tbody>
 </table>
 </div>
@@ -743,6 +749,66 @@ Corresponds to <code class="docutils literal notranslate"><span class="pre">matp
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="cleanlab.object_detection.summary.get_average_per_class_confusion_matrix">
+<span class="sig-prename descclassname"><span class="pre">cleanlab.object_detection.summary.</span></span><span class="sig-name descname"><span class="pre">get_average_per_class_confusion_matrix</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">labels</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">predictions</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_procs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">class_names</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/cleanlab/object_detection/summary.html#get_average_per_class_confusion_matrix"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cleanlab.object_detection.summary.get_average_per_class_confusion_matrix" title="Permalink to this definition">#</a></dt>
+<dd><p>Compute a confusion matrix dictionary for each class containing the average number of True Positive, False Positive, and False Negative detections from the object detection model across a range of Intersection over Union thresholds.</p>
+<p>At each IoU threshold, the metrics are calculated as follows:
+- True Positive (TP): Instances where the model correctly identifies the class with IoU above the threshold.
+- False Positive (FP): Instances where the model predicts the class, but IoU is below the threshold.
+- False Negative (FN): Instances where the ground truth class is not predicted by the model.</p>
+<p>The average confusion matrix provides insights into the model strengths and potential biases.</p>
+<p>Note:  lower TP at certain IoU thresholds does not necessarily imply that everything else is FP, instead it indicates that, at those specific IoU thresholds, the model is not performing as well in terms of correctly identifying class instances. The other metrics (FP and FN) provide additional information about the model’s behavior.</p>
+<p>Note: Since we average over many IoU thresholds, ‘TP’, ‘FP’, and ‘FN’ may contain float values representing the average across these thresholds.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>labels</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code>]]) – A list of <code class="docutils literal notranslate"><span class="pre">N</span></code> dictionaries such that <code class="docutils literal notranslate"><span class="pre">labels[i]</span></code> contains the given labels for the <code class="xref py py-obj docutils literal notranslate"><span class="pre">i</span></code>-th image.
+Refer to documentation for this argument in <a class="reference internal" href="filter.html#cleanlab.object_detection.filter.find_label_issues" title="cleanlab.object_detection.filter.find_label_issues"><code class="xref py py-func docutils literal notranslate"><span class="pre">object_detection.filter.find_label_issues</span></code></a> for further details.</p></li>
+<li><p><strong>predictions</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>]) – A list of <code class="docutils literal notranslate"><span class="pre">N</span></code> <code class="docutils literal notranslate"><span class="pre">np.ndarray</span></code> such that <code class="docutils literal notranslate"><span class="pre">predictions[i]</span></code> corresponds to the model predictions for the <code class="xref py py-obj docutils literal notranslate"><span class="pre">i</span></code>-th image.
+Refer to documentation for this argument in <a class="reference internal" href="filter.html#cleanlab.object_detection.filter.find_label_issues" title="cleanlab.object_detection.filter.find_label_issues"><code class="xref py py-func docutils literal notranslate"><span class="pre">object_detection.filter.find_label_issues</span></code></a> for further details.</p></li>
+<li><p><strong>num_procs</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>) – Number of processes for parallelization. Default is 1.</p></li>
+<li><p><strong>class_names</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code>[<code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code>, <code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code>]]) – Optional dictionary mapping one-hot-encoded class labels back to their original class names in the format <code class="docutils literal notranslate"><span class="pre">{&quot;integer-label&quot;:</span> <span class="pre">&quot;original-class-name&quot;}</span></code></p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code>[<code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>], <code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>]]</p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><p><strong>avg_metrics</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code>) – A distionary containing the average confusion matrix.</p>
+<p>The default range of Intersection over Union thresholds is from 0.5 to 0.95 with a step size of 0.05.</p>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="cleanlab.object_detection.summary.calculate_per_class_metrics">
+<span class="sig-prename descclassname"><span class="pre">cleanlab.object_detection.summary.</span></span><span class="sig-name descname"><span class="pre">calculate_per_class_metrics</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">labels</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">predictions</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_procs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">class_names</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/cleanlab/object_detection/summary.html#calculate_per_class_metrics"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cleanlab.object_detection.summary.calculate_per_class_metrics" title="Permalink to this definition">#</a></dt>
+<dd><p>Calculate the object detection model’s precision, recall, and F1 score for each class in the dataset.</p>
+<p>These metrics can help you identify model strengths and weaknesses, and provide reference statistics for model evaluation and comparisons.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>labels</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code>]]) – A list of <code class="docutils literal notranslate"><span class="pre">N</span></code> dictionaries such that <code class="docutils literal notranslate"><span class="pre">labels[i]</span></code> contains the given labels for the <code class="xref py py-obj docutils literal notranslate"><span class="pre">i</span></code>-th image.
+Refer to documentation for this argument in <a class="reference internal" href="filter.html#cleanlab.object_detection.filter.find_label_issues" title="cleanlab.object_detection.filter.find_label_issues"><code class="xref py py-func docutils literal notranslate"><span class="pre">object_detection.filter.find_label_issues</span></code></a> for further details.</p></li>
+<li><p><strong>predictions</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>]) – A list of <code class="docutils literal notranslate"><span class="pre">N</span></code> <code class="docutils literal notranslate"><span class="pre">np.ndarray</span></code> such that <code class="docutils literal notranslate"><span class="pre">predictions[i]</span></code> corresponds to the model predictions for the <code class="xref py py-obj docutils literal notranslate"><span class="pre">i</span></code>-th image.
+Refer to documentation for this argument in <a class="reference internal" href="filter.html#cleanlab.object_detection.filter.find_label_issues" title="cleanlab.object_detection.filter.find_label_issues"><code class="xref py py-func docutils literal notranslate"><span class="pre">object_detection.filter.find_label_issues</span></code></a> for further details.</p></li>
+<li><p><strong>num_procs</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>) – Number of processes for parallelization. Default is 1.</p></li>
+<li><p><strong>class_names</strong> – Optional dictionary mapping one-hot-encoded class labels back to their original class names in the format <code class="docutils literal notranslate"><span class="pre">{&quot;integer-label&quot;:</span> <span class="pre">&quot;original-class-name&quot;}</span></code></p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code>[<code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>], <code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>]]</p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><p><strong>per_class_metrics</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code>) – A dictionary containing per-class metrics computed from the object detection model’s average confusion matrix values across a range of Intersection over Union thresholds.</p>
+<p>The default range of Intersection over Union thresholds is from 0.5 to 0.95 with a step size of 0.05.</p>
+</p>
 </dd>
 </dl>
 </dd></dl>

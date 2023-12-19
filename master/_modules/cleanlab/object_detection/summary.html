@@ -546,6 +546,7 @@
 <span class="sd">Methods to display examples and their label issues in an object detection dataset.</span>
 <span class="sd">Here each image can have multiple objects, each with its own bounding box and class label.</span>
 <span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">from</span> <span class="nn">multiprocessing</span> <span class="kn">import</span> <span class="n">Pool</span>
 <span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Union</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">TYPE_CHECKING</span><span class="p">,</span> <span class="n">TypeVar</span><span class="p">,</span> <span class="n">DefaultDict</span>
 
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
@@ -555,6 +556,11 @@
     <span class="n">MAX_CLASS_TO_SHOW</span><span class="p">,</span>
     <span class="n">ALPHA</span><span class="p">,</span>
     <span class="n">EPSILON</span><span class="p">,</span>
+    <span class="n">TINY_VALUE</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span> <span class="nn">cleanlab.object_detection.filter</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">_filter_by_class</span><span class="p">,</span>
+    <span class="n">_calculate_true_positives_false_positives</span><span class="p">,</span>
 <span class="p">)</span>
 <span class="kn">from</span> <span class="nn">cleanlab.object_detection.rank</span> <span class="kn">import</span> <span class="p">(</span>
     <span class="n">_get_valid_inputs_for_compute_scores</span><span class="p">,</span>
@@ -970,6 +976,194 @@
             <span class="n">pad_inches</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span>
         <span class="p">)</span>
     <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span></div>
+
+
+<span class="k">def</span> <span class="nf">_get_per_class_confusion_matrix_dict_</span><span class="p">(</span>
+    <span class="n">labels</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]],</span>
+    <span class="n">predictions</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">],</span>
+    <span class="n">iou_threshold</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.5</span><span class="p">,</span>
+    <span class="n">num_procs</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">DefaultDict</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">]]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Returns a confusion matrix dictionary for each class containing the number of True Positive, False Positive, and False Negative detections from the object detection model.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">num_classes</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">predictions</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+    <span class="n">num_images</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">predictions</span><span class="p">)</span>
+    <span class="n">pool</span> <span class="o">=</span> <span class="n">Pool</span><span class="p">(</span><span class="n">num_procs</span><span class="p">)</span>
+    <span class="n">counter_dict</span><span class="p">:</span> <span class="n">DefaultDict</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">]]</span> <span class="o">=</span> <span class="n">collections</span><span class="o">.</span><span class="n">defaultdict</span><span class="p">(</span>
+        <span class="k">lambda</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;TP&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;FP&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;FN&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">}</span>
+    <span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">class_num</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_classes</span><span class="p">):</span>
+        <span class="n">pred_bboxes</span><span class="p">,</span> <span class="n">lab_bboxes</span> <span class="o">=</span> <span class="n">_filter_by_class</span><span class="p">(</span><span class="n">labels</span><span class="p">,</span> <span class="n">predictions</span><span class="p">,</span> <span class="n">class_num</span><span class="p">)</span>
+        <span class="n">tpfpfn</span> <span class="o">=</span> <span class="n">pool</span><span class="o">.</span><span class="n">starmap</span><span class="p">(</span>
+            <span class="n">_calculate_true_positives_false_positives</span><span class="p">,</span>
+            <span class="nb">zip</span><span class="p">(</span>
+                <span class="n">pred_bboxes</span><span class="p">,</span>
+                <span class="n">lab_bboxes</span><span class="p">,</span>
+                <span class="p">[</span><span class="n">iou_threshold</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_images</span><span class="p">)],</span>
+                <span class="p">[</span><span class="kc">True</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_images</span><span class="p">)],</span>
+            <span class="p">),</span>
+        <span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">image_idx</span><span class="p">,</span> <span class="p">(</span><span class="n">tp</span><span class="p">,</span> <span class="n">fp</span><span class="p">,</span> <span class="n">fn</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">tpfpfn</span><span class="p">):</span>  <span class="c1"># type: ignore</span>
+            <span class="n">counter_dict</span><span class="p">[</span><span class="n">class_num</span><span class="p">][</span><span class="s2">&quot;TP&quot;</span><span class="p">]</span> <span class="o">+=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">tp</span><span class="p">)</span>
+            <span class="n">counter_dict</span><span class="p">[</span><span class="n">class_num</span><span class="p">][</span><span class="s2">&quot;FP&quot;</span><span class="p">]</span> <span class="o">+=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">fp</span><span class="p">)</span>
+            <span class="n">counter_dict</span><span class="p">[</span><span class="n">class_num</span><span class="p">][</span><span class="s2">&quot;FN&quot;</span><span class="p">]</span> <span class="o">+=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">fn</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">counter_dict</span>
+
+
+<span class="k">def</span> <span class="nf">_sort_dict_to_list</span><span class="p">(</span><span class="n">index_value_dict</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Convert a dictionary to a list sorted by index and return the values in that order.</span>
+
+<span class="sd">    Parameters:</span>
+<span class="sd">    - index_value_dict (dict): The input dictionary where keys represent indices and values are the corresponding elements.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">    list: A list containing the values from the input dictionary, sorted by index.</span>
+
+<span class="sd">    Example:</span>
+<span class="sd">    &gt;&gt;&gt; my_dict = {&#39;0&#39;: &#39;0&#39;, &#39;1&#39;: &#39;1&#39;, &#39;2&#39;: &#39;2&#39;, &#39;3&#39;: &#39;3&#39;, &#39;4&#39;: &#39;4&#39;}</span>
+<span class="sd">    &gt;&gt;&gt; sort_dict_to_list(my_dict)</span>
+<span class="sd">    [&#39;0&#39;, &#39;1&#39;, &#39;2&#39;, &#39;3&#39;, &#39;4&#39;]</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">sorted_list</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="n">value</span> <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">index_value_dict</span><span class="o">.</span><span class="n">items</span><span class="p">(),</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="nb">int</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
+    <span class="p">]</span>
+    <span class="k">return</span> <span class="n">sorted_list</span>
+
+
+<div class="viewcode-block" id="get_average_per_class_confusion_matrix"><a class="viewcode-back" href="../../../cleanlab/object_detection/summary.html#cleanlab.object_detection.summary.get_average_per_class_confusion_matrix">[docs]</a><span class="k">def</span> <span class="nf">get_average_per_class_confusion_matrix</span><span class="p">(</span>
+    <span class="n">labels</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]],</span>
+    <span class="n">predictions</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">],</span>
+    <span class="n">num_procs</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
+    <span class="n">class_names</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="n">Any</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">str</span><span class="p">],</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">float</span><span class="p">]]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Compute a confusion matrix dictionary for each class containing the average number of True Positive, False Positive, and False Negative detections from the object detection model across a range of Intersection over Union thresholds.</span>
+
+<span class="sd">    At each IoU threshold, the metrics are calculated as follows:</span>
+<span class="sd">    - True Positive (TP): Instances where the model correctly identifies the class with IoU above the threshold.</span>
+<span class="sd">    - False Positive (FP): Instances where the model predicts the class, but IoU is below the threshold.</span>
+<span class="sd">    - False Negative (FN): Instances where the ground truth class is not predicted by the model.</span>
+
+<span class="sd">    The average confusion matrix provides insights into the model strengths and potential biases.</span>
+
+<span class="sd">    Note:  lower TP at certain IoU thresholds does not necessarily imply that everything else is FP, instead it indicates that, at those specific IoU thresholds, the model is not performing as well in terms of correctly identifying class instances. The other metrics (FP and FN) provide additional information about the model&#39;s behavior.</span>
+
+<span class="sd">    Note: Since we average over many IoU thresholds, &#39;TP&#39;, &#39;FP&#39;, and &#39;FN&#39; may contain float values representing the average across these thresholds.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    labels:</span>
+<span class="sd">        A list of ``N`` dictionaries such that ``labels[i]`` contains the given labels for the `i`-th image.</span>
+<span class="sd">        Refer to documentation for this argument in :py:func:`object_detection.filter.find_label_issues &lt;cleanlab.object_detection.filter.find_label_issues&gt;` for further details.</span>
+
+<span class="sd">    predictions:</span>
+<span class="sd">        A list of ``N`` ``np.ndarray`` such that ``predictions[i]`` corresponds to the model predictions for the `i`-th image.</span>
+<span class="sd">        Refer to documentation for this argument in :py:func:`object_detection.filter.find_label_issues &lt;cleanlab.object_detection.filter.find_label_issues&gt;` for further details.</span>
+
+<span class="sd">    num_procs:</span>
+<span class="sd">        Number of processes for parallelization. Default is 1.</span>
+
+<span class="sd">    class_names:</span>
+<span class="sd">        Optional dictionary mapping one-hot-encoded class labels back to their original class names in the format ``{&quot;integer-label&quot;: &quot;original-class-name&quot;}``</span>
+
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    avg_metrics: dict</span>
+<span class="sd">        A distionary containing the average confusion matrix.</span>
+
+<span class="sd">        The default range of Intersection over Union thresholds is from 0.5 to 0.95 with a step size of 0.05.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">iou_thrs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.95</span><span class="p">,</span> <span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">((</span><span class="mf">0.95</span> <span class="o">-</span> <span class="mf">0.5</span><span class="p">)</span> <span class="o">/</span> <span class="mf">0.05</span><span class="p">))</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">endpoint</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">num_classes</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">predictions</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+    <span class="k">if</span> <span class="n">class_names</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">class_names</span> <span class="o">=</span> <span class="p">{</span><span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">):</span> <span class="nb">int</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">num_classes</span><span class="p">))}</span>
+    <span class="n">class_names</span> <span class="o">=</span> <span class="n">_sort_dict_to_list</span><span class="p">(</span><span class="n">class_names</span><span class="p">)</span>
+    <span class="n">avg_metrics</span> <span class="o">=</span> <span class="p">{</span><span class="n">class_num</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;TP&quot;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">,</span> <span class="s2">&quot;FP&quot;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">,</span> <span class="s2">&quot;FN&quot;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">}</span> <span class="k">for</span> <span class="n">class_num</span> <span class="ow">in</span> <span class="n">class_names</span><span class="p">}</span>
+
+    <span class="k">for</span> <span class="n">iou_threshold</span> <span class="ow">in</span> <span class="n">iou_thrs</span><span class="p">:</span>
+        <span class="n">results_dict</span> <span class="o">=</span> <span class="n">_get_per_class_confusion_matrix_dict_</span><span class="p">(</span>
+            <span class="n">labels</span><span class="p">,</span> <span class="n">predictions</span><span class="p">,</span> <span class="n">iou_threshold</span><span class="p">,</span> <span class="n">num_procs</span>
+        <span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">class_num</span> <span class="ow">in</span> <span class="n">results_dict</span><span class="p">:</span>
+            <span class="n">tp</span> <span class="o">=</span> <span class="n">results_dict</span><span class="p">[</span><span class="n">class_num</span><span class="p">][</span><span class="s2">&quot;TP&quot;</span><span class="p">]</span>
+            <span class="n">fp</span> <span class="o">=</span> <span class="n">results_dict</span><span class="p">[</span><span class="n">class_num</span><span class="p">][</span><span class="s2">&quot;FP&quot;</span><span class="p">]</span>
+            <span class="n">fn</span> <span class="o">=</span> <span class="n">results_dict</span><span class="p">[</span><span class="n">class_num</span><span class="p">][</span><span class="s2">&quot;FN&quot;</span><span class="p">]</span>
+
+            <span class="n">avg_metrics</span><span class="p">[</span><span class="n">class_names</span><span class="p">[</span><span class="n">class_num</span><span class="p">]][</span><span class="s2">&quot;TP&quot;</span><span class="p">]</span> <span class="o">+=</span> <span class="n">tp</span>
+            <span class="n">avg_metrics</span><span class="p">[</span><span class="n">class_names</span><span class="p">[</span><span class="n">class_num</span><span class="p">]][</span><span class="s2">&quot;FP&quot;</span><span class="p">]</span> <span class="o">+=</span> <span class="n">fp</span>
+            <span class="n">avg_metrics</span><span class="p">[</span><span class="n">class_names</span><span class="p">[</span><span class="n">class_num</span><span class="p">]][</span><span class="s2">&quot;FN&quot;</span><span class="p">]</span> <span class="o">+=</span> <span class="n">fn</span>
+
+    <span class="n">num_thresholds</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">iou_thrs</span><span class="p">)</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">results_dict</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">class_name</span> <span class="ow">in</span> <span class="n">avg_metrics</span><span class="p">:</span>
+        <span class="n">avg_metrics</span><span class="p">[</span><span class="n">class_name</span><span class="p">][</span><span class="s2">&quot;TP&quot;</span><span class="p">]</span> <span class="o">/=</span> <span class="n">num_thresholds</span>
+        <span class="n">avg_metrics</span><span class="p">[</span><span class="n">class_name</span><span class="p">][</span><span class="s2">&quot;FP&quot;</span><span class="p">]</span> <span class="o">/=</span> <span class="n">num_thresholds</span>
+        <span class="n">avg_metrics</span><span class="p">[</span><span class="n">class_name</span><span class="p">][</span><span class="s2">&quot;FN&quot;</span><span class="p">]</span> <span class="o">/=</span> <span class="n">num_thresholds</span>
+    <span class="k">return</span> <span class="n">avg_metrics</span></div>
+
+
+<div class="viewcode-block" id="calculate_per_class_metrics"><a class="viewcode-back" href="../../../cleanlab/object_detection/summary.html#cleanlab.object_detection.summary.calculate_per_class_metrics">[docs]</a><span class="k">def</span> <span class="nf">calculate_per_class_metrics</span><span class="p">(</span>
+    <span class="n">labels</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]],</span>
+    <span class="n">predictions</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">],</span>
+    <span class="n">num_procs</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
+    <span class="n">class_names</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">str</span><span class="p">],</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">float</span><span class="p">]]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Calculate the object detection model&#39;s precision, recall, and F1 score for each class in the dataset.</span>
+
+<span class="sd">    These metrics can help you identify model strengths and weaknesses, and provide reference statistics for model evaluation and comparisons.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    labels:</span>
+<span class="sd">        A list of ``N`` dictionaries such that ``labels[i]`` contains the given labels for the `i`-th image.</span>
+<span class="sd">        Refer to documentation for this argument in :py:func:`object_detection.filter.find_label_issues &lt;cleanlab.object_detection.filter.find_label_issues&gt;` for further details.</span>
+
+<span class="sd">    predictions:</span>
+<span class="sd">        A list of ``N`` ``np.ndarray`` such that ``predictions[i]`` corresponds to the model predictions for the `i`-th image.</span>
+<span class="sd">        Refer to documentation for this argument in :py:func:`object_detection.filter.find_label_issues &lt;cleanlab.object_detection.filter.find_label_issues&gt;` for further details.</span>
+
+<span class="sd">    num_procs:</span>
+<span class="sd">        Number of processes for parallelization. Default is 1.</span>
+
+<span class="sd">    class_names:</span>
+<span class="sd">        Optional dictionary mapping one-hot-encoded class labels back to their original class names in the format ``{&quot;integer-label&quot;: &quot;original-class-name&quot;}``</span>
+
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    per_class_metrics: dict</span>
+<span class="sd">        A dictionary containing per-class metrics computed from the object detection model&#39;s average confusion matrix values across a range of Intersection over Union thresholds.</span>
+
+<span class="sd">        The default range of Intersection over Union thresholds is from 0.5 to 0.95 with a step size of 0.05.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">avg_metrics</span> <span class="o">=</span> <span class="n">get_average_per_class_confusion_matrix</span><span class="p">(</span>
+        <span class="n">labels</span><span class="p">,</span> <span class="n">predictions</span><span class="p">,</span> <span class="n">num_procs</span><span class="p">,</span> <span class="n">class_names</span><span class="o">=</span><span class="n">class_names</span>
+    <span class="p">)</span>
+
+    <span class="n">avg_metrics_dict</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">for</span> <span class="n">class_name</span> <span class="ow">in</span> <span class="n">avg_metrics</span><span class="p">:</span>
+        <span class="n">tp</span> <span class="o">=</span> <span class="n">avg_metrics</span><span class="p">[</span><span class="n">class_name</span><span class="p">][</span><span class="s2">&quot;TP&quot;</span><span class="p">]</span>
+        <span class="n">fp</span> <span class="o">=</span> <span class="n">avg_metrics</span><span class="p">[</span><span class="n">class_name</span><span class="p">][</span><span class="s2">&quot;FP&quot;</span><span class="p">]</span>
+        <span class="n">fn</span> <span class="o">=</span> <span class="n">avg_metrics</span><span class="p">[</span><span class="n">class_name</span><span class="p">][</span><span class="s2">&quot;FN&quot;</span><span class="p">]</span>
+
+        <span class="n">precision</span> <span class="o">=</span> <span class="n">tp</span> <span class="o">/</span> <span class="p">(</span><span class="n">tp</span> <span class="o">+</span> <span class="n">fp</span> <span class="o">+</span> <span class="n">TINY_VALUE</span><span class="p">)</span>  <span class="c1"># Avoid division by zero</span>
+        <span class="n">recall</span> <span class="o">=</span> <span class="n">tp</span> <span class="o">/</span> <span class="p">(</span><span class="n">tp</span> <span class="o">+</span> <span class="n">fn</span> <span class="o">+</span> <span class="n">TINY_VALUE</span><span class="p">)</span>  <span class="c1"># Avoid division by zero</span>
+        <span class="n">f1</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="p">(</span><span class="n">precision</span> <span class="o">*</span> <span class="n">recall</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">precision</span> <span class="o">+</span> <span class="n">recall</span> <span class="o">+</span> <span class="n">TINY_VALUE</span><span class="p">)</span>  <span class="c1"># Avoid division by zero</span>
+
+        <span class="n">avg_metrics_dict</span><span class="p">[</span><span class="n">class_name</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;average precision&quot;</span><span class="p">:</span> <span class="n">precision</span><span class="p">,</span>
+            <span class="s2">&quot;average recall&quot;</span><span class="p">:</span> <span class="n">recall</span><span class="p">,</span>
+            <span class="s2">&quot;average f1&quot;</span><span class="p">:</span> <span class="n">f1</span><span class="p">,</span>
+        <span class="p">}</span>
+
+    <span class="k">return</span> <span class="n">avg_metrics_dict</span></div>
 
 
 <span class="k">def</span> <span class="nf">_normalize_by_total</span><span class="p">(</span><span class="n">freq</span><span class="p">):</span>
