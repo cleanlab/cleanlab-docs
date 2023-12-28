@@ -761,6 +761,24 @@ Appropriate defaults are used for any parameters you do not specify, so no need 
 <p>For more information on generating <code class="xref py py-obj docutils literal notranslate"><span class="pre">cluster_ids</span></code> for this issue manager, refer to this <a class="reference external" href="../../../tutorials/faq.html#How-do-I-specify-pre-computed-data-slices/clusters-when-detecting-the-Underperforming-Group-Issue?">FAQ Section</a>.</p>
 </div>
 </section>
+<section id="image-issue-parameters">
+<h3>Image Issue Parameters<a class="headerlink" href="#image-issue-parameters" title="Permalink to this heading">#</a></h3>
+<p>To customize optional parameters for specific image issue types, you can provide a dictionary format corresponding to each image issue. The following codeblock demonstrates how to specify optional parameters for all image issues. However, it’s important to note that providing optional parameters for specific image issues is not mandatory. If no specific parameters are provided, defaults will be used for those issues.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">image_issue_types_kwargs</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;dark&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;threshold&quot;</span><span class="p">:</span> <span class="mf">0.32</span><span class="p">},</span> <span class="c1"># `threshold` argument for dark issue type. Non-negative floating value between 0 and 1, lower value implies fewer samples will be marked as issue and vice versa.</span>
+    <span class="s2">&quot;light&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;threshold&quot;</span><span class="p">:</span> <span class="mf">0.05</span><span class="p">},</span> <span class="c1"># `threshold` argument for light issue type. Non-negative floating value between 0 and 1, lower value implies fewer samples will be marked as issue and vice versa.</span>
+    <span class="s2">&quot;blurry&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;threshold&quot;</span><span class="p">:</span> <span class="mf">0.29</span><span class="p">},</span> <span class="c1"># `threshold` argument for blurry issue type. Non-negative floating value between 0 and 1, lower value implies fewer samples will be marked as issue and vice versa.</span>
+    <span class="s2">&quot;low_information&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;threshold&quot;</span><span class="p">:</span> <span class="mf">0.3</span><span class="p">},</span> <span class="c1"># `threshold` argument for low_information issue type. Non-negative floating value between 0 and 1, lower value implies fewer samples will be marked as issue and vice versa.</span>
+    <span class="s2">&quot;odd_aspect_ratio&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;threshold&quot;</span><span class="p">:</span> <span class="mf">0.35</span><span class="p">},</span> <span class="c1"># `threshold` argument for odd_aspect_ratio issue type. Non-negative floating value between 0 and 1, lower value implies fewer samples will be marked as issue and vice versa.</span>
+    <span class="s2">&quot;odd_size&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;threshold&quot;</span><span class="p">:</span> <span class="mf">10.0</span><span class="p">},</span> <span class="c1"># `threshold` argument for odd_size issue type. Non-negative integer value between starting from 0, unlike other issues, here higher value implies fewer samples will be selected.</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>For more information, view the cleanvision <a class="reference external" href="https://cleanvision.readthedocs.io/en/latest/tutorials/tutorial.html#5.-Check-for-an-issue-with-a-different-threshold">docs</a>.</p>
+</div>
+</section>
 </section>
 </section>
  
@@ -858,6 +876,7 @@ Appropriate defaults are used for any parameters you do not specify, so no need 
 <li><a class="reference internal" href="#non-iid-issue-parameters">Non-IID Issue Parameters</a></li>
 <li><a class="reference internal" href="#imbalance-issue-parameters">Imbalance Issue Parameters</a></li>
 <li><a class="reference internal" href="#underperforming-group-issue-parameters">Underperforming Group Issue Parameters</a></li>
+<li><a class="reference internal" href="#image-issue-parameters">Image Issue Parameters</a></li>
 </ul>
 </li>
 </ul>
