@@ -589,10 +589,11 @@
         <span class="n">K</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">datalab</span><span class="o">.</span><span class="n">class_names</span><span class="p">)</span>
         <span class="n">class_probs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">bincount</span><span class="p">(</span><span class="n">labels</span><span class="p">)</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">labels</span><span class="p">)</span>
         <span class="n">rarest_class_idx</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">argmin</span><span class="p">(</span><span class="n">class_probs</span><span class="p">))</span>
+        <span class="c1"># solely one class is identified as rarest, ties go to class w smaller integer index</span>
+        <span class="n">scores</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">labels</span> <span class="o">==</span> <span class="n">rarest_class_idx</span><span class="p">,</span> <span class="n">class_probs</span><span class="p">[</span><span class="n">rarest_class_idx</span><span class="p">],</span> <span class="mi">1</span><span class="p">)</span>
         <span class="n">imbalance_exists</span> <span class="o">=</span> <span class="n">class_probs</span><span class="p">[</span><span class="n">rarest_class_idx</span><span class="p">]</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">threshold</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">/</span> <span class="n">K</span><span class="p">)</span>
-        <span class="n">rarest_class</span> <span class="o">=</span> <span class="n">rarest_class_idx</span> <span class="k">if</span> <span class="n">imbalance_exists</span> <span class="k">else</span> <span class="o">-</span><span class="mi">1</span>
-        <span class="n">is_issue_column</span> <span class="o">=</span> <span class="n">labels</span> <span class="o">==</span> <span class="n">rarest_class</span>
-        <span class="n">scores</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">is_issue_column</span><span class="p">,</span> <span class="n">class_probs</span><span class="p">[</span><span class="n">rarest_class</span><span class="p">],</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="n">rarest_class_issue</span> <span class="o">=</span> <span class="n">rarest_class_idx</span> <span class="k">if</span> <span class="n">imbalance_exists</span> <span class="k">else</span> <span class="o">-</span><span class="mi">1</span>
+        <span class="n">is_issue_column</span> <span class="o">=</span> <span class="n">labels</span> <span class="o">==</span> <span class="n">rarest_class_issue</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">issues</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
             <span class="p">{</span>
@@ -619,7 +620,7 @@
         <div class="bottom-of-page">
           <div class="left-details">
             <div class="copyright">
-                Copyright &#169; 2023, Cleanlab Inc.
+                Copyright &#169; 2024, Cleanlab Inc.
             </div>
             Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
             
