@@ -638,7 +638,7 @@
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
         <span class="n">info_extracted</span> <span class="o">=</span> <span class="n">_InfoStrategy</span><span class="o">.</span><span class="n">_get_info_helper</span><span class="p">(</span><span class="n">info</span><span class="o">=</span><span class="n">info</span><span class="p">,</span> <span class="n">issue_name</span><span class="o">=</span><span class="n">issue_name</span><span class="p">)</span>
         <span class="n">info</span> <span class="o">=</span> <span class="n">info_extracted</span> <span class="k">if</span> <span class="n">info_extracted</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">info</span>
-        <span class="k">if</span> <span class="n">issue_name</span> <span class="o">==</span> <span class="s2">&quot;label&quot;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">issue_name</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;label&quot;</span><span class="p">,</span> <span class="s2">&quot;class_imbalance&quot;</span><span class="p">]:</span>
             <span class="k">if</span> <span class="n">data</span><span class="o">.</span><span class="n">labels</span><span class="o">.</span><span class="n">is_available</span> <span class="ow">is</span> <span class="kc">False</span><span class="p">:</span>
                 <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
                     <span class="s2">&quot;The labels are not available. &quot;</span>
@@ -764,9 +764,7 @@
             <span class="n">specific_issues</span> <span class="o">=</span> <span class="n">specific_issues</span><span class="o">.</span><span class="n">assign</span><span class="p">(</span><span class="o">**</span><span class="n">column_dict</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="n">issue_name</span> <span class="o">==</span> <span class="s2">&quot;class_imbalance&quot;</span><span class="p">:</span>
-            <span class="n">specific_issues</span> <span class="o">=</span> <span class="n">specific_issues</span><span class="o">.</span><span class="n">assign</span><span class="p">(</span>
-                <span class="n">class_imbalance_class_name</span><span class="o">=</span><span class="n">info</span><span class="p">[</span><span class="s2">&quot;Rarest Class&quot;</span><span class="p">]</span>
-            <span class="p">)</span>
+            <span class="n">specific_issues</span> <span class="o">=</span> <span class="n">specific_issues</span><span class="o">.</span><span class="n">assign</span><span class="p">(</span><span class="n">given_label</span><span class="o">=</span><span class="n">info</span><span class="p">[</span><span class="s2">&quot;given_label&quot;</span><span class="p">])</span>
         <span class="k">return</span> <span class="n">specific_issues</span></div>
 
 <div class="viewcode-block" id="DataIssues.get_issue_summary"><a class="viewcode-back" href="../../../../cleanlab/datalab/internal/data_issues.html#cleanlab.datalab.internal.data_issues.DataIssues.get_issue_summary">[docs]</a>    <span class="k">def</span> <span class="nf">get_issue_summary</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">issue_name</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
