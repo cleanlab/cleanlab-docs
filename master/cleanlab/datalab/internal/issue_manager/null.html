@@ -582,11 +582,11 @@
 <tr class="row-even"><td><p><a class="reference internal" href="#cleanlab.datalab.internal.issue_manager.null.NullIssueManager.collect_info" title="cleanlab.datalab.internal.issue_manager.null.NullIssueManager.collect_info"><code class="xref py py-obj docutils literal notranslate"><span class="pre">collect_info</span></code></a>(null_tracker)</p></td>
 <td><p>Collects data for the info attribute of the Datalab.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#cleanlab.datalab.internal.issue_manager.null.NullIssueManager.make_summary" title="cleanlab.datalab.internal.issue_manager.null.NullIssueManager.make_summary"><code class="xref py py-obj docutils literal notranslate"><span class="pre">make_summary</span></code></a>(score)</p></td>
-<td><p>Construct a summary dataframe.</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#cleanlab.datalab.internal.issue_manager.null.NullIssueManager.report" title="cleanlab.datalab.internal.issue_manager.null.NullIssueManager.report"><code class="xref py py-obj docutils literal notranslate"><span class="pre">report</span></code></a>(*args, **kwargs)</p></td>
+<td><p>Return a report of issues found by the NullIssueManager.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#cleanlab.datalab.internal.issue_manager.null.NullIssueManager.report" title="cleanlab.datalab.internal.issue_manager.null.NullIssueManager.report"><code class="xref py py-obj docutils literal notranslate"><span class="pre">report</span></code></a>(issues, summary, info[, ...])</p></td>
-<td><p>Compose a report of the issues found by this IssueManager.</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#cleanlab.datalab.internal.issue_manager.null.NullIssueManager.make_summary" title="cleanlab.datalab.internal.issue_manager.null.NullIssueManager.make_summary"><code class="xref py py-obj docutils literal notranslate"><span class="pre">make_summary</span></code></a>(score)</p></td>
+<td><p>Construct a summary dataframe.</p></td>
 </tr>
 </tbody>
 </table>
@@ -650,6 +650,35 @@ as instance attributes.</p>
 </dl>
 </dd></dl>
 
+<dl class="py method">
+<dt class="sig sig-object py" id="cleanlab.datalab.internal.issue_manager.null.NullIssueManager.report">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">report</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/cleanlab/datalab/internal/issue_manager/null.html#NullIssueManager.report"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cleanlab.datalab.internal.issue_manager.null.NullIssueManager.report" title="Permalink to this definition">#</a></dt>
+<dd><p>Return a report of issues found by the NullIssueManager.</p>
+<p>This method extends the superclass method by identifying and reporting
+specific issues related to null values in the dataset.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>*args</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code>) – Variable length argument list.</p></li>
+<li><p><strong>**kwargs</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code>) – Arbitrary keyword arguments.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">report_str</span></code> – A string containing the report.</p>
+</dd>
+</dl>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<p><code class="xref py py-meth docutils literal notranslate"><span class="pre">cleanlab.datalab.Datalab.report()</span></code></p>
+</div>
+<p class="rubric">Notes</p>
+<p>This method differs from other IssueManager report methods. It checks for issues
+and prompts the user to address them to enable other issue managers to run effectively.</p>
+</dd></dl>
+
 <dl class="py attribute">
 <dt class="sig sig-object py" id="cleanlab.datalab.internal.issue_manager.null.NullIssueManager.issue_score_key">
 <span class="sig-name descname"><span class="pre">issue_score_key</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ClassVar</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'null_score'</span></em><a class="headerlink" href="#cleanlab.datalab.internal.issue_manager.null.NullIssueManager.issue_score_key" title="Permalink to this definition">#</a></dt>
@@ -669,59 +698,6 @@ as instance attributes.</p>
 </dd>
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><p><a class="reference internal" href="#cleanlab.datalab.internal.issue_manager.null.NullIssueManager.summary" title="cleanlab.datalab.internal.issue_manager.null.NullIssueManager.summary"><code class="xref py py-class docutils literal notranslate"><span class="pre">summary</span></code></a> – A summary dataframe.</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="cleanlab.datalab.internal.issue_manager.null.NullIssueManager.report">
-<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">report</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">issues</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">summary</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">info</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_examples</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbosity</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">include_description</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">info_to_omit</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#cleanlab.datalab.internal.issue_manager.null.NullIssueManager.report" title="Permalink to this definition">#</a></dt>
-<dd><p>Compose a report of the issues found by this IssueManager.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>issues</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code>) – <p>An issues dataframe.</p>
-<p class="rubric">Example</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">issues</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
-<span class="gp">... </span>    <span class="p">{</span>
-<span class="gp">... </span>        <span class="s2">&quot;is_X_issue&quot;</span><span class="p">:</span> <span class="p">[</span><span class="kc">True</span><span class="p">,</span> <span class="kc">False</span><span class="p">,</span> <span class="kc">True</span><span class="p">],</span>
-<span class="gp">... </span>        <span class="s2">&quot;X_score&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mf">0.2</span><span class="p">,</span> <span class="mf">0.9</span><span class="p">,</span> <span class="mf">0.4</span><span class="p">],</span>
-<span class="gp">... </span>    <span class="p">},</span>
-<span class="gp">... </span><span class="p">)</span>
-</pre></div>
-</div>
-</p></li>
-<li><p><strong>summary</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code>) – <p>The summary dataframe.</p>
-<p class="rubric">Example</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">summary</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
-<span class="gp">... </span>    <span class="p">{</span>
-<span class="gp">... </span>        <span class="s2">&quot;issue_type&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;X&quot;</span><span class="p">],</span>
-<span class="gp">... </span>        <span class="s2">&quot;score&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mf">0.5</span><span class="p">],</span>
-<span class="gp">... </span>    <span class="p">},</span>
-<span class="gp">... </span><span class="p">)</span>
-</pre></div>
-</div>
-</p></li>
-<li><p><strong>info</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code>]) – <p>The info dict.</p>
-<p class="rubric">Example</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">info</span> <span class="o">=</span> <span class="p">{</span>
-<span class="gp">... </span>    <span class="s2">&quot;A&quot;</span><span class="p">:</span> <span class="s2">&quot;val_A&quot;</span><span class="p">,</span>
-<span class="gp">... </span>    <span class="s2">&quot;B&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;val_B1&quot;</span><span class="p">,</span> <span class="s2">&quot;val_B2&quot;</span><span class="p">],</span>
-<span class="gp">... </span><span class="p">}</span>
-</pre></div>
-</div>
-</p></li>
-<li><p><strong>num_examples</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>) – The number of examples to print.</p></li>
-<li><p><strong>verbosity</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>) – The verbosity level of the report.</p></li>
-<li><p><strong>include_description</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code>) – Whether to include a description of the issue in the report.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></p>
-</dd>
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">report_str</span></code> – A string containing the report.</p>
 </dd>
 </dl>
 </dd></dl>

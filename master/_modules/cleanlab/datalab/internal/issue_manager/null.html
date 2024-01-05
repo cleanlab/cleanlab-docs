@@ -552,13 +552,13 @@
 
     <span class="n">description</span><span class="p">:</span> <span class="n">ClassVar</span><span class="p">[</span>
         <span class="nb">str</span>
-    <span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;Whether the dataset has any missing/null values</span>
+    <span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;Examples identified with the null issue correspond to rows that have null/missing values across all feature columns (i.e. the entire row is missing values).</span>
 <span class="s2">        &quot;&quot;&quot;</span>
     <span class="n">issue_name</span><span class="p">:</span> <span class="n">ClassVar</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;null&quot;</span>
     <span class="n">verbosity_levels</span> <span class="o">=</span> <span class="p">{</span>
-        <span class="mi">0</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;average_null_score&quot;</span><span class="p">],</span>
-        <span class="mi">1</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;most_common_issue&quot;</span><span class="p">],</span>
-        <span class="mi">2</span><span class="p">:</span> <span class="p">[],</span>
+        <span class="mi">0</span><span class="p">:</span> <span class="p">[],</span>
+        <span class="mi">1</span><span class="p">:</span> <span class="p">[],</span>
+        <span class="mi">2</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;most_common_issue&quot;</span><span class="p">],</span>
     <span class="p">}</span>
 
     <span class="nd">@staticmethod</span>
@@ -667,7 +667,70 @@
         <span class="n">average_null_score</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;average_null_score&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">issues</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">issue_score_key</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">()}</span>
         <span class="n">issues_dict</span> <span class="o">=</span> <span class="p">{</span><span class="o">**</span><span class="n">average_null_score</span><span class="p">,</span> <span class="o">**</span><span class="n">most_common_issue</span><span class="p">,</span> <span class="o">**</span><span class="n">column_impact</span><span class="p">}</span>
         <span class="n">info_dict</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="o">**</span><span class="n">issues_dict</span><span class="p">}</span>
-        <span class="k">return</span> <span class="n">info_dict</span></div></div>
+        <span class="k">return</span> <span class="n">info_dict</span></div>
+
+<div class="viewcode-block" id="NullIssueManager.report"><a class="viewcode-back" href="../../../../../cleanlab/datalab/internal/issue_manager/null.html#cleanlab.datalab.internal.issue_manager.null.NullIssueManager.report">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">report</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Return a report of issues found by the NullIssueManager.</span>
+
+<span class="sd">        This method extends the superclass method by identifying and reporting</span>
+<span class="sd">        specific issues related to null values in the dataset.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        *args : list</span>
+<span class="sd">            Variable length argument list.</span>
+<span class="sd">        **kwargs : dict</span>
+<span class="sd">            Arbitrary keyword arguments.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        report_str :</span>
+<span class="sd">            A string containing the report.</span>
+
+<span class="sd">        See Also</span>
+<span class="sd">        --------</span>
+<span class="sd">        :meth:`cleanlab.datalab.Datalab.report`</span>
+
+<span class="sd">        Notes</span>
+<span class="sd">        -----</span>
+<span class="sd">        This method differs from other IssueManager report methods. It checks for issues</span>
+<span class="sd">        and prompts the user to address them to enable other issue managers to run effectively.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Generate the base report using the superclass method</span>
+        <span class="n">original_report</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">report</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+        <span class="c1"># Retrieve the &#39;issues&#39; dataframe from keyword arguments</span>
+        <span class="n">issues</span> <span class="o">=</span> <span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;issues&quot;</span><span class="p">]</span>
+
+        <span class="c1"># Identify examples that have null values in all features</span>
+        <span class="n">issue_filter</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;is_</span><span class="si">{</span><span class="bp">cls</span><span class="o">.</span><span class="n">issue_name</span><span class="si">}</span><span class="s2">_issue&quot;</span>
+        <span class="n">examples_with_full_nulls</span> <span class="o">=</span> <span class="n">issues</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">issue_filter</span><span class="p">)</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+
+        <span class="c1"># Identify examples that have some null values (but not in all features)</span>
+        <span class="n">partial_null_filter</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">cls</span><span class="o">.</span><span class="n">issue_score_key</span><span class="si">}</span><span class="s2"> &lt; 1.0 and not </span><span class="si">{</span><span class="n">issue_filter</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="n">examples_with_partial_nulls</span> <span class="o">=</span> <span class="n">issues</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">partial_null_filter</span><span class="p">)</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+
+        <span class="c1"># Append information about examples with null values in all features</span>
+        <span class="k">if</span> <span class="n">examples_with_full_nulls</span><span class="p">:</span>
+            <span class="n">report_addition</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n\n</span><span class="s2">Found </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">examples_with_full_nulls</span><span class="p">)</span><span class="si">}</span><span class="s2"> examples with null values in all features. &quot;</span>
+                <span class="sa">f</span><span class="s2">&quot;These examples should be removed from the dataset before running other issue managers.&quot;</span>
+                <span class="c1"># TODO: Add a link to the documentation on how to handle null examples</span>
+            <span class="p">)</span>
+            <span class="n">original_report</span> <span class="o">+=</span> <span class="n">report_addition</span>
+
+        <span class="c1"># Append information about examples with some null values</span>
+        <span class="k">if</span> <span class="n">examples_with_partial_nulls</span><span class="p">:</span>
+            <span class="n">report_addition</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n\n</span><span class="s2">Found </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">examples_with_partial_nulls</span><span class="p">)</span><span class="si">}</span><span class="s2"> examples with null values in some features. &quot;</span>
+                <span class="sa">f</span><span class="s2">&quot;Please address these issues before running other issue managers.&quot;</span>
+                <span class="c1"># TODO: Add a link to the documentation on how to handle partially null examples</span>
+            <span class="p">)</span>
+            <span class="n">original_report</span> <span class="o">+=</span> <span class="n">report_addition</span>
+
+        <span class="k">return</span> <span class="n">original_report</span></div></div>
 </pre></div> 
         </article>
       </div>

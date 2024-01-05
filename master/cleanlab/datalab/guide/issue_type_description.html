@@ -632,6 +632,15 @@ If you do not provide both these arguments, this type of issue will not be consi
 The underperforming group quality score is equal to <code class="xref py py-obj docutils literal notranslate"><span class="pre">q/r</span></code> for examples belonging to the underperforming group, and is equal to 1 for all other examples.
 Advanced users:  If you have pre-computed cluster assignments for each example in the dataset, you can pass them explicitly to <a class="reference internal" href="../datalab.html#cleanlab.datalab.datalab.Datalab.find_issues" title="cleanlab.datalab.datalab.Datalab.find_issues"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Datalab.find_issues</span></code></a> using the <code class="xref py py-obj docutils literal notranslate"><span class="pre">cluster_ids</span></code> key in the <code class="xref py py-obj docutils literal notranslate"><span class="pre">issue_types</span></code> dict argument.  This is useful for tabular datasets where you want to group/slice the data based on a categorical column. An integer encoding of the categorical column can be passed as cluster assignments for finding the underperforming group, based on the data slices you define.</p>
 </section>
+<section id="null-issue">
+<h3>Null Issue<a class="headerlink" href="#null-issue" title="Permalink to this heading">#</a></h3>
+<p>Examples identified with the null issue correspond to rows that have null/missing values across all feature columns (i.e. the entire row is missing values).</p>
+<p>Null issues are detected based on provided <code class="xref py py-obj docutils literal notranslate"><span class="pre">features</span></code>.  If you do not provide <code class="xref py py-obj docutils literal notranslate"><span class="pre">features</span></code>, this type of issue will not be considered.</p>
+<p>Each example’s null issue quality score equals the proportion of features values in this row that are not null/missing. The overall dataset null issue quality score
+equals the average of the individual examples’ quality scores.</p>
+<p>Presence of null examples in the dataset can lead to errors when training ML models. It can also
+result in the model learning incorrect patterns due to the null values.</p>
+</section>
 </section>
 <section id="optional-issue-parameters">
 <h2>Optional Issue Parameters<a class="headerlink" href="#optional-issue-parameters" title="Permalink to this heading">#</a></h2>
@@ -641,7 +650,8 @@ Appropriate defaults are used for any parameters you do not specify, so no need 
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">possible_issue_types</span> <span class="o">=</span> <span class="p">{</span>
     <span class="s2">&quot;label&quot;</span><span class="p">:</span> <span class="n">label_kwargs</span><span class="p">,</span> <span class="s2">&quot;outlier&quot;</span><span class="p">:</span> <span class="n">outlier_kwargs</span><span class="p">,</span>
     <span class="s2">&quot;near_duplicate&quot;</span><span class="p">:</span> <span class="n">near_duplicate_kwargs</span><span class="p">,</span> <span class="s2">&quot;non_iid&quot;</span><span class="p">:</span> <span class="n">non_iid_kwargs</span><span class="p">,</span>
-    <span class="s2">&quot;class_imbalance&quot;</span><span class="p">:</span> <span class="n">class_imbalance_kwargs</span><span class="p">,</span> <span class="s2">&quot;underperforming_group&quot;</span><span class="p">:</span> <span class="n">underperforming_group_kwargs</span>
+    <span class="s2">&quot;class_imbalance&quot;</span><span class="p">:</span> <span class="n">class_imbalance_kwargs</span><span class="p">,</span> <span class="s2">&quot;underperforming_group&quot;</span><span class="p">:</span> <span class="n">underperforming_group_kwargs</span><span class="p">,</span>
+    <span class="s2">&quot;null&quot;</span><span class="p">:</span> <span class="n">null_kwargs</span>
 <span class="p">}</span>
 </pre></div>
 </div>
@@ -761,6 +771,16 @@ Appropriate defaults are used for any parameters you do not specify, so no need 
 <p>For more information on generating <code class="xref py py-obj docutils literal notranslate"><span class="pre">cluster_ids</span></code> for this issue manager, refer to this <a class="reference external" href="../../../tutorials/faq.html#How-do-I-specify-pre-computed-data-slices/clusters-when-detecting-the-Underperforming-Group-Issue?">FAQ Section</a>.</p>
 </div>
 </section>
+<section id="null-issue-parameters">
+<h3>Null Issue Parameters<a class="headerlink" href="#null-issue-parameters" title="Permalink to this heading">#</a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">null_kwargs</span> <span class="o">=</span> <span class="p">{}</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>For more information, view the source code of:  <a class="reference internal" href="../internal/issue_manager/null.html#cleanlab.datalab.internal.issue_manager.null.NullIssueManager" title="cleanlab.datalab.internal.issue_manager.null.NullIssueManager"><code class="xref py py-class docutils literal notranslate"><span class="pre">datalab.internal.issue_manager.null.NullIssueManager</span></code></a>.</p>
+</div>
+</section>
 <section id="image-issue-parameters">
 <h3>Image Issue Parameters<a class="headerlink" href="#image-issue-parameters" title="Permalink to this heading">#</a></h3>
 <p>To customize optional parameters for specific image issue types, you can provide a dictionary format corresponding to each image issue. The following codeblock demonstrates how to specify optional parameters for all image issues. However, it’s important to note that providing optional parameters for specific image issues is not mandatory. If no specific parameters are provided, defaults will be used for those issues.</p>
@@ -867,6 +887,7 @@ Appropriate defaults are used for any parameters you do not specify, so no need 
 <li><a class="reference internal" href="#class-imbalance-issue">Class Imbalance Issue</a></li>
 <li><a class="reference internal" href="#image-specific-issues">Image-specific Issues</a></li>
 <li><a class="reference internal" href="#underperforming-group-issue">Underperforming Group Issue</a></li>
+<li><a class="reference internal" href="#null-issue">Null Issue</a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#optional-issue-parameters">Optional Issue Parameters</a><ul>
@@ -876,6 +897,7 @@ Appropriate defaults are used for any parameters you do not specify, so no need 
 <li><a class="reference internal" href="#non-iid-issue-parameters">Non-IID Issue Parameters</a></li>
 <li><a class="reference internal" href="#imbalance-issue-parameters">Imbalance Issue Parameters</a></li>
 <li><a class="reference internal" href="#underperforming-group-issue-parameters">Underperforming Group Issue Parameters</a></li>
+<li><a class="reference internal" href="#null-issue-parameters">Null Issue Parameters</a></li>
 <li><a class="reference internal" href="#image-issue-parameters">Image Issue Parameters</a></li>
 </ul>
 </li>

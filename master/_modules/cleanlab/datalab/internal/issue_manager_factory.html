@@ -579,6 +579,7 @@
     <span class="n">UnderperformingGroupIssueManager</span><span class="p">,</span>
     <span class="n">DataValuationIssueManager</span><span class="p">,</span>
     <span class="n">OutlierIssueManager</span><span class="p">,</span>
+    <span class="n">NullIssueManager</span><span class="p">,</span>
 <span class="p">)</span>
 <span class="kn">from</span> <span class="nn">cleanlab.datalab.internal.issue_manager.regression</span> <span class="kn">import</span> <span class="n">RegressionLabelIssueManager</span>
 
@@ -591,10 +592,9 @@
         <span class="s2">&quot;class_imbalance&quot;</span><span class="p">:</span> <span class="n">ClassImbalanceIssueManager</span><span class="p">,</span>
         <span class="s2">&quot;underperforming_group&quot;</span><span class="p">:</span> <span class="n">UnderperformingGroupIssueManager</span><span class="p">,</span>
         <span class="s2">&quot;data_valuation&quot;</span><span class="p">:</span> <span class="n">DataValuationIssueManager</span><span class="p">,</span>
+        <span class="s2">&quot;null&quot;</span><span class="p">:</span> <span class="n">NullIssueManager</span><span class="p">,</span>
     <span class="p">},</span>
-    <span class="s2">&quot;regression&quot;</span><span class="p">:</span> <span class="p">{</span>
-        <span class="s2">&quot;label&quot;</span><span class="p">:</span> <span class="n">RegressionLabelIssueManager</span><span class="p">,</span>
-    <span class="p">},</span>
+    <span class="s2">&quot;regression&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;label&quot;</span><span class="p">:</span> <span class="n">RegressionLabelIssueManager</span><span class="p">},</span>
 <span class="p">}</span>
 <span class="sd">&quot;&quot;&quot;Registry of issue managers that can be constructed from a string</span>
 <span class="sd">and used in the Datalab class.</span>
@@ -731,7 +731,14 @@
     <span class="k">if</span> <span class="n">task</span> <span class="o">==</span> <span class="s2">&quot;regression&quot;</span><span class="p">:</span>
         <span class="n">default_issue_types</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;label&quot;</span><span class="p">]</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="n">default_issue_types</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;label&quot;</span><span class="p">,</span> <span class="s2">&quot;outlier&quot;</span><span class="p">,</span> <span class="s2">&quot;near_duplicate&quot;</span><span class="p">,</span> <span class="s2">&quot;non_iid&quot;</span><span class="p">,</span> <span class="s2">&quot;class_imbalance&quot;</span><span class="p">]</span>
+        <span class="n">default_issue_types</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="s2">&quot;null&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;label&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;outlier&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;near_duplicate&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;non_iid&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;class_imbalance&quot;</span><span class="p">,</span>
+        <span class="p">]</span>
     <span class="k">return</span> <span class="n">default_issue_types</span></div>
 </pre></div> 
         </article>
