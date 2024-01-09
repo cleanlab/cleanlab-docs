@@ -720,15 +720,48 @@ For regression data, this must be a 1D array with shape <code class="docutils li
 <li><p><strong>features</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">Optional[np.ndarray]</span></code>) – <p>Feature embeddings (vector representations) of every example in the dataset.</p>
 <p>If provided, this must be a 2D array with shape (num_examples, num_features).</p>
 </p></li>
-<li><p><strong>knn_graph</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">csr_matrix</span></code>]) – <p>Sparse matrix representing distances between examples in the dataset in a k nearest neighbor graph.</p>
-<p>If provided, this must be a square CSR matrix with shape (num_examples, num_examples) and (k*num_examples) non-zero entries (k is the number of nearest neighbors considered for each example)
+<li><p><strong>knn_graph</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">csr_matrix</span></code>]) – <p>Sparse matrix of precomputed distances between examples in the dataset in a k nearest neighbor graph.</p>
+<p>If provided, this must be a square CSR matrix with shape <code class="docutils literal notranslate"><span class="pre">(num_examples,</span> <span class="pre">num_examples)</span></code> and <code class="docutils literal notranslate"><span class="pre">(k*num_examples)</span></code> non-zero entries (<code class="docutils literal notranslate"><span class="pre">k</span></code> is the number of nearest neighbors considered for each example),
 evenly distributed across the rows.
-The non-zero entries must be the distances between the corresponding examples. Self-distances must be omitted
-(i.e. the diagonal must be all zeros and the k nearest neighbors of each example must not include itself).</p>
+Each non-zero entry in this matrix is a distance between a pair of examples in the dataset. Self-distances must be omitted
+(i.e. diagonal must be all zeros, k nearest neighbors for each example do not include the example itself).</p>
+<p>This CSR format uses three 1D arrays (<code class="xref py py-obj docutils literal notranslate"><span class="pre">data</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">indices</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">indptr</span></code>) to store a 2D matrix <code class="docutils literal notranslate"><span class="pre">M</span></code>:</p>
+<ul>
+<li><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">data</span></code>: 1D array containing all the non-zero elements of matrix <code class="docutils literal notranslate"><span class="pre">M</span></code>, listed in a row-wise fashion (but sorted within each row).</p></li>
+<li><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">indices</span></code>: 1D array storing the column indices in matrix <code class="docutils literal notranslate"><span class="pre">M</span></code> of these non-zero elements. Each entry in <code class="xref py py-obj docutils literal notranslate"><span class="pre">indices</span></code> corresponds to an entry in <code class="xref py py-obj docutils literal notranslate"><span class="pre">data</span></code>, indicating the column of <code class="docutils literal notranslate"><span class="pre">M</span></code> containing this entry.</p></li>
+<li><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">indptr</span></code>: 1D array indicating the start and end indices in <code class="xref py py-obj docutils literal notranslate"><span class="pre">data</span></code> for each row of matrix <code class="docutils literal notranslate"><span class="pre">M</span></code>. The non-zero elements of the i-th row of <code class="docutils literal notranslate"><span class="pre">M</span></code> are stored from <code class="docutils literal notranslate"><span class="pre">data[indptr[i]]</span></code> to <code class="docutils literal notranslate"><span class="pre">data[indptr[i+1]]</span></code>.</p></li>
+</ul>
+<p>Within each row of matrix <code class="docutils literal notranslate"><span class="pre">M</span></code> (defined by the ranges in <code class="xref py py-obj docutils literal notranslate"><span class="pre">indptr</span></code>), the corresponding non-zero entries (distances) of <code class="xref py py-obj docutils literal notranslate"><span class="pre">knn_graph</span></code> must be sorted in ascending order (specifically in the segments of the <code class="xref py py-obj docutils literal notranslate"><span class="pre">data</span></code> array that correspond to each row of <code class="docutils literal notranslate"><span class="pre">M</span></code>). The <code class="xref py py-obj docutils literal notranslate"><span class="pre">indices</span></code> array must also reflect this ordering, maintaining the correct column positions for these sorted distances.</p>
+<p>This type of matrix is returned by the method: <a class="reference external" href="https://scikit-learn.org/stable/modules/generated/sklearn.neighbors.NearestNeighbors.html#sklearn.neighbors.NearestNeighbors.kneighbors_graph">sklearn.neighbors.NearestNeighbors.kneighbors_graph</a>.</p>
+<p>Below is an example to illustrate:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">knn_graph</span><span class="o">.</span><span class="n">todense</span><span class="p">()</span>
+<span class="c1"># matrix([[0. , 0.3, 0.2],</span>
+<span class="c1">#         [0.3, 0. , 0.4],</span>
+<span class="c1">#         [0.2, 0.4, 0. ]])</span>
+
+<span class="n">knn_graph</span><span class="o">.</span><span class="n">data</span>
+<span class="c1"># array([0.2, 0.3, 0.3, 0.4, 0.2, 0.4])</span>
+<span class="c1"># Here, 0.2 and 0.3 are the sorted distances in the first row, 0.3 and 0.4 in the second row, and so on.</span>
+
+<span class="n">knn_graph</span><span class="o">.</span><span class="n">indices</span>
+<span class="c1"># array([2, 1, 0, 2, 0, 1])</span>
+<span class="c1"># Corresponding neighbor indices for the distances from the `data` array.</span>
+
+<span class="n">knn_graph</span><span class="o">.</span><span class="n">indptr</span>
+<span class="c1"># array([0, 2, 4, 6])</span>
+<span class="c1"># The non-zero entries in the first row are stored from `knn_graph.data[0]` to `knn_graph.data[2]`, the second row from `knn_graph.data[2]` to `knn_graph.data[4]`, and so on.</span>
+</pre></div>
+</div>
 <p>For any duplicated examples i,j whose distance is 0, there should be an <em>explicit</em> zero stored in the matrix, i.e. <code class="docutils literal notranslate"><span class="pre">knn_graph[i,j]</span> <span class="pre">=</span> <span class="pre">0</span></code>.</p>
 <p>If both <code class="xref py py-obj docutils literal notranslate"><span class="pre">knn_graph</span></code> and <code class="xref py py-obj docutils literal notranslate"><span class="pre">features</span></code> are provided, the <code class="xref py py-obj docutils literal notranslate"><span class="pre">knn_graph</span></code> will take precendence.
 If <code class="xref py py-obj docutils literal notranslate"><span class="pre">knn_graph</span></code> is not provided, it is constructed based on the provided <code class="xref py py-obj docutils literal notranslate"><span class="pre">features</span></code>.
 If neither <code class="xref py py-obj docutils literal notranslate"><span class="pre">knn_graph</span></code> nor <code class="xref py py-obj docutils literal notranslate"><span class="pre">features</span></code> are provided, certain issue types like (near) duplicates will not be considered.</p>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<p>See the
+<a class="reference external" href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.sparse.csr_matrix.html">scipy.sparse.csr_matrix documentation</a>
+for more details on the CSR matrix format.</p>
+</div>
 </p></li>
 <li><p><strong>issue_types</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code>]]) – <p>Collection specifying which types of issues to consider in audit and any non-default parameter settings to use.
 If unspecified, a default set of issue types and recommended parameter settings is considered.</p>

@@ -625,14 +625,7 @@ If provided for regression, this must be a 1D array with shape <code class="docu
 <p>If provided, this must be a 2D array with shape (num_examples, num_features).</p>
 </p></li>
 <li><p><strong>knn_graph</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">csr_matrix</span></code>]) – <p>Sparse matrix representing distances between examples in the dataset in a k nearest neighbor graph.</p>
-<p>If provided, this must be a square CSR matrix with shape (num_examples, num_examples) and (k*num_examples) non-zero entries (k is the number of nearest neighbors considered for each example)
-evenly distributed across the rows.
-The non-zero entries must be the distances between the corresponding examples. Self-distances must be omitted
-(i.e. the diagonal must be all zeros and the k nearest neighbors of each example must not include itself).</p>
-<p>For any duplicated examples i,j whose distance is 0, there should be an <em>explicit</em> zero stored in the matrix, i.e. <code class="docutils literal notranslate"><span class="pre">knn_graph[i,j]</span> <span class="pre">=</span> <span class="pre">0</span></code>.</p>
-<p>If both <code class="xref py py-obj docutils literal notranslate"><span class="pre">knn_graph</span></code> and <code class="xref py py-obj docutils literal notranslate"><span class="pre">features</span></code> are provided, the <code class="xref py py-obj docutils literal notranslate"><span class="pre">knn_graph</span></code> will take precendence.
-If <code class="xref py py-obj docutils literal notranslate"><span class="pre">knn_graph</span></code> is not provided, it is constructed based on the provided <code class="xref py py-obj docutils literal notranslate"><span class="pre">features</span></code>.
-If neither <code class="xref py py-obj docutils literal notranslate"><span class="pre">knn_graph</span></code> nor <code class="xref py py-obj docutils literal notranslate"><span class="pre">features</span></code> are provided, certain issue types like (near) duplicates will not be considered.</p>
+<p>For details, refer to the documentation of the same argument in <a class="reference internal" href="../datalab.html#cleanlab.datalab.datalab.Datalab.find_issues" title="cleanlab.datalab.datalab.Datalab.find_issues"><code class="xref py py-class docutils literal notranslate"><span class="pre">Datalab.find_issues</span></code></a></p>
 </p></li>
 <li><p><strong>issue_types</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code>]]) – <p>Collection specifying which types of issues to consider in audit and any non-default parameter settings to use.
 If unspecified, a default set of issue types and recommended parameter settings is considered.</p>
