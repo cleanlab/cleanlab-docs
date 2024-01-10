@@ -566,7 +566,11 @@
 
 <span class="kn">from</span> <span class="nn">cleanlab.typing</span> <span class="kn">import</span> <span class="n">LabelLike</span>
 <span class="kn">from</span> <span class="nn">cleanlab.internal.multilabel_utils</span> <span class="kn">import</span> <span class="n">stack_complement</span><span class="p">,</span> <span class="n">get_onehot_num_classes</span>
-<span class="kn">from</span> <span class="nn">cleanlab.internal.constants</span> <span class="kn">import</span> <span class="n">TINY_VALUE</span><span class="p">,</span> <span class="n">CONFIDENT_THRESHOLDS_LOWER_BOUND</span>
+<span class="kn">from</span> <span class="nn">cleanlab.internal.constants</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">TINY_VALUE</span><span class="p">,</span>
+    <span class="n">CONFIDENT_THRESHOLDS_LOWER_BOUND</span><span class="p">,</span>
+    <span class="n">FLOATING_POINT_COMPARISON</span><span class="p">,</span>
+<span class="p">)</span>
 
 <span class="kn">from</span> <span class="nn">cleanlab.internal.util</span> <span class="kn">import</span> <span class="p">(</span>
     <span class="n">value_counts_fill_missing_classes</span><span class="p">,</span>
@@ -678,9 +682,9 @@
         <span class="n">label_issues_mask</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">labels</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">bool</span><span class="p">)</span>
         <span class="n">label_issues_mask</span><span class="p">[</span><span class="n">cl_error_indices</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
 
-        <span class="c1"># Remove label issues if given label == model prediction</span>
-        <span class="n">pred</span> <span class="o">=</span> <span class="n">pred_probs</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
-        <span class="n">label_issues_mask</span><span class="p">[</span><span class="n">pred</span> <span class="o">==</span> <span class="n">labels</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="c1"># Remove label issues if model prediction is close to given label</span>
+        <span class="n">mask</span> <span class="o">=</span> <span class="n">_reduce_issues</span><span class="p">(</span><span class="n">pred_probs</span><span class="o">=</span><span class="n">pred_probs</span><span class="p">,</span> <span class="n">labels</span><span class="o">=</span><span class="n">labels</span><span class="p">)</span>
+        <span class="n">label_issues_mask</span><span class="p">[</span><span class="n">mask</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span>
         <span class="n">num_issues</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">label_issues_mask</span><span class="p">)</span>
     <span class="k">elif</span> <span class="n">estimation_method</span> <span class="o">==</span> <span class="s2">&quot;off_diagonal_calibrated&quot;</span><span class="p">:</span>
         <span class="n">calculated_confident_joint</span> <span class="o">=</span> <span class="n">compute_confident_joint</span><span class="p">(</span>
@@ -750,6 +754,16 @@
         <span class="n">filter_by</span><span class="o">=</span><span class="s2">&quot;confident_learning&quot;</span><span class="p">,</span>  <span class="c1"># specified to match num_label_issues</span>
     <span class="p">)</span>
     <span class="k">return</span> <span class="nb">sum</span><span class="p">(</span><span class="n">issues_idx</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">_reduce_issues</span><span class="p">(</span><span class="n">pred_probs</span><span class="p">,</span> <span class="n">labels</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Returns a boolean mask denoting correct predictions or predictions within a margin around 0.5 for binary classification, suitable for filtering out indices in &#39;is_label_issue&#39;.&quot;&quot;&quot;</span>
+    <span class="n">pred_probs_copy</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">pred_probs</span><span class="p">)</span>  <span class="c1"># Make a copy of the original array</span>
+    <span class="n">pred_probs_copy</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">labels</span><span class="p">)),</span> <span class="n">labels</span><span class="p">]</span> <span class="o">+=</span> <span class="n">FLOATING_POINT_COMPARISON</span>
+    <span class="n">pred</span> <span class="o">=</span> <span class="n">pred_probs_copy</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">mask</span> <span class="o">=</span> <span class="n">pred</span> <span class="o">==</span> <span class="n">labels</span>
+    <span class="k">del</span> <span class="n">pred_probs_copy</span>  <span class="c1"># Delete copy</span>
+    <span class="k">return</span> <span class="n">mask</span>
 
 
 <div class="viewcode-block" id="calibrate_confident_joint"><a class="viewcode-back" href="../../cleanlab/count.html#cleanlab.count.calibrate_confident_joint">[docs]</a><span class="k">def</span> <span class="nf">calibrate_confident_joint</span><span class="p">(</span>
