@@ -549,7 +549,9 @@
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 
 
-<div class="viewcode-block" id="transform_distances_to_scores"><a class="viewcode-back" href="../../../cleanlab/internal/outlier.html#cleanlab.internal.outlier.transform_distances_to_scores">[docs]</a><span class="k">def</span> <span class="nf">transform_distances_to_scores</span><span class="p">(</span><span class="n">distances</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">k</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">t</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<div class="viewcode-block" id="transform_distances_to_scores"><a class="viewcode-back" href="../../../cleanlab/internal/outlier.html#cleanlab.internal.outlier.transform_distances_to_scores">[docs]</a><span class="k">def</span> <span class="nf">transform_distances_to_scores</span><span class="p">(</span>
+    <span class="n">avg_distances</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">t</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">scaling_factor</span><span class="p">:</span> <span class="nb">float</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Returns an outlier score for each example based on its average distance to its k nearest neighbors.</span>
 
 <span class="sd">    The transformation of a distance, :math:`d` , to a score, :math:`o` , is based on the following formula:</span>
@@ -561,18 +563,21 @@
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    distances : np.ndarray</span>
-<span class="sd">        An array of distances of shape ``(N, num_neighbors)``, where N is the number of examples.</span>
-<span class="sd">        Each row contains the distances to each example&#39;s `num_neighbors` nearest neighbors.</span>
-<span class="sd">        It is assumed that each row is sorted in ascending order.</span>
-
-<span class="sd">    k : int</span>
-<span class="sd">        Number of neighbors used to compute the average distance to each example.</span>
-<span class="sd">        This assumes that the second dimension of distances is k or greater, but it</span>
-<span class="sd">        uses slicing to avoid indexing errors.</span>
+<span class="sd">    avg_distances : np.ndarray</span>
+<span class="sd">        An array of distances of shape ``(N)``, where N is the number of examples.</span>
+<span class="sd">        Each entry represents an example&#39;s average distance to its k nearest neighbors.</span>
 
 <span class="sd">    t : int</span>
-<span class="sd">        Controls transformation of distances between examples into similarity scores that lie in [0,1].</span>
+<span class="sd">        A sensitivity parameter that modulates the strength of the transformation from distances to scores.</span>
+<span class="sd">        Higher values of `t` result in more pronounced differentiation between the scores of examples</span>
+<span class="sd">        lying in the range [0,1].</span>
+
+<span class="sd">    scaling_factor : float</span>
+<span class="sd">        A scaling factor used to normalize the distances before they are converted into scores. A valid</span>
+<span class="sd">        scaling factor is any positive number. The choice of scaling factor should be based on the</span>
+<span class="sd">        distribution of distances between neighboring examples. A good rule of thumb is to set the</span>
+<span class="sd">        scaling factor to the median distance between neighboring examples. A lower scaling factor</span>
+<span class="sd">        results in more pronounced differentiation between the scores of examples lying in the range [0,1].</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
@@ -585,14 +590,12 @@
 <span class="sd">    &gt;&gt;&gt; from cleanlab.outlier import transform_distances_to_scores</span>
 <span class="sd">    &gt;&gt;&gt; distances = np.array([[0.0, 0.1, 0.25],</span>
 <span class="sd">    ...                       [0.15, 0.2, 0.3]])</span>
-<span class="sd">    &gt;&gt;&gt; transform_distances_to_scores(distances, k=2, t=1)</span>
-<span class="sd">    array([0.95122942, 0.83945702])</span>
+<span class="sd">    &gt;&gt;&gt; avg_distances = np.mean(distances, axis=1)</span>
+<span class="sd">    &gt;&gt;&gt; transform_distances_to_scores(avg_distances, t=1, scaling_factor=1)</span>
+<span class="sd">    array([0.88988177, 0.80519832])</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="c1"># Calculate average distance to k-nearest neighbors</span>
-    <span class="n">avg_knn_distances</span> <span class="o">=</span> <span class="n">distances</span><span class="p">[:,</span> <span class="p">:</span><span class="n">k</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
-
     <span class="c1"># Map ood_features_scores to range 0-1 with 0 = most concerning</span>
-    <span class="n">ood_features_scores</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span> <span class="o">*</span> <span class="n">avg_knn_distances</span> <span class="o">*</span> <span class="n">t</span><span class="p">)</span>
+    <span class="n">ood_features_scores</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span> <span class="o">*</span> <span class="n">avg_distances</span> <span class="o">/</span> <span class="n">scaling_factor</span> <span class="o">*</span> <span class="n">t</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">ood_features_scores</span></div>
 </pre></div> 
         </article>

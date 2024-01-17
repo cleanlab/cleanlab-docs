@@ -553,7 +553,7 @@
 <span class="kn">from</span> <span class="nn">cleanlab.count</span> <span class="kn">import</span> <span class="n">get_confident_thresholds</span>
 <span class="kn">from</span> <span class="nn">sklearn.neighbors</span> <span class="kn">import</span> <span class="n">NearestNeighbors</span>
 <span class="kn">from</span> <span class="nn">sklearn.exceptions</span> <span class="kn">import</span> <span class="n">NotFittedError</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Union</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">cast</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Union</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Dict</span>
 <span class="kn">from</span> <span class="nn">cleanlab.internal.label_quality_utils</span> <span class="kn">import</span> <span class="p">(</span>
     <span class="n">_subtract_confident_thresholds</span><span class="p">,</span>
     <span class="n">get_normalized_entropy</span><span class="p">,</span>
@@ -646,6 +646,9 @@
                 <span class="s2">&quot;CAUTION: GEN method is not recommended for use with adjusted pred_probs. &quot;</span>
                 <span class="s2">&quot;To use GEN, we recommend setting: params[&#39;adjust_pred_probs&#39;] = False&quot;</span>
             <span class="p">)</span>
+
+        <span class="c1"># scaling_factor internally used to rescale distances based on mean distances to k nearest neighbors</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s2">&quot;scaling_factor&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
 
 <div class="viewcode-block" id="OutOfDistribution.fit_score"><a class="viewcode-back" href="../../cleanlab/outlier.html#cleanlab.outlier.OutOfDistribution.fit_score">[docs]</a>    <span class="k">def</span> <span class="nf">fit_score</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
@@ -794,7 +797,9 @@
                 <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
                     <span class="s2">&quot;OOD estimator needs to be fit on features first. Call `fit()` or `fit_scores()` before this function.&quot;</span>
                 <span class="p">)</span>
-            <span class="n">scores</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">_get_ood_features_scores</span><span class="p">(</span><span class="n">features</span><span class="p">,</span> <span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">_get_params</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">OUTLIER_PARAMS</span><span class="p">))</span>
+            <span class="n">scores</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_ood_features_scores</span><span class="p">(</span>
+                <span class="n">features</span><span class="p">,</span> <span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">_get_params</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">OUTLIER_PARAMS</span><span class="p">)</span>
+            <span class="p">)</span>
 
         <span class="k">if</span> <span class="n">pred_probs</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s2">&quot;confident_thresholds&quot;</span><span class="p">]</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s2">&quot;adjust_pred_probs&quot;</span><span class="p">]:</span>
@@ -866,7 +871,7 @@
                 <span class="c1"># Get ood features scores</span>
                 <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
                     <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Fitting OOD estimator based on provided features ...&quot;</span><span class="p">)</span>
-                <span class="n">scores</span><span class="p">,</span> <span class="n">knn</span> <span class="o">=</span> <span class="n">_get_ood_features_scores</span><span class="p">(</span>
+                <span class="n">scores</span><span class="p">,</span> <span class="n">knn</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_ood_features_scores</span><span class="p">(</span>
                     <span class="n">features</span><span class="p">,</span> <span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">_get_params</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">OUTLIER_PARAMS</span><span class="p">)</span>
                 <span class="p">)</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s2">&quot;knn&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">knn</span>
@@ -895,91 +900,105 @@
                     <span class="p">)</span>
                 <span class="k">else</span><span class="p">:</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s2">&quot;confident_thresholds&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">confident_thresholds</span>
-        <span class="k">return</span> <span class="n">scores</span></div>
+        <span class="k">return</span> <span class="n">scores</span>
 
+    <span class="k">def</span> <span class="nf">_get_ood_features_scores</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">features</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">knn</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">NearestNeighbors</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">k</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">t</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">Optional</span><span class="p">[</span><span class="n">NearestNeighbors</span><span class="p">]]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Return outlier score based on feature values using `k` nearest neighbors.</span>
 
-<span class="k">def</span> <span class="nf">_get_ood_features_scores</span><span class="p">(</span>
-    <span class="n">features</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-    <span class="n">knn</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">NearestNeighbors</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-    <span class="n">k</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-    <span class="n">t</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
-<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">Optional</span><span class="p">[</span><span class="n">NearestNeighbors</span><span class="p">]]:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Return outlier score based on feature values using `k` nearest neighbors.</span>
+<span class="sd">        The outlier score for each example is computed inversely proportional to</span>
+<span class="sd">        the average distance between this example and its K nearest neighbors (in feature space).</span>
 
-<span class="sd">    The outlier score for each example is computed inversely proportional to</span>
-<span class="sd">    the average distance between this example and its K nearest neighbors (in feature space).</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        features : np.ndarray</span>
+<span class="sd">        Feature array of shape ``(N, M)``, where N is the number of examples and M is the number of features used to represent each example.</span>
+<span class="sd">        For details, `features` in the same format expected by the `~cleanlab.outlier.OutOfDistribution.fit` function.</span>
 
-<span class="sd">    Parameters</span>
-<span class="sd">    ----------</span>
-<span class="sd">    features : np.ndarray</span>
-<span class="sd">      Feature array of shape ``(N, M)``, where N is the number of examples and M is the number of features used to represent each example.</span>
-<span class="sd">      For details, `features` in the same format expected by the `~cleanlab.outlier.OutOfDistribution.fit` function.</span>
+<span class="sd">        knn : sklearn.neighbors.NearestNeighbors, default = None</span>
+<span class="sd">        For details, see key `knn` in the params dict arg of `~cleanlab.outlier.OutOfDistribution`.</span>
 
-<span class="sd">    knn : sklearn.neighbors.NearestNeighbors, default = None</span>
-<span class="sd">      For details, see key `knn` in the params dict arg of `~cleanlab.outlier.OutOfDistribution`.</span>
+<span class="sd">        k : int, default=None</span>
+<span class="sd">        Optional number of neighbors to use when calculating outlier score (average distance to neighbors).</span>
+<span class="sd">        For details, see key `k` in the params dict arg of `~cleanlab.outlier.OutOfDistribution`.</span>
 
-<span class="sd">    k : int, default=None</span>
-<span class="sd">      Optional number of neighbors to use when calculating outlier score (average distance to neighbors).</span>
-<span class="sd">      For details, see key `k` in the params dict arg of `~cleanlab.outlier.OutOfDistribution`.</span>
+<span class="sd">        t : int, default=1</span>
+<span class="sd">        Controls transformation of distances between examples into similarity scores that lie in [0,1].</span>
+<span class="sd">        For details, see key `t` in the params dict arg of `~cleanlab.outlier.OutOfDistribution`.</span>
 
-<span class="sd">    t : int, default=1</span>
-<span class="sd">      Controls transformation of distances between examples into similarity scores that lie in [0,1].</span>
-<span class="sd">      For details, see key `t` in the params dict arg of `~cleanlab.outlier.OutOfDistribution`.</span>
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        ood_features_scores : Tuple[np.ndarray, Optional[NearestNeighbors]]</span>
+<span class="sd">        Return a tuple whose first element is array of `ood_features_scores` and second is a `knn` Estimator object.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">DEFAULT_K</span> <span class="o">=</span> <span class="mi">10</span>
+        <span class="c1"># fit skip over (if knn is not None) then skipping fit and suggest score else fit.</span>
+        <span class="k">if</span> <span class="n">knn</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>  <span class="c1"># setup default KNN estimator</span>
+            <span class="c1"># Make sure both knn and features are not None</span>
+            <span class="k">if</span> <span class="n">features</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                    <span class="s2">&quot;Both knn and features arguments cannot be None at the same time. Not enough information to compute outlier scores.&quot;</span>
+                <span class="p">)</span>
+            <span class="k">if</span> <span class="n">k</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">k</span> <span class="o">=</span> <span class="n">DEFAULT_K</span>  <span class="c1"># use default when knn and k are both None</span>
+            <span class="k">if</span> <span class="n">k</span> <span class="o">&gt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">features</span><span class="p">):</span>  <span class="c1"># Ensure number of neighbors less than number of examples</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">&quot;Number of nearest neighbors k=</span><span class="si">{</span><span class="n">k</span><span class="si">}</span><span class="s2"> cannot exceed the number of examples N=</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">features</span><span class="p">)</span><span class="si">}</span><span class="s2"> passed into the estimator (knn).&quot;</span>
+                <span class="p">)</span>
 
-<span class="sd">    Returns</span>
-<span class="sd">    -------</span>
-<span class="sd">    ood_features_scores : Tuple[np.ndarray, Optional[NearestNeighbors]]</span>
-<span class="sd">      Return a tuple whose first element is array of `ood_features_scores` and second is a `knn` Estimator object.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">DEFAULT_K</span> <span class="o">=</span> <span class="mi">10</span>
-    <span class="c1"># fit skip over (if knn is not None) then skipping fit and suggest score else fit.</span>
-    <span class="k">if</span> <span class="n">knn</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>  <span class="c1"># setup default KNN estimator</span>
-        <span class="c1"># Make sure both knn and features are not None</span>
-        <span class="k">if</span> <span class="n">features</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-                <span class="s2">&quot;Both knn and features arguments cannot be None at the same time. Not enough information to compute outlier scores.&quot;</span>
+            <span class="k">if</span> <span class="n">features</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">3</span><span class="p">:</span>  <span class="c1"># use euclidean distance for lower dimensional spaces</span>
+                <span class="n">metric</span> <span class="o">=</span> <span class="s2">&quot;cosine&quot;</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">metric</span> <span class="o">=</span> <span class="s2">&quot;euclidean&quot;</span>
+
+            <span class="n">knn</span> <span class="o">=</span> <span class="n">NearestNeighbors</span><span class="p">(</span><span class="n">n_neighbors</span><span class="o">=</span><span class="n">k</span><span class="p">,</span> <span class="n">metric</span><span class="o">=</span><span class="n">metric</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">features</span><span class="p">)</span>
+            <span class="n">features</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># features should be None in knn.kneighbors(features) to avoid counting duplicate data points</span>
+
+        <span class="k">elif</span> <span class="n">k</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">k</span> <span class="o">=</span> <span class="n">knn</span><span class="o">.</span><span class="n">n_neighbors</span>
+
+        <span class="n">max_k</span> <span class="o">=</span> <span class="n">knn</span><span class="o">.</span><span class="n">n_neighbors</span>  <span class="c1"># number of neighbors previously used in NearestNeighbors object</span>
+        <span class="k">if</span> <span class="n">k</span> <span class="o">&gt;</span> <span class="n">max_k</span><span class="p">:</span>  <span class="c1"># if k provided is too high, use max possible number of nearest neighbors</span>
+            <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;Chosen k=</span><span class="si">{</span><span class="n">k</span><span class="si">}</span><span class="s2"> cannot be greater than n_neighbors=</span><span class="si">{</span><span class="n">max_k</span><span class="si">}</span><span class="s2"> which was used when fitting &quot;</span>
+                <span class="sa">f</span><span class="s2">&quot;NearestNeighbors object! Value of k changed to k=</span><span class="si">{</span><span class="n">max_k</span><span class="si">}</span><span class="s2">.&quot;</span><span class="p">,</span>
+                <span class="ne">UserWarning</span><span class="p">,</span>
             <span class="p">)</span>
-        <span class="k">if</span> <span class="n">k</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">k</span> <span class="o">=</span> <span class="n">DEFAULT_K</span>  <span class="c1"># use default when knn and k are both None</span>
-        <span class="k">if</span> <span class="n">k</span> <span class="o">&gt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">features</span><span class="p">):</span>  <span class="c1"># Ensure number of neighbors less than number of examples</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-                <span class="sa">f</span><span class="s2">&quot;Number of nearest neighbors k=</span><span class="si">{</span><span class="n">k</span><span class="si">}</span><span class="s2"> cannot exceed the number of examples N=</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">features</span><span class="p">)</span><span class="si">}</span><span class="s2"> passed into the estimator (knn).&quot;</span>
+            <span class="n">k</span> <span class="o">=</span> <span class="n">max_k</span>
+
+        <span class="c1"># Fit knn estimator on the features if a non-fitted estimator is passed in</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">knn</span><span class="o">.</span><span class="n">kneighbors</span><span class="p">(</span><span class="n">features</span><span class="p">)</span>
+        <span class="k">except</span> <span class="n">NotFittedError</span><span class="p">:</span>
+            <span class="n">knn</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">features</span><span class="p">)</span>
+
+        <span class="c1"># Get distances to k-nearest neighbors Note that the knn object contains the specification of distance metric</span>
+        <span class="c1"># and n_neighbors (k value) If our query set of features matches the training set used to fit knn, the nearest</span>
+        <span class="c1"># neighbor of each point is the point itself, at a distance of zero.</span>
+        <span class="n">distances</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">knn</span><span class="o">.</span><span class="n">kneighbors</span><span class="p">(</span><span class="n">features</span><span class="p">)</span>
+
+        <span class="c1"># Calculate average distance to k-nearest neighbors</span>
+        <span class="n">avg_knn_distances</span> <span class="o">=</span> <span class="n">distances</span><span class="p">[:,</span> <span class="p">:</span><span class="n">k</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s2">&quot;scaling_factor&quot;</span><span class="p">]</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s2">&quot;scaling_factor&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span>
+                <span class="nb">max</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">median</span><span class="p">(</span><span class="n">avg_knn_distances</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">finfo</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float_</span><span class="p">)</span><span class="o">.</span><span class="n">eps</span><span class="p">)</span>
             <span class="p">)</span>
+        <span class="n">scaling_factor</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s2">&quot;scaling_factor&quot;</span><span class="p">]</span>
 
-        <span class="k">if</span> <span class="n">features</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">3</span><span class="p">:</span>  <span class="c1"># use euclidean distance for lower dimensional spaces</span>
-            <span class="n">metric</span> <span class="o">=</span> <span class="s2">&quot;cosine&quot;</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">metric</span> <span class="o">=</span> <span class="s2">&quot;euclidean&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">scaling_factor</span><span class="p">,</span> <span class="nb">float</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Scaling factor must be a float. Got </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">scaling_factor</span><span class="p">)</span><span class="si">}</span><span class="s2"> instead.&quot;</span><span class="p">)</span>
 
-        <span class="n">knn</span> <span class="o">=</span> <span class="n">NearestNeighbors</span><span class="p">(</span><span class="n">n_neighbors</span><span class="o">=</span><span class="n">k</span><span class="p">,</span> <span class="n">metric</span><span class="o">=</span><span class="n">metric</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">features</span><span class="p">)</span>
-        <span class="n">features</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># features should be None in knn.kneighbors(features) to avoid counting duplicate data points</span>
-
-    <span class="k">elif</span> <span class="n">k</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">k</span> <span class="o">=</span> <span class="n">knn</span><span class="o">.</span><span class="n">n_neighbors</span>
-
-    <span class="n">max_k</span> <span class="o">=</span> <span class="n">knn</span><span class="o">.</span><span class="n">n_neighbors</span>  <span class="c1"># number of neighbors previously used in NearestNeighbors object</span>
-    <span class="k">if</span> <span class="n">k</span> <span class="o">&gt;</span> <span class="n">max_k</span><span class="p">:</span>  <span class="c1"># if k provided is too high, use max possible number of nearest neighbors</span>
-        <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
-            <span class="sa">f</span><span class="s2">&quot;Chosen k=</span><span class="si">{</span><span class="n">k</span><span class="si">}</span><span class="s2"> cannot be greater than n_neighbors=</span><span class="si">{</span><span class="n">max_k</span><span class="si">}</span><span class="s2"> which was used when fitting &quot;</span>
-            <span class="sa">f</span><span class="s2">&quot;NearestNeighbors object! Value of k changed to k=</span><span class="si">{</span><span class="n">max_k</span><span class="si">}</span><span class="s2">.&quot;</span><span class="p">,</span>
-            <span class="ne">UserWarning</span><span class="p">,</span>
+        <span class="n">ood_features_scores</span> <span class="o">=</span> <span class="n">transform_distances_to_scores</span><span class="p">(</span>
+            <span class="n">avg_knn_distances</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="n">scaling_factor</span><span class="o">=</span><span class="n">scaling_factor</span>
         <span class="p">)</span>
-        <span class="n">k</span> <span class="o">=</span> <span class="n">max_k</span>
-
-    <span class="c1"># Fit knn estimator on the features if a non-fitted estimator is passed in</span>
-    <span class="k">try</span><span class="p">:</span>
-        <span class="n">knn</span><span class="o">.</span><span class="n">kneighbors</span><span class="p">(</span><span class="n">features</span><span class="p">)</span>
-    <span class="k">except</span> <span class="n">NotFittedError</span><span class="p">:</span>
-        <span class="n">knn</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">features</span><span class="p">)</span>
-
-    <span class="c1"># Get distances to k-nearest neighbors Note that the knn object contains the specification of distance metric</span>
-    <span class="c1"># and n_neighbors (k value) If our query set of features matches the training set used to fit knn, the nearest</span>
-    <span class="c1"># neighbor of each point is the point itself, at a distance of zero.</span>
-    <span class="n">distances</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">knn</span><span class="o">.</span><span class="n">kneighbors</span><span class="p">(</span><span class="n">features</span><span class="p">)</span>
-
-    <span class="n">ood_features_scores</span> <span class="o">=</span> <span class="n">transform_distances_to_scores</span><span class="p">(</span><span class="n">distances</span><span class="p">,</span> <span class="n">cast</span><span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="n">k</span><span class="p">),</span> <span class="n">t</span><span class="p">)</span>
-    <span class="k">return</span> <span class="p">(</span><span class="n">ood_features_scores</span><span class="p">,</span> <span class="n">knn</span><span class="p">)</span>
+        <span class="k">return</span> <span class="p">(</span><span class="n">ood_features_scores</span><span class="p">,</span> <span class="n">knn</span><span class="p">)</span></div>
 
 
 <span class="k">def</span> <span class="nf">_get_ood_predictions_scores</span><span class="p">(</span>
