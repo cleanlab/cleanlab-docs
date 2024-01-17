@@ -239,6 +239,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../internal/issue_manager/imbalance.html">imbalance</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../internal/issue_manager/underperforming_group.html">underperforming_group</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../internal/issue_manager/null.html">null</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../internal/issue_manager/data_valuation.html">data_valuation</a></li>
 <li class="toctree-l4 has-children"><a class="reference internal" href="../internal/issue_manager/regression/index.html">regression</a><input class="toctree-checkbox" id="toctree-checkbox-6" name="toctree-checkbox-6" role="switch" type="checkbox"/><label for="toctree-checkbox-6"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l5"><a class="reference internal" href="../internal/issue_manager/regression/label.html">label</a></li>
 </ul>
@@ -649,6 +650,12 @@ equals the average of the individual examples’ quality scores.</p>
 <p>Presence of null examples in the dataset can lead to errors when training ML models. It can also
 result in the model learning incorrect patterns due to the null values.</p>
 </section>
+<section id="data-valuation-issue">
+<h3>Data Valuation Issue<a class="headerlink" href="#data-valuation-issue" title="Permalink to this heading">#</a></h3>
+<p>The examples in the dataset with lowest data valuation scores contribute least to a trained ML model’s performance (those whose value falls below a threshold are flagged with this type of issue).</p>
+<p>Data valuation issues can only be detected based on a provided <code class="xref py py-obj docutils literal notranslate"><span class="pre">knn_graph`</span></code> (or one pre-computed during the computation of other issue types).  If you do not provide this argument and there isn’t a <code class="xref py py-obj docutils literal notranslate"><span class="pre">knn_graph</span></code> already stored in the Datalab object, this type of issue will not be considered.</p>
+<p>The data valuation score is an approximate Data Shapley value, calculated based on the labels of the top k nearest neighbors of an example. The details of this KNN-Shapley value could be found in the papers: <a class="reference external" href="https://arxiv.org/abs/1908.08619">Efficient Task-Specific Data Valuation for Nearest Neighbor Algorithms</a> and <a class="reference external" href="https://arxiv.org/abs/1911.07128">Scalability vs. Utility: Do We Have to Sacrifice One for the Other in Data Importance Quantification?</a>.</p>
+</section>
 </section>
 <section id="optional-issue-parameters">
 <h2>Optional Issue Parameters<a class="headerlink" href="#optional-issue-parameters" title="Permalink to this heading">#</a></h2>
@@ -789,6 +796,19 @@ Appropriate defaults are used for any parameters you do not specify, so no need 
 <p>For more information, view the source code of:  <a class="reference internal" href="../internal/issue_manager/null.html#cleanlab.datalab.internal.issue_manager.null.NullIssueManager" title="cleanlab.datalab.internal.issue_manager.null.NullIssueManager"><code class="xref py py-class docutils literal notranslate"><span class="pre">datalab.internal.issue_manager.null.NullIssueManager</span></code></a>.</p>
 </div>
 </section>
+<section id="data-valuation-issue-parameters">
+<h3>Data Valuation Issue Parameters<a class="headerlink" href="#data-valuation-issue-parameters" title="Permalink to this heading">#</a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">data_valuation_kwargs</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;k&quot;</span><span class="p">:</span> <span class="c1"># Number of nearest neighbors used to calculate data valuation scores,</span>
+    <span class="s2">&quot;threshold&quot;</span><span class="p">:</span> <span class="c1"># Examples with scores below this  threshold will be flagged with a data valuation issue</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>For more information, view the source code of:  <a class="reference internal" href="../internal/issue_manager/data_valuation.html#cleanlab.datalab.internal.issue_manager.data_valuation.DataValuationIssueManager" title="cleanlab.datalab.internal.issue_manager.data_valuation.DataValuationIssueManager"><code class="xref py py-class docutils literal notranslate"><span class="pre">datalab.internal.issue_manager.data_valuation.DataValuationIssueManager</span></code></a>.</p>
+</div>
+</section>
 <section id="image-issue-parameters">
 <h3>Image Issue Parameters<a class="headerlink" href="#image-issue-parameters" title="Permalink to this heading">#</a></h3>
 <p>To customize optional parameters for specific image issue types, you can provide a dictionary format corresponding to each image issue. The following codeblock demonstrates how to specify optional parameters for all image issues. However, it’s important to note that providing optional parameters for specific image issues is not mandatory. If no specific parameters are provided, defaults will be used for those issues.</p>
@@ -896,6 +916,7 @@ Appropriate defaults are used for any parameters you do not specify, so no need 
 <li><a class="reference internal" href="#image-specific-issues">Image-specific Issues</a></li>
 <li><a class="reference internal" href="#underperforming-group-issue">Underperforming Group Issue</a></li>
 <li><a class="reference internal" href="#null-issue">Null Issue</a></li>
+<li><a class="reference internal" href="#data-valuation-issue">Data Valuation Issue</a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#optional-issue-parameters">Optional Issue Parameters</a><ul>
@@ -906,6 +927,7 @@ Appropriate defaults are used for any parameters you do not specify, so no need 
 <li><a class="reference internal" href="#imbalance-issue-parameters">Imbalance Issue Parameters</a></li>
 <li><a class="reference internal" href="#underperforming-group-issue-parameters">Underperforming Group Issue Parameters</a></li>
 <li><a class="reference internal" href="#null-issue-parameters">Null Issue Parameters</a></li>
+<li><a class="reference internal" href="#data-valuation-issue-parameters">Data Valuation Issue Parameters</a></li>
 <li><a class="reference internal" href="#image-issue-parameters">Image Issue Parameters</a></li>
 </ul>
 </li>
