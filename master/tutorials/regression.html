@@ -1104,37 +1104,37 @@ tutorial, we consider a Grades dataset, which records three exam grades and some
     <tr>
       <th>0</th>
       <td>False</td>
-      <td>0.629763</td>
+      <td>0.636197</td>
       <td>73.3</td>
-      <td>76.521450</td>
+      <td>76.499503</td>
     </tr>
     <tr>
       <th>1</th>
       <td>False</td>
-      <td>0.954607</td>
+      <td>0.843478</td>
       <td>83.8</td>
-      <td>83.547234</td>
+      <td>82.776647</td>
     </tr>
     <tr>
       <th>2</th>
-      <td>False</td>
-      <td>0.338296</td>
+      <td>True</td>
+      <td>0.350358</td>
       <td>73.5</td>
-      <td>62.754531</td>
+      <td>63.170547</td>
     </tr>
     <tr>
       <th>3</th>
       <td>False</td>
-      <td>0.619090</td>
+      <td>0.706969</td>
       <td>78.6</td>
-      <td>75.312295</td>
+      <td>75.984759</td>
     </tr>
     <tr>
       <th>4</th>
       <td>False</td>
-      <td>0.806626</td>
+      <td>0.812515</td>
       <td>74.1</td>
-      <td>75.784048</td>
+      <td>75.795928</td>
     </tr>
   </tbody>
 </table>
@@ -1166,9 +1166,9 @@ tutorial, we consider a Grades dataset, which records three exam grades and some
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-cleanlab found 113 potential label errors in the dataset.
+cleanlab found 141 potential label errors in the dataset.
 Here are indices of the top 10 most likely errors:
- [659 367  56 560 318 305 289 688 657 117]
+ [659 367  56 318 305 560 657 688 117 160]
 </pre></div></div>
 </div>
 <p>Let’s review some of the most likely label errors. To help us inspect these datapoints, we define a method to print any example from the dataset, together with its given (original) label and the suggested alternative label from cleanlab.</p>
@@ -1232,7 +1232,7 @@ Here are indices of the top 10 most likely errors:
       <td>93</td>
       <td>NaN</td>
       <td>17.4</td>
-      <td>85.2</td>
+      <td>84.1</td>
     </tr>
     <tr>
       <th>367</th>
@@ -1241,7 +1241,7 @@ Here are indices of the top 10 most likely errors:
       <td>86</td>
       <td>NaN</td>
       <td>0.0</td>
-      <td>56.5</td>
+      <td>56.7</td>
     </tr>
     <tr>
       <th>56</th>
@@ -1250,16 +1250,7 @@ Here are indices of the top 10 most likely errors:
       <td>69</td>
       <td>NaN</td>
       <td>8.9</td>
-      <td>70.8</td>
-    </tr>
-    <tr>
-      <th>560</th>
-      <td>95</td>
-      <td>0</td>
-      <td>72</td>
-      <td>NaN</td>
-      <td>0.0</td>
-      <td>55.4</td>
+      <td>71.7</td>
     </tr>
     <tr>
       <th>318</th>
@@ -1268,7 +1259,16 @@ Here are indices of the top 10 most likely errors:
       <td>98</td>
       <td>missed class frequently -10</td>
       <td>0.0</td>
-      <td>69.6</td>
+      <td>71.9</td>
+    </tr>
+    <tr>
+      <th>305</th>
+      <td>97</td>
+      <td>0</td>
+      <td>90</td>
+      <td>NaN</td>
+      <td>19.1</td>
+      <td>61.6</td>
     </tr>
   </tbody>
 </table>
@@ -1323,7 +1323,7 @@ r-squared score of original model: 0.838
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-r-squared score of cleanlab&#39;s model: 0.925
+r-squared score of cleanlab&#39;s model: 0.926
 </pre></div></div>
 </div>
 <p>We can see that the coefficient of determination (r-squared score) of the test set improved as a result of the data cleaning. Note that this will not always be the case, especially when we are evaluating on test data that are themselves noisy. The best practice is to run cleanlab to identify potential label issues and then manually review them, before blindly trusting any evaluation metrics. In particular, the most effort should be made to ensure high-quality test data, which is supposed to
