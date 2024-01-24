@@ -599,10 +599,12 @@
 <span class="sd">        Annotated boxes and class labels in the original dataset, which may contain some errors.</span>
 <span class="sd">        This is a list of ``N`` dictionaries such that ``labels[i]`` contains the given labels for the `i`-th image in the following format:</span>
 <span class="sd">        ``{&#39;bboxes&#39;: np.ndarray((L,4)), &#39;labels&#39;: np.ndarray((L,)), &#39;image_name&#39;: str}`` where ``L`` is the number of annotated bounding boxes</span>
-<span class="sd">        for the `i`-th image and ``bboxes[l]`` is a bounding box of coordinates in ``[x1,y1,x2,y2]`` format with given class label ``labels[j]``.</span>
+<span class="sd">        for the `i`-th image and ``bboxes[l]`` is a bounding box of coordinates in ``[x1,y1,x2,y2]`` format and with given class label ``labels[j]``.</span>
 <span class="sd">        ``image_name`` is an optional part of the labels that can be used to later refer to specific images.</span>
 
-<span class="sd">       For more information on proper labels formatting, check out the `MMDetection library &lt;https://mmdetection.readthedocs.io/en/dev-3.x/advanced_guides/customize_dataset.html&gt;`_.</span>
+<span class="sd">        Note: Here, ``(x1,y1)`` corresponds to the top-left and ``(x2,y2)`` corresponds to the bottom-right corner of the bounding box with respect to the image matrix [e.g. `XYXY in Keras &lt;https://keras.io/api/keras_cv/bounding_box/formats/&gt;`, `Detectron 2 &lt;https://detectron2.readthedocs.io/en/latest/modules/utils.html#detectron2.utils.visualizer.Visualizer.draw_box&gt;`].</span>
+
+<span class="sd">        For more information on proper labels formatting, check out the `MMDetection library &lt;https://mmdetection.readthedocs.io/en/dev-3.x/advanced_guides/customize_dataset.html&gt;`_.</span>
 
 <span class="sd">    predictions:</span>
 <span class="sd">        Predictions output by a trained object detection model.</span>
@@ -610,10 +612,9 @@
 <span class="sd">        This is a list of ``N`` ``np.ndarray`` such that ``predictions[i]`` corresponds to the model prediction for the `i`-th image.</span>
 <span class="sd">        For each possible class ``k`` in 0, 1, ..., K-1: ``predictions[i][k]`` is a ``np.ndarray`` of shape ``(M,5)``,</span>
 <span class="sd">        where ``M`` is the number of predicted bounding boxes for class ``k``. Here the five columns correspond to ``[x1,y1,x2,y2,pred_prob]``,</span>
-<span class="sd">        where ``[x1,y1,x2,y2]`` are coordinates of the bounding box predicted by the model</span>
-<span class="sd">        and ``pred_prob`` is the model&#39;s confidence in the predicted class label for this bounding box.</span>
+<span class="sd">        where ``[x1,y1,x2,y2]`` are coordinates of the bounding box predicted by the model and ``pred_prob`` is the model&#39;s confidence in the predicted class label for this bounding box.</span>
 
-<span class="sd">        Note: Here, ``[x1,y1]`` corresponds to the coordinates of the bottom-left corner of the bounding box, while ``[x2,y2]`` corresponds to the coordinates of the top-right corner of the bounding box. The last column, pred_prob, represents the predicted probability that the bounding box contains an object of the class k.</span>
+<span class="sd">        Note: Here, ``(x1,y1)`` corresponds to the top-left and ``(x2,y2)`` corresponds to the bottom-right corner of the bounding box with respect to the image matrix [e.g. `XYXY in Keras &lt;https://keras.io/api/keras_cv/bounding_box/formats/&gt;`, `Detectron 2 &lt;https://detectron2.readthedocs.io/en/latest/modules/utils.html#detectron2.utils.visualizer.Visualizer.draw_box&gt;`]. The last column, pred_prob, represents the predicted probability that the bounding box contains an object of the class k.</span>
 
 <span class="sd">        For more information see the `MMDetection package &lt;https://github.com/open-mmlab/mmdetection&gt;`_ for an example object detection library that outputs predictions in the correct format.</span>
 

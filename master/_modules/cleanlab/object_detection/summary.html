@@ -597,7 +597,9 @@
 <span class="sd">        for the `i`-th image and ``bboxes[l]`` is a bounding box of coordinates in ``[x1,y1,x2,y2]`` format with given class label ``labels[j]``.</span>
 <span class="sd">        ``image_name`` is an optional part of the labels that can be used to later refer to specific images.</span>
 
-<span class="sd">       For more information on proper labels formatting, check out the `MMDetection library &lt;https://mmdetection.readthedocs.io/en/dev-3.x/advanced_guides/customize_dataset.html&gt;`_.</span>
+<span class="sd">        Note: Here, ``(x1,y1)`` corresponds to the top-left and ``(x2,y2)`` corresponds to the bottom-right corner of the bounding box with respect to the image matrix [e.g. `XYXY in Keras &lt;https://keras.io/api/keras_cv/bounding_box/formats/&gt;`, `Detectron 2 &lt;https://detectron2.readthedocs.io/en/latest/modules/utils.html#detectron2.utils.visualizer.Visualizer.draw_box&gt;`].</span>
+
+<span class="sd">        For more information on proper labels formatting, check out the `MMDetection library &lt;https://mmdetection.readthedocs.io/en/dev-3.x/advanced_guides/customize_dataset.html&gt;`_.</span>
 
 <span class="sd">    predictions :</span>
 <span class="sd">        Predictions output by a trained object detection model.</span>
@@ -608,7 +610,7 @@
 <span class="sd">        where ``[x1,y1,x2,y2]`` are coordinates of the bounding box predicted by the model</span>
 <span class="sd">        and ``pred_prob`` is the model&#39;s confidence in the predicted class label for this bounding box.</span>
 
-<span class="sd">        Note: Here, ``[x1,y1]`` corresponds to the coordinates of the bottom-left corner of the bounding box, while ``[x2,y2]`` corresponds to the coordinates of the top-right corner of the bounding box. The last column, pred_prob, represents the predicted probability that the bounding box contains an object of the class k.</span>
+<span class="sd">        Note: Here, ``(x1,y1)`` corresponds to the top-left and ``(x2,y2)`` corresponds to the bottom-right corner of the bounding box with respect to the image matrix [e.g. `XYXY in Keras &lt;https://keras.io/api/keras_cv/bounding_box/formats/&gt;`, `Detectron 2 &lt;https://detectron2.readthedocs.io/en/latest/modules/utils.html#detectron2.utils.visualizer.Visualizer.draw_box&gt;`]. The last column, pred_prob, represents the predicted probability that the bounding box contains an object of the class k.</span>
 
 <span class="sd">        For more information see the `MMDetection package &lt;https://github.com/open-mmlab/mmdetection&gt;`_ for an example object detection library that outputs predictions in the correct format.</span>
 
@@ -881,12 +883,14 @@
 <span class="sd">        The given label for a single image in the format ``{&#39;bboxes&#39;: np.ndarray((L,4)), &#39;labels&#39;: np.ndarray((L,))}`` where</span>
 <span class="sd">        ``L`` is the number of bounding boxes for the `i`-th image and ``bboxes[j]`` is in the format ``[x1,y1,x2,y2]`` with given label ``labels[j]``.</span>
 
-<span class="sd">        Note: Here, ``[x1,y1]`` corresponds to the coordinates of the bottom-left corner of the bounding box, while ``[x2,y2]`` corresponds to the coordinates of the top-right corner of the bounding box. The last column, pred_prob, represents the predicted probability that the bounding box contains an object of the class k.</span>
+<span class="sd">        Note: Here, ``(x1,y1)`` corresponds to the top-left and ``(x2,y2)`` corresponds to the bottom-right corner of the bounding box with respect to the image matrix [e.g. `XYXY in Keras &lt;https://keras.io/api/keras_cv/bounding_box/formats/&gt;`, `Detectron 2 &lt;https://detectron2.readthedocs.io/en/latest/modules/utils.html#detectron2.utils.visualizer.Visualizer.draw_box&gt;`].</span>
 
 <span class="sd">    prediction:</span>
 <span class="sd">        A prediction for a single image in the format ``np.ndarray((K,))`` and ``prediction[k]`` is of shape ``np.ndarray(N,5)``</span>
 <span class="sd">        where ``M`` is the number of predicted bounding boxes for class ``k`` and the five columns correspond to ``[x,y,x,y,pred_prob]`` where</span>
-<span class="sd">        ``[x,y,x,y]`` are the bounding box coordinates predicted by the model and ``pred_prob`` is the model&#39;s confidence in ``predictions[i]``.</span>
+<span class="sd">        ``[x1,y1,x2,y2]`` are the bounding box coordinates predicted by the model and ``pred_prob`` is the model&#39;s confidence in ``predictions[i]``.</span>
+
+<span class="sd">        Note: Here, ``(x1,y1)`` corresponds to the top-left and ``(x2,y2)`` corresponds to the bottom-right corner of the bounding box with respect to the image matrix [e.g. `XYXY in Keras &lt;https://keras.io/api/keras_cv/bounding_box/formats/&gt;`, `Detectron 2 &lt;https://detectron2.readthedocs.io/en/latest/modules/utils.html#detectron2.utils.visualizer.Visualizer.draw_box&gt;`]. The last column, pred_prob, represents the predicted probability that the bounding box contains an object of the class k.</span>
 
 <span class="sd">    prediction_threshold:</span>
 <span class="sd">        All model-predicted bounding boxes with confidence (`pred_prob`)</span>
