@@ -629,11 +629,18 @@
             <span class="p">)</span>
         <span class="c1"># If features are provided and either a custom model is used or no predictions are provided</span>
         <span class="n">use_features</span> <span class="o">=</span> <span class="n">features</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_uses_custom_model</span> <span class="ow">or</span> <span class="n">predictions</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="n">labels</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">datalab</span><span class="o">.</span><span class="n">labels</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">labels</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">):</span>
+            <span class="n">error_msg</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;Expected labels to be a numpy array of shape (n_samples,) to use with RegressionLabelIssueManager, &quot;</span>
+                <span class="sa">f</span><span class="s2">&quot;but got </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">labels</span><span class="p">)</span><span class="si">}</span><span class="s2"> instead.&quot;</span>
+            <span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="n">error_msg</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">use_features</span><span class="p">:</span>
             <span class="k">assert</span> <span class="n">features</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>  <span class="c1"># mypy won&#39;t narrow the type for some reason</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">issues</span> <span class="o">=</span> <span class="n">find_issues_with_features</span><span class="p">(</span>
                 <span class="n">features</span><span class="o">=</span><span class="n">features</span><span class="p">,</span>
-                <span class="n">y</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">datalab</span><span class="o">.</span><span class="n">labels</span><span class="p">,</span>
+                <span class="n">y</span><span class="o">=</span><span class="n">labels</span><span class="p">,</span>
                 <span class="n">cl</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">cl</span><span class="p">,</span>
                 <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>  <span class="c1"># function sanitizes kwargs</span>
             <span class="p">)</span>
@@ -644,7 +651,7 @@
             <span class="k">assert</span> <span class="n">predictions</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>  <span class="c1"># mypy won&#39;t narrow the type for some reason</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">issues</span> <span class="o">=</span> <span class="n">find_issues_with_predictions</span><span class="p">(</span>
                 <span class="n">predictions</span><span class="o">=</span><span class="n">predictions</span><span class="p">,</span>
-                <span class="n">y</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">datalab</span><span class="o">.</span><span class="n">labels</span><span class="p">,</span>
+                <span class="n">y</span><span class="o">=</span><span class="n">labels</span><span class="p">,</span>
                 <span class="o">**</span><span class="p">{</span><span class="o">**</span><span class="n">kwargs</span><span class="p">,</span> <span class="o">**</span><span class="p">{</span><span class="s2">&quot;threshold&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">threshold</span><span class="p">}},</span>  <span class="c1"># function sanitizes kwargs</span>
             <span class="p">)</span>
 

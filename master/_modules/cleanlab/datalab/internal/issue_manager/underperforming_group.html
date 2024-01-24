@@ -630,6 +630,12 @@
         <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">labels</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">datalab</span><span class="o">.</span><span class="n">labels</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">labels</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">):</span>
+            <span class="n">error_msg</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;Labels must be a numpy array of shape (n_samples,) for UnderperformingGroupIssueManager. &quot;</span>
+                <span class="sa">f</span><span class="s2">&quot;Got </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">labels</span><span class="p">)</span><span class="si">}</span><span class="s2"> instead.&quot;</span>
+            <span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="n">error_msg</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">cluster_ids</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">knn_graph</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">set_knn_graph</span><span class="p">(</span><span class="n">features</span><span class="p">,</span> <span class="n">kwargs</span><span class="p">)</span>
             <span class="n">cluster_ids</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">perform_clustering</span><span class="p">(</span><span class="n">knn_graph</span><span class="p">)</span>

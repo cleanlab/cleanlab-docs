@@ -676,6 +676,35 @@
         <span class="k">return</span> <span class="n">info</span>
 
 
+<span class="k">class</span> <span class="nc">_MultilabelInfoStrategy</span><span class="p">(</span><span class="n">_InfoStrategy</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Strategy for computing information about data issues related to multilabel tasks.&quot;&quot;&quot;</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">get_info</span><span class="p">(</span>
+        <span class="n">data</span><span class="p">:</span> <span class="n">Data</span><span class="p">,</span>
+        <span class="n">info</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]],</span>
+        <span class="n">issue_name</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+        <span class="n">info_extracted</span> <span class="o">=</span> <span class="n">_InfoStrategy</span><span class="o">.</span><span class="n">_get_info_helper</span><span class="p">(</span><span class="n">info</span><span class="o">=</span><span class="n">info</span><span class="p">,</span> <span class="n">issue_name</span><span class="o">=</span><span class="n">issue_name</span><span class="p">)</span>
+        <span class="n">info</span> <span class="o">=</span> <span class="n">info_extracted</span> <span class="k">if</span> <span class="n">info_extracted</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">info</span>
+        <span class="k">if</span> <span class="n">issue_name</span> <span class="o">==</span> <span class="s2">&quot;label&quot;</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">data</span><span class="o">.</span><span class="n">labels</span><span class="o">.</span><span class="n">is_available</span> <span class="ow">is</span> <span class="kc">False</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                    <span class="s2">&quot;The labels are not available. &quot;</span>
+                    <span class="s2">&quot;Most likely, no label column was provided when creating the Data object.&quot;</span>
+                <span class="p">)</span>
+            <span class="c1"># Labels that are stored as integers may need to be converted to strings.</span>
+            <span class="n">label_map</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">labels</span><span class="o">.</span><span class="n">label_map</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">label_map</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;The label map is not available.&quot;</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;given_label&quot;</span><span class="p">,</span> <span class="s2">&quot;predicted_label&quot;</span><span class="p">]:</span>
+                <span class="n">labels</span> <span class="o">=</span> <span class="n">info</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">labels</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="n">info</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="n">label_map</span><span class="o">.</span><span class="n">get</span><span class="p">,</span> <span class="n">label</span><span class="p">))</span> <span class="k">for</span> <span class="n">label</span> <span class="ow">in</span> <span class="n">labels</span><span class="p">]</span>
+            <span class="n">info</span><span class="p">[</span><span class="s2">&quot;class_names&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">label_map</span><span class="o">.</span><span class="n">values</span><span class="p">())</span>
+        <span class="k">return</span> <span class="n">info</span>
+
+
 <div class="viewcode-block" id="DataIssues"><a class="viewcode-back" href="../../../../cleanlab/datalab/internal/data_issues.html#cleanlab.datalab.internal.data_issues.DataIssues">[docs]</a><span class="k">class</span> <span class="nc">DataIssues</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Class that collects and stores information and statistics on issues found in a dataset.</span>

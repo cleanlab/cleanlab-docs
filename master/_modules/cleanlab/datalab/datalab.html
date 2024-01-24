@@ -640,11 +640,15 @@
         <span class="n">image_key</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">verbosity</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_validate_task</span><span class="p">(</span><span class="n">task</span><span class="p">)</span>
         <span class="c1"># Assume continuous values of labels for regression task</span>
         <span class="c1"># Map labels to integers for classification task</span>
         <span class="n">map_labels_to_int</span> <span class="o">=</span> <span class="n">task</span> <span class="o">==</span> <span class="s2">&quot;classification&quot;</span>  <span class="c1"># TODO: handle more generally</span>
+        <span class="n">is_multilabel</span> <span class="o">=</span> <span class="n">task</span> <span class="o">==</span> <span class="s2">&quot;multilabel&quot;</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">_data</span> <span class="o">=</span> <span class="n">Data</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">label_name</span><span class="p">,</span> <span class="n">map_to_int</span><span class="o">=</span><span class="n">map_labels_to_int</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_data</span> <span class="o">=</span> <span class="n">Data</span><span class="p">(</span>
+            <span class="n">data</span><span class="p">,</span> <span class="n">label_name</span><span class="p">,</span> <span class="n">map_to_int</span><span class="o">=</span><span class="n">map_labels_to_int</span><span class="p">,</span> <span class="n">is_multilabel</span><span class="o">=</span><span class="n">is_multilabel</span>
+        <span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="o">.</span><span class="n">_data</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">task</span> <span class="o">=</span> <span class="n">task</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_labels</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="o">.</span><span class="n">labels</span>
@@ -667,8 +671,15 @@
     <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">_Displayer</span><span class="p">(</span><span class="n">data_issues</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">data_issues</span><span class="p">)</span><span class="o">.</span><span class="fm">__str__</span><span class="p">()</span>
 
+    <span class="k">def</span> <span class="nf">_validate_task</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">task</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Validates the task parameter passed to the Datalab constructor.&quot;&quot;&quot;</span>
+        <span class="n">_valid_tasks</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;classification&quot;</span><span class="p">,</span> <span class="s2">&quot;regression&quot;</span><span class="p">,</span> <span class="s2">&quot;multilabel&quot;</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">task</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">_valid_tasks</span><span class="p">:</span>
+            <span class="n">error_msg</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;Invalid task: </span><span class="si">{</span><span class="n">task</span><span class="si">}</span><span class="s2">. Datalab only supports </span><span class="si">{</span><span class="n">_valid_tasks</span><span class="si">}</span><span class="s2">.&quot;</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="n">error_msg</span><span class="p">)</span>
+
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">labels</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">labels</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]]]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Labels of the dataset, in a [0, 1, ..., K-1] format.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_labels</span><span class="o">.</span><span class="n">labels</span>
 

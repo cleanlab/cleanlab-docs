@@ -749,6 +749,27 @@
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
                 <span class="s2">&quot;List of labels must be convertable to 1D numpy array via: np.ndarray(labels).&quot;</span>
             <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="labels_to_list_multilabel"><a class="viewcode-back" href="../../../cleanlab/internal/validation.html#cleanlab.internal.validation.labels_to_list_multilabel">[docs]</a><span class="k">def</span> <span class="nf">labels_to_list_multilabel</span><span class="p">(</span><span class="n">y</span><span class="p">:</span> <span class="n">List</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Converts different types of label objects to nested list and checks their validity.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    y : List</span>
+<span class="sd">        Labels to convert to nested list. Supports only list type.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    labels_list : List[List[int]]</span>
+<span class="sd">        Nested list of labels.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Unsupported Label format&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">all</span><span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="nb">list</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">y</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Each element in list of labels must be a list.&quot;</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">y</span></div>
 </pre></div> 
         </article>
       </div>

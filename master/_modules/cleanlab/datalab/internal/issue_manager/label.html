@@ -676,12 +676,20 @@
                     <span class="s2">&quot;Either pred_probs or features must be provided to find label issues.&quot;</span>
                 <span class="p">)</span>
             <span class="c1"># produce out-of-sample pred_probs from features</span>
+            <span class="n">labels</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">datalab</span><span class="o">.</span><span class="n">labels</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">labels</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">):</span>
+                <span class="n">error_msg</span> <span class="o">=</span> <span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">&quot;Expected labels to be a numpy array of shape (n_samples,) to use in LabelIssueManager, &quot;</span>
+                    <span class="sa">f</span><span class="s2">&quot;but got </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">labels</span><span class="p">)</span><span class="si">}</span><span class="s2"> instead.&quot;</span>
+                <span class="p">)</span>
+                <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="n">error_msg</span><span class="p">)</span>
+
             <span class="n">knn</span> <span class="o">=</span> <span class="n">KNeighborsClassifier</span><span class="p">(</span><span class="n">n_neighbors</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">k</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
-            <span class="n">knn</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">features</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">datalab</span><span class="o">.</span><span class="n">labels</span><span class="p">)</span>
+            <span class="n">knn</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">features</span><span class="p">,</span> <span class="n">labels</span><span class="p">)</span>
             <span class="n">pred_probs</span> <span class="o">=</span> <span class="n">knn</span><span class="o">.</span><span class="n">predict_proba</span><span class="p">(</span><span class="n">features</span><span class="p">)</span>
 
             <span class="n">encoder</span> <span class="o">=</span> <span class="n">OneHotEncoder</span><span class="p">()</span>
-            <span class="n">label_transform</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">datalab</span><span class="o">.</span><span class="n">labels</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+            <span class="n">label_transform</span> <span class="o">=</span> <span class="n">labels</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
             <span class="n">one_hot_label</span> <span class="o">=</span> <span class="n">encoder</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">label_transform</span><span class="p">)</span>
 
             <span class="c1"># adjust pred_probs so it is out-of-sample</span>

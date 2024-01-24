@@ -823,13 +823,14 @@ tagging (or document tagging), where multiple tags can be appropriate for a sing
 <div class="admonition note">
 <p class="admonition-title">Quickstart</p>
 <p>cleanlab finds label issues based on two inputs: <code class="docutils literal notranslate"><span class="pre">labels</span></code> formatted as a list of lists of integer class indices that apply to each example in your dataset, and <code class="docutils literal notranslate"><span class="pre">pred_probs</span></code> from a trained multi-label classification model (which do not need to sum to 1 since the classes are not mutually exclusive). Once you have these, run the code below to find label issues in your multi-label dataset:</p>
-<div class="markdown" style="background:white;margin:16px"><div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">cleanlab.multilabel_classification.filter</span> <span class="kn">import</span> <span class="n">find_label_issues</span>
+<div class="markdown" style="background:white;margin:16px"><div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">cleanlab</span> <span class="kn">import</span> <span class="n">Datalab</span>
 
-<span class="n">ranked_label_issues</span> <span class="o">=</span> <span class="n">find_label_issues</span><span class="p">(</span>
-    <span class="n">labels</span><span class="o">=</span><span class="n">labels</span><span class="p">,</span>
-    <span class="n">pred_probs</span><span class="o">=</span><span class="n">pred_probs</span><span class="p">,</span>
-    <span class="n">return_indices_ranked_by</span><span class="o">=</span><span class="s2">&quot;self_confidence&quot;</span><span class="p">,</span>
-<span class="p">)</span>
+<span class="c1"># Assuming your dataset has a label column named &#39;label&#39;</span>
+<span class="n">lab</span> <span class="o">=</span> <span class="n">Datalab</span><span class="p">(</span><span class="n">dataset</span><span class="p">,</span> <span class="n">label_name</span><span class="o">=</span><span class="s1">&#39;label&#39;</span><span class="p">,</span> <span class="n">task</span><span class="o">=</span><span class="s1">&#39;multilabel&#39;</span><span class="p">)</span>
+
+<span class="n">lab</span><span class="o">.</span><span class="n">find_issues</span><span class="p">(</span><span class="n">pred_probs</span><span class="o">=</span><span class="n">pred_probs</span><span class="p">,</span> <span class="n">issue_types</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;label&quot;</span><span class="p">:</span> <span class="p">{}})</span>
+
+<span class="n">ranked_label_issues</span> <span class="o">=</span> <span class="n">lab</span><span class="o">.</span><span class="n">get_issues</span><span class="p">(</span><span class="s2">&quot;label&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="s2">&quot;label_score&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -851,13 +852,11 @@ tagging (or document tagging), where multiple tags can be appropriate for a sing
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">sklearn</span>
 <span class="kn">from</span> <span class="nn">sklearn.multiclass</span> <span class="kn">import</span> <span class="n">OneVsRestClassifier</span>
-<span class="kn">from</span> <span class="nn">sklearn.multioutput</span> <span class="kn">import</span> <span class="n">MultiOutputClassifier</span>
 <span class="kn">from</span> <span class="nn">sklearn.ensemble</span> <span class="kn">import</span> <span class="n">RandomForestClassifier</span>
 <span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="kn">import</span> <span class="n">StratifiedKFold</span>
 <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
 
-<span class="kn">from</span> <span class="nn">cleanlab.multilabel_classification.filter</span> <span class="kn">import</span> <span class="n">find_label_issues</span>
-<span class="kn">from</span> <span class="nn">cleanlab.multilabel_classification.rank</span> <span class="kn">import</span> <span class="n">get_label_quality_scores</span>
+<span class="kn">from</span> <span class="nn">cleanlab</span> <span class="kn">import</span> <span class="n">Datalab</span>
 <span class="kn">from</span> <span class="nn">cleanlab.internal.multilabel_utils</span> <span class="kn">import</span> <span class="n">int2onehot</span><span class="p">,</span> <span class="n">onehot2int</span>
 </pre></div>
 </div>
@@ -1033,7 +1032,7 @@ tagging (or document tagging), where multiple tags can be appropriate for a sing
 <p><code class="docutils literal notranslate"><span class="pre">pred_probs</span></code> should be 2D array whose rows are length-<em>K</em> vectors for <strong>each</strong> example in the dataset, representing the model-estimated probability that this example belongs to each class. Since one example can belong to multiple classes in multi-label classification, these probabilities need not sum to 1. For the best label error detection performance, these <code class="docutils literal notranslate"><span class="pre">pred_probs</span></code> should be out-of-sample (from a copy of the model that never saw this example during training, e.g. produced via
 cross-validation).</p>
 <p><code class="docutils literal notranslate"><span class="pre">labels</span></code> should be a list of lists, whose <em>i</em>-th entry is a list of (integer) class indices that apply to the <em>i</em>-th example in the dataset. If your classes are represented as string names, you should map these to integer indices. The label for an example that belongs to none of the classes should just be an empty list <code class="docutils literal notranslate"><span class="pre">[]</span></code>.</p>
-<p>Once you have <code class="docutils literal notranslate"><span class="pre">pred_probs</span></code> and <code class="docutils literal notranslate"><span class="pre">labels</span></code> appropriately formatted, you can find/analyze label issues in any multi-label dataset via methods from the <code class="docutils literal notranslate"><span class="pre">cleanlab.multilabel_classification</span></code> module!</p>
+<p>Once you have <code class="docutils literal notranslate"><span class="pre">pred_probs</span></code> and <code class="docutils literal notranslate"><span class="pre">labels</span></code> appropriately formatted, you can find/analyze label issues in any multi-label dataset via <code class="docutils literal notranslate"><span class="pre">Datalab</span></code>!</p>
 <p>Here’s what these look like for the first few examples in our synthetic multi-label dataset:</p>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
@@ -1064,17 +1063,49 @@ pred_probs for first 3 examples in format expected by cleanlab:
 </section>
 <section id="3.-Use-cleanlab-to-find-label-issues">
 <h2>3. Use cleanlab to find label issues<a class="headerlink" href="#3.-Use-cleanlab-to-find-label-issues" title="Permalink to this heading">#</a></h2>
-<p>Based on the given <code class="docutils literal notranslate"><span class="pre">labels</span></code> and <code class="docutils literal notranslate"><span class="pre">pred_probs</span></code> from a trained model, cleanlab can quickly help us find label errors in our dataset. Here we request that the indices of the examples identified with label issues be sorted by cleanlab’s self-confidence score, which is used to measure the quality of individual labels. The returned <code class="docutils literal notranslate"><span class="pre">issues</span></code> are a list of indices corresponding to the examples in your dataset that cleanlab finds most likely to be mislabeled. These indices are sorted by the
-<em>self-confidence</em> label quality score, with the lowest quality labels at the start.</p>
+<p>Based on the given <code class="docutils literal notranslate"><span class="pre">labels</span></code> and <code class="docutils literal notranslate"><span class="pre">pred_probs</span></code> from a trained model, cleanlab can quickly help us find label errors in our dataset.</p>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">issues</span> <span class="o">=</span> <span class="n">find_label_issues</span><span class="p">(</span>
-    <span class="n">labels</span><span class="o">=</span><span class="n">labels</span><span class="p">,</span>
-    <span class="n">pred_probs</span><span class="o">=</span><span class="n">pred_probs</span><span class="p">,</span>
-    <span class="n">return_indices_ranked_by</span><span class="o">=</span><span class="s2">&quot;self_confidence&quot;</span><span class="p">,</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">lab</span> <span class="o">=</span> <span class="n">Datalab</span><span class="p">(</span>
+    <span class="n">data</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;labels&quot;</span><span class="p">:</span> <span class="n">labels</span><span class="p">},</span>
+    <span class="n">label_name</span><span class="o">=</span><span class="s2">&quot;labels&quot;</span><span class="p">,</span>
+    <span class="n">task</span><span class="o">=</span><span class="s2">&quot;multilabel&quot;</span><span class="p">,</span>
 <span class="p">)</span>
+
+<span class="n">lab</span><span class="o">.</span><span class="n">find_issues</span><span class="p">(</span>
+    <span class="n">pred_probs</span><span class="o">=</span><span class="n">pred_probs</span><span class="p">,</span>
+    <span class="n">issue_types</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;label&quot;</span><span class="p">:</span> <span class="p">{}}</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Finding label issues ...
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+
+Audit complete. 30 issues found in the dataset.
+</pre></div></div>
+</div>
+<p>Here we request that the indices of the examples identified with label issues be sorted by cleanlab’s self-confidence score, which is used to measure the quality of individual labels. The returned <code class="docutils literal notranslate"><span class="pre">issues</span></code> are a list of indices corresponding to the examples in your dataset that cleanlab finds most likely to be mislabeled. These indices are sorted by the <em>self-confidence</em> label quality score, with the lowest quality labels at the start.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">label_issues</span> <span class="o">=</span> <span class="n">lab</span><span class="o">.</span><span class="n">get_issues</span><span class="p">(</span><span class="s2">&quot;label&quot;</span><span class="p">)</span>
+
+<span class="n">issues</span> <span class="o">=</span> <span class="n">label_issues</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s2">&quot;is_label_issue&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="s2">&quot;label_score&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">values</span>
 
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Indices of examples with label issues:</span><span class="se">\n</span><span class="si">{</span><span class="n">issues</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 </pre></div>
@@ -1092,7 +1123,7 @@ Indices of examples with label issues:
 </div>
 <p>Let’s look at the samples that cleanlab thinks are most likely to be mislabeled. You can see that cleanlab was able to identify most of <code class="docutils literal notranslate"><span class="pre">true_errors</span></code> in our small dataset (despite not having access to this variable, which you won’t have in your own applications).</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">plot_data</span><span class="p">(</span><span class="n">dataset</span><span class="p">[</span><span class="s1">&#39;X_train&#39;</span><span class="p">],</span> <span class="n">circles</span><span class="o">=</span><span class="n">issues</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;Inferred label issues in multi-label dataset with </span><span class="si">{</span><span class="n">num_class</span><span class="si">}</span><span class="s2"> classes&quot;</span><span class="p">,</span> <span class="n">colors</span> <span class="o">=</span> <span class="n">get_color_array</span><span class="p">(</span><span class="n">labels</span><span class="p">),</span> <span class="n">alpha</span> <span class="o">=</span> <span class="mi">1</span><span class="p">)</span>
@@ -1103,17 +1134,17 @@ Indices of examples with label issues:
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/tutorials_multilabel_classification_17_0.png" src="../_images/tutorials_multilabel_classification_17_0.png" />
+<img alt="../_images/tutorials_multilabel_classification_19_0.png" src="../_images/tutorials_multilabel_classification_19_0.png" />
 </div>
 </div>
 <section id="Label-quality-scores">
 <h3>Label quality scores<a class="headerlink" href="#Label-quality-scores" title="Permalink to this heading">#</a></h3>
-<p>The above code identifies which examples have label issues and sorts them by their label quality score. We can also directly compute this label quality score for each example in the dataset, which estimates our confidence that this example has been correctly labeled. These scores range between 0 and 1 with smaller values indicating examples whose label seems more suspect.</p>
+<p>The above code identifies which examples have label issues and sorts them by their label quality score. We can also take a look at this label quality score for each example in the dataset, which estimates our confidence that this example has been correctly labeled. These scores range between 0 and 1 with smaller values indicating examples whose label seems more suspect.</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">scores</span> <span class="o">=</span> <span class="n">get_label_quality_scores</span><span class="p">(</span><span class="n">labels</span><span class="p">,</span> <span class="n">pred_probs</span><span class="p">)</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">scores</span> <span class="o">=</span> <span class="n">label_issues</span><span class="p">[</span><span class="s2">&quot;label_score&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span>
 
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Label quality scores of the first 10 examples in dataset:</span><span class="se">\n</span><span class="si">{</span><span class="n">scores</span><span class="p">[:</span><span class="mi">10</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 </pre></div>
@@ -1128,13 +1159,12 @@ Label quality scores of the first 10 examples in dataset:
 [1.     0.888  0.8224 0.9632 0.968  0.6512 0.0444 1.     0.76   0.774 ]
 </pre></div></div>
 </div>
-<p><strong>Note:</strong> For multi-label data, make sure to use the versions of <code class="docutils literal notranslate"><span class="pre">find_label_issues()</span></code> and <code class="docutils literal notranslate"><span class="pre">get_label_quality_scores()</span></code> from the <code class="docutils literal notranslate"><span class="pre">cleanlab.multilabel_classification</span></code> module. There exist other versions of these methods for other types of data.</p>
 </section>
 <section id="How-to-format-labels-given-as-a-one-hot-(multi-hot)-binary-matrix?">
 <h3>How to format labels given as a one-hot (multi-hot) binary matrix?<a class="headerlink" href="#How-to-format-labels-given-as-a-one-hot-(multi-hot)-binary-matrix?" title="Permalink to this heading">#</a></h3>
 <p>For multi-label classification, cleanlab expects labels to be formatted as a list of lists, where each entry is an integer corresponding to a particular class. Here are some functions you can use to easily convert labels between this format and a binary matrix format commonly used to train multi-label classification models.</p>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">labels_binary_format</span> <span class="o">=</span> <span class="n">int2onehot</span><span class="p">(</span><span class="n">labels</span><span class="p">,</span> <span class="n">K</span><span class="o">=</span><span class="n">num_class</span><span class="p">)</span>
