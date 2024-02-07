@@ -592,6 +592,7 @@
         <span class="n">verbosity</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
         <span class="n">include_description</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
         <span class="n">show_summary_score</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="n">show_all_issues</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
         <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
     <span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">data_issues</span> <span class="o">=</span> <span class="n">data_issues</span>
@@ -599,6 +600,20 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">verbosity</span> <span class="o">=</span> <span class="n">verbosity</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">include_description</span> <span class="o">=</span> <span class="n">include_description</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">show_summary_score</span> <span class="o">=</span> <span class="n">show_summary_score</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">show_all_issues</span> <span class="o">=</span> <span class="n">show_all_issues</span>
+
+    <span class="k">def</span> <span class="nf">_get_empty_report</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;This method is used to return a report when there are</span>
+<span class="sd">        no issues found in the data with Datalab.find_issues().</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">report_str</span> <span class="o">=</span> <span class="s2">&quot;No issues found in the data. Good job!&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">show_summary_score</span><span class="p">:</span>
+            <span class="n">recommendation_msg</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="s2">&quot;Try re-running Datalab.report() with &quot;</span>
+                <span class="s2">&quot;`show_summary_score = True` and `show_all_issues = True`.&quot;</span>
+            <span class="p">)</span>
+            <span class="n">report_str</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n\n</span><span class="si">{</span><span class="n">recommendation_msg</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="k">return</span> <span class="n">report_str</span>
 
 <div class="viewcode-block" id="Reporter.report"><a class="viewcode-back" href="../../../../cleanlab/datalab/internal/report.html#cleanlab.datalab.internal.report.Reporter.report">[docs]</a>    <span class="k">def</span> <span class="nf">report</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">num_examples</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Prints a report about identified issues in the data.</span>
@@ -633,10 +648,27 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">report_str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
         <span class="n">issue_summary</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data_issues</span><span class="o">.</span><span class="n">issue_summary</span>
+        <span class="n">should_return_empty_report</span> <span class="o">=</span> <span class="ow">not</span> <span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">show_all_issues</span> <span class="ow">or</span> <span class="n">issue_summary</span><span class="o">.</span><span class="n">empty</span> <span class="ow">or</span> <span class="n">issue_summary</span><span class="p">[</span><span class="s2">&quot;num_issues&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span> <span class="o">&gt;</span> <span class="mi">0</span>
+        <span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">should_return_empty_report</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_empty_report</span><span class="p">()</span>
         <span class="n">issue_summary_sorted</span> <span class="o">=</span> <span class="n">issue_summary</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="n">by</span><span class="o">=</span><span class="s2">&quot;num_issues&quot;</span><span class="p">,</span> <span class="n">ascending</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
         <span class="n">report_str</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_write_summary</span><span class="p">(</span><span class="n">summary</span><span class="o">=</span><span class="n">issue_summary_sorted</span><span class="p">)</span>
 
         <span class="n">issue_types</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_issue_types</span><span class="p">(</span><span class="n">issue_summary_sorted</span><span class="p">)</span>
+
+        <span class="k">def</span> <span class="nf">add_issue_to_report</span><span class="p">(</span><span class="n">issue_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">            </span><span class="sd">&quot;&quot;&quot;Returns True if the issue should be added to the report.</span>
+<span class="sd">            It is excluded if show_all_issues is False and there are no issues of that type</span>
+<span class="sd">            found in the data.</span>
+<span class="sd">            &quot;&quot;&quot;</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">show_all_issues</span><span class="p">:</span>
+                <span class="k">return</span> <span class="kc">True</span>
+            <span class="n">summary</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data_issues</span><span class="o">.</span><span class="n">get_issue_summary</span><span class="p">(</span><span class="n">issue_name</span><span class="o">=</span><span class="n">issue_name</span><span class="p">)</span>
+            <span class="n">has_issues</span> <span class="o">=</span> <span class="n">summary</span><span class="p">[</span><span class="s2">&quot;num_issues&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">0</span>
+            <span class="k">return</span> <span class="n">has_issues</span>
 
         <span class="n">issue_reports</span> <span class="o">=</span> <span class="p">[</span>
             <span class="n">_IssueManagerFactory</span><span class="o">.</span><span class="n">from_str</span><span class="p">(</span><span class="n">issue_type</span><span class="o">=</span><span class="n">key</span><span class="p">,</span> <span class="n">task</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">task</span><span class="p">)</span><span class="o">.</span><span class="n">report</span><span class="p">(</span>
@@ -683,8 +715,11 @@
     <span class="k">def</span> <span class="nf">_get_issue_types</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">issue_summary</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
         <span class="n">issue_types</span> <span class="o">=</span> <span class="p">[</span>
             <span class="n">issue_type</span>
-            <span class="k">for</span> <span class="n">issue_type</span> <span class="ow">in</span> <span class="n">issue_summary</span><span class="p">[</span><span class="s2">&quot;issue_type&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+            <span class="k">for</span> <span class="n">issue_type</span><span class="p">,</span> <span class="n">num_issues</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span>
+                <span class="n">issue_summary</span><span class="p">[</span><span class="s2">&quot;issue_type&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">(),</span> <span class="n">issue_summary</span><span class="p">[</span><span class="s2">&quot;num_issues&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+            <span class="p">)</span>
             <span class="k">if</span> <span class="n">issue_type</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">DEFAULT_CLEANVISION_ISSUES</span>
+            <span class="ow">and</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">show_all_issues</span> <span class="ow">or</span> <span class="n">num_issues</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span>
         <span class="p">]</span>
         <span class="k">return</span> <span class="n">issue_types</span></div>
 </pre></div> 
