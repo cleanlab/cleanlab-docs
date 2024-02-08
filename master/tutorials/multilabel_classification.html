@@ -576,15 +576,15 @@
 tagging (or document tagging), where multiple tags can be appropriate for a single image (or document). For example, a image tagging application could involve the following classes: [<code class="docutils literal notranslate"><span class="pre">copyrighted</span></code>, <code class="docutils literal notranslate"><span class="pre">advertisement</span></code>, <code class="docutils literal notranslate"><span class="pre">face</span></code>, <code class="docutils literal notranslate"><span class="pre">violence</span></code>, <code class="docutils literal notranslate"><span class="pre">nsfw</span></code>]</p>
 <div class="admonition note">
 <p class="admonition-title">Quickstart</p>
-<p>cleanlab finds label issues based on two inputs: <code class="docutils literal notranslate"><span class="pre">labels</span></code> formatted as a list of lists of integer class indices that apply to each example in your dataset, and <code class="docutils literal notranslate"><span class="pre">pred_probs</span></code> from a trained multi-label classification model (which do not need to sum to 1 since the classes are not mutually exclusive). Once you have these, run the code below to find label issues in your multi-label dataset:</p>
+<p>cleanlab finds data/label issues based on two inputs: <code class="docutils literal notranslate"><span class="pre">labels</span></code> formatted as a list of lists of integer class indices that apply to each example in your dataset, and <code class="docutils literal notranslate"><span class="pre">pred_probs</span></code> from a trained multi-label classification model (which do not need to sum to 1 since the classes are not mutually exclusive). Once you have these, run the code below to find issues in your multi-label dataset:</p>
 <div class="markdown" style="background:white;margin:16px"><div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">cleanlab</span> <span class="kn">import</span> <span class="n">Datalab</span>
 
 <span class="c1"># Assuming your dataset has a label column named &#39;label&#39;</span>
 <span class="n">lab</span> <span class="o">=</span> <span class="n">Datalab</span><span class="p">(</span><span class="n">dataset</span><span class="p">,</span> <span class="n">label_name</span><span class="o">=</span><span class="s1">&#39;label&#39;</span><span class="p">,</span> <span class="n">task</span><span class="o">=</span><span class="s1">&#39;multilabel&#39;</span><span class="p">)</span>
+<span class="c1"># To detect more issue types, optionally supply `features` (numeric dataset values or model embeddings of the data)</span>
+<span class="n">lab</span><span class="o">.</span><span class="n">find_issues</span><span class="p">(</span><span class="n">pred_probs</span><span class="o">=</span><span class="n">pred_probs</span><span class="p">,</span> <span class="n">features</span><span class="o">=</span><span class="n">features</span><span class="p">)</span>
 
-<span class="n">lab</span><span class="o">.</span><span class="n">find_issues</span><span class="p">(</span><span class="n">pred_probs</span><span class="o">=</span><span class="n">pred_probs</span><span class="p">,</span> <span class="n">issue_types</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;label&quot;</span><span class="p">:</span> <span class="p">{}})</span>
-
-<span class="n">ranked_label_issues</span> <span class="o">=</span> <span class="n">lab</span><span class="o">.</span><span class="n">get_issues</span><span class="p">(</span><span class="s2">&quot;label&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="s2">&quot;label_score&quot;</span><span class="p">)</span>
+<span class="n">lab</span><span class="o">.</span><span class="n">report</span><span class="p">()</span>
 </pre></div>
 </div>
 </div>
@@ -913,6 +913,8 @@ Label quality scores of the first 10 examples in dataset:
 [1.     0.888  0.8224 0.9632 0.968  0.6512 0.0444 1.     0.76   0.774 ]
 </pre></div></div>
 </div>
+<p>While this tutorial focused on label issues, cleanlab’s <code class="docutils literal notranslate"><span class="pre">Datalab</span></code> object can automatically detect many other types of issues in your dataset (outliers, near duplicates, etc). Simply remove the <code class="docutils literal notranslate"><span class="pre">issue_types</span></code> argument from the above call to <code class="docutils literal notranslate"><span class="pre">Datalab.find_issues()</span></code> above and <code class="docutils literal notranslate"><span class="pre">Datalab</span></code> will more comprehensively audit your dataset. Refer to our <a class="reference external" href="./datalab/datalab_quickstart.html">Datalab quickstart tutorial</a> to learn how to interpret the results (the interpretation remains mostly the same
+across different types of ML tasks).</p>
 </section>
 <section id="How-to-format-labels-given-as-a-one-hot-(multi-hot)-binary-matrix?">
 <h3>How to format labels given as a one-hot (multi-hot) binary matrix?<a class="headerlink" href="#How-to-format-labels-given-as-a-one-hot-(multi-hot)-binary-matrix?" title="Permalink to this heading">#</a></h3>
