@@ -591,10 +591,20 @@
     <span class="s2">&quot;class_imbalance&quot;</span><span class="p">:</span> <span class="p">[],</span>
     <span class="s2">&quot;null&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;features&quot;</span><span class="p">],</span>
 <span class="p">}</span>
-<span class="n">_REGRESSION_ARGS_DICT</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;label&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;features&quot;</span><span class="p">,</span> <span class="s2">&quot;predictions&quot;</span><span class="p">]}</span>
+<span class="n">_REGRESSION_ARGS_DICT</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;label&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;features&quot;</span><span class="p">,</span> <span class="s2">&quot;predictions&quot;</span><span class="p">],</span>
+    <span class="s2">&quot;outlier&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;features&quot;</span><span class="p">,</span> <span class="s2">&quot;knn_graph&quot;</span><span class="p">],</span>
+    <span class="s2">&quot;near_duplicate&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;features&quot;</span><span class="p">,</span> <span class="s2">&quot;knn_graph&quot;</span><span class="p">],</span>
+    <span class="s2">&quot;non_iid&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;features&quot;</span><span class="p">,</span> <span class="s2">&quot;knn_graph&quot;</span><span class="p">],</span>
+    <span class="s2">&quot;null&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;features&quot;</span><span class="p">],</span>
+<span class="p">}</span>
 
 <span class="n">_MULTILABEL_ARGS_DICT</span> <span class="o">=</span> <span class="p">{</span>
     <span class="s2">&quot;label&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;pred_probs&quot;</span><span class="p">],</span>
+    <span class="s2">&quot;outlier&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;features&quot;</span><span class="p">,</span> <span class="s2">&quot;knn_graph&quot;</span><span class="p">],</span>
+    <span class="s2">&quot;near_duplicate&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;features&quot;</span><span class="p">,</span> <span class="s2">&quot;knn_graph&quot;</span><span class="p">],</span>
+    <span class="s2">&quot;non_iid&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;features&quot;</span><span class="p">,</span> <span class="s2">&quot;knn_graph&quot;</span><span class="p">],</span>
+    <span class="s2">&quot;null&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;features&quot;</span><span class="p">],</span>
 <span class="p">}</span>
 
 
@@ -655,8 +665,12 @@
     <span class="n">args_dict</span> <span class="o">=</span> <span class="p">{</span>
         <span class="n">k</span><span class="p">:</span> <span class="p">{</span><span class="n">k2</span><span class="p">:</span> <span class="n">v2</span> <span class="k">for</span> <span class="n">k2</span><span class="p">,</span> <span class="n">v2</span> <span class="ow">in</span> <span class="n">v</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="k">if</span> <span class="n">v2</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">}</span>
         <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">args_dict</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
-        <span class="k">if</span> <span class="n">v</span> <span class="ow">or</span> <span class="n">k</span> <span class="o">==</span> <span class="s2">&quot;label&quot;</span> <span class="ow">or</span> <span class="n">keep_empty_argument</span><span class="p">(</span><span class="n">k</span><span class="p">)</span>  <span class="c1"># Allow label issues to require no arguments</span>
+        <span class="k">if</span> <span class="n">v</span> <span class="ow">or</span> <span class="n">keep_empty_argument</span><span class="p">(</span><span class="n">k</span><span class="p">)</span>
     <span class="p">}</span>
+
+    <span class="c1"># Only keep issue types that have at least one argument</span>
+    <span class="c1"># or those that require no arguments.</span>
+    <span class="n">args_dict</span> <span class="o">=</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="n">v</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">args_dict</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="k">if</span> <span class="p">(</span><span class="n">v</span> <span class="ow">or</span> <span class="n">keep_empty_argument</span><span class="p">(</span><span class="n">k</span><span class="p">))}</span>
 
     <span class="k">return</span> <span class="n">args_dict</span>
 
@@ -678,6 +692,10 @@
         <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">args_dict</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
         <span class="k">if</span> <span class="n">v</span> <span class="ow">or</span> <span class="n">keep_empty_argument</span><span class="p">(</span><span class="n">k</span><span class="p">)</span>  <span class="c1"># Allow label issues to require no arguments</span>
     <span class="p">}</span>
+
+    <span class="c1"># Only keep issue types that have at least one argument</span>
+    <span class="c1"># or those that require no arguments.</span>
+    <span class="n">args_dict</span> <span class="o">=</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="n">v</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">args_dict</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="k">if</span> <span class="p">(</span><span class="n">v</span> <span class="ow">or</span> <span class="n">keep_empty_argument</span><span class="p">(</span><span class="n">k</span><span class="p">))}</span>
 
     <span class="k">return</span> <span class="n">args_dict</span>
 
@@ -938,6 +956,7 @@
 
         <span class="k">if</span> <span class="n">model_output</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="c1"># A basic trick to assign the model output to the correct argument</span>
+            <span class="c1"># E.g. Datalab accepts only `pred_probs`, but those are assigned to the `predictions` argument for regression-related issue_managers</span>
             <span class="n">kwargs</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="n">model_output</span><span class="o">.</span><span class="n">argument</span><span class="p">:</span> <span class="n">model_output</span><span class="o">.</span><span class="n">collect</span><span class="p">()})</span>
 
         <span class="c1"># Determine which parameters are required for each issue type</span>
@@ -964,7 +983,11 @@
             <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s2">&quot;No labels were provided. &quot;</span> <span class="s2">&quot;The &#39;label&#39; issue type will not be run.&quot;</span><span class="p">)</span>
             <span class="n">issue_types_copy</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;label&quot;</span><span class="p">)</span>
 
-        <span class="n">outlier_check_needs_features</span> <span class="o">=</span> <span class="s2">&quot;outlier&quot;</span> <span class="ow">in</span> <span class="n">issue_types_copy</span> <span class="ow">and</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">datalab</span><span class="o">.</span><span class="n">has_labels</span>
+        <span class="n">outlier_check_needs_features</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">task</span> <span class="o">==</span> <span class="s2">&quot;classification&quot;</span>
+            <span class="ow">and</span> <span class="s2">&quot;outlier&quot;</span> <span class="ow">in</span> <span class="n">issue_types_copy</span>
+            <span class="ow">and</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">datalab</span><span class="o">.</span><span class="n">has_labels</span>
+        <span class="p">)</span>
         <span class="k">if</span> <span class="n">outlier_check_needs_features</span><span class="p">:</span>
             <span class="n">no_features</span> <span class="o">=</span> <span class="n">features</span> <span class="ow">is</span> <span class="kc">None</span>
             <span class="n">no_knn_graph</span> <span class="o">=</span> <span class="n">knn_graph</span> <span class="ow">is</span> <span class="kc">None</span>
