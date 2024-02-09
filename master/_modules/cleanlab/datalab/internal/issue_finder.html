@@ -238,6 +238,7 @@
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../cleanlab/datalab/internal/report.html">report</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../cleanlab/datalab/internal/task.html">task</a></li>
 </ul>
 </li>
 </ul>
@@ -573,6 +574,7 @@
     <span class="n">RegressionPredictions</span><span class="p">,</span>
     <span class="n">MultiLabelPredProbs</span><span class="p">,</span>
 <span class="p">)</span>
+<span class="kn">from</span> <span class="nn">cleanlab.datalab.internal.task</span> <span class="kn">import</span> <span class="n">Task</span>
 
 <span class="k">if</span> <span class="n">TYPE_CHECKING</span><span class="p">:</span>  <span class="c1"># pragma: no cover</span>
     <span class="kn">import</span> <span class="nn">numpy.typing</span> <span class="k">as</span> <span class="nn">npt</span>
@@ -700,7 +702,7 @@
     <span class="k">return</span> <span class="n">args_dict</span>
 
 
-<span class="k">def</span> <span class="nf">_select_strategy_for_resolving_required_args</span><span class="p">(</span><span class="n">task</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Callable</span><span class="p">:</span>
+<span class="k">def</span> <span class="nf">_select_strategy_for_resolving_required_args</span><span class="p">(</span><span class="n">task</span><span class="p">:</span> <span class="n">Task</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Callable</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Helper function that selects the strategy for resolving required arguments for each issue type.</span>
 
 <span class="sd">    Each strategy resolves the required arguments for each issue type.</span>
@@ -721,9 +723,9 @@
 <span class="sd">        Dictionary of required arguments for each issue type, if available.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">strategies</span> <span class="o">=</span> <span class="p">{</span>
-        <span class="s2">&quot;classification&quot;</span><span class="p">:</span> <span class="n">_resolve_required_args_for_classification</span><span class="p">,</span>
-        <span class="s2">&quot;regression&quot;</span><span class="p">:</span> <span class="n">_resolve_required_args_for_regression</span><span class="p">,</span>
-        <span class="s2">&quot;multilabel&quot;</span><span class="p">:</span> <span class="n">_resolve_required_args_for_multilabel</span><span class="p">,</span>
+        <span class="n">Task</span><span class="o">.</span><span class="n">CLASSIFICATION</span><span class="p">:</span> <span class="n">_resolve_required_args_for_classification</span><span class="p">,</span>
+        <span class="n">Task</span><span class="o">.</span><span class="n">REGRESSION</span><span class="p">:</span> <span class="n">_resolve_required_args_for_regression</span><span class="p">,</span>
+        <span class="n">Task</span><span class="o">.</span><span class="n">MULTILABEL</span><span class="p">:</span> <span class="n">_resolve_required_args_for_multilabel</span><span class="p">,</span>
     <span class="p">}</span>
     <span class="n">selected_strategy</span> <span class="o">=</span> <span class="n">strategies</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">task</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">selected_strategy</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
@@ -762,7 +764,7 @@
 <span class="sd">    `Datalab.find_issues` method which internally utilizes an IssueFinder instance.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">datalab</span><span class="p">:</span> <span class="s2">&quot;Datalab&quot;</span><span class="p">,</span> <span class="n">task</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">verbosity</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">datalab</span><span class="p">:</span> <span class="s2">&quot;Datalab&quot;</span><span class="p">,</span> <span class="n">task</span><span class="p">:</span> <span class="n">Task</span><span class="p">,</span> <span class="n">verbosity</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">datalab</span> <span class="o">=</span> <span class="n">datalab</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">task</span> <span class="o">=</span> <span class="n">task</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">verbosity</span> <span class="o">=</span> <span class="n">verbosity</span>
@@ -943,9 +945,9 @@
         <span class="n">model_output</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="k">if</span> <span class="n">pred_probs</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">model_output_dict</span> <span class="o">=</span> <span class="p">{</span>
-                <span class="s2">&quot;regression&quot;</span><span class="p">:</span> <span class="n">RegressionPredictions</span><span class="p">,</span>
-                <span class="s2">&quot;classification&quot;</span><span class="p">:</span> <span class="n">MultiClassPredProbs</span><span class="p">,</span>
-                <span class="s2">&quot;multilabel&quot;</span><span class="p">:</span> <span class="n">MultiLabelPredProbs</span><span class="p">,</span>
+                <span class="n">Task</span><span class="o">.</span><span class="n">REGRESSION</span><span class="p">:</span> <span class="n">RegressionPredictions</span><span class="p">,</span>
+                <span class="n">Task</span><span class="o">.</span><span class="n">CLASSIFICATION</span><span class="p">:</span> <span class="n">MultiClassPredProbs</span><span class="p">,</span>
+                <span class="n">Task</span><span class="o">.</span><span class="n">MULTILABEL</span><span class="p">:</span> <span class="n">MultiLabelPredProbs</span><span class="p">,</span>
             <span class="p">}</span>
 
             <span class="n">model_output_class</span> <span class="o">=</span> <span class="n">model_output_dict</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">task</span><span class="p">)</span>
@@ -976,7 +978,7 @@
         <span class="n">drop_label_check</span> <span class="o">=</span> <span class="p">(</span>
             <span class="s2">&quot;label&quot;</span> <span class="ow">in</span> <span class="n">issue_types_copy</span>
             <span class="ow">and</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">datalab</span><span class="o">.</span><span class="n">has_labels</span>
-            <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">task</span> <span class="o">!=</span> <span class="s2">&quot;regression&quot;</span>
+            <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">task</span> <span class="o">!=</span> <span class="n">Task</span><span class="o">.</span><span class="n">REGRESSION</span>
         <span class="p">)</span>
 
         <span class="k">if</span> <span class="n">drop_label_check</span><span class="p">:</span>

@@ -238,6 +238,7 @@
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../cleanlab/datalab/internal/report.html">report</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../cleanlab/datalab/internal/task.html">task</a></li>
 </ul>
 </li>
 </ul>
@@ -547,6 +548,8 @@
 <span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Mapping</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Union</span><span class="p">,</span> <span class="n">cast</span><span class="p">,</span> <span class="n">TYPE_CHECKING</span><span class="p">,</span> <span class="n">Tuple</span>
 
+<span class="kn">from</span> <span class="nn">cleanlab.datalab.internal.task</span> <span class="kn">import</span> <span class="n">Task</span>
+
 <span class="k">try</span><span class="p">:</span>
     <span class="kn">import</span> <span class="nn">datasets</span>
 <span class="k">except</span> <span class="ne">ImportError</span> <span class="k">as</span> <span class="n">error</span><span class="p">:</span>
@@ -646,9 +649,21 @@
 <span class="sd">    label_name : Union[str, List[str]]</span>
 <span class="sd">        Name of the label column in the dataset.</span>
 
-<span class="sd">    map_to_int : bool</span>
-<span class="sd">        Whether to map the labels to integers, e.g. [0, 1, ..., K-1] where K is the number of classes.</span>
-<span class="sd">        If False, the labels are not mapped to integers, e.g. for regression tasks.</span>
+<span class="sd">    task :</span>
+<span class="sd">        The task associated with the dataset. This is used to determine how to</span>
+<span class="sd">        to format the labels.</span>
+
+<span class="sd">        Note:</span>
+
+<span class="sd">          - If the task is a classification task, the labels</span>
+<span class="sd">          will be mapped to integers, e.g. [0, 1, ..., K-1] where K is the number</span>
+<span class="sd">          of classes. If the task is a regression task, the labels will not be</span>
+<span class="sd">          mapped to integers.</span>
+
+<span class="sd">          - If the task is a multilabel task, the labels will be formatted as a</span>
+<span class="sd">            list of lists, e.g. [[0, 1], [1, 2], [0, 2]] where each sublist contains</span>
+<span class="sd">            the labels for a single example. If the task is not a multilabel task,</span>
+<span class="sd">            the labels will be formatted as a 1D numpy array.</span>
 
 <span class="sd">    Warnings</span>
 <span class="sd">    --------</span>
@@ -663,15 +678,15 @@
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">data</span><span class="p">:</span> <span class="s2">&quot;DatasetLike&quot;</span><span class="p">,</span>
+        <span class="n">task</span><span class="p">:</span> <span class="n">Task</span><span class="p">,</span>
         <span class="n">label_name</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-        <span class="n">map_to_int</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
-        <span class="n">is_multilabel</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_validate_data</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_load_data</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_data_hash</span> <span class="o">=</span> <span class="nb">hash</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">labels</span><span class="p">:</span> <span class="n">Label</span>
-        <span class="n">label_class</span> <span class="o">=</span> <span class="n">MultiLabel</span> <span class="k">if</span> <span class="n">is_multilabel</span> <span class="k">else</span> <span class="n">MultiClass</span>
+        <span class="n">label_class</span> <span class="o">=</span> <span class="n">MultiLabel</span> <span class="k">if</span> <span class="n">task</span><span class="o">.</span><span class="n">is_multilabel</span> <span class="k">else</span> <span class="n">MultiClass</span>
+        <span class="n">map_to_int</span> <span class="o">=</span> <span class="n">task</span><span class="o">.</span><span class="n">is_classification</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">labels</span> <span class="o">=</span> <span class="n">label_class</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="p">,</span> <span class="n">label_name</span><span class="o">=</span><span class="n">label_name</span><span class="p">,</span> <span class="n">map_to_int</span><span class="o">=</span><span class="n">map_to_int</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">_load_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="s2">&quot;DatasetLike&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dataset</span><span class="p">:</span>

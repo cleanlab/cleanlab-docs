@@ -247,6 +247,7 @@
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="report.html">report</a></li>
+<li class="toctree-l3"><a class="reference internal" href="task.html">task</a></li>
 </ul>
 </li>
 </ul>
@@ -559,7 +560,7 @@
 <div class="table-wrapper autosummary longtable docutils container">
 <table class="autosummary longtable docutils align-default">
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#cleanlab.datalab.internal.data.Data" title="cleanlab.datalab.internal.data.Data"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Data</span></code></a>(data[, label_name, map_to_int, ...])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#cleanlab.datalab.internal.data.Data" title="cleanlab.datalab.internal.data.Data"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Data</span></code></a>(data, task[, label_name])</p></td>
 <td><p>Class that holds and validates datasets for Datalab.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#cleanlab.datalab.internal.data.Label" title="cleanlab.datalab.internal.data.Label"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Label</span></code></a>(*, data[, label_name, map_to_int])</p></td>
@@ -661,7 +662,7 @@ set self.__traceback__ to tb and return self.</p>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="cleanlab.datalab.internal.data.Data">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">cleanlab.datalab.internal.data.</span></span><span class="sig-name descname"><span class="pre">Data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">label_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">map_to_int</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_multilabel</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/cleanlab/datalab/internal/data.html#Data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cleanlab.datalab.internal.data.Data" title="Permalink to this definition">#</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">cleanlab.datalab.internal.data.</span></span><span class="sig-name descname"><span class="pre">Data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">task</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">label_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/cleanlab/datalab/internal/data.html#Data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cleanlab.datalab.internal.data.Data" title="Permalink to this definition">#</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Class that holds and validates datasets for Datalab.</p>
 <p>Internally, the data is stored as a datasets.Dataset object and the labels
@@ -714,8 +715,24 @@ it assumes it is a dataset identifier on the Hugging Face Hub.</p>
 </dl>
 </p></li>
 <li><p><strong>label_name</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">Union[str</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">List[str]]</span></code>) – Name of the label column in the dataset.</p></li>
-<li><p><strong>map_to_int</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code>) – Whether to map the labels to integers, e.g. [0, 1, …, K-1] where K is the number of classes.
-If False, the labels are not mapped to integers, e.g. for regression tasks.</p></li>
+<li><p><strong>task</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference internal" href="task.html#cleanlab.datalab.internal.task.Task" title="cleanlab.datalab.internal.task.Task"><code class="xref py py-class docutils literal notranslate"><span class="pre">Task</span></code></a></span>) – <p>The task associated with the dataset. This is used to determine how to
+to format the labels.</p>
+<p>Note:</p>
+<blockquote>
+<div><ul>
+<li><p>If the task is a classification task, the labels</p></li>
+</ul>
+<p>will be mapped to integers, e.g. [0, 1, …, K-1] where K is the number
+of classes. If the task is a regression task, the labels will not be
+mapped to integers.</p>
+<ul>
+<li><p>If the task is a multilabel task, the labels will be formatted as a
+list of lists, e.g. [[0, 1], [1, 2], [0, 2]] where each sublist contains
+the labels for a single example. If the task is not a multilabel task,
+the labels will be formatted as a 1D numpy array.</p></li>
+</ul>
+</div></blockquote>
+</p></li>
 </ul>
 </dd>
 </dl>

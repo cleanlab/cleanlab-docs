@@ -238,6 +238,7 @@
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../cleanlab/datalab/internal/report.html">report</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../cleanlab/datalab/internal/task.html">task</a></li>
 </ul>
 </li>
 </ul>
@@ -552,6 +553,7 @@
 
 <span class="kn">from</span> <span class="nn">cleanlab.datalab.internal.adapter.constants</span> <span class="kn">import</span> <span class="n">DEFAULT_CLEANVISION_ISSUES</span>
 <span class="kn">from</span> <span class="nn">cleanlab.datalab.internal.issue_manager_factory</span> <span class="kn">import</span> <span class="n">_IssueManagerFactory</span>
+<span class="kn">from</span> <span class="nn">cleanlab.datalab.internal.task</span> <span class="kn">import</span> <span class="n">Task</span>
 
 <span class="k">if</span> <span class="n">TYPE_CHECKING</span><span class="p">:</span>  <span class="c1"># pragma: no cover</span>
     <span class="kn">from</span> <span class="nn">cleanlab.datalab.internal.data_issues</span> <span class="kn">import</span> <span class="n">DataIssues</span>
@@ -568,7 +570,8 @@
 <span class="sd">        and then passed to the :py:class:`Reporter` class to generate a report.</span>
 
 <span class="sd">    task :</span>
-<span class="sd">        Specific machine learning task like classification or regression.</span>
+<span class="sd">        Specific machine learning task that the datset is intended for.</span>
+<span class="sd">        See details about supported tasks in :py:class:`Task &lt;cleanlab.datalab.internal.task.Task&gt;`.</span>
 
 <span class="sd">    verbosity :</span>
 <span class="sd">        The default verbosity of the report to generate. Each :py:class`IssueManager`</span>
@@ -588,7 +591,7 @@
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">data_issues</span><span class="p">:</span> <span class="s2">&quot;DataIssues&quot;</span><span class="p">,</span>
-        <span class="n">task</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">task</span><span class="p">:</span> <span class="n">Task</span><span class="p">,</span>
         <span class="n">verbosity</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
         <span class="n">include_description</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
         <span class="n">show_summary_score</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>

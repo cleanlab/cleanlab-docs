@@ -247,6 +247,7 @@
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="report.html">report</a></li>
+<li class="toctree-l3"><a class="reference internal" href="task.html">task</a></li>
 </ul>
 </li>
 </ul>
@@ -562,7 +563,7 @@ and provides detailed documentation on how to use the API.</p>
 <table class="autosummary longtable docutils align-default">
 <tbody>
 <tr class="row-odd"><td><p><a class="reference internal" href="#cleanlab.datalab.internal.issue_manager_factory.REGISTRY" title="cleanlab.datalab.internal.issue_manager_factory.REGISTRY"><code class="xref py py-obj docutils literal notranslate"><span class="pre">REGISTRY</span></code></a></p></td>
-<td><p>Registry of issue managers that can be constructed from a string and used in the Datalab class.</p></td>
+<td><p>Registry of issue managers that can be constructed from a task and issue type and used in the Datalab class.</p></td>
 </tr>
 </tbody>
 </table>
@@ -585,16 +586,41 @@ and provides detailed documentation on how to use the API.</p>
 </div>
 <dl class="py data">
 <dt class="sig sig-object py" id="cleanlab.datalab.internal.issue_manager_factory.REGISTRY">
-<span class="sig-prename descclassname"><span class="pre">cleanlab.datalab.internal.issue_manager_factory.</span></span><span class="sig-name descname"><span class="pre">REGISTRY</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Type</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="issue_manager/issue_manager.html#cleanlab.datalab.internal.issue_manager.issue_manager.IssueManager" title="cleanlab.datalab.internal.issue_manager.issue_manager.IssueManager"><span class="pre">IssueManager</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#cleanlab.datalab.internal.issue_manager_factory.REGISTRY" title="Permalink to this definition">#</a></dt>
-<dd><p>Registry of issue managers that can be constructed from a string
+<span class="sig-prename descclassname"><span class="pre">cleanlab.datalab.internal.issue_manager_factory.</span></span><span class="sig-name descname"><span class="pre">REGISTRY</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="task.html#cleanlab.datalab.internal.task.Task" title="cleanlab.datalab.internal.task.Task"><span class="pre">Task</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Type</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="issue_manager/issue_manager.html#cleanlab.datalab.internal.issue_manager.issue_manager.IssueManager" title="cleanlab.datalab.internal.issue_manager.issue_manager.IssueManager"><span class="pre">IssueManager</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#cleanlab.datalab.internal.issue_manager_factory.REGISTRY" title="Permalink to this definition">#</a></dt>
+<dd><p>Registry of issue managers that can be constructed from a task and issue type
 and used in the Datalab class.</p>
 <dl class="field-list simple">
 </dl>
-<p>Currently, the following issue managers are registered by default:</p>
-<ul class="simple">
+<p>Currently, the following issue managers are registered by default for a given task:</p>
+<ul>
+<li><p>Classification:</p>
+<blockquote>
+<div><ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">&quot;outlier&quot;</span></code>: <a class="reference internal" href="issue_manager/outlier.html#cleanlab.datalab.internal.issue_manager.outlier.OutlierIssueManager" title="cleanlab.datalab.internal.issue_manager.outlier.OutlierIssueManager"><code class="xref py py-class docutils literal notranslate"><span class="pre">OutlierIssueManager</span></code></a></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">&quot;label&quot;</span></code>: <a class="reference internal" href="issue_manager/label.html#cleanlab.datalab.internal.issue_manager.label.LabelIssueManager" title="cleanlab.datalab.internal.issue_manager.label.LabelIssueManager"><code class="xref py py-class docutils literal notranslate"><span class="pre">LabelIssueManager</span></code></a></p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">&quot;near_duplicate&quot;</span></code>: <a class="reference internal" href="issue_manager/duplicate.html#cleanlab.datalab.internal.issue_manager.duplicate.NearDuplicateIssueManager" title="cleanlab.datalab.internal.issue_manager.duplicate.NearDuplicateIssueManager"><code class="xref py py-class docutils literal notranslate"><span class="pre">NearDuplicateIssueManager</span></code></a></p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">&quot;non_iid&quot;</span></code>: <a class="reference internal" href="issue_manager/noniid.html#cleanlab.datalab.internal.issue_manager.noniid.NonIIDIssueManager" title="cleanlab.datalab.internal.issue_manager.noniid.NonIIDIssueManager"><code class="xref py py-class docutils literal notranslate"><span class="pre">NonIIDIssueManager</span></code></a></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">&quot;class_imbalance&quot;</span></code>: <code class="xref py py-class docutils literal notranslate"><span class="pre">ClassImbalanceIssueManager</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">&quot;underperforming_group&quot;</span></code>: <a class="reference internal" href="issue_manager/underperforming_group.html#cleanlab.datalab.internal.issue_manager.underperforming_group.UnderperformingGroupIssueManager" title="cleanlab.datalab.internal.issue_manager.underperforming_group.UnderperformingGroupIssueManager"><code class="xref py py-class docutils literal notranslate"><span class="pre">UnderperformingGroupIssueManager</span></code></a></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">&quot;data_valuation&quot;</span></code>: <a class="reference internal" href="issue_manager/data_valuation.html#cleanlab.datalab.internal.issue_manager.data_valuation.DataValuationIssueManager" title="cleanlab.datalab.internal.issue_manager.data_valuation.DataValuationIssueManager"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataValuationIssueManager</span></code></a></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">&quot;null&quot;</span></code>: <a class="reference internal" href="issue_manager/null.html#cleanlab.datalab.internal.issue_manager.null.NullIssueManager" title="cleanlab.datalab.internal.issue_manager.null.NullIssueManager"><code class="xref py py-class docutils literal notranslate"><span class="pre">NullIssueManager</span></code></a></p></li>
+</ul>
+</div></blockquote>
+</li>
+<li><p>Regression:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">&quot;label&quot;</span></code>: <a class="reference internal" href="issue_manager/regression/label.html#cleanlab.datalab.internal.issue_manager.regression.label.RegressionLabelIssueManager" title="cleanlab.datalab.internal.issue_manager.regression.label.RegressionLabelIssueManager"><code class="xref py py-class docutils literal notranslate"><span class="pre">RegressionLabelIssueManager</span></code></a></p></li>
+</ul>
+</div></blockquote>
+</li>
+<li><p>Multilabel:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">&quot;label&quot;</span></code>: <code class="xref py py-class docutils literal notranslate"><span class="pre">MultilabelIssueManager</span></code></p></li>
+</ul>
+</div></blockquote>
+</li>
 </ul>
 <div class="admonition warning">
 <p class="admonition-title">Warning</p>
@@ -611,7 +637,9 @@ and used in the Datalab class.</p>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>cls</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">Type</span></code>[<a class="reference internal" href="issue_manager/issue_manager.html#cleanlab.datalab.internal.issue_manager.issue_manager.IssueManager" title="cleanlab.datalab.internal.issue_manager.issue_manager.IssueManager"><code class="xref py py-class docutils literal notranslate"><span class="pre">IssueManager</span></code></a>]</span>) – A subclass of
 <a class="reference internal" href="issue_manager/issue_manager.html#cleanlab.datalab.internal.issue_manager.issue_manager.IssueManager" title="cleanlab.datalab.internal.issue_manager.issue_manager.IssueManager"><code class="xref py py-class docutils literal notranslate"><span class="pre">IssueManager</span></code></a>.</p></li>
-<li><p><strong>task</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span>) – Specific machine learning task like classification or regression.</p></li>
+<li><p><strong>task</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span>) – Specific machine learning task like classification or regression.
+See <code class="xref py py-meth docutils literal notranslate"><span class="pre">Task.from_str</span> <span class="pre">&lt;cleanlab.datalab.internal.task.Task.from_str&gt;`()</span></code> for more details,
+to see which task type corresponds to which string.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
@@ -667,8 +695,16 @@ you can register it like so:</p>
 <dt class="sig sig-object py" id="cleanlab.datalab.internal.issue_manager_factory.list_default_issue_types">
 <span class="sig-prename descclassname"><span class="pre">cleanlab.datalab.internal.issue_manager_factory.</span></span><span class="sig-name descname"><span class="pre">list_default_issue_types</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">task</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/cleanlab/datalab/internal/issue_manager_factory.html#list_default_issue_types"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cleanlab.datalab.internal.issue_manager_factory.list_default_issue_types" title="Permalink to this definition">#</a></dt>
 <dd><p>Returns a list of the issue types that are run by default
-when <code class="xref py py-meth docutils literal notranslate"><span class="pre">find_issues()</span></code> is called without specifying <cite>issue_types</cite>.
-:rtype: <span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]</span></p>
+when <code class="xref py py-meth docutils literal notranslate"><span class="pre">find_issues()</span></code> is called without specifying <cite>issue_types</cite>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]</span></p>
+</dd>
+</dl>
+<dl class="simple">
+<dt>task :</dt><dd><p>Specific machine learning task supported by Datalab.</p>
+</dd>
+</dl>
 <div class="admonition seealso">
 <p class="admonition-title">See also</p>
 <p><a class="reference internal" href="#cleanlab.datalab.internal.issue_manager_factory.REGISTRY" title="cleanlab.datalab.internal.issue_manager_factory.REGISTRY"><code class="xref py py-class docutils literal notranslate"><span class="pre">REGISTRY</span></code></a> : All available issue types and their corresponding issue managers can be found here.</p>
