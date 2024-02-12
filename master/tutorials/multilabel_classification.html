@@ -914,8 +914,11 @@ Label quality scores of the first 10 examples in dataset:
 [1.     0.888  0.8224 0.9632 0.968  0.6512 0.0444 1.     0.76   0.774 ]
 </pre></div></div>
 </div>
-<p>While this tutorial focused on label issues, cleanlab’s <code class="docutils literal notranslate"><span class="pre">Datalab</span></code> object can automatically detect many other types of issues in your dataset (outliers, near duplicates, etc). Simply remove the <code class="docutils literal notranslate"><span class="pre">issue_types</span></code> argument from the above call to <code class="docutils literal notranslate"><span class="pre">Datalab.find_issues()</span></code> above and <code class="docutils literal notranslate"><span class="pre">Datalab</span></code> will more comprehensively audit your dataset. Refer to our <a class="reference external" href="./datalab/datalab_quickstart.html">Datalab quickstart tutorial</a> to learn how to interpret the results (the interpretation remains mostly the same
-across different types of ML tasks).</p>
+</section>
+<section id="Data-issues-beyond-mislabeling-(outliers,-duplicates,-drift,-...)">
+<h3>Data issues beyond mislabeling (outliers, duplicates, drift, …)<a class="headerlink" href="#Data-issues-beyond-mislabeling-(outliers,-duplicates,-drift,-...)" title="Permalink to this heading">#</a></h3>
+<p>While this tutorial focused on label issues, cleanlab’s <code class="docutils literal notranslate"><span class="pre">Datalab</span></code> object can automatically detect many other types of issues in your dataset (outliers, near duplicates, drift, etc). Simply remove the <code class="docutils literal notranslate"><span class="pre">issue_types</span></code> argument from the above call to <code class="docutils literal notranslate"><span class="pre">Datalab.find_issues()</span></code> above and <code class="docutils literal notranslate"><span class="pre">Datalab</span></code> will more comprehensively audit your dataset. Refer to our <a class="reference external" href="./datalab/datalab_quickstart.html">Datalab quickstart tutorial</a> to learn how to interpret the results (the interpretation remains mostly
+the same across different types of ML tasks).</p>
 </section>
 <section id="How-to-format-labels-given-as-a-one-hot-(multi-hot)-binary-matrix?">
 <h3>How to format labels given as a one-hot (multi-hot) binary matrix?<a class="headerlink" href="#How-to-format-labels-given-as-a-one-hot-(multi-hot)-binary-matrix?" title="Permalink to this heading">#</a></h3>
@@ -929,6 +932,14 @@ across different types of ML tasks).</p>
 </pre></div>
 </div>
 </div>
+</section>
+<section id="Estimate-label-issues-without-Datalab">
+<h3>Estimate label issues without Datalab<a class="headerlink" href="#Estimate-label-issues-without-Datalab" title="Permalink to this heading">#</a></h3>
+<p>If you prefer to directly run the same lower-level mathematical functions Datalab uses to detect label issues, you can do so outside of Datalab via the methods in the <code class="docutils literal notranslate"><span class="pre">cleanlab.multilabel_classification</span></code> module such as: <a class="reference external" href="../cleanlab/multilabel_classification/filter.html#cleanlab.multilabel_classification.filter.find_label_issues">multilabel_classification.filter.find_label_issues</a>,
+<a class="reference external" href="../cleanlab/multilabel_classification/rank.html#cleanlab.multilabel_classification.rank.get_label_quality_scores">multilabel_classification.rank.get_label_quality_scores</a></p>
+</section>
+<section id="Application-to-Real-Data">
+<h3>Application to Real Data<a class="headerlink" href="#Application-to-Real-Data" title="Permalink to this heading">#</a></h3>
 <p>To see cleanlab applied to a real image tagging dataset, check out our <a class="reference external" href="https://github.com/cleanlab/examples">example</a> notebook <a class="reference external" href="https://github.com/cleanlab/examples/blob/master/multilabel_classification/image_tagging.ipynb">“Find Label Errors in Multi-Label Classification Data (CelebA Image Tagging)”</a>. That example also demonstrates how to use a state-of-the-art Pytorch neural network for multi-label classification with image data.</p>
 </section>
 </section>
@@ -1014,7 +1025,10 @@ across different types of ML tasks).</p>
 <li><a class="reference internal" href="#2.-Format-data,-labels,-and-model-predictions">2. Format data, labels, and model predictions</a></li>
 <li><a class="reference internal" href="#3.-Use-cleanlab-to-find-label-issues">3. Use cleanlab to find label issues</a><ul>
 <li><a class="reference internal" href="#Label-quality-scores">Label quality scores</a></li>
+<li><a class="reference internal" href="#Data-issues-beyond-mislabeling-(outliers,-duplicates,-drift,-...)">Data issues beyond mislabeling (outliers, duplicates, drift, …)</a></li>
 <li><a class="reference internal" href="#How-to-format-labels-given-as-a-one-hot-(multi-hot)-binary-matrix?">How to format labels given as a one-hot (multi-hot) binary matrix?</a></li>
+<li><a class="reference internal" href="#Estimate-label-issues-without-Datalab">Estimate label issues without Datalab</a></li>
+<li><a class="reference internal" href="#Application-to-Real-Data">Application to Real Data</a></li>
 </ul>
 </li>
 </ul>
