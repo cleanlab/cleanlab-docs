@@ -1002,6 +1002,14 @@
                 <span class="p">)</span>
                 <span class="n">issue_types_copy</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;outlier&quot;</span><span class="p">)</span>
 
+        <span class="n">drop_class_imbalance_check</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="s2">&quot;class_imbalance&quot;</span> <span class="ow">in</span> <span class="n">issue_types_copy</span>
+            <span class="ow">and</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">datalab</span><span class="o">.</span><span class="n">has_labels</span>
+            <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">task</span> <span class="o">==</span> <span class="n">Task</span><span class="o">.</span><span class="n">CLASSIFICATION</span>
+        <span class="p">)</span>
+        <span class="k">if</span> <span class="n">drop_class_imbalance_check</span><span class="p">:</span>
+            <span class="n">issue_types_copy</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;class_imbalance&quot;</span><span class="p">)</span>
+
         <span class="k">return</span> <span class="n">issue_types_copy</span></div></div>
 </pre></div> 
         </article>
