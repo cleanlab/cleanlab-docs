@@ -715,22 +715,34 @@ where the core logic for issue detection is implemented.</p>
 </div>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>pred_probs</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>]</span>) – <p>Out-of-sample predicted class probabilities made by the model for every example in the dataset.
+<dd class="field-odd"><p><strong>pred_probs</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>]</span>) – <p>Out-of-sample predicted class probabilities made by the model for every example in the dataset.
 To best detect label issues, provide this input obtained from the most accurate model you can produce.</p>
-<p>For classification data, this must be a 2D array with shape <code class="docutils literal notranslate"><span class="pre">(num_examples,</span> <span class="pre">K)</span></code> where <code class="docutils literal notranslate"><span class="pre">K</span></code> is the number of classes in the dataset.
-For regression data, this must be a 1D array with shape <code class="docutils literal notranslate"><span class="pre">(num_examples,)</span></code> containing the predicted value for each example.</p>
-</p></li>
-<li><p><strong>features</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">Optional[np.ndarray]</span></code>) – <p>Feature embeddings (vector representations) of every example in the dataset.</p>
+<dl class="simple">
+<dt>For classification data, this must be a 2D array with shape <code class="docutils literal notranslate"><span class="pre">(num_examples,</span> <span class="pre">K)</span></code> where <code class="docutils literal notranslate"><span class="pre">K</span></code> is the number of classes in the dataset.</dt><dd><p>Make sure that the columns of your <cite>pred_probs</cite> are properly ordered with respect to the ordering of classes, which for Datalab is: lexicographically sorted by class name.</p>
+</dd>
+</dl>
+<p>For regression data, this must be a 1D array with shape <code class="docutils literal notranslate"><span class="pre">(num_examples,)</span></code> containing the predicted value for each example.
+For multilabel classification data, this must be a 2D array with shape <code class="docutils literal notranslate"><span class="pre">(num_examples,</span> <span class="pre">K)</span></code> where <code class="docutils literal notranslate"><span class="pre">K</span></code> is the number of classes in the dataset.</p>
+<blockquote>
+<div><p>Make sure that the columns of your <cite>pred_probs</cite> are properly ordered with respect to the ordering of classes, which for Datalab is: lexicographically sorted by class name.</p>
+</div></blockquote>
+</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span></p>
+</dd>
+</dl>
+<dl>
+<dt>features<span class="classifier">Optional[np.ndarray]</span></dt><dd><p>Feature embeddings (vector representations) of every example in the dataset.</p>
 <p>If provided, this must be a 2D array with shape (num_examples, num_features).</p>
-</p></li>
-<li><p><strong>knn_graph</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">csr_matrix</span></code>]</span>) – <p>Sparse matrix of precomputed distances between examples in the dataset in a k nearest neighbor graph.</p>
+</dd>
+<dt>knn_graph :</dt><dd><p>Sparse matrix of precomputed distances between examples in the dataset in a k nearest neighbor graph.</p>
 <p>If provided, this must be a square CSR matrix with shape <code class="docutils literal notranslate"><span class="pre">(num_examples,</span> <span class="pre">num_examples)</span></code> and <code class="docutils literal notranslate"><span class="pre">(k*num_examples)</span></code> non-zero entries (<code class="docutils literal notranslate"><span class="pre">k</span></code> is the number of nearest neighbors considered for each example),
 evenly distributed across the rows.
 Each non-zero entry in this matrix is a distance between a pair of examples in the dataset. Self-distances must be omitted
 (i.e. diagonal must be all zeros, k nearest neighbors for each example do not include the example itself).</p>
 <p>This CSR format uses three 1D arrays (<cite>data</cite>, <cite>indices</cite>, <cite>indptr</cite>) to store a 2D matrix <code class="docutils literal notranslate"><span class="pre">M</span></code>:</p>
-<ul>
+<ul class="simple">
 <li><p><cite>data</cite>: 1D array containing all the non-zero elements of matrix <code class="docutils literal notranslate"><span class="pre">M</span></code>, listed in a row-wise fashion (but sorted within each row).</p></li>
 <li><p><cite>indices</cite>: 1D array storing the column indices in matrix <code class="docutils literal notranslate"><span class="pre">M</span></code> of these non-zero elements. Each entry in <cite>indices</cite> corresponds to an entry in <cite>data</cite>, indicating the column of <code class="docutils literal notranslate"><span class="pre">M</span></code> containing this entry.</p></li>
 <li><p><cite>indptr</cite>: 1D array indicating the start and end indices in <cite>data</cite> for each row of matrix <code class="docutils literal notranslate"><span class="pre">M</span></code>. The non-zero elements of the i-th row of <code class="docutils literal notranslate"><span class="pre">M</span></code> are stored from <code class="docutils literal notranslate"><span class="pre">data[indptr[i]]</span></code> to <code class="docutils literal notranslate"><span class="pre">data[indptr[i+1]]</span></code>.</p></li>
@@ -766,8 +778,8 @@ If neither <cite>knn_graph</cite> nor <cite>features</cite> are provided, certai
 <a class="reference external" href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.sparse.csr_matrix.html">scipy.sparse.csr_matrix documentation</a>
 for more details on the CSR matrix format.</p>
 </div>
-</p></li>
-<li><p><strong>issue_types</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code>]]</span>) – <p>Collection specifying which types of issues to consider in audit and any non-default parameter settings to use.
+</dd>
+<dt>issue_types :</dt><dd><p>Collection specifying which types of issues to consider in audit and any non-default parameter settings to use.
 If unspecified, a default set of issue types and recommended parameter settings is considered.</p>
 <p>This is a dictionary of dictionaries, where the keys are the issue types of interest
 and the values are dictionaries of parameter values that control how each type of issue is detected (only for advanced users).
@@ -777,11 +789,6 @@ which is responsible for detecting the particular issue type.</p>
 <p class="admonition-title">See also</p>
 <p><a class="reference internal" href="internal/issue_manager/issue_manager.html#cleanlab.datalab.internal.issue_manager.issue_manager.IssueManager" title="cleanlab.datalab.internal.issue_manager.issue_manager.IssueManager"><code class="xref py py-class docutils literal notranslate"><span class="pre">IssueManager</span></code></a></p>
 </div>
-</p></li>
-</ul>
-</dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span></p>
 </dd>
 </dl>
 <p class="rubric">Examples</p>

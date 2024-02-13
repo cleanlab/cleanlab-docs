@@ -759,7 +759,8 @@ automatically identifies <em>hundreds</em> of examples in this dataset that were
 </div>
 </div>
 <p>To find potential labeling errors, cleanlab requires a probabilistic prediction from your model for every datapoint. However, these predictions will be <em>overfitted</em> (and thus unreliable) for examples the model was previously trained on. For the best results, cleanlab should be applied with <strong>out-of-sample</strong> predicted class probabilities, i.e., on examples held out from the model during the training.</p>
-<p>K-fold cross-validation is a straightforward way to produce out-of-sample predicted probabilities for every datapoint in the dataset by training K copies of our model on different data subsets and using each copy to predict on the subset of data it did not see during training. We can implement this via the <code class="docutils literal notranslate"><span class="pre">cross_val_predict</span></code> method from scikit-learn:</p>
+<p>K-fold cross-validation is a straightforward way to produce out-of-sample predicted probabilities for every datapoint in the dataset by training K copies of our model on different data subsets and using each copy to predict on the subset of data it did not see during training. Make sure that the columns of your <code class="docutils literal notranslate"><span class="pre">pred_probs</span></code> are properly ordered with respect to the ordering of classes, which for Datalab is: lexicographically sorted by class name. We can implement this via the
+<code class="docutils literal notranslate"><span class="pre">cross_val_predict</span></code> method from scikit-learn.</p>
 <div class="nbinput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
 </pre></div>
