@@ -714,12 +714,7 @@ The more of these inputs you provide, the more types of issues Datalab can detec
 If you provide a subset of these inputs, Datalab will output what insights it can based on the limited information from your model.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>This method acts as a wrapper around the <a class="reference internal" href="internal/issue_finder.html#cleanlab.datalab.internal.issue_finder.IssueFinder.find_issues" title="cleanlab.datalab.internal.issue_finder.IssueFinder.find_issues"><code class="xref py py-meth docutils literal notranslate"><span class="pre">IssueFinder.find_issues</span></code></a> method,
-where the core logic for issue detection is implemented.</p>
-</div>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>The issues are saved in the <code class="docutils literal notranslate"><span class="pre">self.issues</span></code> attribute, but are not returned.</p>
+<p>The issues are saved in the <code class="docutils literal notranslate"><span class="pre">self.issues</span></code> attribute of the <code class="docutils literal notranslate"><span class="pre">Datalab</span></code> object, but are not returned.</p>
 </div>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -895,8 +890,10 @@ The report shows the top <cite>num_examples</cite> instances in the dataset that
 <li><p><strong>verbosity</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>]</span>) – Higher verbosity levels add more information to the report.</p></li>
 <li><p><strong>include_description</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></span>) – Whether or not to include a description of each issue type in the report.
 Consider setting this to <code class="docutils literal notranslate"><span class="pre">False</span></code> once you’re familiar with how each issue type is defined.</p></li>
-<li><p><strong>show_summary_score</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></span>) – Whether or not to include the overall severity of each issue type in the report.</p></li>
-<li><p><strong>show_all_issues</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></span>) – Whether or not to show all issues in the report, or only the issues for which examples were found in the dataset
+<li><p><strong>show_summary_score</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></span>) – Whether or not to include the overall severity score of each issue type in the report.
+These scores are not comparable across different issue types,
+see the <code class="docutils literal notranslate"><span class="pre">issue_summary</span></code> documentation to learn more.</p></li>
+<li><p><strong>show_all_issues</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></span>) – Whether or not the report should show all issue types that were checked for, or only the types of issues detected in the dataset.
 With this set to <code class="docutils literal notranslate"><span class="pre">True</span></code>, the report may include more types of issues that were not detected in the dataset.</p></li>
 </ul>
 </dd>
@@ -921,7 +918,16 @@ With this set to <code class="docutils literal notranslate"><span class="pre">Tr
 <dt class="sig sig-object py" id="cleanlab.datalab.datalab.Datalab.issue_summary">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">issue_summary</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">DataFrame</span></em><a class="headerlink" href="#cleanlab.datalab.datalab.Datalab.issue_summary" title="Permalink to this definition">#</a></dt>
 <dd><p>Summary of issues found in the dataset and the overall severity of each type of issue.</p>
-<p>This is a wrapper around the <code class="docutils literal notranslate"><span class="pre">DataIssues.issue_summary</span></code> attribute.</p>
+<p>Each type of issue has a summary score, which is usually defined as an average of
+per-example issue-severity scores (over all examples in the dataset).
+So these summary scores are not directly tied to the number of examples estimated to exhibit
+a particular type of issue. Issue-severity (ie. quality of each example) is measured differently for each issue type,
+and these per-example scores are only comparable across different examples for the same issue-type, but are not comparable across different issue types.
+For instance, label quality might be scored via estimated likelihood of the given label,
+whereas outlier quality might be scored via distance to K-nearest-neighbors in feature space (fundamentally incomparable quantities).
+For some issue types, the summary score is not an average of per-example scores, but rather a global statistic of the dataset
+(eg. for <cite>non_iid</cite> issue type, the p-value for hypothesis test that data are IID).</p>
+<p>In summary, you can compare these summary scores across datasets for the same issue type, but never compare them across different issue types.</p>
 <p class="rubric">Examples</p>
 <p>If checks for “label” and “outlier” issues were run,
 then the issue summary will look something like this:</p>
@@ -937,7 +943,6 @@ then the issue summary will look something like this:</p>
 <dt class="sig sig-object py" id="cleanlab.datalab.datalab.Datalab.info">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">info</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#cleanlab.datalab.datalab.Datalab.info" title="Permalink to this definition">#</a></dt>
 <dd><p>Information and statistics about the dataset issues found.</p>
-<p>This is a wrapper around the <code class="docutils literal notranslate"><span class="pre">DataIssues.info</span></code> attribute.</p>
 <p class="rubric">Examples</p>
 <p>If checks for “label” and “outlier” issues were run,
 then the info will look something like this:</p>
@@ -962,10 +967,6 @@ then the info will look something like this:</p>
 <dt class="sig sig-object py" id="cleanlab.datalab.datalab.Datalab.get_issues">
 <span class="sig-name descname"><span class="pre">get_issues</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">issue_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/cleanlab/datalab/datalab.html#Datalab.get_issues"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cleanlab.datalab.datalab.Datalab.get_issues" title="Permalink to this definition">#</a></dt>
 <dd><p>Use this after finding issues to see which examples suffer from which types of issues.</p>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>This is a wrapper around the <a class="reference internal" href="internal/data_issues.html#cleanlab.datalab.internal.data_issues.DataIssues.get_issues" title="cleanlab.datalab.internal.data_issues.DataIssues.get_issues"><code class="xref py py-meth docutils literal notranslate"><span class="pre">DataIssues.get_issues</span></code></a> method.</p>
-</div>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>issue_name</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code> or <code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code>) – The type of issue to focus on. If <cite>None</cite>, returns full DataFrame summarizing all of the types of issues detected in each example from the dataset.</p>
@@ -991,11 +992,7 @@ The quality scores lie between 0-1 and are directly comparable between examples 
 <span class="sig-name descname"><span class="pre">get_issue_summary</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">issue_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/cleanlab/datalab/datalab.html#Datalab.get_issue_summary"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cleanlab.datalab.datalab.Datalab.get_issue_summary" title="Permalink to this definition">#</a></dt>
 <dd><p>Summarize the issues found in dataset of a particular type,
 including how severe this type of issue is overall across the dataset.</p>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>This is a wrapper around the
-<a class="reference internal" href="internal/data_issues.html#cleanlab.datalab.internal.data_issues.DataIssues.get_issue_summary" title="cleanlab.datalab.internal.data_issues.DataIssues.get_issue_summary"><code class="xref py py-meth docutils literal notranslate"><span class="pre">DataIssues.get_issue_summary</span></code></a> method.</p>
-</div>
+<p>See the documentation of the <code class="docutils literal notranslate"><span class="pre">issue_summary</span></code> attribute to learn more.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>issue_name</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]</span>) – Name of the issue type to summarize. If <cite>None</cite>, summarizes each of the different issue types previously considered in the audit.</p>
@@ -1017,11 +1014,6 @@ The quality scores lie between 0-1 and are directly comparable between multiple 
 <span class="sig-name descname"><span class="pre">get_info</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">issue_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/cleanlab/datalab/datalab.html#Datalab.get_info"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cleanlab.datalab.datalab.Datalab.get_info" title="Permalink to this definition">#</a></dt>
 <dd><p>Get the info for the issue_name key.</p>
 <p>This function is used to get the info for a specific issue_name. If the info is not computed yet, it will raise an error.</p>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>This is a wrapper around the
-<a class="reference internal" href="internal/data_issues.html#cleanlab.datalab.internal.data_issues.DataIssues.get_info" title="cleanlab.datalab.internal.data_issues.DataIssues.get_info"><code class="xref py py-meth docutils literal notranslate"><span class="pre">DataIssues.get_info</span></code></a> method.</p>
-</div>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>issue_name</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]</span>) – The issue name for which the info is required.</p>
@@ -1041,10 +1033,6 @@ The quality scores lie between 0-1 and are directly comparable between multiple 
 <dd><p>Returns a list of all registered issue types.</p>
 <p>Any issue type that is not in this list cannot be used in the <a class="reference internal" href="#cleanlab.datalab.datalab.Datalab.find_issues" title="cleanlab.datalab.datalab.Datalab.find_issues"><code class="xref py py-meth docutils literal notranslate"><span class="pre">find_issues()</span></code></a> method.
 :rtype: <span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]</span></p>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>This method is a wrapper around <code class="xref py py-meth docutils literal notranslate"><span class="pre">IssueFinder.list_possible_issue_types</span></code>.</p>
-</div>
 <div class="admonition seealso">
 <p class="admonition-title">See also</p>
 <p><a class="reference internal" href="internal/factory.html#cleanlab.datalab.internal.issue_manager_factory.REGISTRY" title="cleanlab.datalab.internal.issue_manager_factory.REGISTRY"><code class="xref py py-class docutils literal notranslate"><span class="pre">REGISTRY</span></code></a> : All available issue types and their corresponding issue managers can be found here.</p>
@@ -1057,10 +1045,6 @@ The quality scores lie between 0-1 and are directly comparable between multiple 
 <dd><p>Returns a list of the issue types that are run by default
 when <a class="reference internal" href="#cleanlab.datalab.datalab.Datalab.find_issues" title="cleanlab.datalab.datalab.Datalab.find_issues"><code class="xref py py-meth docutils literal notranslate"><span class="pre">find_issues()</span></code></a> is called without specifying <cite>issue_types</cite>.
 :rtype: <span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]</span></p>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>This method is a wrapper around <code class="xref py py-meth docutils literal notranslate"><span class="pre">IssueFinder.list_default_issue_types</span></code>.</p>
-</div>
 <div class="admonition seealso">
 <p class="admonition-title">See also</p>
 <p><a class="reference internal" href="internal/factory.html#cleanlab.datalab.internal.issue_manager_factory.REGISTRY" title="cleanlab.datalab.internal.issue_manager_factory.REGISTRY"><code class="xref py py-class docutils literal notranslate"><span class="pre">REGISTRY</span></code></a> : All available issue types and their corresponding issue managers can be found here.</p>

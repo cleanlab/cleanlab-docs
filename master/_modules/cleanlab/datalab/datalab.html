@@ -713,14 +713,9 @@
 <span class="sd">        The more of these inputs you provide, the more types of issues Datalab can detect in your dataset/labels.</span>
 <span class="sd">        If you provide a subset of these inputs, Datalab will output what insights it can based on the limited information from your model.</span>
 
-<span class="sd">        Note</span>
+<span class="sd">        NOTE</span>
 <span class="sd">        ----</span>
-<span class="sd">        This method acts as a wrapper around the :py:meth:`IssueFinder.find_issues &lt;cleanlab.datalab.internal.issue_finder.IssueFinder.find_issues&gt;` method,</span>
-<span class="sd">        where the core logic for issue detection is implemented.</span>
-
-<span class="sd">        Note</span>
-<span class="sd">        ----</span>
-<span class="sd">        The issues are saved in the ``self.issues`` attribute, but are not returned.</span>
+<span class="sd">        The issues are saved in the ``self.issues`` attribute of the ``Datalab`` object, but are not returned.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -931,10 +926,12 @@
 <span class="sd">            Consider setting this to ``False`` once you&#39;re familiar with how each issue type is defined.</span>
 
 <span class="sd">        show_summary_score :</span>
-<span class="sd">            Whether or not to include the overall severity of each issue type in the report.</span>
+<span class="sd">            Whether or not to include the overall severity score of each issue type in the report.</span>
+<span class="sd">            These scores are not comparable across different issue types,</span>
+<span class="sd">            see the ``issue_summary`` documentation to learn more.</span>
 
 <span class="sd">        show_all_issues :</span>
-<span class="sd">            Whether or not to show all issues in the report, or only the issues for which examples were found in the dataset</span>
+<span class="sd">            Whether or not the report should show all issue types that were checked for, or only the types of issues detected in the dataset.</span>
 <span class="sd">            With this set to ``True``, the report may include more types of issues that were not detected in the dataset.</span>
 
 <span class="sd">        See Also</span>
@@ -972,7 +969,17 @@
     <span class="k">def</span> <span class="nf">issue_summary</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Summary of issues found in the dataset and the overall severity of each type of issue.</span>
 
-<span class="sd">        This is a wrapper around the ``DataIssues.issue_summary`` attribute.</span>
+<span class="sd">        Each type of issue has a summary score, which is usually defined as an average of</span>
+<span class="sd">        per-example issue-severity scores (over all examples in the dataset).</span>
+<span class="sd">        So these summary scores are not directly tied to the number of examples estimated to exhibit</span>
+<span class="sd">        a particular type of issue. Issue-severity (ie. quality of each example) is measured differently for each issue type,</span>
+<span class="sd">        and these per-example scores are only comparable across different examples for the same issue-type, but are not comparable across different issue types.</span>
+<span class="sd">        For instance, label quality might be scored via estimated likelihood of the given label,</span>
+<span class="sd">        whereas outlier quality might be scored via distance to K-nearest-neighbors in feature space (fundamentally incomparable quantities).</span>
+<span class="sd">        For some issue types, the summary score is not an average of per-example scores, but rather a global statistic of the dataset</span>
+<span class="sd">        (eg. for `non_iid` issue type, the p-value for hypothesis test that data are IID).</span>
+
+<span class="sd">        In summary, you can compare these summary scores across datasets for the same issue type, but never compare them across different issue types.</span>
 
 <span class="sd">        Examples</span>
 <span class="sd">        -------</span>
@@ -994,8 +1001,6 @@
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">info</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Information and statistics about the dataset issues found.</span>
-
-<span class="sd">        This is a wrapper around the ``DataIssues.info`` attribute.</span>
 
 <span class="sd">        Examples</span>
 <span class="sd">        -------</span>
@@ -1027,10 +1032,6 @@
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Use this after finding issues to see which examples suffer from which types of issues.</span>
 
-<span class="sd">        NOTE</span>
-<span class="sd">        ----</span>
-<span class="sd">        This is a wrapper around the :py:meth:`DataIssues.get_issues &lt;cleanlab.datalab.internal.data_issues.DataIssues.get_issues&gt;` method.</span>
-
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 <span class="sd">        issue_name : str or None</span>
@@ -1056,10 +1057,7 @@
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Summarize the issues found in dataset of a particular type,</span>
 <span class="sd">        including how severe this type of issue is overall across the dataset.</span>
 
-<span class="sd">        NOTE</span>
-<span class="sd">        ----</span>
-<span class="sd">        This is a wrapper around the</span>
-<span class="sd">        :py:meth:`DataIssues.get_issue_summary &lt;cleanlab.datalab.internal.data_issues.DataIssues.get_issue_summary&gt;` method.</span>
+<span class="sd">        See the documentation of the ``issue_summary`` attribute to learn more.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -1081,11 +1079,6 @@
 
 <span class="sd">        This function is used to get the info for a specific issue_name. If the info is not computed yet, it will raise an error.</span>
 
-<span class="sd">        NOTE</span>
-<span class="sd">        ----</span>
-<span class="sd">        This is a wrapper around the</span>
-<span class="sd">        :py:meth:`DataIssues.get_info &lt;cleanlab.datalab.internal.data_issues.DataIssues.get_info&gt;` method.</span>
-
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 <span class="sd">        issue_name :</span>
@@ -1103,10 +1096,6 @@
 
 <span class="sd">        Any issue type that is not in this list cannot be used in the :py:meth:`find_issues` method.</span>
 
-<span class="sd">        Note</span>
-<span class="sd">        ----</span>
-<span class="sd">        This method is a wrapper around :py:meth:`IssueFinder.list_possible_issue_types &lt;cleanlab.datalab.internal.issue_finder.IssueFinder.list_possible_issue_types&gt;`.</span>
-
 <span class="sd">        See Also</span>
 <span class="sd">        --------</span>
 <span class="sd">        :py:class:`REGISTRY &lt;cleanlab.datalab.internal.issue_manager_factory.REGISTRY&gt;` : All available issue types and their corresponding issue managers can be found here.</span>
@@ -1116,10 +1105,6 @@
 <div class="viewcode-block" id="Datalab.list_default_issue_types"><a class="viewcode-back" href="../../../cleanlab/datalab/datalab.html#cleanlab.datalab.datalab.Datalab.list_default_issue_types">[docs]</a>    <span class="k">def</span> <span class="nf">list_default_issue_types</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns a list of the issue types that are run by default</span>
 <span class="sd">        when :py:meth:`find_issues` is called without specifying `issue_types`.</span>
-
-<span class="sd">        Note</span>
-<span class="sd">        ----</span>
-<span class="sd">        This method is a wrapper around :py:meth:`IssueFinder.list_default_issue_types &lt;cleanlab.datalab.internal.issue_finder.IssueFinder.list_default_issue_types&gt;`.</span>
 
 <span class="sd">        See Also</span>
 <span class="sd">        --------</span>
@@ -1139,7 +1124,7 @@
 <span class="sd">        force :</span>
 <span class="sd">            If ``True``, overwrites any existing files in the folder at `path`. Use this with caution!</span>
 
-<span class="sd">        Note</span>
+<span class="sd">        NOTE</span>
 <span class="sd">        ----</span>
 <span class="sd">        You have to save the Dataset yourself separately if you want it saved to file.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
