@@ -1,8 +1,8 @@
 <!doctype html>
-<html class="no-js" lang="en">
+<html class="no-js" lang="en" data-content_root="">
   <head><meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
-    <meta name="color-scheme" content="light dark"><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+    <meta name="color-scheme" content="light dark"><meta name="viewport" content="width=device-width, initial-scale=1" />
 
         <script async src="https://www.googletagmanager.com/gtag/js?id=G-EV8RVEFX82"></script>
         <script>
@@ -13,18 +13,26 @@
             gtag('config', 'G-EV8RVEFX82');
             
         </script>
-    <link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="multilabel_classification" href="multilabel_classification/index.html" /><link rel="prev" title="outlier" href="outlier.html" />
+    <meta property="og:title" content="multiannotator" />
+<meta property="og:type" content="website" />
+<meta property="og:url" content="https://docs.cleanlab.ai/stable/cleanlab/multiannotator.html" />
+<meta property="og:site_name" content="cleanlab" />
+<meta property="og:description" content="Methods for analysis of classification data labeled by multiple annotators. To analyze a fixed dataset labeled by multiple annotators, use the get_label_quality_multiannotator function which estima..." />
+<meta property="og:image" content="https://raw.githubusercontent.com/cleanlab/assets/master/cleanlab/clos-preview-card.png" />
+<meta property="og:image:alt" content="cleanlab" />
+<meta name="description" content="Methods for analysis of classification data labeled by multiple annotators. To analyze a fixed dataset labeled by multiple annotators, use the get_label_quality_multiannotator function which estima..." />
+<link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="multilabel_classification" href="multilabel_classification/index.html" /><link rel="prev" title="outlier" href="outlier.html" />
 
-    <link rel="shortcut icon" href="https://raw.githubusercontent.com/cleanlab/assets/a4483476d449f2f05a4c7cde329e72358099cc07/cleanlab/cleanlab_favicon.svg"/><meta name="generator" content="sphinx-5.1.1, furo 2022.06.21"/>
+    <link rel="shortcut icon" href="https://raw.githubusercontent.com/cleanlab/assets/a4483476d449f2f05a4c7cde329e72358099cc07/cleanlab/cleanlab_favicon.svg"/><!-- Generated with Sphinx 7.1.2 and Furo 2023.09.10 -->
         <title>multiannotator - cleanlab</title>
-      <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?digest=40978830699223671f4072448e654b5958f38b89" />
-    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/tabs.css" />
-    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/katex@0.13.11/dist/katex.min.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/katex-math.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?digest=30d1aed668e5c3a91c3e3bf6a60b675221979f0e" />
-    <link rel="stylesheet" type="text/css" href="../_static/css/custom.css" />
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=a746c00c" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?v=135e06be" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/tabs.css?v=a5c4661c" />
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/katex-math.css?v=91adb8b6" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?v=36a5483c" />
+    <link rel="stylesheet" type="text/css" href="../_static/css/custom.css?v=96bccb3e" />
     
     
 
@@ -149,7 +157,7 @@
           <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
         </button>
       </div>
-      <label class="toc-overlay-icon toc-header-icon no-toc" for="__toc">
+      <label class="toc-overlay-icon toc-header-icon" for="__toc">
         <div class="visually-hidden">Toggle table of contents sidebar</div>
         <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
       </label>
@@ -158,7 +166,7 @@
   <aside class="sidebar-drawer">
     <div class="sidebar-container">
       
-      <div class="sidebar-sticky"><a style="padding-bottom: 0px;" class="sidebar-brand centered" href="../index.html">
+      <div class="sidebar-sticky"><a style="padding-bottom: 0px;" class="sidebar-brand" href="../index.html">
     
     <div class="sidebar-logo-container">
         <img class="sidebar-logo" src="https://raw.githubusercontent.com/cleanlab/assets/master/cleanlab/cleanlab_logo_only.png" alt="Logo" />
@@ -175,7 +183,7 @@
     aria-label="Star cleanlab/cleanlab on GitHub">Star</a>
 </div>
 <form class="sidebar-search-container" method="get" action="../search.html" role="search">
-  <input class="sidebar-search" placeholder=Search name="q" aria-label="Search">
+  <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
   <input type="hidden" name="check_keywords" value="yes">
   <input type="hidden" name="area" value="default">
 </form>
@@ -185,11 +193,12 @@
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Tutorials</span></p>
 <ul>
-<li class="toctree-l1 has-children"><a class="reference internal" href="../tutorials/datalab/index.html">Datalab Tutorials</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../tutorials/datalab/index.html">Datalab Tutorials</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle navigation of Datalab Tutorials</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="../tutorials/datalab/datalab_quickstart.html">Detecting Common Data Issues with Datalab</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../tutorials/datalab/datalab_advanced.html">Advanced Data Auditing with Datalab</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../tutorials/datalab/text.html">Text Dataset</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../tutorials/datalab/tabular.html">Tabular Data (Numeric/Categorical)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="datalab/guide/issue_type_description.html">Guide to Datalab Issue Types</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../tutorials/indepth_overview.html">Workflows of Data-Centric AI</a></li>
@@ -210,28 +219,41 @@
 </ul>
 <p class="caption" role="heading"><span class="caption-text">API Reference</span></p>
 <ul class="current">
-<li class="toctree-l1 has-children"><a class="reference internal" href="datalab/index.html">datalab</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
-<li class="toctree-l2 has-children"><a class="reference internal" href="datalab/guide/index.html">Datalab guides</a><input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" role="switch" type="checkbox"/><label for="toctree-checkbox-3"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l1 has-children"><a class="reference internal" href="datalab/index.html">datalab</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><div class="visually-hidden">Toggle navigation of datalab</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="datalab/guide/index.html">Datalab guides</a><input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" role="switch" type="checkbox"/><label for="toctree-checkbox-3"><div class="visually-hidden">Toggle navigation of Datalab guides</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l3"><a class="reference internal" href="datalab/guide/issue_type_description.html">Datalab Issue Types</a></li>
 <li class="toctree-l3"><a class="reference internal" href="datalab/guide/custom_issue_manager.html">Creating Your Own Issues Manager</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="datalab/datalab.html">datalab</a></li>
-<li class="toctree-l2 has-children"><a class="reference internal" href="datalab/internal/index.html">internal</a><input class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" role="switch" type="checkbox"/><label for="toctree-checkbox-4"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="datalab/internal/index.html">internal</a><input class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" role="switch" type="checkbox"/><label for="toctree-checkbox-4"><div class="visually-hidden">Toggle navigation of internal</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l3"><a class="reference internal" href="datalab/internal/data.html">data</a></li>
 <li class="toctree-l3"><a class="reference internal" href="datalab/internal/data_issues.html">data_issues</a></li>
 <li class="toctree-l3"><a class="reference internal" href="datalab/internal/issue_finder.html">issue_finder</a></li>
 <li class="toctree-l3"><a class="reference internal" href="datalab/internal/factory.html">factory</a></li>
-<li class="toctree-l3 has-children"><a class="reference internal" href="datalab/internal/issue_manager/index.html">issue_manager</a><input class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" role="switch" type="checkbox"/><label for="toctree-checkbox-5"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="datalab/internal/model_outputs.html">model_outputs</a></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="datalab/internal/issue_manager/index.html">issue_manager</a><input class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" role="switch" type="checkbox"/><label for="toctree-checkbox-5"><div class="visually-hidden">Toggle navigation of issue_manager</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l4"><a class="reference internal" href="datalab/internal/issue_manager/issue_manager.html">Base issue_manager module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="datalab/internal/issue_manager/label.html">label</a></li>
 <li class="toctree-l4"><a class="reference internal" href="datalab/internal/issue_manager/outlier.html">outlier</a></li>
 <li class="toctree-l4"><a class="reference internal" href="datalab/internal/issue_manager/duplicate.html">duplicate</a></li>
 <li class="toctree-l4"><a class="reference internal" href="datalab/internal/issue_manager/noniid.html">noniid</a></li>
 <li class="toctree-l4"><a class="reference internal" href="datalab/internal/issue_manager/imbalance.html">imbalance</a></li>
+<li class="toctree-l4"><a class="reference internal" href="datalab/internal/issue_manager/underperforming_group.html">underperforming_group</a></li>
+<li class="toctree-l4"><a class="reference internal" href="datalab/internal/issue_manager/null.html">null</a></li>
+<li class="toctree-l4"><a class="reference internal" href="datalab/internal/issue_manager/data_valuation.html">data_valuation</a></li>
+<li class="toctree-l4 has-children"><a class="reference internal" href="datalab/internal/issue_manager/regression/index.html">regression</a><input class="toctree-checkbox" id="toctree-checkbox-6" name="toctree-checkbox-6" role="switch" type="checkbox"/><label for="toctree-checkbox-6"><div class="visually-hidden">Toggle navigation of regression</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l5"><a class="reference internal" href="datalab/internal/issue_manager/regression/label.html">label</a></li>
+</ul>
+</li>
+<li class="toctree-l4 has-children"><a class="reference internal" href="datalab/internal/issue_manager/multilabel/index.html">multilabel</a><input class="toctree-checkbox" id="toctree-checkbox-7" name="toctree-checkbox-7" role="switch" type="checkbox"/><label for="toctree-checkbox-7"><div class="visually-hidden">Toggle navigation of multilabel</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l5"><a class="reference internal" href="datalab/internal/issue_manager/multilabel/label.html">label</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="datalab/internal/report.html">report</a></li>
+<li class="toctree-l3"><a class="reference internal" href="datalab/internal/task.html">task</a></li>
 </ul>
 </li>
 </ul>
@@ -243,52 +265,53 @@
 <li class="toctree-l1"><a class="reference internal" href="dataset.html">dataset</a></li>
 <li class="toctree-l1"><a class="reference internal" href="outlier.html">outlier</a></li>
 <li class="toctree-l1 current current-page"><a class="current reference internal" href="#">multiannotator</a></li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="multilabel_classification/index.html">multilabel_classification</a><input class="toctree-checkbox" id="toctree-checkbox-6" name="toctree-checkbox-6" role="switch" type="checkbox"/><label for="toctree-checkbox-6"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l1 has-children"><a class="reference internal" href="multilabel_classification/index.html">multilabel_classification</a><input class="toctree-checkbox" id="toctree-checkbox-8" name="toctree-checkbox-8" role="switch" type="checkbox"/><label for="toctree-checkbox-8"><div class="visually-hidden">Toggle navigation of multilabel_classification</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="multilabel_classification/filter.html">filter</a></li>
 <li class="toctree-l2"><a class="reference internal" href="multilabel_classification/rank.html">rank</a></li>
 <li class="toctree-l2"><a class="reference internal" href="multilabel_classification/dataset.html">dataset</a></li>
 </ul>
 </li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="regression/index.html">regression</a><input class="toctree-checkbox" id="toctree-checkbox-7" name="toctree-checkbox-7" role="switch" type="checkbox"/><label for="toctree-checkbox-7"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l1 has-children"><a class="reference internal" href="regression/index.html">regression</a><input class="toctree-checkbox" id="toctree-checkbox-9" name="toctree-checkbox-9" role="switch" type="checkbox"/><label for="toctree-checkbox-9"><div class="visually-hidden">Toggle navigation of regression</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="regression/rank.html">regression.rank</a></li>
 <li class="toctree-l2"><a class="reference internal" href="regression/learn.html">regression.learn</a></li>
 </ul>
 </li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="token_classification/index.html">token_classification</a><input class="toctree-checkbox" id="toctree-checkbox-8" name="toctree-checkbox-8" role="switch" type="checkbox"/><label for="toctree-checkbox-8"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l1 has-children"><a class="reference internal" href="token_classification/index.html">token_classification</a><input class="toctree-checkbox" id="toctree-checkbox-10" name="toctree-checkbox-10" role="switch" type="checkbox"/><label for="toctree-checkbox-10"><div class="visually-hidden">Toggle navigation of token_classification</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="token_classification/filter.html">filter</a></li>
 <li class="toctree-l2"><a class="reference internal" href="token_classification/rank.html">rank</a></li>
 <li class="toctree-l2"><a class="reference internal" href="token_classification/summary.html">summary</a></li>
 </ul>
 </li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="segmentation/index.html">segmentation</a><input class="toctree-checkbox" id="toctree-checkbox-9" name="toctree-checkbox-9" role="switch" type="checkbox"/><label for="toctree-checkbox-9"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l1 has-children"><a class="reference internal" href="segmentation/index.html">segmentation</a><input class="toctree-checkbox" id="toctree-checkbox-11" name="toctree-checkbox-11" role="switch" type="checkbox"/><label for="toctree-checkbox-11"><div class="visually-hidden">Toggle navigation of segmentation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="segmentation/rank.html">rank</a></li>
 <li class="toctree-l2"><a class="reference internal" href="segmentation/filter.html">filter</a></li>
 <li class="toctree-l2"><a class="reference internal" href="segmentation/summary.html">summary</a></li>
 </ul>
 </li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="object_detection/index.html">object_detection</a><input class="toctree-checkbox" id="toctree-checkbox-10" name="toctree-checkbox-10" role="switch" type="checkbox"/><label for="toctree-checkbox-10"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l1 has-children"><a class="reference internal" href="object_detection/index.html">object_detection</a><input class="toctree-checkbox" id="toctree-checkbox-12" name="toctree-checkbox-12" role="switch" type="checkbox"/><label for="toctree-checkbox-12"><div class="visually-hidden">Toggle navigation of object_detection</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="object_detection/rank.html">rank</a></li>
 <li class="toctree-l2"><a class="reference internal" href="object_detection/filter.html">filter</a></li>
 <li class="toctree-l2"><a class="reference internal" href="object_detection/summary.html">summary</a></li>
 </ul>
 </li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="benchmarking/index.html">benchmarking</a><input class="toctree-checkbox" id="toctree-checkbox-11" name="toctree-checkbox-11" role="switch" type="checkbox"/><label for="toctree-checkbox-11"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l1 has-children"><a class="reference internal" href="benchmarking/index.html">benchmarking</a><input class="toctree-checkbox" id="toctree-checkbox-13" name="toctree-checkbox-13" role="switch" type="checkbox"/><label for="toctree-checkbox-13"><div class="visually-hidden">Toggle navigation of benchmarking</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="benchmarking/noise_generation.html">noise_generation</a></li>
 </ul>
 </li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="models/index.html">models</a><input class="toctree-checkbox" id="toctree-checkbox-12" name="toctree-checkbox-12" role="switch" type="checkbox"/><label for="toctree-checkbox-12"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l1 has-children"><a class="reference internal" href="models/index.html">models</a><input class="toctree-checkbox" id="toctree-checkbox-14" name="toctree-checkbox-14" role="switch" type="checkbox"/><label for="toctree-checkbox-14"><div class="visually-hidden">Toggle navigation of models</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="models/keras.html">keras</a></li>
 <li class="toctree-l2"><a class="reference internal" href="models/fasttext.html">fasttext</a></li>
 </ul>
 </li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="experimental/index.html">experimental</a><input class="toctree-checkbox" id="toctree-checkbox-13" name="toctree-checkbox-13" role="switch" type="checkbox"/><label for="toctree-checkbox-13"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l1 has-children"><a class="reference internal" href="experimental/index.html">experimental</a><input class="toctree-checkbox" id="toctree-checkbox-15" name="toctree-checkbox-15" role="switch" type="checkbox"/><label for="toctree-checkbox-15"><div class="visually-hidden">Toggle navigation of experimental</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="experimental/label_issues_batched.html">label_issues_batched</a></li>
+<li class="toctree-l2"><a class="reference internal" href="experimental/span_classification.html">span_classification</a></li>
 <li class="toctree-l2"><a class="reference internal" href="experimental/mnist_pytorch.html">mnist_pytorch</a></li>
 <li class="toctree-l2"><a class="reference internal" href="experimental/coteaching.html">coteaching</a></li>
 <li class="toctree-l2"><a class="reference internal" href="experimental/cifar_cnn.html">cifar_cnn</a></li>
 </ul>
 </li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="internal/index.html">internal</a><input class="toctree-checkbox" id="toctree-checkbox-14" name="toctree-checkbox-14" role="switch" type="checkbox"/><label for="toctree-checkbox-14"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l1 has-children"><a class="reference internal" href="internal/index.html">internal</a><input class="toctree-checkbox" id="toctree-checkbox-16" name="toctree-checkbox-16" role="switch" type="checkbox"/><label for="toctree-checkbox-16"><div class="visually-hidden">Toggle navigation of internal</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="internal/util.html">util</a></li>
 <li class="toctree-l2"><a class="reference internal" href="internal/latent_algebra.html">latent_algebra</a></li>
 <li class="toctree-l2"><a class="reference internal" href="internal/label_quality_utils.html">label_quality_utils</a></li>
@@ -302,7 +325,7 @@
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Guides</span></p>
 <ul>
-<li class="toctree-l1 has-children"><a class="reference internal" href="datalab/guide/index.html">Datalab issue types</a><input class="toctree-checkbox" id="toctree-checkbox-15" name="toctree-checkbox-15" role="switch" type="checkbox"/><label for="toctree-checkbox-15"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l1 has-children"><a class="reference internal" href="datalab/guide/index.html">Datalab issue types</a><input class="toctree-checkbox" id="toctree-checkbox-17" name="toctree-checkbox-17" role="switch" type="checkbox"/><label for="toctree-checkbox-17"><div class="visually-hidden">Toggle navigation of Datalab issue types</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="datalab/guide/issue_type_description.html">Datalab Issue Types</a></li>
 <li class="toctree-l2"><a class="reference internal" href="datalab/guide/custom_issue_manager.html">Creating Your Own Issues Manager</a></li>
 </ul>
@@ -315,7 +338,7 @@
 <li class="toctree-l1"><a class="reference external" href="https://github.com/cleanlab/cleanlab">GitHub</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://pypi.org/project/cleanlab/">PyPI</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://anaconda.org/Cleanlab/cleanlab">Conda</a></li>
-<li class="toctree-l1"><a class="reference external" href="https://cleanlab.ai/blog/data-centric-ai/">Cleanlab Studio</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://cleanlab.ai/blog/data-centric-ai/">Cleanlab Studio (Easy Mode)</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://help.cleanlab.ai">Cleanlab Studio Docs</a></li>
 </ul>
 
@@ -343,6 +366,15 @@
                 class="reference internal"
                 href="/master/"
                 >developer</a
+            >
+        </li>
+        
+        <li class="toctree-l1">
+            <a
+                id="v2.6.0"
+                class="reference internal"
+                href="/v2.6.0/"
+                >v2.6.0</a
             >
         </li>
         
@@ -462,7 +494,8 @@
           <span>Back to top</span>
         </a>
         <div class="content-icon-container">
-          <div class="theme-toggle-container theme-toggle-content">
+          
+<div class="theme-toggle-container theme-toggle-content">
             <button class="theme-toggle">
               <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
               <svg class="theme-icon-when-auto"><use href="#svg-sun-half"></use></svg>
@@ -470,7 +503,7 @@
               <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
             </button>
           </div>
-          <label class="toc-overlay-icon toc-content-icon no-toc" for="__toc">
+          <label class="toc-overlay-icon toc-content-icon" for="__toc">
             <div class="visually-hidden">Toggle table of contents sidebar</div>
             <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
           </label>
@@ -510,7 +543,7 @@
             document.getElementById("doc_ver_warning").innerHTML =
             `<div class="admonition warning">
             <p class="admonition-title">Warning</p>
-            <p>This documentation is for an old version (<code class="docutils literal notranslate"><span class="pre">v2.5.0</span></code>) of <code class="docutils literal notranslate"><span class="pre">cleanlab</span></code>. To see the documentation for the latest stable version (<code class="docutils literal notranslate"><span class="pre">` + version_number + `</span></code>), click <a href="/">here</a>.</p>
+            <p>This documentation is for an old version (<code class="docutils literal notranslate"><span class="pre">v2.6.0</span></code>) of <code class="docutils literal notranslate"><span class="pre">cleanlab</span></code>. To see the documentation for the latest stable version (<code class="docutils literal notranslate"><span class="pre">` + version_number + `</span></code>), click <a href="/">here</a>.</p>
             </div>`;
         } else {
             document.getElementById("doc_ver_warning").remove();
@@ -524,7 +557,7 @@
 <span id="multiannotator"></span><h1>multiannotator<a class="headerlink" href="#module-cleanlab.multiannotator" title="Permalink to this heading">#</a></h1>
 <p>Methods for analysis of classification data labeled by multiple annotators.</p>
 <p>To analyze a fixed dataset labeled by multiple annotators, use the
-<a class="reference internal" href="#cleanlab.multiannotator.get_label_quality_multiannotator" title="cleanlab.multiannotator.get_label_quality_multiannotator"><code class="xref py py-func docutils literal notranslate"><span class="pre">get_label_quality_multiannotator</span></code></a> function which estimates:</p>
+<a class="reference internal" href="#cleanlab.multiannotator.get_label_quality_multiannotator" title="cleanlab.multiannotator.get_label_quality_multiannotator"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_label_quality_multiannotator</span></code></a> function which estimates:</p>
 <ul class="simple">
 <li><p>A consensus label for each example that aggregates the individual annotations more accurately than alternative aggregation via majority-vote or other algorithms used in crowdsourcing like Dawid-Skene.</p></li>
 <li><p>A quality score for each consensus label which measures our confidence that this label is correct.</p></li>
@@ -533,7 +566,7 @@
 </ul>
 <p>The algorithms to compute these estimates are described in <a class="reference external" href="https://arxiv.org/abs/2210.06812">the CROWDLAB paper</a>.</p>
 <p>If you have some labeled and unlabeled data (with multiple annotators for some labeled examples) and want to decide what data to collect additional labels for,
-use the <a class="reference internal" href="#cleanlab.multiannotator.get_active_learning_scores" title="cleanlab.multiannotator.get_active_learning_scores"><code class="xref py py-func docutils literal notranslate"><span class="pre">get_active_learning_scores</span></code></a> function, which is intended for active learning.
+use the <a class="reference internal" href="#cleanlab.multiannotator.get_active_learning_scores" title="cleanlab.multiannotator.get_active_learning_scores"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_active_learning_scores</span></code></a> function, which is intended for active learning.
 This function estimates an ActiveLab quality score for each example,
 which can be used to prioritize which examples are most informative to collect additional labels for.
 This function is effective for settings where some examples have been labeled by one or more annotators and other examples can have no labels at all so far,
@@ -562,7 +595,7 @@ Variants of these functions are provided for settings where you have trained an 
 <td><p>Returns the majority vote label for each example, aggregated from the labels given by multiple annotators.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#cleanlab.multiannotator.convert_long_to_wide_dataset" title="cleanlab.multiannotator.convert_long_to_wide_dataset"><code class="xref py py-obj docutils literal notranslate"><span class="pre">convert_long_to_wide_dataset</span></code></a>(...)</p></td>
-<td><p>Converts a long format dataset to wide format which is suitable for passing into <a class="reference internal" href="#cleanlab.multiannotator.get_label_quality_multiannotator" title="cleanlab.multiannotator.get_label_quality_multiannotator"><code class="xref py py-func docutils literal notranslate"><span class="pre">get_label_quality_multiannotator</span></code></a>.</p></td>
+<td><p>Converts a long format dataset to wide format which is suitable for passing into <a class="reference internal" href="#cleanlab.multiannotator.get_label_quality_multiannotator" title="cleanlab.multiannotator.get_label_quality_multiannotator"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_label_quality_multiannotator</span></code></a>.</p></td>
 </tr>
 </tbody>
 </table>
@@ -577,7 +610,7 @@ multiple annotators (not necessarily the same number of annotators per example).
 annotator (and their quality), as well as a consensus quality score for how confident we are that this consensus label is actually correct.
 It also computes similar quality scores for each annotator’s individual labels, and the quality of each annotator.
 Scores are between 0 and 1 (estimated via methods like CROWDLAB); lower scores indicate labels/annotators less likely to be correct.</p>
-<p>To decide what data to collect additional labels for, try the <a class="reference internal" href="#cleanlab.multiannotator.get_active_learning_scores" title="cleanlab.multiannotator.get_active_learning_scores"><code class="xref py py-func docutils literal notranslate"><span class="pre">get_active_learning_scores</span></code></a>
+<p>To decide what data to collect additional labels for, try the <a class="reference internal" href="#cleanlab.multiannotator.get_active_learning_scores" title="cleanlab.multiannotator.get_active_learning_scores"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_active_learning_scores</span></code></a>
 (ActiveLab) function, which is intended for active learning with multiple annotators.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -598,9 +631,9 @@ Options include:</p>
 <li><p><code class="docutils literal notranslate"><span class="pre">best_quality</span></code>: consensus obtained by selecting the label with highest label quality (quality determined by method specified in <code class="docutils literal notranslate"><span class="pre">quality_method</span></code>).</p></li>
 </ul>
 <p>A List may be passed if you want to consider multiple methods for producing consensus labels.
-If a List is passed, then the 0th element of the list is the method used to produce columns <code class="xref py py-obj docutils literal notranslate"><span class="pre">consensus_label</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">consensus_quality_score</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">annotator_agreement</span></code> in the returned DataFrame.
+If a List is passed, then the 0th element of the list is the method used to produce columns <cite>consensus_label</cite>, <cite>consensus_quality_score</cite>, <cite>annotator_agreement</cite> in the returned DataFrame.
 The remaning (1st, 2nd, 3rd, etc.) elements of this list are output as extra columns in the returned pandas DataFrame with names formatted as:
-<code class="xref py py-obj docutils literal notranslate"><span class="pre">consensus_label_SUFFIX</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">consensus_quality_score_SUFFIX</span></code> where <code class="xref py py-obj docutils literal notranslate"><span class="pre">SUFFIX</span></code> = each element of this
+<cite>consensus_label_SUFFIX</cite>, <cite>consensus_quality_score_SUFFIX</cite> where <cite>SUFFIX</cite> = each element of this
 list, which must correspond to a valid method for computing consensus labels.</p>
 </p></li>
 <li><p><strong>quality_method</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <em>default</em> = <code class="docutils literal notranslate"><span class="pre">&quot;crowdlab&quot;</span></code>) – <p>Specifies the method used to calculate the quality of the consensus label.
@@ -610,18 +643,18 @@ Options include:</p>
 <li><p><code class="docutils literal notranslate"><span class="pre">agreement</span></code>: the fraction of annotators that agree with the consensus label.</p></li>
 </ul>
 </p></li>
-<li><p><strong>calibrate_probs</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code>, <em>default</em> <code class="xref py py-class docutils literal notranslate"><span class="pre">=</span> <span class="pre">False</span></code>) – Boolean value that specifies whether the provided <code class="xref py py-obj docutils literal notranslate"><span class="pre">pred_probs</span></code> should be re-calibrated to better match the annotators’ empirical label distribution.
+<li><p><strong>calibrate_probs</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code>, <em>default</em> <code class="xref py py-class docutils literal notranslate"><span class="pre">=</span> <span class="pre">False</span></code>) – Boolean value that specifies whether the provided <cite>pred_probs</cite> should be re-calibrated to better match the annotators’ empirical label distribution.
 We recommend setting this to True in active learning applications, in order to prevent overconfident models from suggesting the wrong examples to collect labels for.</p></li>
-<li><p><strong>return_detailed_quality</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code>, <em>default</em> <code class="xref py py-class docutils literal notranslate"><span class="pre">=</span> <span class="pre">True</span></code>) – Boolean to specify if <code class="xref py py-obj docutils literal notranslate"><span class="pre">detailed_label_quality</span></code> is returned.</p></li>
-<li><p><strong>return_annotator_stats</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code>, <em>default</em> <code class="xref py py-class docutils literal notranslate"><span class="pre">=</span> <span class="pre">True</span></code>) – Boolean to specify if <code class="xref py py-obj docutils literal notranslate"><span class="pre">annotator_stats</span></code> is returned.</p></li>
-<li><p><strong>return_weights</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code>, <em>default</em> <code class="xref py py-class docutils literal notranslate"><span class="pre">=</span> <span class="pre">False</span></code>) – Boolean to specify if <code class="xref py py-obj docutils literal notranslate"><span class="pre">model_weight</span></code> and <code class="xref py py-obj docutils literal notranslate"><span class="pre">annotator_weight</span></code> is returned.
+<li><p><strong>return_detailed_quality</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code>, <em>default</em> <code class="xref py py-class docutils literal notranslate"><span class="pre">=</span> <span class="pre">True</span></code>) – Boolean to specify if <cite>detailed_label_quality</cite> is returned.</p></li>
+<li><p><strong>return_annotator_stats</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code>, <em>default</em> <code class="xref py py-class docutils literal notranslate"><span class="pre">=</span> <span class="pre">True</span></code>) – Boolean to specify if <cite>annotator_stats</cite> is returned.</p></li>
+<li><p><strong>return_weights</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code>, <em>default</em> <code class="xref py py-class docutils literal notranslate"><span class="pre">=</span> <span class="pre">False</span></code>) – Boolean to specify if <cite>model_weight</cite> and <cite>annotator_weight</cite> is returned.
 Model and annotator weights are applicable for <code class="docutils literal notranslate"><span class="pre">quality_method</span> <span class="pre">==</span> <span class="pre">crowdlab</span></code>, will return <code class="docutils literal notranslate"><span class="pre">None</span></code> for any other quality methods.</p></li>
 <li><p><strong>verbose</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code>, <em>default</em> <code class="xref py py-class docutils literal notranslate"><span class="pre">=</span> <span class="pre">True</span></code>) – Important warnings and other printed statements may be suppressed if <code class="docutils literal notranslate"><span class="pre">verbose</span></code> is set to <code class="docutils literal notranslate"><span class="pre">False</span></code>.</p></li>
 <li><p><strong>label_quality_score_kwargs</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code>, <em>optional</em>) – Keyword arguments to pass into <a class="reference internal" href="rank.html#cleanlab.rank.get_label_quality_scores" title="cleanlab.rank.get_label_quality_scores"><code class="xref py py-func docutils literal notranslate"><span class="pre">get_label_quality_scores</span></code></a>.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code>]</p>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code>]</span></p>
 </dd>
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><p><p><strong>labels_info</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code>) – Dictionary containing up to 5 pandas DataFrame with keys as below:</p>
@@ -634,11 +667,11 @@ Model and annotator weights are applicable for <code class="docutils literal not
 <li><p><code class="docutils literal notranslate"><span class="pre">consensus_quality_score</span></code>: label quality score for consensus label, calculated by the method specified in <code class="docutils literal notranslate"><span class="pre">quality_method</span></code>.</p></li>
 </ul>
 </dd>
-<dt><code class="docutils literal notranslate"><span class="pre">detailed_label_quality</span></code><span class="classifier">pandas.DataFrame</span></dt><dd><p>Only returned if <code class="xref py py-obj docutils literal notranslate"><span class="pre">return_detailed_quality=True</span></code>.
-Returns a pandas DataFrame with columns <code class="xref py py-obj docutils literal notranslate"><span class="pre">quality_annotator_1</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">quality_annotator_2</span></code>, …, <code class="xref py py-obj docutils literal notranslate"><span class="pre">quality_annotator_M</span></code> where each entry is
+<dt><code class="docutils literal notranslate"><span class="pre">detailed_label_quality</span></code><span class="classifier">pandas.DataFrame</span></dt><dd><p>Only returned if <cite>return_detailed_quality=True</cite>.
+Returns a pandas DataFrame with columns <cite>quality_annotator_1</cite>, <cite>quality_annotator_2</cite>, …, <cite>quality_annotator_M</cite> where each entry is
 the label quality score for the labels provided by each annotator (is <code class="docutils literal notranslate"><span class="pre">NaN</span></code> for examples which this annotator did not label).</p>
 </dd>
-<dt><code class="docutils literal notranslate"><span class="pre">annotator_stats</span></code><span class="classifier">pandas.DataFrame</span></dt><dd><p>Only returned if <code class="xref py py-obj docutils literal notranslate"><span class="pre">return_annotator_stats=True</span></code>.
+<dt><code class="docutils literal notranslate"><span class="pre">annotator_stats</span></code><span class="classifier">pandas.DataFrame</span></dt><dd><p>Only returned if <cite>return_annotator_stats=True</cite>.
 Returns overall statistics about each annotator, sorted by lowest annotator_quality first.
 pandas DataFrame in which each row corresponds to one annotator (the row IDs correspond to annotator IDs), with columns:</p>
 <ul class="simple">
@@ -648,11 +681,11 @@ pandas DataFrame in which each row corresponds to one annotator (the row IDs cor
 <li><p><code class="docutils literal notranslate"><span class="pre">worst_class</span></code>: the class that is most frequently mislabeled by a given annotator.</p></li>
 </ul>
 </dd>
-<dt><code class="docutils literal notranslate"><span class="pre">model_weight</span></code><span class="classifier">float</span></dt><dd><p>Only returned if <code class="xref py py-obj docutils literal notranslate"><span class="pre">return_weights=True</span></code>. It is only applicable for <code class="docutils literal notranslate"><span class="pre">quality_method</span> <span class="pre">==</span> <span class="pre">crowdlab</span></code>.
+<dt><code class="docutils literal notranslate"><span class="pre">model_weight</span></code><span class="classifier">float</span></dt><dd><p>Only returned if <cite>return_weights=True</cite>. It is only applicable for <code class="docutils literal notranslate"><span class="pre">quality_method</span> <span class="pre">==</span> <span class="pre">crowdlab</span></code>.
 The model weight specifies the weight of classifier model in weighted averages used to estimate label quality
 This number is an estimate of how trustworthy the model is relative the annotators.</p>
 </dd>
-<dt><code class="docutils literal notranslate"><span class="pre">annotator_weight</span></code><span class="classifier">np.ndarray</span></dt><dd><p>Only returned if <code class="xref py py-obj docutils literal notranslate"><span class="pre">return_weights=True</span></code>. It is only applicable for <code class="docutils literal notranslate"><span class="pre">quality_method</span> <span class="pre">==</span> <span class="pre">crowdlab</span></code>.
+<dt><code class="docutils literal notranslate"><span class="pre">annotator_weight</span></code><span class="classifier">np.ndarray</span></dt><dd><p>Only returned if <cite>return_weights=True</cite>. It is only applicable for <code class="docutils literal notranslate"><span class="pre">quality_method</span> <span class="pre">==</span> <span class="pre">crowdlab</span></code>.
 An array of shape <code class="docutils literal notranslate"><span class="pre">(M,)</span></code> where M is the number of annotators, specifying the weight of each annotator in weighted averages used to estimate label quality.
 These weights are estimates of how trustworthy each annotator is relative to the other annotators.</p>
 </dd>
@@ -666,41 +699,41 @@ These weights are estimates of how trustworthy each annotator is relative to the
 <dt class="sig sig-object py" id="cleanlab.multiannotator.get_label_quality_multiannotator_ensemble">
 <span class="sig-prename descclassname"><span class="pre">cleanlab.multiannotator.</span></span><span class="sig-name descname"><span class="pre">get_label_quality_multiannotator_ensemble</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">labels_multiannotator</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pred_probs</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">calibrate_probs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">return_detailed_quality</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">return_annotator_stats</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">return_weights</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">label_quality_score_kwargs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{}</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/cleanlab/multiannotator.html#get_label_quality_multiannotator_ensemble"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cleanlab.multiannotator.get_label_quality_multiannotator_ensemble" title="Permalink to this definition">#</a></dt>
 <dd><p>Returns label quality scores for each example and for each annotator, based on predictions from an ensemble of models.</p>
-<p>This function is similar to <a class="reference internal" href="#cleanlab.multiannotator.get_label_quality_multiannotator" title="cleanlab.multiannotator.get_label_quality_multiannotator"><code class="xref py py-func docutils literal notranslate"><span class="pre">get_label_quality_multiannotator</span></code></a> but for settings where
+<p>This function is similar to <cite>~cleanlab.multiannotator.get_label_quality_multiannotator</cite> but for settings where
 you have trained an ensemble of multiple classifier models rather than a single model.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>labels_multiannotator</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">pd.DataFrame</span></code> or <code class="xref py py-class docutils literal notranslate"><span class="pre">np.ndarray</span></code>) – Multiannotator labels in the same format expected by <a class="reference internal" href="#cleanlab.multiannotator.get_label_quality_multiannotator" title="cleanlab.multiannotator.get_label_quality_multiannotator"><code class="xref py py-func docutils literal notranslate"><span class="pre">get_label_quality_multiannotator</span></code></a>.</p></li>
+<li><p><strong>labels_multiannotator</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">pd.DataFrame</span></code> or <code class="xref py py-class docutils literal notranslate"><span class="pre">np.ndarray</span></code>) – Multiannotator labels in the same format expected by <cite>~cleanlab.multiannotator.get_label_quality_multiannotator</cite>.</p></li>
 <li><p><strong>pred_probs</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">np.ndarray</span></code>) – An array of shape <code class="docutils literal notranslate"><span class="pre">(P,</span> <span class="pre">N,</span> <span class="pre">K)</span></code> where P is the number of models, consisting of predicted class probabilities from the ensemble models.
 Each set of predicted probabilities with shape <code class="docutils literal notranslate"><span class="pre">(N,</span> <span class="pre">K)</span></code> is in the same format expected by the <a class="reference internal" href="rank.html#cleanlab.rank.get_label_quality_scores" title="cleanlab.rank.get_label_quality_scores"><code class="xref py py-func docutils literal notranslate"><span class="pre">get_label_quality_scores</span></code></a>.</p></li>
-<li><p><strong>calibrate_probs</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code>, <em>default</em> <code class="xref py py-class docutils literal notranslate"><span class="pre">=</span> <span class="pre">False</span></code>) – Boolean value as expected by <a class="reference internal" href="#cleanlab.multiannotator.get_label_quality_multiannotator" title="cleanlab.multiannotator.get_label_quality_multiannotator"><code class="xref py py-func docutils literal notranslate"><span class="pre">get_label_quality_multiannotator</span></code></a>.</p></li>
-<li><p><strong>return_detailed_quality</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code>, <em>default</em> <code class="xref py py-class docutils literal notranslate"><span class="pre">=</span> <span class="pre">True</span></code>) – Boolean value as expected by <a class="reference internal" href="#cleanlab.multiannotator.get_label_quality_multiannotator" title="cleanlab.multiannotator.get_label_quality_multiannotator"><code class="xref py py-func docutils literal notranslate"><span class="pre">get_label_quality_multiannotator</span></code></a>.</p></li>
-<li><p><strong>return_annotator_stats</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code>, <em>default</em> <code class="xref py py-class docutils literal notranslate"><span class="pre">=</span> <span class="pre">True</span></code>) – Boolean value as expected by <a class="reference internal" href="#cleanlab.multiannotator.get_label_quality_multiannotator" title="cleanlab.multiannotator.get_label_quality_multiannotator"><code class="xref py py-func docutils literal notranslate"><span class="pre">get_label_quality_multiannotator</span></code></a>.</p></li>
-<li><p><strong>return_weights</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code>, <em>default</em> <code class="xref py py-class docutils literal notranslate"><span class="pre">=</span> <span class="pre">False</span></code>) – Boolean value as expected by <a class="reference internal" href="#cleanlab.multiannotator.get_label_quality_multiannotator" title="cleanlab.multiannotator.get_label_quality_multiannotator"><code class="xref py py-func docutils literal notranslate"><span class="pre">get_label_quality_multiannotator</span></code></a>.</p></li>
-<li><p><strong>verbose</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code>, <em>default</em> <code class="xref py py-class docutils literal notranslate"><span class="pre">=</span> <span class="pre">True</span></code>) – Boolean value as expected by <a class="reference internal" href="#cleanlab.multiannotator.get_label_quality_multiannotator" title="cleanlab.multiannotator.get_label_quality_multiannotator"><code class="xref py py-func docutils literal notranslate"><span class="pre">get_label_quality_multiannotator</span></code></a>.</p></li>
-<li><p><strong>label_quality_score_kwargs</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code>, <em>optional</em>) – Keyword arguments in the same format expected by py:func:<a class="reference internal" href="#cleanlab.multiannotator.get_label_quality_multiannotator" title="cleanlab.multiannotator.get_label_quality_multiannotator"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_label_quality_multiannotator</span></code></a>.</p></li>
+<li><p><strong>calibrate_probs</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code>, <em>default</em> <code class="xref py py-class docutils literal notranslate"><span class="pre">=</span> <span class="pre">False</span></code>) – Boolean value as expected by <cite>~cleanlab.multiannotator.get_label_quality_multiannotator</cite>.</p></li>
+<li><p><strong>return_detailed_quality</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code>, <em>default</em> <code class="xref py py-class docutils literal notranslate"><span class="pre">=</span> <span class="pre">True</span></code>) – Boolean value as expected by <cite>~cleanlab.multiannotator.get_label_quality_multiannotator</cite>.</p></li>
+<li><p><strong>return_annotator_stats</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code>, <em>default</em> <code class="xref py py-class docutils literal notranslate"><span class="pre">=</span> <span class="pre">True</span></code>) – Boolean value as expected by <cite>~cleanlab.multiannotator.get_label_quality_multiannotator</cite>.</p></li>
+<li><p><strong>return_weights</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code>, <em>default</em> <code class="xref py py-class docutils literal notranslate"><span class="pre">=</span> <span class="pre">False</span></code>) – Boolean value as expected by <cite>~cleanlab.multiannotator.get_label_quality_multiannotator</cite>.</p></li>
+<li><p><strong>verbose</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code>, <em>default</em> <code class="xref py py-class docutils literal notranslate"><span class="pre">=</span> <span class="pre">True</span></code>) – Boolean value as expected by <cite>~cleanlab.multiannotator.get_label_quality_multiannotator</cite>.</p></li>
+<li><p><strong>label_quality_score_kwargs</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code>, <em>optional</em>) – Keyword arguments in the same format expected by <cite>~cleanlab.multiannotator.get_label_quality_multiannotator</cite>.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code>]</p>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code>]</span></p>
 </dd>
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><p><p><strong>labels_info</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code>) – Dictionary containing up to 5 pandas DataFrame with keys as below:</p>
 <dl class="simple">
-<dt><code class="docutils literal notranslate"><span class="pre">label_quality</span></code><span class="classifier">pandas.DataFrame</span></dt><dd><p>Similar to output as <a class="reference internal" href="#cleanlab.multiannotator.get_label_quality_multiannotator" title="cleanlab.multiannotator.get_label_quality_multiannotator"><code class="xref py py-func docutils literal notranslate"><span class="pre">get_label_quality_multiannotator</span></code></a>.</p>
+<dt><code class="docutils literal notranslate"><span class="pre">label_quality</span></code><span class="classifier">pandas.DataFrame</span></dt><dd><p>Similar to output as <cite>~cleanlab.multiannotator.get_label_quality_multiannotator</cite>.</p>
 </dd>
-<dt><code class="docutils literal notranslate"><span class="pre">detailed_label_quality</span></code><span class="classifier">pandas.DataFrame</span></dt><dd><p>Similar to output as <a class="reference internal" href="#cleanlab.multiannotator.get_label_quality_multiannotator" title="cleanlab.multiannotator.get_label_quality_multiannotator"><code class="xref py py-func docutils literal notranslate"><span class="pre">get_label_quality_multiannotator</span></code></a>.</p>
+<dt><code class="docutils literal notranslate"><span class="pre">detailed_label_quality</span></code><span class="classifier">pandas.DataFrame</span></dt><dd><p>Similar to output as <cite>~cleanlab.multiannotator.get_label_quality_multiannotator</cite>.</p>
 </dd>
-<dt><code class="docutils literal notranslate"><span class="pre">annotator_stats</span></code><span class="classifier">pandas.DataFrame</span></dt><dd><p>Similar to output as <a class="reference internal" href="#cleanlab.multiannotator.get_label_quality_multiannotator" title="cleanlab.multiannotator.get_label_quality_multiannotator"><code class="xref py py-func docutils literal notranslate"><span class="pre">get_label_quality_multiannotator</span></code></a>.</p>
+<dt><code class="docutils literal notranslate"><span class="pre">annotator_stats</span></code><span class="classifier">pandas.DataFrame</span></dt><dd><p>Similar to output as <cite>~cleanlab.multiannotator.get_label_quality_multiannotator</cite>.</p>
 </dd>
-<dt><code class="docutils literal notranslate"><span class="pre">model_weight</span></code><span class="classifier">np.ndarray</span></dt><dd><p>Only returned if <code class="xref py py-obj docutils literal notranslate"><span class="pre">return_weights=True</span></code>.
+<dt><code class="docutils literal notranslate"><span class="pre">model_weight</span></code><span class="classifier">np.ndarray</span></dt><dd><p>Only returned if <cite>return_weights=True</cite>.
 An array of shape <code class="docutils literal notranslate"><span class="pre">(P,)</span></code> where is the number of models in the ensemble, specifying the weight of each classifier model in weighted averages used to estimate label quality.
 These weigthts is an estimate of how trustworthy the model is relative the annotators.
 An array of shape <code class="docutils literal notranslate"><span class="pre">(P,)</span></code> where is the number of models in the ensemble, specifying the model weight used in weighted averages.</p>
 </dd>
-<dt><code class="docutils literal notranslate"><span class="pre">annotator_weight</span></code><span class="classifier">np.ndarray</span></dt><dd><p>Only returned if <code class="xref py py-obj docutils literal notranslate"><span class="pre">return_weights=True</span></code>.
-Similar to output as <a class="reference internal" href="#cleanlab.multiannotator.get_label_quality_multiannotator" title="cleanlab.multiannotator.get_label_quality_multiannotator"><code class="xref py py-func docutils literal notranslate"><span class="pre">get_label_quality_multiannotator</span></code></a>.</p>
+<dt><code class="docutils literal notranslate"><span class="pre">annotator_weight</span></code><span class="classifier">np.ndarray</span></dt><dd><p>Only returned if <cite>return_weights=True</cite>.
+Similar to output as <cite>~cleanlab.multiannotator.get_label_quality_multiannotator</cite>.</p>
 </dd>
 </dl>
 </p>
@@ -725,14 +758,14 @@ and repeat this process after retraining your classifier.</p>
 <p>You can use this function to get active learning scores for: examples that already have one or more labels (specify <code class="docutils literal notranslate"><span class="pre">labels_multiannotator</span></code> and <code class="docutils literal notranslate"><span class="pre">pred_probs</span></code>
 as arguments), or for unlabeled examples (specify <code class="docutils literal notranslate"><span class="pre">pred_probs_unlabeled</span></code>), or for both types of examples (specify all of the above arguments).</p>
 <p>To analyze a fixed dataset labeled by multiple annotators rather than collecting additional labels, try the
-<a class="reference internal" href="#cleanlab.multiannotator.get_label_quality_multiannotator" title="cleanlab.multiannotator.get_label_quality_multiannotator"><code class="xref py py-func docutils literal notranslate"><span class="pre">get_label_quality_multiannotator</span></code></a> (CROWDLAB) function instead.</p>
+<cite>~cleanlab.multiannotator.get_label_quality_multiannotator</cite> (CROWDLAB) function instead.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>labels_multiannotator</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">pd.DataFrame</span></code> or <code class="xref py py-class docutils literal notranslate"><span class="pre">np.ndarray</span></code>, <em>optional</em>) – 2D pandas DataFrame or array of multiple given labels for each example with shape <code class="docutils literal notranslate"><span class="pre">(N,</span> <span class="pre">M)</span></code>,
 where N is the number of examples and M is the number of annotators. Note that this function also works with
 datasets where there is only one annotator (M=1).
-For more details, labels in the same format expected by the <a class="reference internal" href="#cleanlab.multiannotator.get_label_quality_multiannotator" title="cleanlab.multiannotator.get_label_quality_multiannotator"><code class="xref py py-func docutils literal notranslate"><span class="pre">get_label_quality_multiannotator</span></code></a>.
+For more details, labels in the same format expected by the <cite>~cleanlab.multiannotator.get_label_quality_multiannotator</cite>.
 Note that examples that have no annotator labels should not be included in this DataFrame/array.
 This argument is optional if <code class="docutils literal notranslate"><span class="pre">pred_probs</span></code> is not provided (you might only provide <code class="docutils literal notranslate"><span class="pre">pred_probs_unlabeled</span></code> to only get active learning scores for the unlabeled examples).</p></li>
 <li><p><strong>pred_probs</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">np.ndarray</span></code>, <em>optional</em>) – An array of shape <code class="docutils literal notranslate"><span class="pre">(N,</span> <span class="pre">K)</span></code> of predicted class probabilities from a trained classifier model.
@@ -744,7 +777,7 @@ This argument is optional if you only want to get active learning scores for alr
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><code class="xref py py-data docutils literal notranslate"><span class="pre">Tuple</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>]</p>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Tuple</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>]</span></p>
 </dd>
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><p><ul class="simple">
@@ -754,7 +787,7 @@ Examples with the lowest scores are those we should label next in order to maxim
 <li><p><strong>active_learning_scores_unlabeled</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">np.ndarray</span></code>) – Array of shape <code class="docutils literal notranslate"><span class="pre">(N,)</span></code> indicating the active learning quality scores for each unlabeled example.
 Returns an empty array if no unlabeled data is provided.
 Examples with the lowest scores are those we should label next in order to maximally improve our classifier model
-(scores for unlabeled data are directly comparable with the <code class="xref py py-obj docutils literal notranslate"><span class="pre">active_learning_scores</span></code> for labeled data).</p></li>
+(scores for unlabeled data are directly comparable with the <cite>active_learning_scores</cite> for labeled data).</p></li>
 </ul>
 </p>
 </dd>
@@ -765,12 +798,12 @@ Examples with the lowest scores are those we should label next in order to maxim
 <dt class="sig sig-object py" id="cleanlab.multiannotator.get_active_learning_scores_ensemble">
 <span class="sig-prename descclassname"><span class="pre">cleanlab.multiannotator.</span></span><span class="sig-name descname"><span class="pre">get_active_learning_scores_ensemble</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">labels_multiannotator</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pred_probs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pred_probs_unlabeled</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/cleanlab/multiannotator.html#get_active_learning_scores_ensemble"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cleanlab.multiannotator.get_active_learning_scores_ensemble" title="Permalink to this definition">#</a></dt>
 <dd><p>Returns an ActiveLab quality score for each example in the dataset, based on predictions from an ensemble of models.</p>
-<p>This function is similar to <a class="reference internal" href="#cleanlab.multiannotator.get_active_learning_scores" title="cleanlab.multiannotator.get_active_learning_scores"><code class="xref py py-func docutils literal notranslate"><span class="pre">get_active_learning_scores</span></code></a> but allows for an
+<p>This function is similar to <cite>~cleanlab.multiannotator.get_active_learning_scores</cite> but allows for an
 ensemble of multiple classifier models to be trained and will aggregate predictions from the models to compute the ActiveLab quality score.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>labels_multiannotator</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">pd.DataFrame</span></code> or <code class="xref py py-class docutils literal notranslate"><span class="pre">np.ndarray</span></code>) – Multiannotator labels in the same format expected by <a class="reference internal" href="#cleanlab.multiannotator.get_active_learning_scores" title="cleanlab.multiannotator.get_active_learning_scores"><code class="xref py py-func docutils literal notranslate"><span class="pre">get_active_learning_scores</span></code></a>.
+<li><p><strong>labels_multiannotator</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">pd.DataFrame</span></code> or <code class="xref py py-class docutils literal notranslate"><span class="pre">np.ndarray</span></code>) – Multiannotator labels in the same format expected by <cite>~cleanlab.multiannotator.get_active_learning_scores</cite>.
 This argument is optional if <code class="docutils literal notranslate"><span class="pre">pred_probs</span></code> is not provided (in cases where you only provide <code class="docutils literal notranslate"><span class="pre">pred_probs_unlabeled</span></code> to get active learning scores for unlabeled examples).</p></li>
 <li><p><strong>pred_probs</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">np.ndarray</span></code>) – An array of shape <code class="docutils literal notranslate"><span class="pre">(P,</span> <span class="pre">N,</span> <span class="pre">K)</span></code> where P is the number of models, consisting of predicted class probabilities from the ensemble models.
 Note that this function also works with datasets where there is only one annotator (M=1).
@@ -783,7 +816,7 @@ This argument is optional if you only want to get active learning scores for lab
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><code class="xref py py-data docutils literal notranslate"><span class="pre">Tuple</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>]</p>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Tuple</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>]</span></p>
 </dd>
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><p><ul class="simple">
@@ -808,14 +841,14 @@ This argument is optional if you only want to get active learning scores for lab
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>labels_multiannotator</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">pd.DataFrame</span></code> or <code class="xref py py-class docutils literal notranslate"><span class="pre">np.ndarray</span></code>) – 2D pandas DataFrame or array of multiple given labels for each example with shape <code class="docutils literal notranslate"><span class="pre">(N,</span> <span class="pre">M)</span></code>,
 where N is the number of examples and M is the number of annotators.
-For more details, labels in the same format expected by the <a class="reference internal" href="#cleanlab.multiannotator.get_label_quality_multiannotator" title="cleanlab.multiannotator.get_label_quality_multiannotator"><code class="xref py py-func docutils literal notranslate"><span class="pre">get_label_quality_multiannotator</span></code></a>.</p></li>
+For more details, labels in the same format expected by the <cite>~cleanlab.multiannotator.get_label_quality_multiannotator</cite>.</p></li>
 <li><p><strong>pred_probs</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">np.ndarray</span></code>, <em>optional</em>) – An array of shape <code class="docutils literal notranslate"><span class="pre">(N,</span> <span class="pre">K)</span></code> of model-predicted probabilities, <code class="docutils literal notranslate"><span class="pre">P(label=k|x)</span></code>.
-For details, predicted probabilities in the same format expected by <a class="reference internal" href="#cleanlab.multiannotator.get_label_quality_multiannotator" title="cleanlab.multiannotator.get_label_quality_multiannotator"><code class="xref py py-func docutils literal notranslate"><span class="pre">get_label_quality_multiannotator</span></code></a>.</p></li>
+For details, predicted probabilities in the same format expected by <cite>~cleanlab.multiannotator.get_label_quality_multiannotator</cite>.</p></li>
 <li><p><strong>verbose</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code>, <em>optional</em>) – Important warnings and other printed statements may be suppressed if <code class="docutils literal notranslate"><span class="pre">verbose</span></code> is set to <code class="docutils literal notranslate"><span class="pre">False</span></code>.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></p>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></span></p>
 </dd>
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><p><p><strong>consensus_label</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">np.ndarray</span></code>) – An array of shape <code class="docutils literal notranslate"><span class="pre">(N,)</span></code> with the majority vote label aggregated from all annotators.</p>
@@ -833,7 +866,7 @@ and lastly by random selection.</p>
 <dt class="sig sig-object py" id="cleanlab.multiannotator.convert_long_to_wide_dataset">
 <span class="sig-prename descclassname"><span class="pre">cleanlab.multiannotator.</span></span><span class="sig-name descname"><span class="pre">convert_long_to_wide_dataset</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">labels_multiannotator_long</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/cleanlab/multiannotator.html#convert_long_to_wide_dataset"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cleanlab.multiannotator.convert_long_to_wide_dataset" title="Permalink to this definition">#</a></dt>
 <dd><p>Converts a long format dataset to wide format which is suitable for passing into
-<a class="reference internal" href="#cleanlab.multiannotator.get_label_quality_multiannotator" title="cleanlab.multiannotator.get_label_quality_multiannotator"><code class="xref py py-func docutils literal notranslate"><span class="pre">get_label_quality_multiannotator</span></code></a>.</p>
+<cite>~cleanlab.multiannotator.get_label_quality_multiannotator</cite>.</p>
 <p>Dataframe must contain three columns named:</p>
 <ol class="arabic simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">task</span></code> representing each example labeled by the annotators</p></li>
@@ -845,7 +878,7 @@ and lastly by random selection.</p>
 <dd class="field-odd"><p><strong>labels_multiannotator_long</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">pd.DataFrame</span></code>) – pandas DataFrame in long format with three columns named <code class="docutils literal notranslate"><span class="pre">task</span></code>, <code class="docutils literal notranslate"><span class="pre">annotator</span></code> and <code class="docutils literal notranslate"><span class="pre">label</span></code></p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code></p>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code></span></p>
 </dd>
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>labels_multiannotator_wide</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">pd.DataFrame</span></code>) – pandas DataFrame of the proper format to be passed as <code class="docutils literal notranslate"><span class="pre">labels_multiannotator</span></code> for the other <code class="docutils literal notranslate"><span class="pre">cleanlab.multiannotator</span></code> functions.</p>
@@ -867,10 +900,10 @@ and lastly by random selection.</p>
                 </div>
                 <div class="title">multilabel_classification</div>
               </div>
-              <svg><use href="#svg-arrow-right"></use></svg>
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
             </a>
           <a class="prev-page" href="outlier.html">
-              <svg><use href="#svg-arrow-right"></use></svg>
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
               <div class="page-info">
                 <div class="context">
                   <span>Previous</span>
@@ -884,7 +917,7 @@ and lastly by random selection.</p>
         <div class="bottom-of-page">
           <div class="left-details">
             <div class="copyright">
-                Copyright &#169; 2023, Cleanlab Inc.
+                Copyright &#169; 2024, Cleanlab Inc.
             </div>
             Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
             
@@ -918,22 +951,44 @@ and lastly by random selection.</p>
 
       </footer>
     </div>
-    <aside class="toc-drawer no-toc">
+    <aside class="toc-drawer">
       
+      
+      <div class="toc-sticky toc-scroll">
+        <div class="toc-title-container">
+          <span class="toc-title">
+            On this page
+          </span>
+        </div>
+        <div class="toc-tree-container">
+          <div class="toc-tree">
+            <ul>
+<li><a class="reference internal" href="#">multiannotator</a><ul>
+<li><a class="reference internal" href="#cleanlab.multiannotator.get_label_quality_multiannotator"><code class="docutils literal notranslate"><span class="pre">get_label_quality_multiannotator()</span></code></a></li>
+<li><a class="reference internal" href="#cleanlab.multiannotator.get_label_quality_multiannotator_ensemble"><code class="docutils literal notranslate"><span class="pre">get_label_quality_multiannotator_ensemble()</span></code></a></li>
+<li><a class="reference internal" href="#cleanlab.multiannotator.get_active_learning_scores"><code class="docutils literal notranslate"><span class="pre">get_active_learning_scores()</span></code></a></li>
+<li><a class="reference internal" href="#cleanlab.multiannotator.get_active_learning_scores_ensemble"><code class="docutils literal notranslate"><span class="pre">get_active_learning_scores_ensemble()</span></code></a></li>
+<li><a class="reference internal" href="#cleanlab.multiannotator.get_majority_vote_label"><code class="docutils literal notranslate"><span class="pre">get_majority_vote_label()</span></code></a></li>
+<li><a class="reference internal" href="#cleanlab.multiannotator.convert_long_to_wide_dataset"><code class="docutils literal notranslate"><span class="pre">convert_long_to_wide_dataset()</span></code></a></li>
+</ul>
+</li>
+</ul>
+
+          </div>
+        </div>
+      </div>
       
       
     </aside>
   </div>
-</div><script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
-    <script src="../_static/jquery.js"></script>
-    <script src="../_static/underscore.js"></script>
-    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
-    <script src="../_static/doctools.js"></script>
-    <script src="../_static/scripts/furo.js"></script>
-    <script src="../_static/clipboard.min.js"></script>
-    <script src="../_static/copybutton.js"></script>
+</div><script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js?v=2b91c5f0"></script>
+    <script src="../_static/doctools.js?v=888ff710"></script>
+    <script src="../_static/sphinx_highlight.js?v=4825356b"></script>
+    <script src="../_static/scripts/furo.js?v=32e29ea5"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=30646c52"></script>
     <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
-    <script src="https://unpkg.com/@jupyter-widgets/html-manager@^0.20.0/dist/embed-amd.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@jupyter-widgets/html-manager@^1.0.1/dist/embed-amd.js"></script>
     
 <script async defer src="https://buttons.github.io/buttons.js"></script>
 </body>

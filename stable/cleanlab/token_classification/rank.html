@@ -1,8 +1,8 @@
 <!doctype html>
-<html class="no-js" lang="en">
+<html class="no-js" lang="en" data-content_root="">
   <head><meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
-    <meta name="color-scheme" content="light dark"><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+    <meta name="color-scheme" content="light dark"><meta name="viewport" content="width=device-width, initial-scale=1" />
 
         <script async src="https://www.googletagmanager.com/gtag/js?id=G-EV8RVEFX82"></script>
         <script>
@@ -13,18 +13,26 @@
             gtag('config', 'G-EV8RVEFX82');
             
         </script>
-    <link rel="index" title="Index" href="../../genindex.html" /><link rel="search" title="Search" href="../../search.html" /><link rel="next" title="summary" href="summary.html" /><link rel="prev" title="filter" href="filter.html" />
+    <meta property="og:title" content="rank" />
+<meta property="og:type" content="website" />
+<meta property="og:url" content="https://docs.cleanlab.ai/stable/cleanlab/token_classification/rank.html" />
+<meta property="og:site_name" content="cleanlab" />
+<meta property="og:description" content="Methods to rank and score sentences in a token classification dataset (text data), based on how likely they are to contain label errors. The underlying algorithms are described in this paper. Funct..." />
+<meta property="og:image" content="https://raw.githubusercontent.com/cleanlab/assets/master/cleanlab/clos-preview-card.png" />
+<meta property="og:image:alt" content="cleanlab" />
+<meta name="description" content="Methods to rank and score sentences in a token classification dataset (text data), based on how likely they are to contain label errors. The underlying algorithms are described in this paper. Funct..." />
+<link rel="index" title="Index" href="../../genindex.html" /><link rel="search" title="Search" href="../../search.html" /><link rel="next" title="summary" href="summary.html" /><link rel="prev" title="filter" href="filter.html" />
 
-    <link rel="shortcut icon" href="https://raw.githubusercontent.com/cleanlab/assets/a4483476d449f2f05a4c7cde329e72358099cc07/cleanlab/cleanlab_favicon.svg"/><meta name="generator" content="sphinx-5.1.1, furo 2022.06.21"/>
+    <link rel="shortcut icon" href="https://raw.githubusercontent.com/cleanlab/assets/a4483476d449f2f05a4c7cde329e72358099cc07/cleanlab/cleanlab_favicon.svg"/><!-- Generated with Sphinx 7.1.2 and Furo 2023.09.10 -->
         <title>rank - cleanlab</title>
-      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="../../_static/styles/furo.css?digest=40978830699223671f4072448e654b5958f38b89" />
-    <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css" />
-    <link rel="stylesheet" type="text/css" href="../../_static/tabs.css" />
-    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/katex@0.13.11/dist/katex.min.css" />
-    <link rel="stylesheet" type="text/css" href="../../_static/katex-math.css" />
-    <link rel="stylesheet" type="text/css" href="../../_static/styles/furo-extensions.css?digest=30d1aed668e5c3a91c3e3bf6a60b675221979f0e" />
-    <link rel="stylesheet" type="text/css" href="../../_static/css/custom.css" />
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=a746c00c" />
+    <link rel="stylesheet" type="text/css" href="../../_static/styles/furo.css?v=135e06be" />
+    <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../../_static/tabs.css?v=a5c4661c" />
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/katex-math.css?v=91adb8b6" />
+    <link rel="stylesheet" type="text/css" href="../../_static/styles/furo-extensions.css?v=36a5483c" />
+    <link rel="stylesheet" type="text/css" href="../../_static/css/custom.css?v=96bccb3e" />
     
     
 
@@ -149,7 +157,7 @@
           <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
         </button>
       </div>
-      <label class="toc-overlay-icon toc-header-icon no-toc" for="__toc">
+      <label class="toc-overlay-icon toc-header-icon" for="__toc">
         <div class="visually-hidden">Toggle table of contents sidebar</div>
         <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
       </label>
@@ -158,7 +166,7 @@
   <aside class="sidebar-drawer">
     <div class="sidebar-container">
       
-      <div class="sidebar-sticky"><a style="padding-bottom: 0px;" class="sidebar-brand centered" href="../../index.html">
+      <div class="sidebar-sticky"><a style="padding-bottom: 0px;" class="sidebar-brand" href="../../index.html">
     
     <div class="sidebar-logo-container">
         <img class="sidebar-logo" src="https://raw.githubusercontent.com/cleanlab/assets/master/cleanlab/cleanlab_logo_only.png" alt="Logo" />
@@ -175,7 +183,7 @@
     aria-label="Star cleanlab/cleanlab on GitHub">Star</a>
 </div>
 <form class="sidebar-search-container" method="get" action="../../search.html" role="search">
-  <input class="sidebar-search" placeholder=Search name="q" aria-label="Search">
+  <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
   <input type="hidden" name="check_keywords" value="yes">
   <input type="hidden" name="area" value="default">
 </form>
@@ -185,11 +193,12 @@
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Tutorials</span></p>
 <ul>
-<li class="toctree-l1 has-children"><a class="reference internal" href="../../tutorials/datalab/index.html">Datalab Tutorials</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../tutorials/datalab/index.html">Datalab Tutorials</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle navigation of Datalab Tutorials</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../tutorials/datalab/datalab_quickstart.html">Detecting Common Data Issues with Datalab</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../tutorials/datalab/datalab_advanced.html">Advanced Data Auditing with Datalab</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../tutorials/datalab/text.html">Text Dataset</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../tutorials/datalab/tabular.html">Tabular Data (Numeric/Categorical)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../datalab/guide/issue_type_description.html">Guide to Datalab Issue Types</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../tutorials/indepth_overview.html">Workflows of Data-Centric AI</a></li>
@@ -210,28 +219,41 @@
 </ul>
 <p class="caption" role="heading"><span class="caption-text">API Reference</span></p>
 <ul class="current">
-<li class="toctree-l1 has-children"><a class="reference internal" href="../datalab/index.html">datalab</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
-<li class="toctree-l2 has-children"><a class="reference internal" href="../datalab/guide/index.html">Datalab guides</a><input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" role="switch" type="checkbox"/><label for="toctree-checkbox-3"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../datalab/index.html">datalab</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><div class="visually-hidden">Toggle navigation of datalab</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../datalab/guide/index.html">Datalab guides</a><input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" role="switch" type="checkbox"/><label for="toctree-checkbox-3"><div class="visually-hidden">Toggle navigation of Datalab guides</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l3"><a class="reference internal" href="../datalab/guide/issue_type_description.html">Datalab Issue Types</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../datalab/guide/custom_issue_manager.html">Creating Your Own Issues Manager</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../datalab/datalab.html">datalab</a></li>
-<li class="toctree-l2 has-children"><a class="reference internal" href="../datalab/internal/index.html">internal</a><input class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" role="switch" type="checkbox"/><label for="toctree-checkbox-4"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../datalab/internal/index.html">internal</a><input class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" role="switch" type="checkbox"/><label for="toctree-checkbox-4"><div class="visually-hidden">Toggle navigation of internal</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l3"><a class="reference internal" href="../datalab/internal/data.html">data</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../datalab/internal/data_issues.html">data_issues</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../datalab/internal/issue_finder.html">issue_finder</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../datalab/internal/factory.html">factory</a></li>
-<li class="toctree-l3 has-children"><a class="reference internal" href="../datalab/internal/issue_manager/index.html">issue_manager</a><input class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" role="switch" type="checkbox"/><label for="toctree-checkbox-5"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../datalab/internal/model_outputs.html">model_outputs</a></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../datalab/internal/issue_manager/index.html">issue_manager</a><input class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" role="switch" type="checkbox"/><label for="toctree-checkbox-5"><div class="visually-hidden">Toggle navigation of issue_manager</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l4"><a class="reference internal" href="../datalab/internal/issue_manager/issue_manager.html">Base issue_manager module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../datalab/internal/issue_manager/label.html">label</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../datalab/internal/issue_manager/outlier.html">outlier</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../datalab/internal/issue_manager/duplicate.html">duplicate</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../datalab/internal/issue_manager/noniid.html">noniid</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../datalab/internal/issue_manager/imbalance.html">imbalance</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../datalab/internal/issue_manager/underperforming_group.html">underperforming_group</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../datalab/internal/issue_manager/null.html">null</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../datalab/internal/issue_manager/data_valuation.html">data_valuation</a></li>
+<li class="toctree-l4 has-children"><a class="reference internal" href="../datalab/internal/issue_manager/regression/index.html">regression</a><input class="toctree-checkbox" id="toctree-checkbox-6" name="toctree-checkbox-6" role="switch" type="checkbox"/><label for="toctree-checkbox-6"><div class="visually-hidden">Toggle navigation of regression</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l5"><a class="reference internal" href="../datalab/internal/issue_manager/regression/label.html">label</a></li>
+</ul>
+</li>
+<li class="toctree-l4 has-children"><a class="reference internal" href="../datalab/internal/issue_manager/multilabel/index.html">multilabel</a><input class="toctree-checkbox" id="toctree-checkbox-7" name="toctree-checkbox-7" role="switch" type="checkbox"/><label for="toctree-checkbox-7"><div class="visually-hidden">Toggle navigation of multilabel</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l5"><a class="reference internal" href="../datalab/internal/issue_manager/multilabel/label.html">label</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../datalab/internal/report.html">report</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../datalab/internal/task.html">task</a></li>
 </ul>
 </li>
 </ul>
@@ -243,52 +265,53 @@
 <li class="toctree-l1"><a class="reference internal" href="../dataset.html">dataset</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../outlier.html">outlier</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../multiannotator.html">multiannotator</a></li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="../multilabel_classification/index.html">multilabel_classification</a><input class="toctree-checkbox" id="toctree-checkbox-6" name="toctree-checkbox-6" role="switch" type="checkbox"/><label for="toctree-checkbox-6"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../multilabel_classification/index.html">multilabel_classification</a><input class="toctree-checkbox" id="toctree-checkbox-8" name="toctree-checkbox-8" role="switch" type="checkbox"/><label for="toctree-checkbox-8"><div class="visually-hidden">Toggle navigation of multilabel_classification</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="../multilabel_classification/filter.html">filter</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../multilabel_classification/rank.html">rank</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../multilabel_classification/dataset.html">dataset</a></li>
 </ul>
 </li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="../regression/index.html">regression</a><input class="toctree-checkbox" id="toctree-checkbox-7" name="toctree-checkbox-7" role="switch" type="checkbox"/><label for="toctree-checkbox-7"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../regression/index.html">regression</a><input class="toctree-checkbox" id="toctree-checkbox-9" name="toctree-checkbox-9" role="switch" type="checkbox"/><label for="toctree-checkbox-9"><div class="visually-hidden">Toggle navigation of regression</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="../regression/rank.html">regression.rank</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../regression/learn.html">regression.learn</a></li>
 </ul>
 </li>
-<li class="toctree-l1 current has-children"><a class="reference internal" href="index.html">token_classification</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-8" name="toctree-checkbox-8" role="switch" type="checkbox"/><label for="toctree-checkbox-8"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="current">
+<li class="toctree-l1 current has-children"><a class="reference internal" href="index.html">token_classification</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-10" name="toctree-checkbox-10" role="switch" type="checkbox"/><label for="toctree-checkbox-10"><div class="visually-hidden">Toggle navigation of token_classification</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="filter.html">filter</a></li>
 <li class="toctree-l2 current current-page"><a class="current reference internal" href="#">rank</a></li>
 <li class="toctree-l2"><a class="reference internal" href="summary.html">summary</a></li>
 </ul>
 </li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="../segmentation/index.html">segmentation</a><input class="toctree-checkbox" id="toctree-checkbox-9" name="toctree-checkbox-9" role="switch" type="checkbox"/><label for="toctree-checkbox-9"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../segmentation/index.html">segmentation</a><input class="toctree-checkbox" id="toctree-checkbox-11" name="toctree-checkbox-11" role="switch" type="checkbox"/><label for="toctree-checkbox-11"><div class="visually-hidden">Toggle navigation of segmentation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="../segmentation/rank.html">rank</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../segmentation/filter.html">filter</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../segmentation/summary.html">summary</a></li>
 </ul>
 </li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="../object_detection/index.html">object_detection</a><input class="toctree-checkbox" id="toctree-checkbox-10" name="toctree-checkbox-10" role="switch" type="checkbox"/><label for="toctree-checkbox-10"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../object_detection/index.html">object_detection</a><input class="toctree-checkbox" id="toctree-checkbox-12" name="toctree-checkbox-12" role="switch" type="checkbox"/><label for="toctree-checkbox-12"><div class="visually-hidden">Toggle navigation of object_detection</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="../object_detection/rank.html">rank</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../object_detection/filter.html">filter</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../object_detection/summary.html">summary</a></li>
 </ul>
 </li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="../benchmarking/index.html">benchmarking</a><input class="toctree-checkbox" id="toctree-checkbox-11" name="toctree-checkbox-11" role="switch" type="checkbox"/><label for="toctree-checkbox-11"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../benchmarking/index.html">benchmarking</a><input class="toctree-checkbox" id="toctree-checkbox-13" name="toctree-checkbox-13" role="switch" type="checkbox"/><label for="toctree-checkbox-13"><div class="visually-hidden">Toggle navigation of benchmarking</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="../benchmarking/noise_generation.html">noise_generation</a></li>
 </ul>
 </li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="../models/index.html">models</a><input class="toctree-checkbox" id="toctree-checkbox-12" name="toctree-checkbox-12" role="switch" type="checkbox"/><label for="toctree-checkbox-12"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../models/index.html">models</a><input class="toctree-checkbox" id="toctree-checkbox-14" name="toctree-checkbox-14" role="switch" type="checkbox"/><label for="toctree-checkbox-14"><div class="visually-hidden">Toggle navigation of models</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="../models/keras.html">keras</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../models/fasttext.html">fasttext</a></li>
 </ul>
 </li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="../experimental/index.html">experimental</a><input class="toctree-checkbox" id="toctree-checkbox-13" name="toctree-checkbox-13" role="switch" type="checkbox"/><label for="toctree-checkbox-13"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../experimental/index.html">experimental</a><input class="toctree-checkbox" id="toctree-checkbox-15" name="toctree-checkbox-15" role="switch" type="checkbox"/><label for="toctree-checkbox-15"><div class="visually-hidden">Toggle navigation of experimental</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="../experimental/label_issues_batched.html">label_issues_batched</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../experimental/span_classification.html">span_classification</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../experimental/mnist_pytorch.html">mnist_pytorch</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../experimental/coteaching.html">coteaching</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../experimental/cifar_cnn.html">cifar_cnn</a></li>
 </ul>
 </li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="../internal/index.html">internal</a><input class="toctree-checkbox" id="toctree-checkbox-14" name="toctree-checkbox-14" role="switch" type="checkbox"/><label for="toctree-checkbox-14"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../internal/index.html">internal</a><input class="toctree-checkbox" id="toctree-checkbox-16" name="toctree-checkbox-16" role="switch" type="checkbox"/><label for="toctree-checkbox-16"><div class="visually-hidden">Toggle navigation of internal</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="../internal/util.html">util</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../internal/latent_algebra.html">latent_algebra</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../internal/label_quality_utils.html">label_quality_utils</a></li>
@@ -302,7 +325,7 @@
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Guides</span></p>
 <ul>
-<li class="toctree-l1 has-children"><a class="reference internal" href="../datalab/guide/index.html">Datalab issue types</a><input class="toctree-checkbox" id="toctree-checkbox-15" name="toctree-checkbox-15" role="switch" type="checkbox"/><label for="toctree-checkbox-15"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../datalab/guide/index.html">Datalab issue types</a><input class="toctree-checkbox" id="toctree-checkbox-17" name="toctree-checkbox-17" role="switch" type="checkbox"/><label for="toctree-checkbox-17"><div class="visually-hidden">Toggle navigation of Datalab issue types</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="../datalab/guide/issue_type_description.html">Datalab Issue Types</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../datalab/guide/custom_issue_manager.html">Creating Your Own Issues Manager</a></li>
 </ul>
@@ -315,7 +338,7 @@
 <li class="toctree-l1"><a class="reference external" href="https://github.com/cleanlab/cleanlab">GitHub</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://pypi.org/project/cleanlab/">PyPI</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://anaconda.org/Cleanlab/cleanlab">Conda</a></li>
-<li class="toctree-l1"><a class="reference external" href="https://cleanlab.ai/blog/data-centric-ai/">Cleanlab Studio</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://cleanlab.ai/blog/data-centric-ai/">Cleanlab Studio (Easy Mode)</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://help.cleanlab.ai">Cleanlab Studio Docs</a></li>
 </ul>
 
@@ -343,6 +366,15 @@
                 class="reference internal"
                 href="/master/"
                 >developer</a
+            >
+        </li>
+        
+        <li class="toctree-l1">
+            <a
+                id="v2.6.0"
+                class="reference internal"
+                href="/v2.6.0/"
+                >v2.6.0</a
             >
         </li>
         
@@ -462,7 +494,8 @@
           <span>Back to top</span>
         </a>
         <div class="content-icon-container">
-          <div class="theme-toggle-container theme-toggle-content">
+          
+<div class="theme-toggle-container theme-toggle-content">
             <button class="theme-toggle">
               <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
               <svg class="theme-icon-when-auto"><use href="#svg-sun-half"></use></svg>
@@ -470,7 +503,7 @@
               <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
             </button>
           </div>
-          <label class="toc-overlay-icon toc-content-icon no-toc" for="__toc">
+          <label class="toc-overlay-icon toc-content-icon" for="__toc">
             <div class="visually-hidden">Toggle table of contents sidebar</div>
             <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
           </label>
@@ -510,7 +543,7 @@
             document.getElementById("doc_ver_warning").innerHTML =
             `<div class="admonition warning">
             <p class="admonition-title">Warning</p>
-            <p>This documentation is for an old version (<code class="docutils literal notranslate"><span class="pre">v2.5.0</span></code>) of <code class="docutils literal notranslate"><span class="pre">cleanlab</span></code>. To see the documentation for the latest stable version (<code class="docutils literal notranslate"><span class="pre">` + version_number + `</span></code>), click <a href="/">here</a>.</p>
+            <p>This documentation is for an old version (<code class="docutils literal notranslate"><span class="pre">v2.6.0</span></code>) of <code class="docutils literal notranslate"><span class="pre">cleanlab</span></code>. To see the documentation for the latest stable version (<code class="docutils literal notranslate"><span class="pre">` + version_number + `</span></code>), click <a href="/">here</a>.</p>
             </div>`;
         } else {
             document.getElementById("doc_ver_warning").remove();
@@ -532,7 +565,7 @@
 <td><p>Returns overall quality scores for the labels in each sentence, as well as for the individual tokens' labels in a token classification dataset.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#cleanlab.token_classification.rank.issues_from_scores" title="cleanlab.token_classification.rank.issues_from_scores"><code class="xref py py-obj docutils literal notranslate"><span class="pre">issues_from_scores</span></code></a>(sentence_scores, *[, ...])</p></td>
-<td><p>Converts scores output by <a class="reference internal" href="#cleanlab.token_classification.rank.get_label_quality_scores" title="cleanlab.token_classification.rank.get_label_quality_scores"><code class="xref py py-func docutils literal notranslate"><span class="pre">token_classification.rank.get_label_quality_scores</span></code></a> to a list of issues of similar format as output by <a class="reference internal" href="filter.html#cleanlab.token_classification.filter.find_label_issues" title="cleanlab.token_classification.filter.find_label_issues"><code class="xref py py-func docutils literal notranslate"><span class="pre">token_classification.filter.find_label_issues</span></code></a>.</p></td>
+<td><p>Converts scores output by <a class="reference internal" href="#cleanlab.token_classification.rank.get_label_quality_scores" title="cleanlab.token_classification.rank.get_label_quality_scores"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_label_quality_scores</span></code></a> to a list of issues of similar format as output by <a class="reference internal" href="filter.html#cleanlab.token_classification.filter.find_label_issues" title="cleanlab.token_classification.filter.find_label_issues"><code class="xref py py-func docutils literal notranslate"><span class="pre">token_classification.filter.find_label_issues</span></code></a>.</p></td>
 </tr>
 </tbody>
 </table>
@@ -546,44 +579,44 @@
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>labels</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code>) – <p>Nested list of given labels for all tokens, such that <code class="xref py py-obj docutils literal notranslate"><span class="pre">labels[i]</span></code> is a list of labels, one for each token in the <code class="xref py py-obj docutils literal notranslate"><span class="pre">i</span></code>-th sentence.</p>
+<li><p><strong>labels</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code></span>) – <p>Nested list of given labels for all tokens, such that <cite>labels[i]</cite> is a list of labels, one for each token in the <cite>i</cite>-th sentence.</p>
 <p>For a dataset with K classes, each label must be in 0, 1, …, K-1.</p>
 </p></li>
-<li><p><strong>pred_probs</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code>) – <p>List of np arrays, such that <code class="xref py py-obj docutils literal notranslate"><span class="pre">pred_probs[i]</span></code> has shape <code class="docutils literal notranslate"><span class="pre">(T,</span> <span class="pre">K)</span></code> if the <code class="xref py py-obj docutils literal notranslate"><span class="pre">i</span></code>-th sentence contains T tokens.</p>
-<p>Each row of <code class="xref py py-obj docutils literal notranslate"><span class="pre">pred_probs[i]</span></code> corresponds to a token <code class="xref py py-obj docutils literal notranslate"><span class="pre">t</span></code> in the <code class="xref py py-obj docutils literal notranslate"><span class="pre">i</span></code>-th sentence,
-and contains model-predicted probabilities that <code class="xref py py-obj docutils literal notranslate"><span class="pre">t</span></code> belongs to each of the K possible classes.</p>
-<p>Columns of each <code class="xref py py-obj docutils literal notranslate"><span class="pre">pred_probs[i]</span></code> should be ordered such that the probabilities correspond to class 0, 1, …, K-1.</p>
+<li><p><strong>pred_probs</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code></span>) – <p>List of np arrays, such that <cite>pred_probs[i]</cite> has shape <code class="docutils literal notranslate"><span class="pre">(T,</span> <span class="pre">K)</span></code> if the <cite>i</cite>-th sentence contains T tokens.</p>
+<p>Each row of <cite>pred_probs[i]</cite> corresponds to a token <cite>t</cite> in the <cite>i</cite>-th sentence,
+and contains model-predicted probabilities that <cite>t</cite> belongs to each of the K possible classes.</p>
+<p>Columns of each <cite>pred_probs[i]</cite> should be ordered such that the probabilities correspond to class 0, 1, …, K-1.</p>
 </p></li>
-<li><p><strong>tokens</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code>]) – <p>Nested list such that <code class="xref py py-obj docutils literal notranslate"><span class="pre">tokens[i]</span></code> is a list of tokens (strings/words) that comprise the <code class="xref py py-obj docutils literal notranslate"><span class="pre">i</span></code>-th sentence.</p>
-<p>These strings are used to annotated the returned <code class="xref py py-obj docutils literal notranslate"><span class="pre">token_scores</span></code> object, see its documentation for more information.</p>
+<li><p><strong>tokens</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code>]</span>) – <p>Nested list such that <cite>tokens[i]</cite> is a list of tokens (strings/words) that comprise the <cite>i</cite>-th sentence.</p>
+<p>These strings are used to annotated the returned <cite>token_scores</cite> object, see its documentation for more information.</p>
 </p></li>
 <li><p><strong>sentence_score_method</strong> (<code class="docutils literal notranslate"><span class="pre">{&quot;min&quot;,</span> <span class="pre">&quot;softmin&quot;}</span></code>, <em>default</em> <code class="docutils literal notranslate"><span class="pre">&quot;min&quot;</span></code>) – <p>Method to aggregate individual token label quality scores into a single score for the sentence.</p>
 <ul>
-<li><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">min</span></code>: sentence score = minimum of token scores in the sentence</p></li>
-<li><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">softmin</span></code>: sentence score = <code class="docutils literal notranslate"><span class="pre">&lt;s,</span> <span class="pre">softmax(1-s,</span> <span class="pre">t)&gt;</span></code>, where <code class="xref py py-obj docutils literal notranslate"><span class="pre">s</span></code> denotes the token label scores of the sentence, and <code class="docutils literal notranslate"><span class="pre">&lt;a,</span> <span class="pre">b&gt;</span> <span class="pre">==</span> <span class="pre">np.dot(a,</span> <span class="pre">b)</span></code>.
-Here parameter <code class="xref py py-obj docutils literal notranslate"><span class="pre">t</span></code> controls the softmax temperature, such that the score converges toward <code class="xref py py-obj docutils literal notranslate"><span class="pre">min</span></code> as <code class="docutils literal notranslate"><span class="pre">t</span> <span class="pre">-&gt;</span> <span class="pre">0</span></code>.
-Unlike <code class="xref py py-obj docutils literal notranslate"><span class="pre">min</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">softmin</span></code> is affected by the scores of all tokens in the sentence.</p></li>
+<li><p><cite>min</cite>: sentence score = minimum of token scores in the sentence</p></li>
+<li><p><cite>softmin</cite>: sentence score = <code class="docutils literal notranslate"><span class="pre">&lt;s,</span> <span class="pre">softmax(1-s,</span> <span class="pre">t)&gt;</span></code>, where <cite>s</cite> denotes the token label scores of the sentence, and <code class="docutils literal notranslate"><span class="pre">&lt;a,</span> <span class="pre">b&gt;</span> <span class="pre">==</span> <span class="pre">np.dot(a,</span> <span class="pre">b)</span></code>.
+Here parameter <cite>t</cite> controls the softmax temperature, such that the score converges toward <cite>min</cite> as <code class="docutils literal notranslate"><span class="pre">t</span> <span class="pre">-&gt;</span> <span class="pre">0</span></code>.
+Unlike <cite>min</cite>, <cite>softmin</cite> is affected by the scores of all tokens in the sentence.</p></li>
 </ul>
 </p></li>
 <li><p><strong>token_score_method</strong> (<code class="docutils literal notranslate"><span class="pre">{&quot;self_confidence&quot;,</span> <span class="pre">&quot;normalized_margin&quot;,</span> <span class="pre">&quot;confidence_weighted_entropy&quot;}</span></code>, <em>default</em> <code class="docutils literal notranslate"><span class="pre">&quot;self_confidence&quot;</span></code>) – <p>Label quality scoring method for each token.</p>
 <p>See <a class="reference internal" href="../rank.html#cleanlab.rank.get_label_quality_scores" title="cleanlab.rank.get_label_quality_scores"><code class="xref py py-func docutils literal notranslate"><span class="pre">cleanlab.rank.get_label_quality_scores</span></code></a> documentation for more info.</p>
 </p></li>
-<li><p><strong>sentence_score_kwargs</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code>) – <p>Optional keyword arguments for <code class="xref py py-obj docutils literal notranslate"><span class="pre">sentence_score_method</span></code> function (for advanced users only).</p>
-<p>See <code class="xref py py-obj docutils literal notranslate"><span class="pre">cleanlab.token_classification.rank._softmin_sentence_score</span></code> for more info about keyword arguments supported for that scoring method.</p>
+<li><p><strong>sentence_score_kwargs</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code></span>) – <p>Optional keyword arguments for <cite>sentence_score_method</cite> function (for advanced users only).</p>
+<p>See <cite>~cleanlab.token_classification.rank._softmin_sentence_score</cite> for more info about keyword arguments supported for that scoring method.</p>
 </p></li>
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><code class="xref py py-data docutils literal notranslate"><span class="pre">Tuple</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code>]</p>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Tuple</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code>]</span></p>
 </dd>
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><p><ul>
 <li><p><code class="xref py py-class docutils literal notranslate"><span class="pre">sentence_scores</span></code> – Array of shape <code class="docutils literal notranslate"><span class="pre">(N,</span> <span class="pre">)</span></code> of scores between 0 and 1, one per sentence in the dataset.</p>
 <p>Lower scores indicate sentences more likely to contain a label issue.</p>
 </li>
-<li><p><code class="xref py py-class docutils literal notranslate"><span class="pre">token_scores</span></code> – List of <code class="docutils literal notranslate"><span class="pre">pd.Series</span></code>, such that <code class="xref py py-obj docutils literal notranslate"><span class="pre">token_info[i]</span></code> contains the
-label quality scores for individual tokens in the <code class="xref py py-obj docutils literal notranslate"><span class="pre">i</span></code>-th sentence.</p>
-<p>If <code class="xref py py-obj docutils literal notranslate"><span class="pre">tokens</span></code> strings were provided, they are used as index for each <code class="docutils literal notranslate"><span class="pre">Series</span></code>.</p>
+<li><p><code class="xref py py-class docutils literal notranslate"><span class="pre">token_scores</span></code> – List of <code class="docutils literal notranslate"><span class="pre">pd.Series</span></code>, such that <cite>token_info[i]</cite> contains the
+label quality scores for individual tokens in the <cite>i</cite>-th sentence.</p>
+<p>If <cite>tokens</cite> strings were provided, they are used as index for each <code class="docutils literal notranslate"><span class="pre">Series</span></code>.</p>
 </li>
 </ul>
 </p>
@@ -614,40 +647,40 @@ label quality scores for individual tokens in the <code class="xref py py-obj do
 <dl class="py function">
 <dt class="sig sig-object py" id="cleanlab.token_classification.rank.issues_from_scores">
 <span class="sig-prename descclassname"><span class="pre">cleanlab.token_classification.rank.</span></span><span class="sig-name descname"><span class="pre">issues_from_scores</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sentence_scores</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">token_scores</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">threshold</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.1</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/cleanlab/token_classification/rank.html#issues_from_scores"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cleanlab.token_classification.rank.issues_from_scores" title="Permalink to this definition">#</a></dt>
-<dd><p>Converts scores output by <a class="reference internal" href="#cleanlab.token_classification.rank.get_label_quality_scores" title="cleanlab.token_classification.rank.get_label_quality_scores"><code class="xref py py-func docutils literal notranslate"><span class="pre">token_classification.rank.get_label_quality_scores</span></code></a>
+<dd><p>Converts scores output by <cite>~cleanlab.token_classification.rank.get_label_quality_scores</cite>
 to a list of issues of similar format as output by <a class="reference internal" href="filter.html#cleanlab.token_classification.filter.find_label_issues" title="cleanlab.token_classification.filter.find_label_issues"><code class="xref py py-func docutils literal notranslate"><span class="pre">token_classification.filter.find_label_issues</span></code></a>.</p>
 <p>Issues are sorted by label quality score, from most to least severe.</p>
-<p>Only considers as issues those tokens with label quality score lower than <code class="xref py py-obj docutils literal notranslate"><span class="pre">threshold</span></code>,
+<p>Only considers as issues those tokens with label quality score lower than <cite>threshold</cite>,
 so this parameter determines the number of issues that are returned.
 This method is intended for converting the most severely mislabeled examples to a format compatible with
 <code class="docutils literal notranslate"><span class="pre">summary</span></code> methods like <a class="reference internal" href="summary.html#cleanlab.token_classification.summary.display_issues" title="cleanlab.token_classification.summary.display_issues"><code class="xref py py-func docutils literal notranslate"><span class="pre">token_classification.summary.display_issues</span></code></a>.
-This method does not estimate the number of label errors since the <code class="xref py py-obj docutils literal notranslate"><span class="pre">threshold</span></code> is arbitrary,
+This method does not estimate the number of label errors since the <cite>threshold</cite> is arbitrary,
 for that instead use <a class="reference internal" href="filter.html#cleanlab.token_classification.filter.find_label_issues" title="cleanlab.token_classification.filter.find_label_issues"><code class="xref py py-func docutils literal notranslate"><span class="pre">token_classification.filter.find_label_issues</span></code></a>,
 which estimates the label errors via Confident Learning rather than score thresholding.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>sentence_scores</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>) – <p>Array of shape <code class="xref py py-obj docutils literal notranslate"><span class="pre">(N,</span> <span class="pre">)</span></code> of overall sentence scores, where <code class="xref py py-obj docutils literal notranslate"><span class="pre">N</span></code> is the number of sentences in the dataset.</p>
-<p>Same format as the <code class="xref py py-obj docutils literal notranslate"><span class="pre">sentence_scores</span></code> returned by <a class="reference internal" href="#cleanlab.token_classification.rank.get_label_quality_scores" title="cleanlab.token_classification.rank.get_label_quality_scores"><code class="xref py py-func docutils literal notranslate"><span class="pre">token_classification.rank.get_label_quality_scores</span></code></a>.</p>
+<li><p><strong>sentence_scores</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></span>) – <p>Array of shape <cite>(N, )</cite> of overall sentence scores, where <cite>N</cite> is the number of sentences in the dataset.</p>
+<p>Same format as the <cite>sentence_scores</cite> returned by <cite>~cleanlab.token_classification.rank.get_label_quality_scores</cite>.</p>
 </p></li>
-<li><p><strong>token_scores</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code>]) – <p>Optional list such that <code class="xref py py-obj docutils literal notranslate"><span class="pre">token_scores[i]</span></code> contains the individual token scores for the <code class="xref py py-obj docutils literal notranslate"><span class="pre">i</span></code>-th sentence.</p>
-<p>Same format as the <code class="xref py py-obj docutils literal notranslate"><span class="pre">token_scores</span></code> returned by <a class="reference internal" href="#cleanlab.token_classification.rank.get_label_quality_scores" title="cleanlab.token_classification.rank.get_label_quality_scores"><code class="xref py py-func docutils literal notranslate"><span class="pre">token_classification.rank.get_label_quality_scores</span></code></a>.</p>
+<li><p><strong>token_scores</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code>]</span>) – <p>Optional list such that <cite>token_scores[i]</cite> contains the individual token scores for the <cite>i</cite>-th sentence.</p>
+<p>Same format as the <cite>token_scores</cite> returned by <cite>~cleanlab.token_classification.rank.get_label_quality_scores</cite>.</p>
 </p></li>
-<li><p><strong>threshold</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>) – Tokens (or sentences, if <code class="xref py py-obj docutils literal notranslate"><span class="pre">token_scores</span></code> is not provided) with quality scores above the <code class="xref py py-obj docutils literal notranslate"><span class="pre">threshold</span></code> are not
+<li><p><strong>threshold</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></span>) – Tokens (or sentences, if <cite>token_scores</cite> is not provided) with quality scores above the <cite>threshold</cite> are not
 included in the result.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>]</p>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>]</span></p>
 </dd>
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><p><p><code class="xref py py-class docutils literal notranslate"><span class="pre">issues</span></code> – List of label issues identified by comparing quality scores to threshold, such that each element is a tuple <code class="docutils literal notranslate"><span class="pre">(i,</span> <span class="pre">j)</span></code>, which
-indicates that the <code class="xref py py-obj docutils literal notranslate"><span class="pre">j</span></code>-th token of the <code class="xref py py-obj docutils literal notranslate"><span class="pre">i</span></code>-th sentence has a label issue.</p>
-<p>These tuples are ordered in <code class="xref py py-obj docutils literal notranslate"><span class="pre">issues</span></code> list based on the token label quality score.</p>
+indicates that the <cite>j</cite>-th token of the <cite>i</cite>-th sentence has a label issue.</p>
+<p>These tuples are ordered in <cite>issues</cite> list based on the token label quality score.</p>
 <p>Use <a class="reference internal" href="summary.html#cleanlab.token_classification.summary.display_issues" title="cleanlab.token_classification.summary.display_issues"><code class="xref py py-func docutils literal notranslate"><span class="pre">token_classification.summary.display_issues</span></code></a>
 to view these issues within the original sentences.</p>
-<p>If <code class="xref py py-obj docutils literal notranslate"><span class="pre">token_scores</span></code> is not provided, returns array of integer indices (rather than tuples) of the sentences whose label quality score
-falls below the <code class="xref py py-obj docutils literal notranslate"><span class="pre">threshold</span></code> (also sorted by overall label quality score of each sentence).</p>
+<p>If <cite>token_scores</cite> is not provided, returns array of integer indices (rather than tuples) of the sentences whose label quality score
+falls below the <cite>threshold</cite> (also sorted by overall label quality score of each sentence).</p>
 </p>
 </dd>
 </dl>
@@ -697,10 +730,10 @@ falls below the <code class="xref py py-obj docutils literal notranslate"><span 
                 </div>
                 <div class="title">summary</div>
               </div>
-              <svg><use href="#svg-arrow-right"></use></svg>
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
             </a>
           <a class="prev-page" href="filter.html">
-              <svg><use href="#svg-arrow-right"></use></svg>
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
               <div class="page-info">
                 <div class="context">
                   <span>Previous</span>
@@ -714,7 +747,7 @@ falls below the <code class="xref py py-obj docutils literal notranslate"><span 
         <div class="bottom-of-page">
           <div class="left-details">
             <div class="copyright">
-                Copyright &#169; 2023, Cleanlab Inc.
+                Copyright &#169; 2024, Cleanlab Inc.
             </div>
             Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
             
@@ -748,22 +781,40 @@ falls below the <code class="xref py py-obj docutils literal notranslate"><span 
 
       </footer>
     </div>
-    <aside class="toc-drawer no-toc">
+    <aside class="toc-drawer">
       
+      
+      <div class="toc-sticky toc-scroll">
+        <div class="toc-title-container">
+          <span class="toc-title">
+            On this page
+          </span>
+        </div>
+        <div class="toc-tree-container">
+          <div class="toc-tree">
+            <ul>
+<li><a class="reference internal" href="#">rank</a><ul>
+<li><a class="reference internal" href="#cleanlab.token_classification.rank.get_label_quality_scores"><code class="docutils literal notranslate"><span class="pre">get_label_quality_scores()</span></code></a></li>
+<li><a class="reference internal" href="#cleanlab.token_classification.rank.issues_from_scores"><code class="docutils literal notranslate"><span class="pre">issues_from_scores()</span></code></a></li>
+</ul>
+</li>
+</ul>
+
+          </div>
+        </div>
+      </div>
       
       
     </aside>
   </div>
-</div><script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
-    <script src="../../_static/jquery.js"></script>
-    <script src="../../_static/underscore.js"></script>
-    <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
-    <script src="../../_static/doctools.js"></script>
-    <script src="../../_static/scripts/furo.js"></script>
-    <script src="../../_static/clipboard.min.js"></script>
-    <script src="../../_static/copybutton.js"></script>
+</div><script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js?v=2b91c5f0"></script>
+    <script src="../../_static/doctools.js?v=888ff710"></script>
+    <script src="../../_static/sphinx_highlight.js?v=4825356b"></script>
+    <script src="../../_static/scripts/furo.js?v=32e29ea5"></script>
+    <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../../_static/copybutton.js?v=30646c52"></script>
     <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
-    <script src="https://unpkg.com/@jupyter-widgets/html-manager@^0.20.0/dist/embed-amd.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@jupyter-widgets/html-manager@^1.0.1/dist/embed-amd.js"></script>
     
 <script async defer src="https://buttons.github.io/buttons.js"></script>
 </body>

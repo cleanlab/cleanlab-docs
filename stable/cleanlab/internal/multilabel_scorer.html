@@ -1,8 +1,8 @@
 <!doctype html>
-<html class="no-js" lang="en">
+<html class="no-js" lang="en" data-content_root="">
   <head><meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
-    <meta name="color-scheme" content="light dark"><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+    <meta name="color-scheme" content="light dark"><meta name="viewport" content="width=device-width, initial-scale=1" />
 
         <script async src="https://www.googletagmanager.com/gtag/js?id=G-EV8RVEFX82"></script>
         <script>
@@ -13,18 +13,26 @@
             gtag('config', 'G-EV8RVEFX82');
             
         </script>
-    <link rel="index" title="Index" href="../../genindex.html" /><link rel="search" title="Search" href="../../search.html" /><link rel="next" title="outlier" href="outlier.html" /><link rel="prev" title="multilabel_utils" href="multilabel_utils.html" />
+    <meta property="og:title" content="multilabel_scorer" />
+<meta property="og:type" content="website" />
+<meta property="og:url" content="https://docs.cleanlab.ai/stable/cleanlab/internal/multilabel_scorer.html" />
+<meta property="og:site_name" content="cleanlab" />
+<meta property="og:description" content="Helper classes and functions used internally to compute label quality scores in multi-label classification. Classes: Functions:" />
+<meta property="og:image" content="https://raw.githubusercontent.com/cleanlab/assets/master/cleanlab/clos-preview-card.png" />
+<meta property="og:image:alt" content="cleanlab" />
+<meta name="description" content="Helper classes and functions used internally to compute label quality scores in multi-label classification. Classes: Functions:" />
+<link rel="index" title="Index" href="../../genindex.html" /><link rel="search" title="Search" href="../../search.html" /><link rel="next" title="outlier" href="outlier.html" /><link rel="prev" title="multilabel_utils" href="multilabel_utils.html" />
 
-    <link rel="shortcut icon" href="https://raw.githubusercontent.com/cleanlab/assets/a4483476d449f2f05a4c7cde329e72358099cc07/cleanlab/cleanlab_favicon.svg"/><meta name="generator" content="sphinx-5.1.1, furo 2022.06.21"/>
+    <link rel="shortcut icon" href="https://raw.githubusercontent.com/cleanlab/assets/a4483476d449f2f05a4c7cde329e72358099cc07/cleanlab/cleanlab_favicon.svg"/><!-- Generated with Sphinx 7.1.2 and Furo 2023.09.10 -->
         <title>multilabel_scorer - cleanlab</title>
-      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="../../_static/styles/furo.css?digest=40978830699223671f4072448e654b5958f38b89" />
-    <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css" />
-    <link rel="stylesheet" type="text/css" href="../../_static/tabs.css" />
-    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/katex@0.13.11/dist/katex.min.css" />
-    <link rel="stylesheet" type="text/css" href="../../_static/katex-math.css" />
-    <link rel="stylesheet" type="text/css" href="../../_static/styles/furo-extensions.css?digest=30d1aed668e5c3a91c3e3bf6a60b675221979f0e" />
-    <link rel="stylesheet" type="text/css" href="../../_static/css/custom.css" />
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=a746c00c" />
+    <link rel="stylesheet" type="text/css" href="../../_static/styles/furo.css?v=135e06be" />
+    <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../../_static/tabs.css?v=a5c4661c" />
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/katex-math.css?v=91adb8b6" />
+    <link rel="stylesheet" type="text/css" href="../../_static/styles/furo-extensions.css?v=36a5483c" />
+    <link rel="stylesheet" type="text/css" href="../../_static/css/custom.css?v=96bccb3e" />
     
     
 
@@ -149,7 +157,7 @@
           <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
         </button>
       </div>
-      <label class="toc-overlay-icon toc-header-icon no-toc" for="__toc">
+      <label class="toc-overlay-icon toc-header-icon" for="__toc">
         <div class="visually-hidden">Toggle table of contents sidebar</div>
         <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
       </label>
@@ -158,7 +166,7 @@
   <aside class="sidebar-drawer">
     <div class="sidebar-container">
       
-      <div class="sidebar-sticky"><a style="padding-bottom: 0px;" class="sidebar-brand centered" href="../../index.html">
+      <div class="sidebar-sticky"><a style="padding-bottom: 0px;" class="sidebar-brand" href="../../index.html">
     
     <div class="sidebar-logo-container">
         <img class="sidebar-logo" src="https://raw.githubusercontent.com/cleanlab/assets/master/cleanlab/cleanlab_logo_only.png" alt="Logo" />
@@ -175,7 +183,7 @@
     aria-label="Star cleanlab/cleanlab on GitHub">Star</a>
 </div>
 <form class="sidebar-search-container" method="get" action="../../search.html" role="search">
-  <input class="sidebar-search" placeholder=Search name="q" aria-label="Search">
+  <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
   <input type="hidden" name="check_keywords" value="yes">
   <input type="hidden" name="area" value="default">
 </form>
@@ -185,11 +193,12 @@
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Tutorials</span></p>
 <ul>
-<li class="toctree-l1 has-children"><a class="reference internal" href="../../tutorials/datalab/index.html">Datalab Tutorials</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../tutorials/datalab/index.html">Datalab Tutorials</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle navigation of Datalab Tutorials</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../tutorials/datalab/datalab_quickstart.html">Detecting Common Data Issues with Datalab</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../tutorials/datalab/datalab_advanced.html">Advanced Data Auditing with Datalab</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../tutorials/datalab/text.html">Text Dataset</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../tutorials/datalab/tabular.html">Tabular Data (Numeric/Categorical)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../datalab/guide/issue_type_description.html">Guide to Datalab Issue Types</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../tutorials/indepth_overview.html">Workflows of Data-Centric AI</a></li>
@@ -210,28 +219,41 @@
 </ul>
 <p class="caption" role="heading"><span class="caption-text">API Reference</span></p>
 <ul class="current">
-<li class="toctree-l1 has-children"><a class="reference internal" href="../datalab/index.html">datalab</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
-<li class="toctree-l2 has-children"><a class="reference internal" href="../datalab/guide/index.html">Datalab guides</a><input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" role="switch" type="checkbox"/><label for="toctree-checkbox-3"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../datalab/index.html">datalab</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><div class="visually-hidden">Toggle navigation of datalab</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../datalab/guide/index.html">Datalab guides</a><input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" role="switch" type="checkbox"/><label for="toctree-checkbox-3"><div class="visually-hidden">Toggle navigation of Datalab guides</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l3"><a class="reference internal" href="../datalab/guide/issue_type_description.html">Datalab Issue Types</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../datalab/guide/custom_issue_manager.html">Creating Your Own Issues Manager</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../datalab/datalab.html">datalab</a></li>
-<li class="toctree-l2 has-children"><a class="reference internal" href="../datalab/internal/index.html">internal</a><input class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" role="switch" type="checkbox"/><label for="toctree-checkbox-4"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../datalab/internal/index.html">internal</a><input class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" role="switch" type="checkbox"/><label for="toctree-checkbox-4"><div class="visually-hidden">Toggle navigation of internal</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l3"><a class="reference internal" href="../datalab/internal/data.html">data</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../datalab/internal/data_issues.html">data_issues</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../datalab/internal/issue_finder.html">issue_finder</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../datalab/internal/factory.html">factory</a></li>
-<li class="toctree-l3 has-children"><a class="reference internal" href="../datalab/internal/issue_manager/index.html">issue_manager</a><input class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" role="switch" type="checkbox"/><label for="toctree-checkbox-5"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../datalab/internal/model_outputs.html">model_outputs</a></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../datalab/internal/issue_manager/index.html">issue_manager</a><input class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" role="switch" type="checkbox"/><label for="toctree-checkbox-5"><div class="visually-hidden">Toggle navigation of issue_manager</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l4"><a class="reference internal" href="../datalab/internal/issue_manager/issue_manager.html">Base issue_manager module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../datalab/internal/issue_manager/label.html">label</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../datalab/internal/issue_manager/outlier.html">outlier</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../datalab/internal/issue_manager/duplicate.html">duplicate</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../datalab/internal/issue_manager/noniid.html">noniid</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../datalab/internal/issue_manager/imbalance.html">imbalance</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../datalab/internal/issue_manager/underperforming_group.html">underperforming_group</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../datalab/internal/issue_manager/null.html">null</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../datalab/internal/issue_manager/data_valuation.html">data_valuation</a></li>
+<li class="toctree-l4 has-children"><a class="reference internal" href="../datalab/internal/issue_manager/regression/index.html">regression</a><input class="toctree-checkbox" id="toctree-checkbox-6" name="toctree-checkbox-6" role="switch" type="checkbox"/><label for="toctree-checkbox-6"><div class="visually-hidden">Toggle navigation of regression</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l5"><a class="reference internal" href="../datalab/internal/issue_manager/regression/label.html">label</a></li>
+</ul>
+</li>
+<li class="toctree-l4 has-children"><a class="reference internal" href="../datalab/internal/issue_manager/multilabel/index.html">multilabel</a><input class="toctree-checkbox" id="toctree-checkbox-7" name="toctree-checkbox-7" role="switch" type="checkbox"/><label for="toctree-checkbox-7"><div class="visually-hidden">Toggle navigation of multilabel</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l5"><a class="reference internal" href="../datalab/internal/issue_manager/multilabel/label.html">label</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../datalab/internal/report.html">report</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../datalab/internal/task.html">task</a></li>
 </ul>
 </li>
 </ul>
@@ -243,52 +265,53 @@
 <li class="toctree-l1"><a class="reference internal" href="../dataset.html">dataset</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../outlier.html">outlier</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../multiannotator.html">multiannotator</a></li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="../multilabel_classification/index.html">multilabel_classification</a><input class="toctree-checkbox" id="toctree-checkbox-6" name="toctree-checkbox-6" role="switch" type="checkbox"/><label for="toctree-checkbox-6"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../multilabel_classification/index.html">multilabel_classification</a><input class="toctree-checkbox" id="toctree-checkbox-8" name="toctree-checkbox-8" role="switch" type="checkbox"/><label for="toctree-checkbox-8"><div class="visually-hidden">Toggle navigation of multilabel_classification</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="../multilabel_classification/filter.html">filter</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../multilabel_classification/rank.html">rank</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../multilabel_classification/dataset.html">dataset</a></li>
 </ul>
 </li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="../regression/index.html">regression</a><input class="toctree-checkbox" id="toctree-checkbox-7" name="toctree-checkbox-7" role="switch" type="checkbox"/><label for="toctree-checkbox-7"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../regression/index.html">regression</a><input class="toctree-checkbox" id="toctree-checkbox-9" name="toctree-checkbox-9" role="switch" type="checkbox"/><label for="toctree-checkbox-9"><div class="visually-hidden">Toggle navigation of regression</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="../regression/rank.html">regression.rank</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../regression/learn.html">regression.learn</a></li>
 </ul>
 </li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="../token_classification/index.html">token_classification</a><input class="toctree-checkbox" id="toctree-checkbox-8" name="toctree-checkbox-8" role="switch" type="checkbox"/><label for="toctree-checkbox-8"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../token_classification/index.html">token_classification</a><input class="toctree-checkbox" id="toctree-checkbox-10" name="toctree-checkbox-10" role="switch" type="checkbox"/><label for="toctree-checkbox-10"><div class="visually-hidden">Toggle navigation of token_classification</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="../token_classification/filter.html">filter</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../token_classification/rank.html">rank</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../token_classification/summary.html">summary</a></li>
 </ul>
 </li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="../segmentation/index.html">segmentation</a><input class="toctree-checkbox" id="toctree-checkbox-9" name="toctree-checkbox-9" role="switch" type="checkbox"/><label for="toctree-checkbox-9"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../segmentation/index.html">segmentation</a><input class="toctree-checkbox" id="toctree-checkbox-11" name="toctree-checkbox-11" role="switch" type="checkbox"/><label for="toctree-checkbox-11"><div class="visually-hidden">Toggle navigation of segmentation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="../segmentation/rank.html">rank</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../segmentation/filter.html">filter</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../segmentation/summary.html">summary</a></li>
 </ul>
 </li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="../object_detection/index.html">object_detection</a><input class="toctree-checkbox" id="toctree-checkbox-10" name="toctree-checkbox-10" role="switch" type="checkbox"/><label for="toctree-checkbox-10"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../object_detection/index.html">object_detection</a><input class="toctree-checkbox" id="toctree-checkbox-12" name="toctree-checkbox-12" role="switch" type="checkbox"/><label for="toctree-checkbox-12"><div class="visually-hidden">Toggle navigation of object_detection</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="../object_detection/rank.html">rank</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../object_detection/filter.html">filter</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../object_detection/summary.html">summary</a></li>
 </ul>
 </li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="../benchmarking/index.html">benchmarking</a><input class="toctree-checkbox" id="toctree-checkbox-11" name="toctree-checkbox-11" role="switch" type="checkbox"/><label for="toctree-checkbox-11"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../benchmarking/index.html">benchmarking</a><input class="toctree-checkbox" id="toctree-checkbox-13" name="toctree-checkbox-13" role="switch" type="checkbox"/><label for="toctree-checkbox-13"><div class="visually-hidden">Toggle navigation of benchmarking</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="../benchmarking/noise_generation.html">noise_generation</a></li>
 </ul>
 </li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="../models/index.html">models</a><input class="toctree-checkbox" id="toctree-checkbox-12" name="toctree-checkbox-12" role="switch" type="checkbox"/><label for="toctree-checkbox-12"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../models/index.html">models</a><input class="toctree-checkbox" id="toctree-checkbox-14" name="toctree-checkbox-14" role="switch" type="checkbox"/><label for="toctree-checkbox-14"><div class="visually-hidden">Toggle navigation of models</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="../models/keras.html">keras</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../models/fasttext.html">fasttext</a></li>
 </ul>
 </li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="../experimental/index.html">experimental</a><input class="toctree-checkbox" id="toctree-checkbox-13" name="toctree-checkbox-13" role="switch" type="checkbox"/><label for="toctree-checkbox-13"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../experimental/index.html">experimental</a><input class="toctree-checkbox" id="toctree-checkbox-15" name="toctree-checkbox-15" role="switch" type="checkbox"/><label for="toctree-checkbox-15"><div class="visually-hidden">Toggle navigation of experimental</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="../experimental/label_issues_batched.html">label_issues_batched</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../experimental/span_classification.html">span_classification</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../experimental/mnist_pytorch.html">mnist_pytorch</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../experimental/coteaching.html">coteaching</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../experimental/cifar_cnn.html">cifar_cnn</a></li>
 </ul>
 </li>
-<li class="toctree-l1 current has-children"><a class="reference internal" href="index.html">internal</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-14" name="toctree-checkbox-14" role="switch" type="checkbox"/><label for="toctree-checkbox-14"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="current">
+<li class="toctree-l1 current has-children"><a class="reference internal" href="index.html">internal</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-16" name="toctree-checkbox-16" role="switch" type="checkbox"/><label for="toctree-checkbox-16"><div class="visually-hidden">Toggle navigation of internal</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="util.html">util</a></li>
 <li class="toctree-l2"><a class="reference internal" href="latent_algebra.html">latent_algebra</a></li>
 <li class="toctree-l2"><a class="reference internal" href="label_quality_utils.html">label_quality_utils</a></li>
@@ -302,7 +325,7 @@
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Guides</span></p>
 <ul>
-<li class="toctree-l1 has-children"><a class="reference internal" href="../datalab/guide/index.html">Datalab issue types</a><input class="toctree-checkbox" id="toctree-checkbox-15" name="toctree-checkbox-15" role="switch" type="checkbox"/><label for="toctree-checkbox-15"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../datalab/guide/index.html">Datalab issue types</a><input class="toctree-checkbox" id="toctree-checkbox-17" name="toctree-checkbox-17" role="switch" type="checkbox"/><label for="toctree-checkbox-17"><div class="visually-hidden">Toggle navigation of Datalab issue types</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="../datalab/guide/issue_type_description.html">Datalab Issue Types</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../datalab/guide/custom_issue_manager.html">Creating Your Own Issues Manager</a></li>
 </ul>
@@ -315,7 +338,7 @@
 <li class="toctree-l1"><a class="reference external" href="https://github.com/cleanlab/cleanlab">GitHub</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://pypi.org/project/cleanlab/">PyPI</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://anaconda.org/Cleanlab/cleanlab">Conda</a></li>
-<li class="toctree-l1"><a class="reference external" href="https://cleanlab.ai/blog/data-centric-ai/">Cleanlab Studio</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://cleanlab.ai/blog/data-centric-ai/">Cleanlab Studio (Easy Mode)</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://help.cleanlab.ai">Cleanlab Studio Docs</a></li>
 </ul>
 
@@ -343,6 +366,15 @@
                 class="reference internal"
                 href="/master/"
                 >developer</a
+            >
+        </li>
+        
+        <li class="toctree-l1">
+            <a
+                id="v2.6.0"
+                class="reference internal"
+                href="/v2.6.0/"
+                >v2.6.0</a
             >
         </li>
         
@@ -462,7 +494,8 @@
           <span>Back to top</span>
         </a>
         <div class="content-icon-container">
-          <div class="theme-toggle-container theme-toggle-content">
+          
+<div class="theme-toggle-container theme-toggle-content">
             <button class="theme-toggle">
               <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
               <svg class="theme-icon-when-auto"><use href="#svg-sun-half"></use></svg>
@@ -470,7 +503,7 @@
               <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
             </button>
           </div>
-          <label class="toc-overlay-icon toc-content-icon no-toc" for="__toc">
+          <label class="toc-overlay-icon toc-content-icon" for="__toc">
             <div class="visually-hidden">Toggle table of contents sidebar</div>
             <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
           </label>
@@ -510,7 +543,7 @@
             document.getElementById("doc_ver_warning").innerHTML =
             `<div class="admonition warning">
             <p class="admonition-title">Warning</p>
-            <p>This documentation is for an old version (<code class="docutils literal notranslate"><span class="pre">v2.5.0</span></code>) of <code class="docutils literal notranslate"><span class="pre">cleanlab</span></code>. To see the documentation for the latest stable version (<code class="docutils literal notranslate"><span class="pre">` + version_number + `</span></code>), click <a href="/">here</a>.</p>
+            <p>This documentation is for an old version (<code class="docutils literal notranslate"><span class="pre">v2.6.0</span></code>) of <code class="docutils literal notranslate"><span class="pre">cleanlab</span></code>. To see the documentation for the latest stable version (<code class="docutils literal notranslate"><span class="pre">` + version_number + `</span></code>), click <a href="/">here</a>.</p>
             </div>`;
         } else {
             document.getElementById("doc_ver_warning").remove();
@@ -527,7 +560,7 @@
 <div class="table-wrapper autosummary longtable docutils container">
 <table class="autosummary longtable docutils align-default">
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#cleanlab.internal.multilabel_scorer.ClassLabelScorer" title="cleanlab.internal.multilabel_scorer.ClassLabelScorer"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ClassLabelScorer</span></code></a>(value)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#cleanlab.internal.multilabel_scorer.ClassLabelScorer" title="cleanlab.internal.multilabel_scorer.ClassLabelScorer"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ClassLabelScorer</span></code></a>(value[, names, module, ...])</p></td>
 <td><p>Enum for the different methods to compute label quality scores.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#cleanlab.internal.multilabel_scorer.Aggregator" title="cleanlab.internal.multilabel_scorer.Aggregator"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Aggregator</span></code></a>(method, **kwargs)</p></td>
@@ -563,7 +596,7 @@
 </div>
 <dl class="py class">
 <dt class="sig sig-object py" id="cleanlab.internal.multilabel_scorer.ClassLabelScorer">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">cleanlab.internal.multilabel_scorer.</span></span><span class="sig-name descname"><span class="pre">ClassLabelScorer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/cleanlab/internal/multilabel_scorer.html#ClassLabelScorer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cleanlab.internal.multilabel_scorer.ClassLabelScorer" title="Permalink to this definition">#</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">cleanlab.internal.multilabel_scorer.</span></span><span class="sig-name descname"><span class="pre">ClassLabelScorer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">names</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">module</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">qualname</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">start</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">boundary</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/cleanlab/internal/multilabel_scorer.html#ClassLabelScorer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cleanlab.internal.multilabel_scorer.ClassLabelScorer" title="Permalink to this definition">#</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Enum</span></code></p>
 <p>Enum for the different methods to compute label quality scores.</p>
 <p><strong>Attributes:</strong></p>
@@ -591,6 +624,18 @@
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#cleanlab.internal.multilabel_scorer.ClassLabelScorer.from_str" title="cleanlab.internal.multilabel_scorer.ClassLabelScorer.from_str"><code class="xref py py-obj docutils literal notranslate"><span class="pre">from_str</span></code></a>(method)</p></td>
 <td><p>Constructs an instance of the ClassLabelScorer enum based on the given method name.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#cleanlab.internal.multilabel_scorer.ClassLabelScorer.__contains__" title="cleanlab.internal.multilabel_scorer.ClassLabelScorer.__contains__"><code class="xref py py-obj docutils literal notranslate"><span class="pre">__contains__</span></code></a>(member)</p></td>
+<td><p>Return True if member is a member of this enum raises TypeError if member is not an enum member</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#cleanlab.internal.multilabel_scorer.ClassLabelScorer.__getitem__" title="cleanlab.internal.multilabel_scorer.ClassLabelScorer.__getitem__"><code class="xref py py-obj docutils literal notranslate"><span class="pre">__getitem__</span></code></a>(name)</p></td>
+<td><p>Return the member matching <cite>name</cite>.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#cleanlab.internal.multilabel_scorer.ClassLabelScorer.__iter__" title="cleanlab.internal.multilabel_scorer.ClassLabelScorer.__iter__"><code class="xref py py-obj docutils literal notranslate"><span class="pre">__iter__</span></code></a>()</p></td>
+<td><p>Return members in definition order.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#cleanlab.internal.multilabel_scorer.ClassLabelScorer.__len__" title="cleanlab.internal.multilabel_scorer.ClassLabelScorer.__len__"><code class="xref py py-obj docutils literal notranslate"><span class="pre">__len__</span></code></a>()</p></td>
+<td><p>Return the number of members (no aliases)</p></td>
 </tr>
 </tbody>
 </table>
@@ -630,6 +675,11 @@
 <span class="sig-name descname"><span class="pre">__call__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">labels</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pred_probs</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/cleanlab/internal/multilabel_scorer.html#ClassLabelScorer.__call__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cleanlab.internal.multilabel_scorer.ClassLabelScorer.__call__" title="Permalink to this definition">#</a></dt>
 <dd><p>Returns the label-quality scores for each datapoint based on the given labels and predicted probabilities.</p>
 <p>See the documentation for each method for more details.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></span></p>
+</dd>
+</dl>
 <p class="rubric">Example</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">cleanlab.internal.multilabel_scorer</span> <span class="kn">import</span> <span class="n">ClassLabelScorer</span>
@@ -646,11 +696,6 @@
 <span class="go">array([0.9 , 0.8 , 0.7 , 0.8 , 0.25, 0.9 ])</span>
 </pre></div>
 </div>
-<dl class="field-list simple">
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></p>
-</dd>
-</dl>
 </dd></dl>
 
 <dl class="py method">
@@ -659,10 +704,10 @@
 <dd><p>Constructs an instance of the ClassLabelScorer enum based on the given method name.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>method</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>) – The name of the scoring method to use.</p>
+<dd class="field-odd"><p><strong>method</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span>) – The name of the scoring method to use.</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference internal" href="#cleanlab.internal.multilabel_scorer.ClassLabelScorer" title="cleanlab.internal.multilabel_scorer.ClassLabelScorer"><code class="xref py py-class docutils literal notranslate"><span class="pre">ClassLabelScorer</span></code></a></p>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><a class="reference internal" href="#cleanlab.internal.multilabel_scorer.ClassLabelScorer" title="cleanlab.internal.multilabel_scorer.ClassLabelScorer"><code class="xref py py-class docutils literal notranslate"><span class="pre">ClassLabelScorer</span></code></a></span></p>
 </dd>
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">scorer</span></code> – An instance of the ClassLabelScorer enum.</p>
@@ -678,6 +723,33 @@
 <span class="go">&lt;ClassLabelScorer.SELF_CONFIDENCE: get_self_confidence_for_each_label&gt;</span>
 </pre></div>
 </div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cleanlab.internal.multilabel_scorer.ClassLabelScorer.__contains__">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">__contains__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">member</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#cleanlab.internal.multilabel_scorer.ClassLabelScorer.__contains__" title="Permalink to this definition">#</a></dt>
+<dd><p>Return True if member is a member of this enum
+raises TypeError if member is not an enum member</p>
+<p>note: in 3.12 TypeError will no longer be raised, and True will also be
+returned if member is the value of a member in this enum</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cleanlab.internal.multilabel_scorer.ClassLabelScorer.__getitem__">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">__getitem__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#cleanlab.internal.multilabel_scorer.ClassLabelScorer.__getitem__" title="Permalink to this definition">#</a></dt>
+<dd><p>Return the member matching <cite>name</cite>.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cleanlab.internal.multilabel_scorer.ClassLabelScorer.__iter__">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">__iter__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#cleanlab.internal.multilabel_scorer.ClassLabelScorer.__iter__" title="Permalink to this definition">#</a></dt>
+<dd><p>Return members in definition order.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cleanlab.internal.multilabel_scorer.ClassLabelScorer.__len__">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">__len__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#cleanlab.internal.multilabel_scorer.ClassLabelScorer.__len__" title="Permalink to this definition">#</a></dt>
+<dd><p>Return the number of members (no aliases)</p>
 </dd></dl>
 
 </dd></dl>
@@ -703,18 +775,18 @@ most recent scores, and successively less weight to the previous scores.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>s</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>) – Scores to be transformed.</p></li>
-<li><p><strong>alpha</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>]) – <p>Discount factor that determines the weight of the previous EMA score.
+<li><p><strong>s</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></span>) – Scores to be transformed.</p></li>
+<li><p><strong>alpha</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>]</span>) – <p>Discount factor that determines the weight of the previous EMA score.
 Higher alpha means that the previous EMA score has a lower weight while
 the current score has a higher weight.</p>
 <p>Its value must be in the interval [0, 1].</p>
 <p>If alpha is None, it is set to 2 / (K + 1) where K is the number of scores.</p>
 </p></li>
-<li><p><strong>axis</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>) – Axis along which the scores are sorted.</p></li>
+<li><p><strong>axis</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></span>) – Axis along which the scores are sorted.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></p>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></span></p>
 </dd>
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">s_ema</span></code> – Exponential moving average score.</p>
@@ -737,16 +809,16 @@ the current score has a higher weight.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>s</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>) – Input array.</p></li>
-<li><p><strong>temperature</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>) – Temperature parameter. Too small values may cause numerical underflow and NaN scores.</p></li>
-<li><p><strong>axis</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>) – Axis along which to apply the function.</p></li>
+<li><p><strong>s</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></span>) – Input array.</p></li>
+<li><p><strong>temperature</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></span>) – Temperature parameter. Too small values may cause numerical underflow and NaN scores.</p></li>
+<li><p><strong>axis</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></span>) – Axis along which to apply the function.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></p>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></span></p>
 </dd>
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">Softmin</span> <span class="pre">score.</span></code></p>
+<dd class="field-odd"><p>Softmin score.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -759,10 +831,10 @@ the current score has a higher weight.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>method</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-data docutils literal notranslate"><span class="pre">Callable</span></code>]) – The method to compute the label quality scores for each class.
+<li><p><strong>method</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-data docutils literal notranslate"><span class="pre">Callable</span></code>]</span>) – The method to compute the label quality scores for each class.
 If passed as a callable, your function should take in a 1D array of K scores and return a single aggregated score.
-See <a class="reference internal" href="#cleanlab.internal.multilabel_scorer.exponential_moving_average" title="cleanlab.internal.multilabel_scorer.exponential_moving_average"><code class="xref py py-func docutils literal notranslate"><span class="pre">exponential_moving_average</span></code></a> for an example of such a function.
-Alternatively, this can be a str value to specify a built-in function, possible values are the keys of the <code class="docutils literal notranslate"><span class="pre">Aggregator</span></code>’s <a class="reference internal" href="#cleanlab.internal.multilabel_scorer.Aggregator.possible_methods" title="cleanlab.internal.multilabel_scorer.Aggregator.possible_methods"><code class="xref py py-obj docutils literal notranslate"><span class="pre">possible_methods</span></code></a> attribute.</p></li>
+See <cite>~cleanlab.internal.multilabel_scorer.exponential_moving_average</cite> for an example of such a function.
+Alternatively, this can be a str value to specify a built-in function, possible values are the keys of the <code class="docutils literal notranslate"><span class="pre">Aggregator</span></code>’s <cite>possible_methods</cite> attribute.</p></li>
 <li><p><strong>kwargs</strong> – Additional keyword arguments to pass to the aggregation function when it is called.</p></li>
 </ul>
 </dd>
@@ -789,7 +861,7 @@ Alternatively, this can be a str value to specify a built-in function, possible 
 </div>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="cleanlab.internal.multilabel_scorer.Aggregator.possible_methods">
-<span class="sig-name descname"><span class="pre">possible_methods</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Callable</span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">...</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">ndarray</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{'exponential_moving_average':</span> <span class="pre">&lt;function</span> <span class="pre">exponential_moving_average&gt;,</span> <span class="pre">'softmin':</span> <span class="pre">&lt;function</span> <span class="pre">softmin&gt;}</span></em><a class="headerlink" href="#cleanlab.internal.multilabel_scorer.Aggregator.possible_methods" title="Permalink to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">possible_methods</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code><span class="pre">[</span><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code><span class="pre">,</span> <code class="xref py py-data docutils literal notranslate"><span class="pre">Callable</span></code><span class="pre">[</span><code class="xref py py-data docutils literal notranslate"><span class="pre">...</span></code><span class="pre">,</span> <code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code><span class="pre">]]</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{'exponential_moving_average':</span> <span class="pre">&lt;function</span> <span class="pre">exponential_moving_average&gt;,</span> <span class="pre">'softmin':</span> <span class="pre">&lt;function</span> <span class="pre">softmin&gt;}</span></em><a class="headerlink" href="#cleanlab.internal.multilabel_scorer.Aggregator.possible_methods" title="Permalink to this definition">#</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
@@ -798,10 +870,10 @@ Alternatively, this can be a str value to specify a built-in function, possible 
 <dd><p>Returns the label quality scores for each datapoint based on the given label quality scores for each class.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>scores</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>) – The label quality scores for each class.</p>
+<dd class="field-odd"><p><strong>scores</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></span>) – The label quality scores for each class.</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></p>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></span></p>
 </dd>
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">aggregated_scores</span></code> – A single label quality score for each datapoint.</p>
@@ -819,10 +891,10 @@ Alternatively, this can be a str value to specify a built-in function, possible 
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>base_scorer</strong> (<a class="reference internal" href="#cleanlab.internal.multilabel_scorer.ClassLabelScorer" title="cleanlab.internal.multilabel_scorer.ClassLabelScorer"><code class="xref py py-class docutils literal notranslate"><span class="pre">ClassLabelScorer</span></code></a>) – <p>The method to compute the label quality scores for each class.</p>
+<li><p><strong>base_scorer</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference internal" href="#cleanlab.internal.multilabel_scorer.ClassLabelScorer" title="cleanlab.internal.multilabel_scorer.ClassLabelScorer"><code class="xref py py-class docutils literal notranslate"><span class="pre">ClassLabelScorer</span></code></a></span>) – <p>The method to compute the label quality scores for each class.</p>
 <p>See the documentation for the ClassLabelScorer enum for more details.</p>
 </p></li>
-<li><p><strong>aggregator</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code>[<a class="reference internal" href="#cleanlab.internal.multilabel_scorer.Aggregator" title="cleanlab.internal.multilabel_scorer.Aggregator"><code class="xref py py-class docutils literal notranslate"><span class="pre">Aggregator</span></code></a>, <code class="xref py py-data docutils literal notranslate"><span class="pre">Callable</span></code>]) – <p>The method to aggregate the label quality scores for each class into a single score for each datapoint.</p>
+<li><p><strong>aggregator</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code>[<a class="reference internal" href="#cleanlab.internal.multilabel_scorer.Aggregator" title="cleanlab.internal.multilabel_scorer.Aggregator"><code class="xref py py-class docutils literal notranslate"><span class="pre">Aggregator</span></code></a>, <code class="xref py py-data docutils literal notranslate"><span class="pre">Callable</span></code>]</span>) – <p>The method to aggregate the label quality scores for each class into a single score for each datapoint.</p>
 <p>Defaults to the EMA (exponential moving average) aggregator with forgetting factor <code class="docutils literal notranslate"><span class="pre">alpha=0.8</span></code>.</p>
 <p>See the documentation for the Aggregator class for more details.</p>
 <div class="admonition seealso">
@@ -830,7 +902,7 @@ Alternatively, this can be a str value to specify a built-in function, possible 
 <p><a class="reference internal" href="#cleanlab.internal.multilabel_scorer.exponential_moving_average" title="cleanlab.internal.multilabel_scorer.exponential_moving_average"><code class="xref py py-obj docutils literal notranslate"><span class="pre">exponential_moving_average</span></code></a></p>
 </div>
 </p></li>
-<li><p><strong>strict</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code>) – Flag for performing strict validation of the input data.</p></li>
+<li><p><strong>strict</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></span>) – Flag for performing strict validation of the input data.</p></li>
 </ul>
 </dd>
 </dl>
@@ -859,10 +931,10 @@ For each example, the label quality scores for each class are aggregated into a 
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>labels</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>) – A 2D array of shape (n_samples, n_labels) with binary labels.</p></li>
-<li><p><strong>pred_probs</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>) – A 2D array of shape (n_samples, n_labels) with predicted probabilities.</p></li>
+<li><p><strong>labels</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></span>) – A 2D array of shape (n_samples, n_labels) with binary labels.</p></li>
+<li><p><strong>pred_probs</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></span>) – A 2D array of shape (n_samples, n_labels) with predicted probabilities.</p></li>
 <li><p><strong>kwargs</strong> – Additional keyword arguments to pass to the base_scorer and the aggregator.</p></li>
-<li><p><strong>base_scorer_kwargs</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code>]) – <p>Keyword arguments to pass to the base_scorer</p>
+<li><p><strong>base_scorer_kwargs</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code>]</span>) – <p>Keyword arguments to pass to the base_scorer</p>
 <dl class="simple">
 <dt>aggregator_kwargs:</dt><dd><p>Additional keyword arguments to pass to the aggregator.</p>
 </dd>
@@ -871,7 +943,7 @@ For each example, the label quality scores for each class are aggregated into a 
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></p>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></span></p>
 </dd>
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">scores</span></code> – A 1D array of shape (n_samples,) with the quality scores for each datapoint.</p>
@@ -906,7 +978,7 @@ For each example, the label quality scores for each class are aggregated into a 
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>class_label_quality_scores</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>) – <p>A 2D array of shape (n_samples, n_labels) with the label quality scores for each class.</p>
+<li><p><strong>class_label_quality_scores</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></span>) – <p>A 2D array of shape (n_samples, n_labels) with the label quality scores for each class.</p>
 <div class="admonition seealso">
 <p class="admonition-title">See also</p>
 <p><a class="reference internal" href="#cleanlab.internal.multilabel_scorer.MultilabelScorer.get_class_label_quality_scores" title="cleanlab.internal.multilabel_scorer.MultilabelScorer.get_class_label_quality_scores"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_class_label_quality_scores</span></code></a></p>
@@ -916,7 +988,7 @@ For each example, the label quality scores for each class are aggregated into a 
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></p>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></span></p>
 </dd>
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">scores</span></code> – A 1D array of shape (n_samples,) with the quality scores for each datapoint.</p>
@@ -949,13 +1021,13 @@ I.e. the <code class="docutils literal notranslate"><span class="pre">exponentia
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>labels</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>) – A 2D array of shape (n_samples, n_labels) with binary labels.</p></li>
-<li><p><strong>pred_probs</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>) – A 2D array of shape (n_samples, n_labels) with predicted probabilities.</p></li>
-<li><p><strong>base_scorer_kwargs</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code>]) – Keyword arguments to pass to the base scoring-function.</p></li>
+<li><p><strong>labels</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></span>) – A 2D array of shape (n_samples, n_labels) with binary labels.</p></li>
+<li><p><strong>pred_probs</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></span>) – A 2D array of shape (n_samples, n_labels) with predicted probabilities.</p></li>
+<li><p><strong>base_scorer_kwargs</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code>]</span>) – Keyword arguments to pass to the base scoring-function.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></p>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></span></p>
 </dd>
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">class_label_quality_scores</span></code> – A 2D array of shape (n_samples, n_labels) with the quality scores for each label.</p>
@@ -987,13 +1059,13 @@ based on out-of-sample predicted probabilities.</p>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>labels</strong> – A 2D array of shape (N, K) with binary labels.</p></li>
 <li><p><strong>pred_probs</strong> – A 2D array of shape (N, K) with predicted probabilities.</p></li>
-<li><p><strong>method</strong> (<a class="reference internal" href="#cleanlab.internal.multilabel_scorer.MultilabelScorer" title="cleanlab.internal.multilabel_scorer.MultilabelScorer"><code class="xref py py-class docutils literal notranslate"><span class="pre">MultilabelScorer</span></code></a>) – A scoring+aggregation method for computing the label quality scores of examples in a multi-label classification setting.</p></li>
-<li><p><strong>base_scorer_kwargs</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code>]) – Keyword arguments to pass to the class-label scorer.</p></li>
+<li><p><strong>method</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference internal" href="#cleanlab.internal.multilabel_scorer.MultilabelScorer" title="cleanlab.internal.multilabel_scorer.MultilabelScorer"><code class="xref py py-class docutils literal notranslate"><span class="pre">MultilabelScorer</span></code></a></span>) – A scoring+aggregation method for computing the label quality scores of examples in a multi-label classification setting.</p></li>
+<li><p><strong>base_scorer_kwargs</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code>]</span>) – Keyword arguments to pass to the class-label scorer.</p></li>
 <li><p><strong>aggregator_kwargs</strong> – Additional keyword arguments to pass to the aggregator.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></p>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></span></p>
 </dd>
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">scores</span></code> – A 1D array of shape (N,) with the quality scores for each datapoint.</p>
@@ -1024,10 +1096,10 @@ based on out-of-sample predicted probabilities.</p>
 <dd><p>Compute the prior probability of each label in a multi-label classification problem.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>y</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>) – A 2d array of binarized multi-labels of shape (N, K) where N is the number of samples and K is the number of classes.</p>
+<dd class="field-odd"><p><strong>y</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></span>) – A 2d array of binarized multi-labels of shape (N, K) where N is the number of samples and K is the number of classes.</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></p>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></span></p>
 </dd>
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">py</span></code> – A 2d array of prior probabilities of shape (K,2) where the first column is the probability of the label being 0
@@ -1056,21 +1128,21 @@ and the second column is the probability of the label being 1 for each class.</p
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>The labels are reformatted to a “multi-class” format internally to support a wider range of cross-validation strategies.
-If you have a multi-label dataset with <code class="xref py py-obj docutils literal notranslate"><span class="pre">K</span></code> classes, the labels are reformatted to a “multi-class” format with up to <code class="xref py py-obj docutils literal notranslate"><span class="pre">2**K</span></code> classes
+If you have a multi-label dataset with <cite>K</cite> classes, the labels are reformatted to a “multi-class” format with up to <cite>2**K</cite> classes
 (i.e. the number of possible class-assignment configurations).
-It is unlikely that you’ll all <code class="xref py py-obj docutils literal notranslate"><span class="pre">2**K</span></code> configurations in your dataset.</p>
+It is unlikely that you’ll all <cite>2**K</cite> configurations in your dataset.</p>
 </div>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>X</strong> – A 2d array of features of shape (N, M) where N is the number of samples and M is the number of features.</p></li>
-<li><p><strong>labels</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>) – A 2d array of binarized multi-labels of shape (N, K) where N is the number of samples and K is the number of classes.</p></li>
+<li><p><strong>labels</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></span>) – A 2d array of binarized multi-labels of shape (N, K) where N is the number of samples and K is the number of classes.</p></li>
 <li><p><strong>clf</strong> – A multi-label classifier with a <code class="docutils literal notranslate"><span class="pre">predict_proba</span></code> method.</p></li>
 <li><p><strong>cv</strong> – A cross-validation splitter with a <code class="docutils literal notranslate"><span class="pre">split</span></code> method that returns a generator of train/test indices.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></p>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></span></p>
 </dd>
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><p><p><code class="xref py py-class docutils literal notranslate"><span class="pre">pred_probs</span></code> – A 2d array of predicted probabilities of shape (N, K) where N is the number of samples and K is the number of classes.</p>
@@ -1111,10 +1183,10 @@ It is unlikely that you’ll all <code class="xref py py-obj docutils literal no
                 </div>
                 <div class="title">outlier</div>
               </div>
-              <svg><use href="#svg-arrow-right"></use></svg>
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
             </a>
           <a class="prev-page" href="multilabel_utils.html">
-              <svg><use href="#svg-arrow-right"></use></svg>
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
               <div class="page-info">
                 <div class="context">
                   <span>Previous</span>
@@ -1128,7 +1200,7 @@ It is unlikely that you’ll all <code class="xref py py-obj docutils literal no
         <div class="bottom-of-page">
           <div class="left-details">
             <div class="copyright">
-                Copyright &#169; 2023, Cleanlab Inc.
+                Copyright &#169; 2024, Cleanlab Inc.
             </div>
             Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
             
@@ -1162,22 +1234,66 @@ It is unlikely that you’ll all <code class="xref py py-obj docutils literal no
 
       </footer>
     </div>
-    <aside class="toc-drawer no-toc">
+    <aside class="toc-drawer">
       
+      
+      <div class="toc-sticky toc-scroll">
+        <div class="toc-title-container">
+          <span class="toc-title">
+            On this page
+          </span>
+        </div>
+        <div class="toc-tree-container">
+          <div class="toc-tree">
+            <ul>
+<li><a class="reference internal" href="#">multilabel_scorer</a><ul>
+<li><a class="reference internal" href="#cleanlab.internal.multilabel_scorer.ClassLabelScorer"><code class="docutils literal notranslate"><span class="pre">ClassLabelScorer</span></code></a><ul>
+<li><a class="reference internal" href="#cleanlab.internal.multilabel_scorer.ClassLabelScorer.SELF_CONFIDENCE"><code class="docutils literal notranslate"><span class="pre">ClassLabelScorer.SELF_CONFIDENCE</span></code></a></li>
+<li><a class="reference internal" href="#cleanlab.internal.multilabel_scorer.ClassLabelScorer.NORMALIZED_MARGIN"><code class="docutils literal notranslate"><span class="pre">ClassLabelScorer.NORMALIZED_MARGIN</span></code></a></li>
+<li><a class="reference internal" href="#cleanlab.internal.multilabel_scorer.ClassLabelScorer.CONFIDENCE_WEIGHTED_ENTROPY"><code class="docutils literal notranslate"><span class="pre">ClassLabelScorer.CONFIDENCE_WEIGHTED_ENTROPY</span></code></a></li>
+<li><a class="reference internal" href="#cleanlab.internal.multilabel_scorer.ClassLabelScorer.__call__"><code class="docutils literal notranslate"><span class="pre">ClassLabelScorer.__call__()</span></code></a></li>
+<li><a class="reference internal" href="#cleanlab.internal.multilabel_scorer.ClassLabelScorer.from_str"><code class="docutils literal notranslate"><span class="pre">ClassLabelScorer.from_str()</span></code></a></li>
+<li><a class="reference internal" href="#cleanlab.internal.multilabel_scorer.ClassLabelScorer.__contains__"><code class="docutils literal notranslate"><span class="pre">ClassLabelScorer.__contains__()</span></code></a></li>
+<li><a class="reference internal" href="#cleanlab.internal.multilabel_scorer.ClassLabelScorer.__getitem__"><code class="docutils literal notranslate"><span class="pre">ClassLabelScorer.__getitem__()</span></code></a></li>
+<li><a class="reference internal" href="#cleanlab.internal.multilabel_scorer.ClassLabelScorer.__iter__"><code class="docutils literal notranslate"><span class="pre">ClassLabelScorer.__iter__()</span></code></a></li>
+<li><a class="reference internal" href="#cleanlab.internal.multilabel_scorer.ClassLabelScorer.__len__"><code class="docutils literal notranslate"><span class="pre">ClassLabelScorer.__len__()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#cleanlab.internal.multilabel_scorer.exponential_moving_average"><code class="docutils literal notranslate"><span class="pre">exponential_moving_average()</span></code></a></li>
+<li><a class="reference internal" href="#cleanlab.internal.multilabel_scorer.softmin"><code class="docutils literal notranslate"><span class="pre">softmin()</span></code></a></li>
+<li><a class="reference internal" href="#cleanlab.internal.multilabel_scorer.Aggregator"><code class="docutils literal notranslate"><span class="pre">Aggregator</span></code></a><ul>
+<li><a class="reference internal" href="#cleanlab.internal.multilabel_scorer.Aggregator.possible_methods"><code class="docutils literal notranslate"><span class="pre">Aggregator.possible_methods</span></code></a></li>
+<li><a class="reference internal" href="#cleanlab.internal.multilabel_scorer.Aggregator.__call__"><code class="docutils literal notranslate"><span class="pre">Aggregator.__call__()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#cleanlab.internal.multilabel_scorer.MultilabelScorer"><code class="docutils literal notranslate"><span class="pre">MultilabelScorer</span></code></a><ul>
+<li><a class="reference internal" href="#cleanlab.internal.multilabel_scorer.MultilabelScorer.__call__"><code class="docutils literal notranslate"><span class="pre">MultilabelScorer.__call__()</span></code></a></li>
+<li><a class="reference internal" href="#cleanlab.internal.multilabel_scorer.MultilabelScorer.aggregate"><code class="docutils literal notranslate"><span class="pre">MultilabelScorer.aggregate()</span></code></a></li>
+<li><a class="reference internal" href="#cleanlab.internal.multilabel_scorer.MultilabelScorer.get_class_label_quality_scores"><code class="docutils literal notranslate"><span class="pre">MultilabelScorer.get_class_label_quality_scores()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#cleanlab.internal.multilabel_scorer.get_label_quality_scores"><code class="docutils literal notranslate"><span class="pre">get_label_quality_scores()</span></code></a></li>
+<li><a class="reference internal" href="#cleanlab.internal.multilabel_scorer.multilabel_py"><code class="docutils literal notranslate"><span class="pre">multilabel_py()</span></code></a></li>
+<li><a class="reference internal" href="#cleanlab.internal.multilabel_scorer.get_cross_validated_multilabel_pred_probs"><code class="docutils literal notranslate"><span class="pre">get_cross_validated_multilabel_pred_probs()</span></code></a></li>
+</ul>
+</li>
+</ul>
+
+          </div>
+        </div>
+      </div>
       
       
     </aside>
   </div>
-</div><script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
-    <script src="../../_static/jquery.js"></script>
-    <script src="../../_static/underscore.js"></script>
-    <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
-    <script src="../../_static/doctools.js"></script>
-    <script src="../../_static/scripts/furo.js"></script>
-    <script src="../../_static/clipboard.min.js"></script>
-    <script src="../../_static/copybutton.js"></script>
+</div><script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js?v=2b91c5f0"></script>
+    <script src="../../_static/doctools.js?v=888ff710"></script>
+    <script src="../../_static/sphinx_highlight.js?v=4825356b"></script>
+    <script src="../../_static/scripts/furo.js?v=32e29ea5"></script>
+    <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../../_static/copybutton.js?v=30646c52"></script>
     <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
-    <script src="https://unpkg.com/@jupyter-widgets/html-manager@^0.20.0/dist/embed-amd.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@jupyter-widgets/html-manager@^1.0.1/dist/embed-amd.js"></script>
     
 <script async defer src="https://buttons.github.io/buttons.js"></script>
 </body>
