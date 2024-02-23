@@ -570,14 +570,20 @@
     <span class="n">Optional</span><span class="p">,</span>
     <span class="n">Union</span><span class="p">,</span>
 <span class="p">)</span>
+<span class="kn">import</span> <span class="nn">warnings</span>
+
 
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 <span class="kn">from</span> <span class="nn">scipy.sparse</span> <span class="kn">import</span> <span class="n">csr_matrix</span>
+<span class="kn">from</span> <span class="nn">sklearn.exceptions</span> <span class="kn">import</span> <span class="n">NotFittedError</span>
+<span class="kn">from</span> <span class="nn">sklearn.neighbors</span> <span class="kn">import</span> <span class="n">NearestNeighbors</span>
+<span class="kn">from</span> <span class="nn">sklearn.utils.validation</span> <span class="kn">import</span> <span class="n">check_is_fitted</span>
 
 <span class="kn">from</span> <span class="nn">cleanlab.datalab.internal.issue_manager</span> <span class="kn">import</span> <span class="n">IssueManager</span>
 
 <span class="k">if</span> <span class="n">TYPE_CHECKING</span><span class="p">:</span>  <span class="c1"># pragma: no cover</span>
+    <span class="kn">import</span> <span class="nn">numpy.typing</span> <span class="k">as</span> <span class="nn">npt</span>
     <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
     <span class="kn">from</span> <span class="nn">cleanlab.datalab.datalab</span> <span class="kn">import</span> <span class="n">Datalab</span>
 
@@ -640,16 +646,19 @@
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">datalab</span><span class="p">:</span> <span class="n">Datalab</span><span class="p">,</span>
+        <span class="n">metric</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">threshold</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">k</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">10</span><span class="p">,</span>
         <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
     <span class="p">):</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">datalab</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">metric</span> <span class="o">=</span> <span class="n">metric</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">k</span> <span class="o">=</span> <span class="n">k</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">threshold</span> <span class="o">=</span> <span class="n">threshold</span> <span class="k">if</span> <span class="n">threshold</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">DEFAULT_THRESHOLD</span>
 
 <div class="viewcode-block" id="DataValuationIssueManager.find_issues"><a class="viewcode-back" href="../../../../../cleanlab/datalab/internal/issue_manager/data_valuation.html#cleanlab.datalab.internal.issue_manager.data_valuation.DataValuationIssueManager.find_issues">[docs]</a>    <span class="k">def</span> <span class="nf">find_issues</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
+        <span class="n">features</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">npt</span><span class="o">.</span><span class="n">NDArray</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Calculate the data valuation score with a provided or existing knn graph.</span>
@@ -663,6 +672,8 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">k</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;k&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">k</span><span class="p">)</span>
         <span class="n">knn_graph</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_process_knn_graph_from_inputs</span><span class="p">(</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="n">old_knn_metric</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">datalab</span><span class="o">.</span><span class="n">get_info</span><span class="p">(</span><span class="s2">&quot;statistics&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;knn_metric&quot;</span><span class="p">)</span>
+        <span class="n">metric_changes</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">metric</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">metric</span> <span class="o">!=</span> <span class="n">old_knn_metric</span>
         <span class="n">labels</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">datalab</span><span class="o">.</span><span class="n">labels</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">labels</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">):</span>
             <span class="n">error_msg</span> <span class="o">=</span> <span class="p">(</span>
@@ -670,12 +681,29 @@
                 <span class="sa">f</span><span class="s2">&quot;but got </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">labels</span><span class="p">)</span><span class="si">}</span><span class="s2"> instead.&quot;</span>
             <span class="p">)</span>
             <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="n">error_msg</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">knn_graph</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-                <span class="s2">&quot;knn_graph must be provided in kwargs or already stored in the Datalab instance</span><span class="se">\n</span><span class="s2">&quot;</span>
-                <span class="s2">&quot;It should be calculated by other issue managers if it is not provided via &quot;</span>
-                <span class="s2">&quot;`Datalab.find_issues(knn_graph=knn_graph, ...)`&quot;</span>
-            <span class="p">)</span>
+        <span class="k">if</span> <span class="n">knn_graph</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">metric_changes</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">features</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                    <span class="s2">&quot;If a knn_graph is not provided, features must be provided to fit a new knn.&quot;</span>
+                <span class="p">)</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">metric</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">metric</span> <span class="o">=</span> <span class="s2">&quot;cosine&quot;</span> <span class="k">if</span> <span class="n">features</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">3</span> <span class="k">else</span> <span class="s2">&quot;euclidean&quot;</span>
+            <span class="n">knn</span> <span class="o">=</span> <span class="n">NearestNeighbors</span><span class="p">(</span><span class="n">n_neighbors</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">k</span><span class="p">,</span> <span class="n">metric</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">metric</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">features</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">metric</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">metric</span> <span class="o">!=</span> <span class="n">knn</span><span class="o">.</span><span class="n">metric</span><span class="p">:</span>
+                <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">&quot;Metric </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">metric</span><span class="si">}</span><span class="s2"> does not match metric </span><span class="si">{</span><span class="n">knn</span><span class="o">.</span><span class="n">metric</span><span class="si">}</span><span class="s2"> used to fit knn. &quot;</span>
+                    <span class="s2">&quot;Most likely an existing NearestNeighbors object was passed in, but a different &quot;</span>
+                    <span class="s2">&quot;metric was specified.&quot;</span>
+                <span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">metric</span> <span class="o">=</span> <span class="n">knn</span><span class="o">.</span><span class="n">metric</span>
+
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">check_is_fitted</span><span class="p">(</span><span class="n">knn</span><span class="p">)</span>
+            <span class="k">except</span> <span class="n">NotFittedError</span><span class="p">:</span>
+                <span class="n">knn</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">features</span><span class="p">)</span>
+
+            <span class="n">knn_graph</span> <span class="o">=</span> <span class="n">knn</span><span class="o">.</span><span class="n">kneighbors_graph</span><span class="p">(</span><span class="n">mode</span><span class="o">=</span><span class="s2">&quot;distance&quot;</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">labels</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;labels must be provided to run data valuation&quot;</span><span class="p">)</span>
 
@@ -689,7 +717,7 @@
         <span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">summary</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">make_summary</span><span class="p">(</span><span class="n">score</span><span class="o">=</span><span class="n">scores</span><span class="o">.</span><span class="n">mean</span><span class="p">())</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">info</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">collect_info</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">issues</span><span class="p">)</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">info</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">collect_info</span><span class="p">(</span><span class="n">issues</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">issues</span><span class="p">,</span> <span class="n">knn_graph</span><span class="o">=</span><span class="n">knn_graph</span><span class="p">)</span></div>
 
     <span class="k">def</span> <span class="nf">_process_knn_graph_from_inputs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">kwargs</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="n">csr_matrix</span><span class="p">,</span> <span class="kc">None</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Determine if a knn_graph is provided in the kwargs or if one is already stored in the associated Datalab instance.&quot;&quot;&quot;</span>
@@ -709,17 +737,46 @@
             <span class="p">)</span>
         <span class="k">return</span> <span class="n">knn_graph</span>
 
-<div class="viewcode-block" id="DataValuationIssueManager.collect_info"><a class="viewcode-back" href="../../../../../cleanlab/datalab/internal/issue_manager/data_valuation.html#cleanlab.datalab.internal.issue_manager.data_valuation.DataValuationIssueManager.collect_info">[docs]</a>    <span class="k">def</span> <span class="nf">collect_info</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">issues</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+<div class="viewcode-block" id="DataValuationIssueManager.collect_info"><a class="viewcode-back" href="../../../../../cleanlab/datalab/internal/issue_manager/data_valuation.html#cleanlab.datalab.internal.issue_manager.data_valuation.DataValuationIssueManager.collect_info">[docs]</a>    <span class="k">def</span> <span class="nf">collect_info</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">issues</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">knn_graph</span><span class="p">:</span> <span class="n">csr_matrix</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
         <span class="n">issues_info</span> <span class="o">=</span> <span class="p">{</span>
             <span class="s2">&quot;num_low_valuation_issues&quot;</span><span class="p">:</span> <span class="nb">sum</span><span class="p">(</span><span class="n">issues</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;is_</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">issue_name</span><span class="si">}</span><span class="s2">_issue&quot;</span><span class="p">]),</span>
             <span class="s2">&quot;average_data_valuation&quot;</span><span class="p">:</span> <span class="n">issues</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">issue_score_key</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">(),</span>
         <span class="p">}</span>
 
-        <span class="n">info_dict</span> <span class="o">=</span> <span class="p">{</span>
-            <span class="o">**</span><span class="n">issues_info</span><span class="p">,</span>
+        <span class="n">params_dict</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;metric&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">metric</span><span class="p">,</span>
+            <span class="s2">&quot;k&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">k</span><span class="p">,</span>
+            <span class="s2">&quot;threshold&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">threshold</span><span class="p">,</span>
         <span class="p">}</span>
 
-        <span class="k">return</span> <span class="n">info_dict</span></div></div>
+        <span class="n">statistics_dict</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_build_statistics_dictionary</span><span class="p">(</span><span class="n">knn_graph</span><span class="o">=</span><span class="n">knn_graph</span><span class="p">)</span>
+
+        <span class="n">info_dict</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="o">**</span><span class="n">issues_info</span><span class="p">,</span>
+            <span class="o">**</span><span class="n">params_dict</span><span class="p">,</span>
+            <span class="o">**</span><span class="n">statistics_dict</span><span class="p">,</span>
+        <span class="p">}</span>
+
+        <span class="k">return</span> <span class="n">info_dict</span></div>
+
+    <span class="k">def</span> <span class="nf">_build_statistics_dictionary</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">knn_graph</span><span class="p">:</span> <span class="n">csr_matrix</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]:</span>
+        <span class="n">statistics_dict</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;statistics&quot;</span><span class="p">:</span> <span class="p">{}}</span>
+
+        <span class="c1"># Add the knn graph as a statistic if necessary</span>
+        <span class="n">graph_key</span> <span class="o">=</span> <span class="s2">&quot;weighted_knn_graph&quot;</span>
+        <span class="n">old_knn_graph</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">datalab</span><span class="o">.</span><span class="n">get_info</span><span class="p">(</span><span class="s2">&quot;statistics&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">graph_key</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="n">old_graph_exists</span> <span class="o">=</span> <span class="n">old_knn_graph</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+        <span class="n">prefer_new_graph</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="ow">not</span> <span class="n">old_graph_exists</span>
+            <span class="ow">or</span> <span class="n">knn_graph</span><span class="o">.</span><span class="n">nnz</span> <span class="o">&gt;</span> <span class="n">old_knn_graph</span><span class="o">.</span><span class="n">nnz</span>
+            <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">metric</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">datalab</span><span class="o">.</span><span class="n">get_info</span><span class="p">(</span><span class="s2">&quot;statistics&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;knn_metric&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="p">)</span>
+        <span class="k">if</span> <span class="n">prefer_new_graph</span><span class="p">:</span>
+            <span class="n">statistics_dict</span><span class="p">[</span><span class="s2">&quot;statistics&quot;</span><span class="p">][</span><span class="n">graph_key</span><span class="p">]</span> <span class="o">=</span> <span class="n">knn_graph</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">metric</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">statistics_dict</span><span class="p">[</span><span class="s2">&quot;statistics&quot;</span><span class="p">][</span><span class="s2">&quot;knn_metric&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">metric</span>
+
+        <span class="k">return</span> <span class="n">statistics_dict</span></div>
 
 
 <span class="k">def</span> <span class="nf">_knn_shapley_score</span><span class="p">(</span><span class="n">knn_graph</span><span class="p">:</span> <span class="n">csr_matrix</span><span class="p">,</span> <span class="n">labels</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">k</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
