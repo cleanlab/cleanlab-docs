@@ -1036,7 +1036,13 @@
                     <span class="s2">&quot;If uncertainty is passed in as an array, it must have the same length as y.&quot;</span>
                 <span class="p">)</span>
 
-        <span class="n">label_quality_scores</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="nb">abs</span><span class="p">(</span><span class="n">residual</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">uncertainty</span> <span class="o">+</span> <span class="n">TINY_VALUE</span><span class="p">))</span>
+        <span class="n">residual_adjusted</span> <span class="o">=</span> <span class="nb">abs</span><span class="p">(</span><span class="n">residual</span> <span class="o">/</span> <span class="p">(</span><span class="n">uncertainty</span> <span class="o">+</span> <span class="n">TINY_VALUE</span><span class="p">))</span>
+
+        <span class="c1"># adjust lqs by the median (for more human-readable scores)</span>
+        <span class="n">residual_median</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span>
+            <span class="n">np</span><span class="o">.</span><span class="n">median</span><span class="p">(</span><span class="n">residual_adjusted</span><span class="p">),</span> <span class="n">TINY_VALUE</span>
+        <span class="p">)</span>  <span class="c1"># take the max to prevent median = 0</span>
+        <span class="n">label_quality_scores</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="n">residual_adjusted</span> <span class="o">/</span> <span class="n">residual_median</span><span class="p">)</span>
 
         <span class="n">label_issues_mask</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">y</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">bool</span><span class="p">)</span>
         <span class="n">num_issues</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">ceil</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">y</span><span class="p">)</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">k</span><span class="p">)</span>
