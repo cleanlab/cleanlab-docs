@@ -1,0 +1,986 @@
+<!doctype html>
+<html class="no-js" lang="en" data-content_root="">
+  <head><meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width,initial-scale=1"/>
+    <meta name="color-scheme" content="light dark">
+        <script async src="https://www.googletagmanager.com/gtag/js?id=G-EV8RVEFX82"></script>
+        <script>
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            
+            gtag('config', 'G-EV8RVEFX82');
+            
+        </script>
+    <link rel="index" title="Index" href="../../../genindex.html" /><link rel="search" title="Search" href="../../../search.html" />
+
+    <link rel="shortcut icon" href="https://raw.githubusercontent.com/cleanlab/assets/a4483476d449f2f05a4c7cde329e72358099cc07/cleanlab/cleanlab_favicon.svg"/><!-- Generated with Sphinx 7.1.2 and Furo 2023.09.10 -->
+        <title>cleanlab.segmentation.summary - cleanlab</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=a746c00c" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/styles/furo.css?v=135e06be" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/tabs.css?v=a5c4661c" />
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/katex-math.css?v=91adb8b6" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/styles/furo-extensions.css?v=36a5483c" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/css/custom.css?v=96bccb3e" />
+    
+    
+
+
+<style>
+  body {
+    --color-code-background: #f8f8f8;
+  --color-code-foreground: black;
+  
+  }
+  @media not print {
+    body[data-theme="dark"] {
+      --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+    }
+    @media (prefers-color-scheme: dark) {
+      body:not([data-theme="light"]) {
+        --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+      }
+    }
+  }
+</style></head>
+  <body>
+    
+    <script>
+      document.body.dataset.theme = localStorage.getItem("theme") || "auto";
+    </script>
+    
+
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+  <symbol id="svg-toc" viewBox="0 0 24 24">
+    <title>Contents</title>
+    <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 1024 1024">
+      <path d="M408 442h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8zm-8 204c0 4.4 3.6 8 8 8h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56zm504-486H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zm0 632H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zM115.4 518.9L271.7 642c5.8 4.6 14.4.5 14.4-6.9V388.9c0-7.4-8.5-11.5-14.4-6.9L115.4 505.1a8.74 8.74 0 0 0 0 13.8z"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-menu" viewBox="0 0 24 24">
+    <title>Menu</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-menu">
+      <line x1="3" y1="12" x2="21" y2="12"></line>
+      <line x1="3" y1="6" x2="21" y2="6"></line>
+      <line x1="3" y1="18" x2="21" y2="18"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-arrow-right" viewBox="0 0 24 24">
+    <title>Expand</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-chevron-right">
+      <polyline points="9 18 15 12 9 6"></polyline>
+    </svg>
+  </symbol>
+  <symbol id="svg-sun" viewBox="0 0 24 24">
+    <title>Light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="feather-sun">
+      <circle cx="12" cy="12" r="5"></circle>
+      <line x1="12" y1="1" x2="12" y2="3"></line>
+      <line x1="12" y1="21" x2="12" y2="23"></line>
+      <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+      <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+      <line x1="1" y1="12" x2="3" y2="12"></line>
+      <line x1="21" y1="12" x2="23" y2="12"></line>
+      <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+      <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon" viewBox="0 0 24 24">
+    <title>Dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-moon">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454z" />
+    </svg>
+  </symbol>
+  <symbol id="svg-sun-half" viewBox="0 0 24 24">
+    <title>Auto light/dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-shadow">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+      <circle cx="12" cy="12" r="9" />
+      <path d="M13 12h5" />
+      <path d="M13 15h4" />
+      <path d="M13 18h1" />
+      <path d="M13 9h4" />
+      <path d="M13 6h1" />
+    </svg>
+  </symbol>
+</svg>
+
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation">
+<input type="checkbox" class="sidebar-toggle" name="__toc" id="__toc">
+<label class="overlay sidebar-overlay" for="__navigation">
+  <div class="visually-hidden">Hide navigation sidebar</div>
+</label>
+<label class="overlay toc-overlay" for="__toc">
+  <div class="visually-hidden">Hide table of contents sidebar</div>
+</label>
+
+
+
+<div class="page">
+  <header class="mobile-header">
+    <div class="header-left">
+      <label class="nav-overlay-icon" for="__navigation">
+        <div class="visually-hidden">Toggle site navigation sidebar</div>
+        <i class="icon"><svg><use href="#svg-menu"></use></svg></i>
+      </label>
+    </div>
+    <div class="header-center">
+      <a href="../../../index.html"><div class="brand">cleanlab</div></a>
+    </div>
+    <div class="header-right">
+      <div class="theme-toggle-container theme-toggle-header">
+        <button class="theme-toggle">
+          <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+          <svg class="theme-icon-when-auto"><use href="#svg-sun-half"></use></svg>
+          <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+          <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+        </button>
+      </div>
+      <label class="toc-overlay-icon toc-header-icon no-toc" for="__toc">
+        <div class="visually-hidden">Toggle table of contents sidebar</div>
+        <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+      </label>
+    </div>
+  </header>
+  <aside class="sidebar-drawer">
+    <div class="sidebar-container">
+      
+      <div class="sidebar-sticky"><a style="padding-bottom: 0px;" class="sidebar-brand" href="../../../index.html">
+    
+    <div class="sidebar-logo-container">
+        <img class="sidebar-logo" src="https://raw.githubusercontent.com/cleanlab/assets/master/cleanlab/cleanlab_logo_only.png" alt="Logo" />
+    </div>
+    
+    <span style="margin-bottom:0px" class="sidebar-brand-text">
+        cleanlab
+    </span>
+    
+</a>
+
+<div class="centered">
+    <a style="margin-top: 6px;" class="github-button" href="https://github.com/cleanlab/cleanlab" data-size="large" data-show-count="true"
+    aria-label="Star cleanlab/cleanlab on GitHub">Star</a>
+</div>
+<form class="sidebar-search-container" method="get" action="../../../search.html" role="search">
+  <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
+  <input type="hidden" name="check_keywords" value="yes">
+  <input type="hidden" name="area" value="default">
+</form>
+<div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
+  <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../index.html">Quickstart</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Tutorials</span></p>
+<ul>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../tutorials/datalab/index.html">Datalab Tutorials</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle navigation of Datalab Tutorials</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../tutorials/datalab/datalab_quickstart.html">Detecting Common Data Issues with Datalab</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../tutorials/datalab/datalab_advanced.html">Advanced Data Auditing with Datalab</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../tutorials/datalab/text.html">Text Dataset</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../tutorials/datalab/tabular.html">Tabular Data (Numeric/Categorical)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../cleanlab/datalab/guide/issue_type_description.html">Guide to Datalab Issue Types</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorials/indepth_overview.html">Workflows of Data-Centric AI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorials/image.html">Image Classification</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorials/text.html">Text Classification</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorials/tabular.html">Tabular Classification</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorials/audio.html">Audio Classification</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorials/dataset_health.html">Find Dataset-level Issues</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorials/outliers.html">Identifying Outliers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorials/multiannotator.html">Improving Consensus Labels for Multiannotator Data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorials/multilabel_classification.html">Multi-Label Classification</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorials/regression.html">Noisy Labels in Regression</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorials/token_classification.html">Token Classification (text)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorials/segmentation.html">Image Segmentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorials/object_detection.html">Object Detection</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorials/pred_probs_cross_val.html">Predicted Probabilities via Cross Validation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorials/faq.html">FAQ</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API Reference</span></p>
+<ul>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../cleanlab/datalab/index.html">datalab</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><div class="visually-hidden">Toggle navigation of datalab</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../cleanlab/datalab/guide/index.html">Datalab guides</a><input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" role="switch" type="checkbox"/><label for="toctree-checkbox-3"><div class="visually-hidden">Toggle navigation of Datalab guides</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../cleanlab/datalab/guide/issue_type_description.html">Datalab Issue Types</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../cleanlab/datalab/guide/custom_issue_manager.html">Creating Your Own Issues Manager</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../cleanlab/datalab/datalab.html">datalab</a></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../cleanlab/datalab/internal/index.html">internal</a><input class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" role="switch" type="checkbox"/><label for="toctree-checkbox-4"><div class="visually-hidden">Toggle navigation of internal</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../cleanlab/datalab/internal/data.html">data</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../cleanlab/datalab/internal/data_issues.html">data_issues</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../cleanlab/datalab/internal/issue_finder.html">issue_finder</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../cleanlab/datalab/internal/factory.html">factory</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../cleanlab/datalab/internal/model_outputs.html">model_outputs</a></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../../../cleanlab/datalab/internal/issue_manager/index.html">issue_manager</a><input class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" role="switch" type="checkbox"/><label for="toctree-checkbox-5"><div class="visually-hidden">Toggle navigation of issue_manager</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../cleanlab/datalab/internal/issue_manager/issue_manager.html">Base issue_manager module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../cleanlab/datalab/internal/issue_manager/label.html">label</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../cleanlab/datalab/internal/issue_manager/outlier.html">outlier</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../cleanlab/datalab/internal/issue_manager/duplicate.html">duplicate</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../cleanlab/datalab/internal/issue_manager/noniid.html">noniid</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../cleanlab/datalab/internal/issue_manager/imbalance.html">imbalance</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../cleanlab/datalab/internal/issue_manager/underperforming_group.html">underperforming_group</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../cleanlab/datalab/internal/issue_manager/null.html">null</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../cleanlab/datalab/internal/issue_manager/data_valuation.html">data_valuation</a></li>
+<li class="toctree-l4 has-children"><a class="reference internal" href="../../../cleanlab/datalab/internal/issue_manager/regression/index.html">regression</a><input class="toctree-checkbox" id="toctree-checkbox-6" name="toctree-checkbox-6" role="switch" type="checkbox"/><label for="toctree-checkbox-6"><div class="visually-hidden">Toggle navigation of regression</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l5"><a class="reference internal" href="../../../cleanlab/datalab/internal/issue_manager/regression/label.html">label</a></li>
+</ul>
+</li>
+<li class="toctree-l4 has-children"><a class="reference internal" href="../../../cleanlab/datalab/internal/issue_manager/multilabel/index.html">multilabel</a><input class="toctree-checkbox" id="toctree-checkbox-7" name="toctree-checkbox-7" role="switch" type="checkbox"/><label for="toctree-checkbox-7"><div class="visually-hidden">Toggle navigation of multilabel</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l5"><a class="reference internal" href="../../../cleanlab/datalab/internal/issue_manager/multilabel/label.html">label</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../cleanlab/datalab/internal/report.html">report</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../cleanlab/datalab/internal/task.html">task</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../cleanlab/classification.html">classification</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../cleanlab/filter.html">filter</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../cleanlab/rank.html">rank</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../cleanlab/count.html">count</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../cleanlab/dataset.html">dataset</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../cleanlab/outlier.html">outlier</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../cleanlab/multiannotator.html">multiannotator</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../cleanlab/multilabel_classification/index.html">multilabel_classification</a><input class="toctree-checkbox" id="toctree-checkbox-8" name="toctree-checkbox-8" role="switch" type="checkbox"/><label for="toctree-checkbox-8"><div class="visually-hidden">Toggle navigation of multilabel_classification</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../cleanlab/multilabel_classification/filter.html">filter</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../cleanlab/multilabel_classification/rank.html">rank</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../cleanlab/multilabel_classification/dataset.html">dataset</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../cleanlab/regression/index.html">regression</a><input class="toctree-checkbox" id="toctree-checkbox-9" name="toctree-checkbox-9" role="switch" type="checkbox"/><label for="toctree-checkbox-9"><div class="visually-hidden">Toggle navigation of regression</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../cleanlab/regression/rank.html">regression.rank</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../cleanlab/regression/learn.html">regression.learn</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../cleanlab/token_classification/index.html">token_classification</a><input class="toctree-checkbox" id="toctree-checkbox-10" name="toctree-checkbox-10" role="switch" type="checkbox"/><label for="toctree-checkbox-10"><div class="visually-hidden">Toggle navigation of token_classification</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../cleanlab/token_classification/filter.html">filter</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../cleanlab/token_classification/rank.html">rank</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../cleanlab/token_classification/summary.html">summary</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../cleanlab/segmentation/index.html">segmentation</a><input class="toctree-checkbox" id="toctree-checkbox-11" name="toctree-checkbox-11" role="switch" type="checkbox"/><label for="toctree-checkbox-11"><div class="visually-hidden">Toggle navigation of segmentation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../cleanlab/segmentation/rank.html">rank</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../cleanlab/segmentation/filter.html">filter</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../cleanlab/segmentation/summary.html">summary</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../cleanlab/object_detection/index.html">object_detection</a><input class="toctree-checkbox" id="toctree-checkbox-12" name="toctree-checkbox-12" role="switch" type="checkbox"/><label for="toctree-checkbox-12"><div class="visually-hidden">Toggle navigation of object_detection</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../cleanlab/object_detection/rank.html">rank</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../cleanlab/object_detection/filter.html">filter</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../cleanlab/object_detection/summary.html">summary</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../cleanlab/benchmarking/index.html">benchmarking</a><input class="toctree-checkbox" id="toctree-checkbox-13" name="toctree-checkbox-13" role="switch" type="checkbox"/><label for="toctree-checkbox-13"><div class="visually-hidden">Toggle navigation of benchmarking</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../cleanlab/benchmarking/noise_generation.html">noise_generation</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../cleanlab/models/index.html">models</a><input class="toctree-checkbox" id="toctree-checkbox-14" name="toctree-checkbox-14" role="switch" type="checkbox"/><label for="toctree-checkbox-14"><div class="visually-hidden">Toggle navigation of models</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../cleanlab/models/keras.html">keras</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../cleanlab/models/fasttext.html">fasttext</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../cleanlab/experimental/index.html">experimental</a><input class="toctree-checkbox" id="toctree-checkbox-15" name="toctree-checkbox-15" role="switch" type="checkbox"/><label for="toctree-checkbox-15"><div class="visually-hidden">Toggle navigation of experimental</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../cleanlab/experimental/label_issues_batched.html">label_issues_batched</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../cleanlab/experimental/span_classification.html">span_classification</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../cleanlab/experimental/mnist_pytorch.html">mnist_pytorch</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../cleanlab/experimental/coteaching.html">coteaching</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../cleanlab/experimental/cifar_cnn.html">cifar_cnn</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../cleanlab/internal/index.html">internal</a><input class="toctree-checkbox" id="toctree-checkbox-16" name="toctree-checkbox-16" role="switch" type="checkbox"/><label for="toctree-checkbox-16"><div class="visually-hidden">Toggle navigation of internal</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../cleanlab/internal/util.html">util</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../cleanlab/internal/latent_algebra.html">latent_algebra</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../cleanlab/internal/label_quality_utils.html">label_quality_utils</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../cleanlab/internal/multilabel_utils.html">multilabel_utils</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../cleanlab/internal/multilabel_scorer.html">multilabel_scorer</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../cleanlab/internal/outlier.html">outlier</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../cleanlab/internal/token_classification_utils.html">token_classification_utils</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../cleanlab/internal/validation.html">validation</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Guides</span></p>
+<ul>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../cleanlab/datalab/guide/index.html">Datalab issue types</a><input class="toctree-checkbox" id="toctree-checkbox-17" name="toctree-checkbox-17" role="switch" type="checkbox"/><label for="toctree-checkbox-17"><div class="visually-hidden">Toggle navigation of Datalab issue types</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../cleanlab/datalab/guide/issue_type_description.html">Datalab Issue Types</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../cleanlab/datalab/guide/custom_issue_manager.html">Creating Your Own Issues Manager</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/cleanlab/cleanlab/blob/master/CONTRIBUTING.md">How to contribute</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Links</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference external" href="https://cleanlab.ai">Website</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/cleanlab/cleanlab">GitHub</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://pypi.org/project/cleanlab/">PyPI</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://anaconda.org/conda-forge/cleanlab">Conda</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://cleanlab.ai/slack">Community Discussions</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://cleanlab.ai/blog/">Blog</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://www.youtube.com/@CleanlabAI/playlists">Videos</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://cleanlab.ai/blog/data-centric-ai/">Cleanlab Studio (Easy Mode)</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://help.cleanlab.ai">Cleanlab Studio Docs</a></li>
+</ul>
+
+</div>
+
+
+<!-- Start of versioning -->
+
+<div class="sidebar-tree">
+    <p class="caption" role="heading">
+        <span class="caption-text">Versions</span>
+    </p>
+    <ul>
+        <li class="toctree-l1">
+            <a
+                id="version_number"
+                class="reference internal"
+                href="/"
+                >stable</a
+            >
+        </li>
+        <li class="toctree-l1">
+            <a
+                id="commit_hash"
+                class="reference internal"
+                href="/master/"
+                >developer</a
+            >
+        </li>
+        
+        <li class="toctree-l1">
+            <a
+                id="v2.6.1"
+                class="reference internal"
+                href="/v2.6.1/"
+                >v2.6.1</a
+            >
+        </li>
+        
+        <li class="toctree-l1">
+            <a
+                id="v2.6.0"
+                class="reference internal"
+                href="/v2.6.0/"
+                >v2.6.0</a
+            >
+        </li>
+        
+        <li class="toctree-l1">
+            <a
+                id="v2.5.0"
+                class="reference internal"
+                href="/v2.5.0/"
+                >v2.5.0</a
+            >
+        </li>
+        
+        <li class="toctree-l1">
+            <a
+                id="v2.4.0"
+                class="reference internal"
+                href="/v2.4.0/"
+                >v2.4.0</a
+            >
+        </li>
+        
+        <li class="toctree-l1">
+            <a
+                id="v2.3.1"
+                class="reference internal"
+                href="/v2.3.1/"
+                >v2.3.1</a
+            >
+        </li>
+        
+        <li class="toctree-l1">
+            <a
+                id="v2.3.0"
+                class="reference internal"
+                href="/v2.3.0/"
+                >v2.3.0</a
+            >
+        </li>
+        
+        <li class="toctree-l1">
+            <a
+                id="v2.2.0"
+                class="reference internal"
+                href="/v2.2.0/"
+                >v2.2.0</a
+            >
+        </li>
+        
+        <li class="toctree-l1">
+            <a
+                id="v2.1.0"
+                class="reference internal"
+                href="/v2.1.0/"
+                >v2.1.0</a
+            >
+        </li>
+        
+        <li class="toctree-l1">
+            <a
+                id="v2.0.0"
+                class="reference internal"
+                href="/v2.0.0/"
+                >v2.0.0</a
+            >
+        </li>
+        
+        <li class="toctree-l1">
+            <a
+                id="v1.0.1"
+                class="reference internal"
+                href="/v1.0.1/"
+                >v1.0.1</a
+            >
+        </li>
+        
+    </ul>
+</div>
+
+<br>
+<br>
+
+<script
+    type="text/javascript"
+    src="/versioning.js"
+></script>
+
+<script type="text/javascript">
+    window.addEventListener("load", () => {
+        const version_number = Version.version_number;
+        const commit_hash = Version.commit_hash;
+
+        document.getElementById("version_number").innerHTML =
+            "stable <code class='docutils literal notranslate'><span class='pre'> (" +
+            version_number +
+            ")</span></code>";
+        document.getElementById("commit_hash").innerHTML =
+            "master <code class='docutils literal notranslate'><span class='pre'> (" +
+            commit_hash.slice(0, 7) +
+            "&hellip;)</span></code>";
+    });
+</script>
+
+<!-- End of versioning -->
+
+</div>
+      </div>
+      
+    </div>
+  </aside>
+  <div class="main">
+    <div class="content">
+      <div class="article-container">
+        <a href="#" class="back-to-top muted-link">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12z"></path>
+          </svg>
+          <span>Back to top</span>
+        </a>
+        <div class="content-icon-container">
+          <div class="theme-toggle-container theme-toggle-content">
+            <button class="theme-toggle">
+              <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+              <svg class="theme-icon-when-auto"><use href="#svg-sun-half"></use></svg>
+              <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+              <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+            </button>
+          </div>
+          <label class="toc-overlay-icon toc-content-icon no-toc" for="__toc">
+            <div class="visually-hidden">Toggle table of contents sidebar</div>
+            <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+          </label>
+        </div>
+        <article role="main">
+          
+
+<noscript>
+  <div class="admonition warning">
+    <p class="admonition-title">Warning</p>
+    <p>Parts of this site uses JavaScript, but your browser does not support it.</p>
+  </div>
+</noscript>
+
+
+
+<!-- Start of Version Warning Banner -->
+
+<p id="doc_ver_warning"></p>
+
+<script
+    type="text/javascript"
+    src="/versioning.js"
+></script>
+<script type="text/javascript">
+    window.addEventListener("load", () => {
+        const version_number = Version.version_number;
+        const path_arr = window.location.pathname.split("/");
+
+        if (path_arr.includes("master")) {
+            document.getElementById("doc_ver_warning").innerHTML =
+            `<div class="admonition warning">
+            <p class="admonition-title">Warning</p>
+            <p>This version of the documentation corresponds to the master branch of <code class="docutils literal notranslate"><span class="pre">cleanlab</span></code> source code from <a href="https://github.com/cleanlab/cleanlab/">GitHub</a>. To see the documentation for the latest <code class="docutils literal notranslate"><span class="pre">pip</span></code>-installed version, click <a href="/">here</a>.</p>
+            </div>`;
+        } else if (!path_arr.includes(version_number) && !path_arr.includes("stable")) {
+            document.getElementById("doc_ver_warning").innerHTML =
+            `<div class="admonition warning">
+            <p class="admonition-title">Warning</p>
+            <p>This documentation is for an old version (<code class="docutils literal notranslate"><span class="pre">v2.6.1</span></code>) of <code class="docutils literal notranslate"><span class="pre">cleanlab</span></code>. To see the documentation for the latest stable version (<code class="docutils literal notranslate"><span class="pre">` + version_number + `</span></code>), click <a href="/">here</a>.</p>
+            </div>`;
+        } else {
+            document.getElementById("doc_ver_warning").remove();
+        }
+    });
+</script>
+
+<!-- End of Version Warning Banner -->
+
+ <h1>Source code for cleanlab.segmentation.summary</h1><div class="highlight"><pre>
+<span></span><span class="c1"># Copyright (C) 2017-2023  Cleanlab Inc.</span>
+<span class="c1"># This file is part of cleanlab.</span>
+<span class="c1">#</span>
+<span class="c1"># cleanlab is free software: you can redistribute it and/or modify</span>
+<span class="c1"># it under the terms of the GNU Affero General Public License as published</span>
+<span class="c1"># by the Free Software Foundation, either version 3 of the License, or</span>
+<span class="c1"># (at your option) any later version.</span>
+<span class="c1">#</span>
+<span class="c1"># cleanlab is distributed in the hope that it will be useful,</span>
+<span class="c1"># but WITHOUT ANY WARRANTY; without even the implied warranty of</span>
+<span class="c1"># MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the</span>
+<span class="c1"># GNU Affero General Public License for more details.</span>
+<span class="c1">#</span>
+<span class="c1"># You should have received a copy of the GNU Affero General Public License</span>
+<span class="c1"># along with cleanlab.  If not, see &lt;https://www.gnu.org/licenses/&gt;.</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Methods to display images and their label issues in a semantic segmentation dataset, as well as summarize the overall types of issues identified.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">from</span> <span class="nn">tqdm.auto</span> <span class="kn">import</span> <span class="n">tqdm</span>
+
+<span class="kn">from</span> <span class="nn">cleanlab.internal.segmentation_utils</span> <span class="kn">import</span> <span class="n">_get_summary_optional_params</span>
+
+
+<div class="viewcode-block" id="display_issues"><a class="viewcode-back" href="../../../cleanlab/segmentation/summary.html#cleanlab.segmentation.summary.display_issues">[docs]</a><span class="k">def</span> <span class="nf">display_issues</span><span class="p">(</span>
+    <span class="n">issues</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+    <span class="o">*</span><span class="p">,</span>
+    <span class="n">labels</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">pred_probs</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">class_names</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">exclude</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">top</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Display semantic segmentation label issues, showing images with problematic pixels highlighted.</span>
+
+<span class="sd">    Can also show given and predicted masks for each image identified to have label issue.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    issues:</span>
+<span class="sd">      Boolean **mask** for the entire dataset</span>
+<span class="sd">      where ``True`` represents a pixel label issue and ``False`` represents an example that is</span>
+<span class="sd">      accurately labeled.</span>
+
+<span class="sd">      Same format as output by :py:func:`segmentation.filter.find_label_issues &lt;cleanlab.segmentation.filter.find_label_issues&gt;`</span>
+<span class="sd">      or :py:func:`segmentation.rank.issues_from_scores &lt;cleanlab.segmentation.rank.issues_from_scores&gt;`.</span>
+
+<span class="sd">    labels:</span>
+<span class="sd">      Optional discrete array of noisy labels for a segmantic segmentation dataset, in the shape ``(N,H,W,)``,</span>
+<span class="sd">      where each pixel must be integer in 0, 1, ..., K-1.</span>
+<span class="sd">      If `labels` is provided, this function also displays given label of the pixel identified with issue.</span>
+<span class="sd">      Refer to documentation for this argument in :py:func:`find_label_issues &lt;cleanlab.segmentation.filter.find_label_issues&gt;` for more information.</span>
+
+<span class="sd">    pred_probs:</span>
+<span class="sd">      Optional array of shape ``(N,K,H,W,)`` of model-predicted class probabilities.</span>
+<span class="sd">      If `pred_probs` is provided, this function also displays predicted label of the pixel identified with issue.</span>
+<span class="sd">      Refer to documentation for this argument in :py:func:`find_label_issues &lt;cleanlab.segmentation.filter.find_label_issues&gt;` for more information.</span>
+
+<span class="sd">      Tip</span>
+<span class="sd">      ---</span>
+<span class="sd">      If your labels are one hot encoded you can `np.argmax(labels_one_hot, axis=1)` assuming that `labels_one_hot` is of dimension (N,K,H,W)</span>
+<span class="sd">      before entering in the function</span>
+
+<span class="sd">    class_names:</span>
+<span class="sd">      Optional list of strings, where each string represents the name of a class in the semantic segmentation problem.</span>
+<span class="sd">      The order of the names should correspond to the numerical order of the classes. The list length should be</span>
+<span class="sd">      equal to the number of unique classes present in the labels.</span>
+<span class="sd">      If provided, this function will generate a legend</span>
+<span class="sd">      showing the color mapping of each class in the provided colormap.</span>
+
+<span class="sd">      Example:</span>
+<span class="sd">      If there are three classes in your labels, represented by 0, 1, 2, then class_names might look like this:</span>
+
+<span class="sd">      .. code-block:: python</span>
+
+<span class="sd">            class_names = [&#39;background&#39;, &#39;person&#39;, &#39;dog&#39;]</span>
+
+<span class="sd">    top:</span>
+<span class="sd">        Optional maximum number of issues to be printed. If not provided, a good default is used.</span>
+
+<span class="sd">    exclude:</span>
+<span class="sd">        Optional list of label classes that can be ignored in the errors, each element must be 0, 1, ..., K-1</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">class_names</span><span class="p">,</span> <span class="n">exclude</span><span class="p">,</span> <span class="n">top</span> <span class="o">=</span> <span class="n">_get_summary_optional_params</span><span class="p">(</span><span class="n">class_names</span><span class="p">,</span> <span class="n">exclude</span><span class="p">,</span> <span class="n">top</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">labels</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">exclude</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Provide labels to allow class exclusion&quot;</span><span class="p">)</span>
+
+    <span class="n">top</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">top</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">issues</span><span class="p">))</span>
+
+    <span class="n">correct_ordering</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argsort</span><span class="p">(</span><span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">issues</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)))[:</span><span class="n">top</span><span class="p">]</span>
+
+    <span class="k">try</span><span class="p">:</span>
+        <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+        <span class="kn">import</span> <span class="nn">matplotlib.patches</span> <span class="k">as</span> <span class="nn">mpatches</span>
+        <span class="kn">from</span> <span class="nn">matplotlib.colors</span> <span class="kn">import</span> <span class="n">ListedColormap</span>
+    <span class="k">except</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ImportError</span><span class="p">(</span><span class="s1">&#39;try &quot;pip install matplotlib&quot;&#39;</span><span class="p">)</span>
+
+    <span class="n">output_plots</span> <span class="o">=</span> <span class="p">(</span><span class="n">pred_probs</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">)</span> <span class="o">+</span> <span class="p">(</span><span class="n">labels</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span>
+
+    <span class="c1"># Colormap for errors</span>
+    <span class="n">error_cmap</span> <span class="o">=</span> <span class="n">ListedColormap</span><span class="p">([</span><span class="s2">&quot;none&quot;</span><span class="p">,</span> <span class="s2">&quot;red&quot;</span><span class="p">])</span>
+    <span class="n">_</span><span class="p">,</span> <span class="n">h</span><span class="p">,</span> <span class="n">w</span> <span class="o">=</span> <span class="n">issues</span><span class="o">.</span><span class="n">shape</span>
+    <span class="k">if</span> <span class="n">output_plots</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">pred_probs</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">_</span><span class="p">,</span> <span class="n">num_classes</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">pred_probs</span><span class="o">.</span><span class="n">shape</span>
+            <span class="n">cmap</span> <span class="o">=</span> <span class="n">_generate_colormap</span><span class="p">(</span><span class="n">num_classes</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">labels</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">num_classes</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">labels</span><span class="p">))</span> <span class="o">+</span> <span class="mi">1</span>
+            <span class="n">cmap</span> <span class="o">=</span> <span class="n">_generate_colormap</span><span class="p">(</span><span class="n">num_classes</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">cmap</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="c1"># Show a legend</span>
+    <span class="k">if</span> <span class="n">class_names</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">cmap</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">patches</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="n">mpatches</span><span class="o">.</span><span class="n">Patch</span><span class="p">(</span><span class="n">color</span><span class="o">=</span><span class="n">cmap</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">label</span><span class="o">=</span><span class="n">class_names</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">class_names</span><span class="p">))</span>
+        <span class="p">]</span>
+        <span class="n">legend</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>  <span class="c1"># adjust figsize for larger legend</span>
+        <span class="n">legend</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span>
+            <span class="n">handles</span><span class="o">=</span><span class="n">patches</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="s2">&quot;center&quot;</span><span class="p">,</span> <span class="n">ncol</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">class_names</span><span class="p">),</span> <span class="n">facecolor</span><span class="o">=</span><span class="s2">&quot;white&quot;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">20</span>
+        <span class="p">)</span>  <span class="c1"># adjust fontsize for larger text</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s2">&quot;off&quot;</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">correct_ordering</span><span class="p">:</span>
+        <span class="c1"># Show images</span>
+        <span class="n">fig</span><span class="p">,</span> <span class="n">axes</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">output_plots</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">5</span> <span class="o">*</span> <span class="n">output_plots</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>
+        <span class="n">plot_index</span> <span class="o">=</span> <span class="mi">0</span>
+
+        <span class="c1"># First image - Given truth labels</span>
+        <span class="k">if</span> <span class="n">labels</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">axes</span><span class="p">[</span><span class="n">plot_index</span><span class="p">]</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">cmap</span><span class="p">[</span><span class="n">labels</span><span class="p">[</span><span class="n">i</span><span class="p">]])</span>
+            <span class="n">axes</span><span class="p">[</span><span class="n">plot_index</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;Given Labels&quot;</span><span class="p">)</span>
+            <span class="n">plot_index</span> <span class="o">+=</span> <span class="mi">1</span>
+
+        <span class="c1"># Second image - Argmaxed pred_probs</span>
+        <span class="k">if</span> <span class="n">pred_probs</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">axes</span><span class="p">[</span><span class="n">plot_index</span><span class="p">]</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">cmap</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">pred_probs</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)])</span>
+            <span class="n">axes</span><span class="p">[</span><span class="n">plot_index</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;Argmaxed Prediction Probabilities&quot;</span><span class="p">)</span>
+            <span class="n">plot_index</span> <span class="o">+=</span> <span class="mi">1</span>
+
+        <span class="c1"># Third image - Errors</span>
+        <span class="k">if</span> <span class="n">output_plots</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">ax</span> <span class="o">=</span> <span class="n">axes</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">ax</span> <span class="o">=</span> <span class="n">axes</span><span class="p">[</span><span class="n">plot_index</span><span class="p">]</span>
+
+        <span class="n">mask</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">full</span><span class="p">((</span><span class="n">h</span><span class="p">,</span> <span class="n">w</span><span class="p">),</span> <span class="kc">True</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">labels</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">exclude</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">mask</span> <span class="o">=</span> <span class="o">~</span><span class="n">np</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">labels</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">exclude</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">issues</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">&amp;</span> <span class="n">mask</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="n">error_cmap</span><span class="p">,</span> <span class="n">vmin</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Image </span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">: Suggested Errors (in Red)&quot;</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+
+    <span class="k">return</span> <span class="kc">None</span></div>
+
+
+<div class="viewcode-block" id="common_label_issues"><a class="viewcode-back" href="../../../cleanlab/segmentation/summary.html#cleanlab.segmentation.summary.common_label_issues">[docs]</a><span class="k">def</span> <span class="nf">common_label_issues</span><span class="p">(</span>
+    <span class="n">issues</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+    <span class="n">labels</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+    <span class="n">pred_probs</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+    <span class="o">*</span><span class="p">,</span>
+    <span class="n">class_names</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">exclude</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">top</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">verbose</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Display the frequency of which label are swapped in the dataset.</span>
+
+<span class="sd">    These may correspond to pixels that are ambiguous or systematically misunderstood by the data annotators.</span>
+
+<span class="sd">    * N - Number of images in the dataset</span>
+<span class="sd">    * K - Number of classes in the dataset</span>
+<span class="sd">    * H - Height of each image</span>
+<span class="sd">    * W - Width of each image</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    issues:</span>
+<span class="sd">      Boolean **mask** for the entire dataset</span>
+<span class="sd">      where ``True`` represents a pixel label issue and ``False`` represents an example that is</span>
+<span class="sd">      accurately labeled.</span>
+
+<span class="sd">      Same format as output by :py:func:`segmentation.filter.find_label_issues &lt;cleanlab.segmentation.filter.find_label_issues&gt;`</span>
+<span class="sd">      or :py:func:`segmentation.rank.issues_from_scores &lt;cleanlab.segmentation.rank.issues_from_scores&gt;`.</span>
+
+<span class="sd">    labels:</span>
+<span class="sd">      A discrete array of noisy labels for a segmantic segmentation dataset, in the shape ``(N,H,W,)``.</span>
+<span class="sd">      where each pixel must be integer in 0, 1, ..., K-1.</span>
+<span class="sd">      Refer to documentation for this argument in :py:func:`find_label_issues &lt;cleanlab.segmentation.filter.find_label_issues&gt;` for more information.</span>
+
+<span class="sd">    pred_probs:</span>
+<span class="sd">      An array of shape ``(N,K,H,W,)`` of model-predicted class probabilities.</span>
+<span class="sd">      Refer to documentation for this argument in :py:func:`find_label_issues &lt;cleanlab.segmentation.filter.find_label_issues&gt;` for more information.</span>
+
+<span class="sd">      Tip</span>
+<span class="sd">      ---</span>
+<span class="sd">      If your labels are one hot encoded you can `np.argmax(labels_one_hot, axis=1)` assuming that `labels_one_hot` is of dimension (N,K,H,W)</span>
+<span class="sd">      before entering in the function</span>
+
+<span class="sd">    class_names:</span>
+<span class="sd">      Optional length K list of names of each class, such that `class_names[i]` is the string name of the class corresponding to `labels` with value `i`.</span>
+<span class="sd">      If `class_names` is provided, display these string names for predicted and given labels, otherwise display the integer index of classes.</span>
+
+<span class="sd">    exclude:</span>
+<span class="sd">      Optional list of label classes that can be ignored in the errors, each element must be in 0, 1, ..., K-1.</span>
+
+<span class="sd">    top:</span>
+<span class="sd">      Optional maximum number of tokens to print information for. If not provided, a good default is used.</span>
+
+<span class="sd">    verbose:</span>
+<span class="sd">      Set to ``False`` to suppress all print statements.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    issues_df:</span>
+<span class="sd">      DataFrame with columns ``[&#39;given_label&#39;, &#39;predicted_label&#39;, &#39;num_label_issues&#39;]``</span>
+<span class="sd">      where each row contains information about a particular given/predicted label swap.</span>
+<span class="sd">      Rows are ordered by the number of label issues inferred to exhibit this type of label swap.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">N</span><span class="p">,</span> <span class="n">K</span><span class="p">,</span> <span class="n">H</span><span class="p">,</span> <span class="n">W</span> <span class="o">=</span> <span class="n">pred_probs</span><span class="o">.</span><span class="n">shape</span>
+    <span class="k">except</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;pred_probs must be of shape (N, K, H, W)&quot;</span><span class="p">)</span>
+
+    <span class="k">assert</span> <span class="n">labels</span><span class="o">.</span><span class="n">shape</span> <span class="o">==</span> <span class="p">(</span><span class="n">N</span><span class="p">,</span> <span class="n">H</span><span class="p">,</span> <span class="n">W</span><span class="p">),</span> <span class="s2">&quot;labels must be of shape (N, H, W)&quot;</span>
+
+    <span class="n">class_names</span><span class="p">,</span> <span class="n">exclude</span><span class="p">,</span> <span class="n">top</span> <span class="o">=</span> <span class="n">_get_summary_optional_params</span><span class="p">(</span><span class="n">class_names</span><span class="p">,</span> <span class="n">exclude</span><span class="p">,</span> <span class="n">top</span><span class="p">)</span>
+    <span class="c1"># Find issues by pixel coordinates</span>
+    <span class="n">issue_coords</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">column_stack</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">issues</span><span class="p">))</span>
+
+    <span class="c1"># Count issues per class (given label)</span>
+    <span class="n">count</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">,</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">tqdm</span><span class="p">(</span><span class="n">issue_coords</span><span class="p">):</span>
+        <span class="n">label</span> <span class="o">=</span> <span class="n">labels</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">,</span> <span class="n">k</span><span class="p">]</span>
+        <span class="n">pred</span> <span class="o">=</span> <span class="n">pred_probs</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="p">:,</span> <span class="n">j</span><span class="p">,</span> <span class="n">k</span><span class="p">]</span><span class="o">.</span><span class="n">argmax</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">label</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">count</span><span class="p">:</span>
+            <span class="n">count</span><span class="p">[</span><span class="n">label</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">K</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">int</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">pred</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">exclude</span><span class="p">:</span>
+            <span class="n">count</span><span class="p">[</span><span class="n">label</span><span class="p">][</span><span class="n">pred</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
+
+    <span class="c1"># Prepare output DataFrame</span>
+    <span class="k">if</span> <span class="n">class_names</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">class_names</span> <span class="o">=</span> <span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">K</span><span class="p">)]</span>
+
+    <span class="n">info</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">given_label</span><span class="p">,</span> <span class="n">class_name</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">class_names</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">given_label</span> <span class="ow">in</span> <span class="n">count</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">pred_label</span><span class="p">,</span> <span class="n">num_issues</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">count</span><span class="p">[</span><span class="n">given_label</span><span class="p">]):</span>
+                <span class="k">if</span> <span class="n">num_issues</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="n">info</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">class_name</span><span class="p">,</span> <span class="n">class_names</span><span class="p">[</span><span class="n">pred_label</span><span class="p">],</span> <span class="n">num_issues</span><span class="p">])</span>
+
+    <span class="n">info</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">info</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">reverse</span><span class="o">=</span><span class="kc">True</span><span class="p">)[:</span><span class="n">top</span><span class="p">]</span>
+    <span class="n">issues_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">info</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;given_label&quot;</span><span class="p">,</span> <span class="s2">&quot;predicted_label&quot;</span><span class="p">,</span> <span class="s2">&quot;num_pixel_issues&quot;</span><span class="p">])</span>
+
+    <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">issues_df</span><span class="o">.</span><span class="n">iterrows</span><span class="p">():</span>
+            <span class="nb">print</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;Class &#39;</span><span class="si">{</span><span class="n">row</span><span class="p">[</span><span class="s1">&#39;given_label&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&#39; is potentially mislabeled as class for &#39;</span><span class="si">{</span><span class="n">row</span><span class="p">[</span><span class="s1">&#39;predicted_label&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&#39; &quot;</span>
+                <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">row</span><span class="p">[</span><span class="s1">&#39;num_pixel_issues&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2"> pixels in the dataset&quot;</span>
+            <span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">issues_df</span></div>
+
+
+<div class="viewcode-block" id="filter_by_class"><a class="viewcode-back" href="../../../cleanlab/segmentation/summary.html#cleanlab.segmentation.summary.filter_by_class">[docs]</a><span class="k">def</span> <span class="nf">filter_by_class</span><span class="p">(</span>
+    <span class="n">class_index</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">issues</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">labels</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">pred_probs</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Return label issues involving particular class. Note that this includes errors where the given label is the class of interest, and the predicted label is any other class.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    class_index:</span>
+<span class="sd">      The specific class you are interested in.</span>
+
+<span class="sd">    issues:</span>
+<span class="sd">      Boolean **mask** for the entire dataset where ``True`` represents a pixel label issue and ``False`` represents an example that is</span>
+<span class="sd">      accurately labeled.</span>
+
+<span class="sd">      Same format as output by :py:func:`segmentation.filter.find_label_issues &lt;cleanlab.segmentation.filter.find_label_issues&gt;`</span>
+<span class="sd">      or :py:func:`segmentation.rank.issues_from_scores &lt;cleanlab.segmentation.rank.issues_from_scores&gt;`.</span>
+
+<span class="sd">    labels:</span>
+<span class="sd">      A discrete array of noisy labels for a segmantic segmentation dataset, in the shape ``(N,H,W,)``,</span>
+<span class="sd">      where each pixel must be integer in 0, 1, ..., K-1.</span>
+<span class="sd">      Refer to documentation for this argument in :py:func:`find_label_issues &lt;cleanlab.segmentation.filter.find_label_issues&gt;` for further details.</span>
+
+<span class="sd">    pred_probs:</span>
+<span class="sd">      An array of shape ``(N,K,H,W,)`` of model-predicted class probabilities.</span>
+<span class="sd">      Refer to documentation for this argument in :py:func:`find_label_issues &lt;cleanlab.segmentation.filter.find_label_issues&gt;` for further details.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    ----------</span>
+<span class="sd">    issues_subset:</span>
+<span class="sd">      Boolean **mask** for the subset dataset where ``True`` represents a pixel label issue and ``False`` represents an example that is</span>
+<span class="sd">      accurately labeled for the labeled class.</span>
+
+<span class="sd">      Returned mask shows **all** instances that involve the particular class of interest.</span>
+
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">issues_subset</span> <span class="o">=</span> <span class="p">(</span><span class="n">issues</span> <span class="o">&amp;</span> <span class="n">np</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">labels</span><span class="p">,</span> <span class="n">class_index</span><span class="p">))</span> <span class="o">|</span> <span class="p">(</span>
+        <span class="n">issues</span> <span class="o">&amp;</span> <span class="n">np</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">pred_probs</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span> <span class="n">class_index</span><span class="p">)</span>
+    <span class="p">)</span>
+    <span class="k">return</span> <span class="n">issues_subset</span></div>
+
+
+<span class="k">def</span> <span class="nf">_generate_colormap</span><span class="p">(</span><span class="n">num_colors</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Finds a unique color map based on the number of colors inputted ideal for semantic segmentation.</span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    num_colors:</span>
+<span class="sd">        How many unique colors you want</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    colors:</span>
+<span class="sd">        colors with num_colors distinct colors</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">try</span><span class="p">:</span>
+        <span class="kn">from</span> <span class="nn">matplotlib.cm</span> <span class="kn">import</span> <span class="n">hsv</span>
+    <span class="k">except</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ImportError</span><span class="p">(</span><span class="s1">&#39;try &quot;pip install matplotlib&quot;&#39;</span><span class="p">)</span>
+
+    <span class="n">num_shades</span> <span class="o">=</span> <span class="mi">7</span>
+    <span class="n">num_colors_with_shades</span> <span class="o">=</span> <span class="o">-</span><span class="p">(</span><span class="o">-</span><span class="n">num_colors</span> <span class="o">//</span> <span class="n">num_shades</span><span class="p">)</span> <span class="o">*</span> <span class="n">num_shades</span>
+    <span class="n">linear_nums</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">num_colors_with_shades</span><span class="p">,</span> <span class="n">endpoint</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+    <span class="n">arr_by_shade_rows</span> <span class="o">=</span> <span class="n">linear_nums</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">num_shades</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">arr_by_shade_columns</span> <span class="o">=</span> <span class="n">arr_by_shade_rows</span><span class="o">.</span><span class="n">T</span>
+    <span class="n">num_partitions</span> <span class="o">=</span> <span class="n">arr_by_shade_columns</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">nums_distributed_like_rising_saw</span> <span class="o">=</span> <span class="n">arr_by_shade_columns</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span>
+
+    <span class="n">initial_cm</span> <span class="o">=</span> <span class="n">hsv</span><span class="p">(</span><span class="n">nums_distributed_like_rising_saw</span><span class="p">)</span>
+    <span class="n">lower_partitions_half</span> <span class="o">=</span> <span class="n">num_partitions</span> <span class="o">//</span> <span class="mi">2</span>
+    <span class="n">upper_partitions_half</span> <span class="o">=</span> <span class="n">num_partitions</span> <span class="o">-</span> <span class="n">lower_partitions_half</span>
+
+    <span class="n">lower_half</span> <span class="o">=</span> <span class="n">lower_partitions_half</span> <span class="o">*</span> <span class="n">num_shades</span>
+    <span class="n">initial_cm</span><span class="p">[:</span><span class="n">lower_half</span><span class="p">,</span> <span class="p">:</span><span class="mi">3</span><span class="p">]</span> <span class="o">*=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mf">0.2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">lower_half</span><span class="p">)[:,</span> <span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">]</span>
+
+    <span class="n">upper_half_indices</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">lower_half</span><span class="p">,</span> <span class="n">num_colors_with_shades</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span>
+        <span class="n">upper_partitions_half</span><span class="p">,</span> <span class="n">num_shades</span>
+    <span class="p">)</span>
+    <span class="n">modifier</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">initial_cm</span><span class="p">[</span><span class="n">upper_half_indices</span><span class="p">,</span> <span class="p">:</span><span class="mi">3</span><span class="p">])</span>
+        <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">upper_partitions_half</span><span class="p">)[:,</span> <span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">]</span>
+        <span class="o">/</span> <span class="n">upper_partitions_half</span>
+    <span class="p">)</span>
+    <span class="n">initial_cm</span><span class="p">[</span><span class="n">upper_half_indices</span><span class="p">,</span> <span class="p">:</span><span class="mi">3</span><span class="p">]</span> <span class="o">+=</span> <span class="n">modifier</span>
+    <span class="n">colors</span> <span class="o">=</span> <span class="n">initial_cm</span><span class="p">[:</span><span class="n">num_colors</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">colors</span>
+</pre></div> 
+        </article>
+      </div>
+      <footer>
+         
+        <div class="related-pages">
+          
+          
+        </div>
+        <div class="bottom-of-page">
+          <div class="left-details">
+            <div class="copyright">
+                Copyright &#169; 2024, Cleanlab Inc.
+            </div>
+            Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
+            
+            <a href="https://github.com/pradyunsg/furo">Furo</a>
+            
+          </div>
+          <div class="right-details">
+            <div class="icons">
+              <a class="muted-link " href="https://github.com/cleanlab/cleanlab" aria-label="GitHub">
+                <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 16 16">
+                    <path fill-rule="evenodd" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0 0 16 8c0-4.42-3.58-8-8-8z"></path>
+                </svg>
+            </a>
+              
+            </div>
+          </div>
+        </div>
+        
+
+<script type="text/javascript">
+    window.addEventListener("load", () => {
+        let elements = document.getElementsByClassName("left-details");
+
+        elements[0].insertAdjacentHTML(
+            "afterbegin",
+            `<code class="docutils literal notranslate"><span class="pre">cleanlab</span></code> is distributed on <a href="https://pypi.org/project/cleanlab/">PyPI</a> and <a href="https://anaconda.org/conda-forge/cleanlab">conda</a>.`
+        );
+    });
+</script>
+
+
+      </footer>
+    </div>
+    <aside class="toc-drawer no-toc">
+      
+      
+      
+    </aside>
+  </div>
+</div><script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js?v=2b91c5f0"></script>
+    <script src="../../../_static/doctools.js?v=888ff710"></script>
+    <script src="../../../_static/sphinx_highlight.js?v=4825356b"></script>
+    <script src="../../../_static/scripts/furo.js?v=32e29ea5"></script>
+    <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../../../_static/copybutton.js?v=30646c52"></script>
+    <script src="../../../_static/tabs.js?v=3030b3cb"></script>
+    <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@jupyter-widgets/html-manager@^1.0.1/dist/embed-amd.js"></script>
+    
+<script async defer src="https://buttons.github.io/buttons.js"></script>
+</body>
+</html>
