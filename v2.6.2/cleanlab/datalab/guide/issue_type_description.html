@@ -1,0 +1,1080 @@
+<!doctype html>
+<html class="no-js" lang="en" data-content_root="">
+  <head><meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width,initial-scale=1"/>
+    <meta name="color-scheme" content="light dark"><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+        <script async src="https://www.googletagmanager.com/gtag/js?id=G-EV8RVEFX82"></script>
+        <script>
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            
+            gtag('config', 'G-EV8RVEFX82');
+            
+        </script>
+    <meta property="og:title" content="Datalab Issue Types" />
+<meta property="og:type" content="website" />
+<meta property="og:url" content="https://docs.cleanlab.ai/stable/cleanlab/datalab/guide/issue_type_description.html" />
+<meta property="og:site_name" content="cleanlab" />
+<meta property="og:description" content="Types of issues Datalab can detect: This page describes the various types of issues that Datalab can detect in a dataset. For each type of issue, we explain: what it says about your data if detecte..." />
+<meta property="og:image" content="https://raw.githubusercontent.com/cleanlab/assets/master/cleanlab/clos-preview-card.png" />
+<meta property="og:image:alt" content="cleanlab" />
+<meta name="description" content="Types of issues Datalab can detect: This page describes the various types of issues that Datalab can detect in a dataset. For each type of issue, we explain: what it says about your data if detecte..." />
+<link rel="index" title="Index" href="../../../genindex.html" /><link rel="search" title="Search" href="../../../search.html" /><link rel="next" title="The Workflows of Data-centric AI for Classification with Noisy Labels" href="../../../tutorials/indepth_overview.html" /><link rel="prev" title="Detecting Issues in Tabular Data (Numeric/Categorical columns) with Datalab" href="../../../tutorials/datalab/tabular.html" />
+
+    <link rel="shortcut icon" href="https://raw.githubusercontent.com/cleanlab/assets/a4483476d449f2f05a4c7cde329e72358099cc07/cleanlab/cleanlab_favicon.svg"/><!-- Generated with Sphinx 7.1.2 and Furo 2023.09.10 -->
+        <title>Datalab Issue Types - cleanlab</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=a746c00c" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/styles/furo.css?v=135e06be" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/tabs.css?v=a5c4661c" />
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/katex-math.css?v=91adb8b6" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/styles/furo-extensions.css?v=36a5483c" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/css/custom.css?v=96bccb3e" />
+    
+    
+
+
+<style>
+  body {
+    --color-code-background: #f8f8f8;
+  --color-code-foreground: black;
+  
+  }
+  @media not print {
+    body[data-theme="dark"] {
+      --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+    }
+    @media (prefers-color-scheme: dark) {
+      body:not([data-theme="light"]) {
+        --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+      }
+    }
+  }
+</style></head>
+  <body>
+    
+    <script>
+      document.body.dataset.theme = localStorage.getItem("theme") || "auto";
+    </script>
+    
+
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+  <symbol id="svg-toc" viewBox="0 0 24 24">
+    <title>Contents</title>
+    <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 1024 1024">
+      <path d="M408 442h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8zm-8 204c0 4.4 3.6 8 8 8h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56zm504-486H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zm0 632H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zM115.4 518.9L271.7 642c5.8 4.6 14.4.5 14.4-6.9V388.9c0-7.4-8.5-11.5-14.4-6.9L115.4 505.1a8.74 8.74 0 0 0 0 13.8z"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-menu" viewBox="0 0 24 24">
+    <title>Menu</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-menu">
+      <line x1="3" y1="12" x2="21" y2="12"></line>
+      <line x1="3" y1="6" x2="21" y2="6"></line>
+      <line x1="3" y1="18" x2="21" y2="18"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-arrow-right" viewBox="0 0 24 24">
+    <title>Expand</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-chevron-right">
+      <polyline points="9 18 15 12 9 6"></polyline>
+    </svg>
+  </symbol>
+  <symbol id="svg-sun" viewBox="0 0 24 24">
+    <title>Light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="feather-sun">
+      <circle cx="12" cy="12" r="5"></circle>
+      <line x1="12" y1="1" x2="12" y2="3"></line>
+      <line x1="12" y1="21" x2="12" y2="23"></line>
+      <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+      <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+      <line x1="1" y1="12" x2="3" y2="12"></line>
+      <line x1="21" y1="12" x2="23" y2="12"></line>
+      <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+      <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon" viewBox="0 0 24 24">
+    <title>Dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-moon">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454z" />
+    </svg>
+  </symbol>
+  <symbol id="svg-sun-half" viewBox="0 0 24 24">
+    <title>Auto light/dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-shadow">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+      <circle cx="12" cy="12" r="9" />
+      <path d="M13 12h5" />
+      <path d="M13 15h4" />
+      <path d="M13 18h1" />
+      <path d="M13 9h4" />
+      <path d="M13 6h1" />
+    </svg>
+  </symbol>
+</svg>
+
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation">
+<input type="checkbox" class="sidebar-toggle" name="__toc" id="__toc">
+<label class="overlay sidebar-overlay" for="__navigation">
+  <div class="visually-hidden">Hide navigation sidebar</div>
+</label>
+<label class="overlay toc-overlay" for="__toc">
+  <div class="visually-hidden">Hide table of contents sidebar</div>
+</label>
+
+
+
+<div class="page">
+  <header class="mobile-header">
+    <div class="header-left">
+      <label class="nav-overlay-icon" for="__navigation">
+        <div class="visually-hidden">Toggle site navigation sidebar</div>
+        <i class="icon"><svg><use href="#svg-menu"></use></svg></i>
+      </label>
+    </div>
+    <div class="header-center">
+      <a href="../../../index.html"><div class="brand">cleanlab</div></a>
+    </div>
+    <div class="header-right">
+      <div class="theme-toggle-container theme-toggle-header">
+        <button class="theme-toggle">
+          <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+          <svg class="theme-icon-when-auto"><use href="#svg-sun-half"></use></svg>
+          <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+          <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+        </button>
+      </div>
+      <label class="toc-overlay-icon toc-header-icon" for="__toc">
+        <div class="visually-hidden">Toggle table of contents sidebar</div>
+        <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+      </label>
+    </div>
+  </header>
+  <aside class="sidebar-drawer">
+    <div class="sidebar-container">
+      
+      <div class="sidebar-sticky"><a style="padding-bottom: 0px;" class="sidebar-brand" href="../../../index.html">
+    
+    <div class="sidebar-logo-container">
+        <img class="sidebar-logo" src="https://raw.githubusercontent.com/cleanlab/assets/master/cleanlab/cleanlab_logo_only.png" alt="Logo" />
+    </div>
+    
+    <span style="margin-bottom:0px" class="sidebar-brand-text">
+        cleanlab
+    </span>
+    
+</a>
+
+<div class="centered">
+    <a style="margin-top: 6px;" class="github-button" href="https://github.com/cleanlab/cleanlab" data-size="large" data-show-count="true"
+    aria-label="Star cleanlab/cleanlab on GitHub">Star</a>
+</div>
+<form class="sidebar-search-container" method="get" action="../../../search.html" role="search">
+  <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
+  <input type="hidden" name="check_keywords" value="yes">
+  <input type="hidden" name="area" value="default">
+</form>
+<div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
+  <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../index.html">Quickstart</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Tutorials</span></p>
+<ul class="current">
+<li class="toctree-l1 current has-children"><a class="reference internal" href="../../../tutorials/datalab/index.html">Datalab Tutorials</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle navigation of Datalab Tutorials</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../../../tutorials/datalab/datalab_quickstart.html">Detecting Common Data Issues with Datalab</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../tutorials/datalab/datalab_advanced.html">Advanced Data Auditing with Datalab</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../tutorials/datalab/text.html">Text Dataset</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../tutorials/datalab/tabular.html">Tabular Data (Numeric/Categorical)</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Guide to Datalab Issue Types</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorials/indepth_overview.html">Workflows of Data-Centric AI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorials/image.html">Image Classification</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorials/text.html">Text Classification</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorials/tabular.html">Tabular Classification</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorials/audio.html">Audio Classification</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorials/dataset_health.html">Find Dataset-level Issues</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorials/outliers.html">Identifying Outliers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorials/multiannotator.html">Improving Consensus Labels for Multiannotator Data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorials/multilabel_classification.html">Multi-Label Classification</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorials/regression.html">Noisy Labels in Regression</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorials/token_classification.html">Token Classification (text)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorials/segmentation.html">Image Segmentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorials/object_detection.html">Object Detection</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorials/pred_probs_cross_val.html">Predicted Probabilities via Cross Validation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorials/faq.html">FAQ</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API Reference</span></p>
+<ul class="current">
+<li class="toctree-l1 current has-children"><a class="reference internal" href="../index.html">datalab</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><div class="visually-hidden">Toggle navigation of datalab</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="current">
+<li class="toctree-l2 current has-children"><a class="reference internal" href="index.html">Datalab guides</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" role="switch" type="checkbox"/><label for="toctree-checkbox-3"><div class="visually-hidden">Toggle navigation of Datalab guides</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="current">
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Datalab Issue Types</a></li>
+<li class="toctree-l3"><a class="reference internal" href="custom_issue_manager.html">Creating Your Own Issues Manager</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../datalab.html">datalab</a></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../internal/index.html">internal</a><input class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" role="switch" type="checkbox"/><label for="toctree-checkbox-4"><div class="visually-hidden">Toggle navigation of internal</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../internal/data.html">data</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../internal/data_issues.html">data_issues</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../internal/issue_finder.html">issue_finder</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../internal/factory.html">factory</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../internal/model_outputs.html">model_outputs</a></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../internal/issue_manager/index.html">issue_manager</a><input class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" role="switch" type="checkbox"/><label for="toctree-checkbox-5"><div class="visually-hidden">Toggle navigation of issue_manager</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="../internal/issue_manager/issue_manager.html">Base issue_manager module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../internal/issue_manager/label.html">label</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../internal/issue_manager/outlier.html">outlier</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../internal/issue_manager/duplicate.html">duplicate</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../internal/issue_manager/noniid.html">noniid</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../internal/issue_manager/imbalance.html">imbalance</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../internal/issue_manager/underperforming_group.html">underperforming_group</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../internal/issue_manager/null.html">null</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../internal/issue_manager/data_valuation.html">data_valuation</a></li>
+<li class="toctree-l4 has-children"><a class="reference internal" href="../internal/issue_manager/regression/index.html">regression</a><input class="toctree-checkbox" id="toctree-checkbox-6" name="toctree-checkbox-6" role="switch" type="checkbox"/><label for="toctree-checkbox-6"><div class="visually-hidden">Toggle navigation of regression</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l5"><a class="reference internal" href="../internal/issue_manager/regression/label.html">label</a></li>
+</ul>
+</li>
+<li class="toctree-l4 has-children"><a class="reference internal" href="../internal/issue_manager/multilabel/index.html">multilabel</a><input class="toctree-checkbox" id="toctree-checkbox-7" name="toctree-checkbox-7" role="switch" type="checkbox"/><label for="toctree-checkbox-7"><div class="visually-hidden">Toggle navigation of multilabel</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l5"><a class="reference internal" href="../internal/issue_manager/multilabel/label.html">label</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../internal/report.html">report</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../internal/task.html">task</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../classification.html">classification</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../filter.html">filter</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../rank.html">rank</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../count.html">count</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../dataset.html">dataset</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../outlier.html">outlier</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../multiannotator.html">multiannotator</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../multilabel_classification/index.html">multilabel_classification</a><input class="toctree-checkbox" id="toctree-checkbox-8" name="toctree-checkbox-8" role="switch" type="checkbox"/><label for="toctree-checkbox-8"><div class="visually-hidden">Toggle navigation of multilabel_classification</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../multilabel_classification/filter.html">filter</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../multilabel_classification/rank.html">rank</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../multilabel_classification/dataset.html">dataset</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../regression/index.html">regression</a><input class="toctree-checkbox" id="toctree-checkbox-9" name="toctree-checkbox-9" role="switch" type="checkbox"/><label for="toctree-checkbox-9"><div class="visually-hidden">Toggle navigation of regression</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../regression/rank.html">regression.rank</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../regression/learn.html">regression.learn</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../token_classification/index.html">token_classification</a><input class="toctree-checkbox" id="toctree-checkbox-10" name="toctree-checkbox-10" role="switch" type="checkbox"/><label for="toctree-checkbox-10"><div class="visually-hidden">Toggle navigation of token_classification</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../token_classification/filter.html">filter</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../token_classification/rank.html">rank</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../token_classification/summary.html">summary</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../segmentation/index.html">segmentation</a><input class="toctree-checkbox" id="toctree-checkbox-11" name="toctree-checkbox-11" role="switch" type="checkbox"/><label for="toctree-checkbox-11"><div class="visually-hidden">Toggle navigation of segmentation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../segmentation/rank.html">rank</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../segmentation/filter.html">filter</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../segmentation/summary.html">summary</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../object_detection/index.html">object_detection</a><input class="toctree-checkbox" id="toctree-checkbox-12" name="toctree-checkbox-12" role="switch" type="checkbox"/><label for="toctree-checkbox-12"><div class="visually-hidden">Toggle navigation of object_detection</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../object_detection/rank.html">rank</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../object_detection/filter.html">filter</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../object_detection/summary.html">summary</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../benchmarking/index.html">benchmarking</a><input class="toctree-checkbox" id="toctree-checkbox-13" name="toctree-checkbox-13" role="switch" type="checkbox"/><label for="toctree-checkbox-13"><div class="visually-hidden">Toggle navigation of benchmarking</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../benchmarking/noise_generation.html">noise_generation</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../models/index.html">models</a><input class="toctree-checkbox" id="toctree-checkbox-14" name="toctree-checkbox-14" role="switch" type="checkbox"/><label for="toctree-checkbox-14"><div class="visually-hidden">Toggle navigation of models</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../models/keras.html">keras</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../models/fasttext.html">fasttext</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../experimental/index.html">experimental</a><input class="toctree-checkbox" id="toctree-checkbox-15" name="toctree-checkbox-15" role="switch" type="checkbox"/><label for="toctree-checkbox-15"><div class="visually-hidden">Toggle navigation of experimental</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../experimental/label_issues_batched.html">label_issues_batched</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../experimental/span_classification.html">span_classification</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../experimental/mnist_pytorch.html">mnist_pytorch</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../experimental/coteaching.html">coteaching</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../experimental/cifar_cnn.html">cifar_cnn</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../internal/index.html">internal</a><input class="toctree-checkbox" id="toctree-checkbox-16" name="toctree-checkbox-16" role="switch" type="checkbox"/><label for="toctree-checkbox-16"><div class="visually-hidden">Toggle navigation of internal</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../internal/util.html">util</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../internal/latent_algebra.html">latent_algebra</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../internal/label_quality_utils.html">label_quality_utils</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../internal/multilabel_utils.html">multilabel_utils</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../internal/multilabel_scorer.html">multilabel_scorer</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../internal/outlier.html">outlier</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../internal/token_classification_utils.html">token_classification_utils</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../internal/validation.html">validation</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Guides</span></p>
+<ul class="current">
+<li class="toctree-l1 current has-children"><a class="reference internal" href="index.html">Datalab issue types</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-17" name="toctree-checkbox-17" role="switch" type="checkbox"/><label for="toctree-checkbox-17"><div class="visually-hidden">Toggle navigation of Datalab issue types</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="current">
+<li class="toctree-l2 current current-page"><a class="current reference internal" href="#">Datalab Issue Types</a></li>
+<li class="toctree-l2"><a class="reference internal" href="custom_issue_manager.html">Creating Your Own Issues Manager</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/cleanlab/cleanlab/blob/master/CONTRIBUTING.md">How to contribute</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Links</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference external" href="https://cleanlab.ai">Website</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/cleanlab/cleanlab">GitHub</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://pypi.org/project/cleanlab/">PyPI</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://anaconda.org/conda-forge/cleanlab">Conda</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://cleanlab.ai/slack">Community Discussions</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://cleanlab.ai/blog/">Blog</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://www.youtube.com/@CleanlabAI/playlists">Videos</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://cleanlab.ai/blog/data-centric-ai/">Cleanlab Studio (Easy Mode)</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://help.cleanlab.ai">Cleanlab Studio Docs</a></li>
+</ul>
+
+</div>
+
+
+<!-- Start of versioning -->
+
+<div class="sidebar-tree">
+    <p class="caption" role="heading">
+        <span class="caption-text">Versions</span>
+    </p>
+    <ul>
+        <li class="toctree-l1">
+            <a
+                id="version_number"
+                class="reference internal"
+                href="/"
+                >stable</a
+            >
+        </li>
+        <li class="toctree-l1">
+            <a
+                id="commit_hash"
+                class="reference internal"
+                href="/master/"
+                >developer</a
+            >
+        </li>
+        
+        <li class="toctree-l1">
+            <a
+                id="v2.6.2"
+                class="reference internal"
+                href="/v2.6.2/"
+                >v2.6.2</a
+            >
+        </li>
+        
+        <li class="toctree-l1">
+            <a
+                id="v2.6.1"
+                class="reference internal"
+                href="/v2.6.1/"
+                >v2.6.1</a
+            >
+        </li>
+        
+        <li class="toctree-l1">
+            <a
+                id="v2.6.0"
+                class="reference internal"
+                href="/v2.6.0/"
+                >v2.6.0</a
+            >
+        </li>
+        
+        <li class="toctree-l1">
+            <a
+                id="v2.5.0"
+                class="reference internal"
+                href="/v2.5.0/"
+                >v2.5.0</a
+            >
+        </li>
+        
+        <li class="toctree-l1">
+            <a
+                id="v2.4.0"
+                class="reference internal"
+                href="/v2.4.0/"
+                >v2.4.0</a
+            >
+        </li>
+        
+        <li class="toctree-l1">
+            <a
+                id="v2.3.1"
+                class="reference internal"
+                href="/v2.3.1/"
+                >v2.3.1</a
+            >
+        </li>
+        
+        <li class="toctree-l1">
+            <a
+                id="v2.3.0"
+                class="reference internal"
+                href="/v2.3.0/"
+                >v2.3.0</a
+            >
+        </li>
+        
+        <li class="toctree-l1">
+            <a
+                id="v2.2.0"
+                class="reference internal"
+                href="/v2.2.0/"
+                >v2.2.0</a
+            >
+        </li>
+        
+        <li class="toctree-l1">
+            <a
+                id="v2.1.0"
+                class="reference internal"
+                href="/v2.1.0/"
+                >v2.1.0</a
+            >
+        </li>
+        
+        <li class="toctree-l1">
+            <a
+                id="v2.0.0"
+                class="reference internal"
+                href="/v2.0.0/"
+                >v2.0.0</a
+            >
+        </li>
+        
+        <li class="toctree-l1">
+            <a
+                id="v1.0.1"
+                class="reference internal"
+                href="/v1.0.1/"
+                >v1.0.1</a
+            >
+        </li>
+        
+    </ul>
+</div>
+
+<br>
+<br>
+
+<script
+    type="text/javascript"
+    src="/versioning.js"
+></script>
+
+<script type="text/javascript">
+    window.addEventListener("load", () => {
+        const version_number = Version.version_number;
+        const commit_hash = Version.commit_hash;
+
+        document.getElementById("version_number").innerHTML =
+            "stable <code class='docutils literal notranslate'><span class='pre'> (" +
+            version_number +
+            ")</span></code>";
+        document.getElementById("commit_hash").innerHTML =
+            "master <code class='docutils literal notranslate'><span class='pre'> (" +
+            commit_hash.slice(0, 7) +
+            "&hellip;)</span></code>";
+    });
+</script>
+
+<!-- End of versioning -->
+
+</div>
+      </div>
+      
+    </div>
+  </aside>
+  <div class="main">
+    <div class="content">
+      <div class="article-container">
+        <a href="#" class="back-to-top muted-link">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12z"></path>
+          </svg>
+          <span>Back to top</span>
+        </a>
+        <div class="content-icon-container">
+          
+<div class="theme-toggle-container theme-toggle-content">
+            <button class="theme-toggle">
+              <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+              <svg class="theme-icon-when-auto"><use href="#svg-sun-half"></use></svg>
+              <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+              <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+            </button>
+          </div>
+          <label class="toc-overlay-icon toc-content-icon" for="__toc">
+            <div class="visually-hidden">Toggle table of contents sidebar</div>
+            <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+          </label>
+        </div>
+        <article role="main">
+          
+
+<noscript>
+  <div class="admonition warning">
+    <p class="admonition-title">Warning</p>
+    <p>Parts of this site uses JavaScript, but your browser does not support it.</p>
+  </div>
+</noscript>
+
+
+
+<!-- Start of Version Warning Banner -->
+
+<p id="doc_ver_warning"></p>
+
+<script
+    type="text/javascript"
+    src="/versioning.js"
+></script>
+<script type="text/javascript">
+    window.addEventListener("load", () => {
+        const version_number = Version.version_number;
+        const path_arr = window.location.pathname.split("/");
+
+        if (path_arr.includes("master")) {
+            document.getElementById("doc_ver_warning").innerHTML =
+            `<div class="admonition warning">
+            <p class="admonition-title">Warning</p>
+            <p>This version of the documentation corresponds to the master branch of <code class="docutils literal notranslate"><span class="pre">cleanlab</span></code> source code from <a href="https://github.com/cleanlab/cleanlab/">GitHub</a>. To see the documentation for the latest <code class="docutils literal notranslate"><span class="pre">pip</span></code>-installed version, click <a href="/">here</a>.</p>
+            </div>`;
+        } else if (!path_arr.includes(version_number) && !path_arr.includes("stable")) {
+            document.getElementById("doc_ver_warning").innerHTML =
+            `<div class="admonition warning">
+            <p class="admonition-title">Warning</p>
+            <p>This documentation is for an old version (<code class="docutils literal notranslate"><span class="pre">v2.6.2</span></code>) of <code class="docutils literal notranslate"><span class="pre">cleanlab</span></code>. To see the documentation for the latest stable version (<code class="docutils literal notranslate"><span class="pre">` + version_number + `</span></code>), click <a href="/">here</a>.</p>
+            </div>`;
+        } else {
+            document.getElementById("doc_ver_warning").remove();
+        }
+    });
+</script>
+
+<!-- End of Version Warning Banner -->
+
+ <section id="datalab-issue-types">
+<h1>Datalab Issue Types<a class="headerlink" href="#datalab-issue-types" title="Permalink to this heading">#</a></h1>
+<section id="types-of-issues-datalab-can-detect">
+<h2>Types of issues Datalab can detect<a class="headerlink" href="#types-of-issues-datalab-can-detect" title="Permalink to this heading">#</a></h2>
+<p>This page describes the various types of issues that Datalab can detect in a dataset.
+For each type of issue, we explain: what it says about your data if detected, why this matters, and what parameters you can optionally specify to control the detection of this issue.</p>
+<p>In case you didn’t know: you can alternatively use <a class="reference external" href="https://cleanlab.ai/blog/data-centric-ai/">Cleanlab Studio</a> to detect the same data issues as this package, plus <a class="reference external" href="https://help.cleanlab.ai/guide/concepts/cleanlab_columns/">many more types of issues</a>, all without having to do any Machine Learning (or even write any code).</p>
+<section id="estimates-for-each-issue-type">
+<h3>Estimates for Each Issue Type<a class="headerlink" href="#estimates-for-each-issue-type" title="Permalink to this heading">#</a></h3>
+<p>Datalab produces three estimates for <strong>each</strong> type of issue (called say <code class="xref py py-obj docutils literal notranslate"><span class="pre">&lt;ISSUE_NAME&gt;</span></code> here):</p>
+<ol class="arabic simple">
+<li><p>A numeric quality score <code class="xref py py-obj docutils literal notranslate"><span class="pre">&lt;ISSUE_NAME&gt;_score</span></code> (between 0 and 1) estimating how severe this issue is exhibited in each example from a dataset. Examples with higher scores are less likely to suffer from this issue. Access these via: the <a class="reference internal" href="../datalab.html#cleanlab.datalab.datalab.Datalab.issues" title="cleanlab.datalab.datalab.Datalab.issues"><code class="xref py py-attr docutils literal notranslate"><span class="pre">Datalab.issues</span></code></a> attribute or the method <a class="reference internal" href="../datalab.html#cleanlab.datalab.datalab.Datalab.get_issues" title="cleanlab.datalab.datalab.Datalab.get_issues"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Datalab.get_issues(&lt;ISSUE_NAME&gt;)</span></code></a>.</p></li>
+<li><p>A Boolean <code class="xref py py-obj docutils literal notranslate"><span class="pre">is_&lt;ISSUE_NAME&gt;_issue</span></code> flag for each example from a dataset. Examples where this has value  <code class="xref py py-obj docutils literal notranslate"><span class="pre">True</span></code> are those estimated to exhibit this issue. Access these via: the <a class="reference internal" href="../datalab.html#cleanlab.datalab.datalab.Datalab.issues" title="cleanlab.datalab.datalab.Datalab.issues"><code class="xref py py-attr docutils literal notranslate"><span class="pre">Datalab.issues</span></code></a> attribute or the method <a class="reference internal" href="../datalab.html#cleanlab.datalab.datalab.Datalab.get_issues" title="cleanlab.datalab.datalab.Datalab.get_issues"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Datalab.get_issues(&lt;ISSUE_NAME&gt;)</span></code></a>.</p></li>
+<li><p>An overall dataset quality score (between 0 and 1), quantifying how severe this issue is overall across the entire dataset. Datasets with higher scores do not exhibit this issue as badly overall. Access these via: the <a class="reference internal" href="../datalab.html#cleanlab.datalab.datalab.Datalab.issue_summary" title="cleanlab.datalab.datalab.Datalab.issue_summary"><code class="xref py py-attr docutils literal notranslate"><span class="pre">Datalab.issue_summary</span></code></a> attribute.</p></li>
+</ol>
+<p><strong>Example (for the outlier issue type)</strong></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">issue_name</span> <span class="o">=</span> <span class="s2">&quot;outlier&quot;</span>  <span class="c1"># how to reference the outlier issue type in code</span>
+<span class="n">issue_score</span> <span class="o">=</span> <span class="s2">&quot;outlier_score&quot;</span>  <span class="c1"># name of column with quality scores for the outlier issue type, atypical datapoints receive lower scores</span>
+<span class="n">is_issue</span> <span class="o">=</span> <span class="s2">&quot;is_outlier_issue&quot;</span>  <span class="c1"># name of Boolean column flagging which datapoints are considered outliers in the dataset</span>
+</pre></div>
+</div>
+<p>Datalab estimates various issues based on the four inputs below.
+Each input is optional, if you do not provide it, Datalab will skip checks for those types of issues that require this input.</p>
+<ol class="arabic simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">label_name</span></code> - a field in the dataset that the stores the annotated class for each example in a multi-class classification dataset.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">pred_probs</span></code> - predicted class probabilities output by your trained model for each example in the dataset (these should be out-of-sample, eg. produced via cross-validation).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">features</span></code> - numeric vector representations of the features for each example in the dataset. These may be embeddings from a (pre)trained model, or just a numerically-transformed version of the original data features.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">knn_graph</span></code> - K nearest neighbor graph represented as a sparse matrix of dissimilarity values between examples in the dataset. If both <code class="xref py py-obj docutils literal notranslate"><span class="pre">knn_graph</span></code> and <code class="xref py py-obj docutils literal notranslate"><span class="pre">features</span></code> are provided, the <code class="xref py py-obj docutils literal notranslate"><span class="pre">knn_graph</span></code> takes precedence, and if only <code class="xref py py-obj docutils literal notranslate"><span class="pre">features</span></code> is provided, then a <code class="xref py py-obj docutils literal notranslate"><span class="pre">knn_graph</span></code> is internally constructed based on the (either euclidean or cosine) distance between different examples’ features.</p></li>
+</ol>
+</section>
+<section id="label-issue">
+<h3>Label Issue<a class="headerlink" href="#label-issue" title="Permalink to this heading">#</a></h3>
+<p>Examples whose given label is estimated to be potentially incorrect (e.g. due to annotation error) are flagged as having label issues.
+Datalab estimates which examples appear mislabeled as well as a numeric label quality score for each, which quantifies the likelihood that an example is correctly labeled.</p>
+<p>For now, Datalab can only detect label issues in multi-class classification datasets, regression datasets, and multi-label classification datasets.
+The cleanlab library has alternative methods you can us to detect label issues in other types of datasets (multi-annotator, token classification, etc.).</p>
+<p>Label issues are calculated based on provided <code class="xref py py-obj docutils literal notranslate"><span class="pre">pred_probs</span></code> from a trained model. If you do not provide this argument, but you do provide <code class="xref py py-obj docutils literal notranslate"><span class="pre">features</span></code>, then a K Nearest Neighbor model will be fit to produce <code class="xref py py-obj docutils literal notranslate"><span class="pre">pred_probs</span></code> based on your <code class="xref py py-obj docutils literal notranslate"><span class="pre">features</span></code>. Otherwise if neither <code class="xref py py-obj docutils literal notranslate"><span class="pre">pred_probs</span></code> nor <code class="xref py py-obj docutils literal notranslate"><span class="pre">features</span></code> is provided, then this type of issue will not be considered.
+For the most accurate results, provide out-of-sample <code class="xref py py-obj docutils literal notranslate"><span class="pre">pred_probs</span></code> which can be obtained for a dataset via <a class="reference external" href="https://docs.cleanlab.ai/stable/tutorials/pred_probs_cross_val.html">cross-validation</a>.</p>
+<p>Having mislabeled examples in your dataset may hamper the performance of supervised learning models you train on this data.
+For evaluating models or performing other types of data analytics, mislabeled examples may lead you to draw incorrect conclusions.
+To handle mislabeled examples, you can either filter out the data with label issues or try to correct their labels.</p>
+<p>Learn more about the method used to detect label issues in our paper: <a class="reference external" href="https://arxiv.org/abs/1911.00068">Confident Learning: Estimating Uncertainty in Dataset Labels</a></p>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>This type of issue has the issue name <code class="xref py py-obj docutils literal notranslate"><span class="pre">&quot;label&quot;</span></code>.</p>
+<p>Run a check for this particular kind of issue by calling <a class="reference internal" href="../datalab.html#cleanlab.datalab.datalab.Datalab.find_issues" title="cleanlab.datalab.datalab.Datalab.find_issues"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Datalab.find_issues()</span></code></a> like so:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># `lab` is a Datalab instance</span>
+<span class="n">lab</span><span class="o">.</span><span class="n">find_issues</span><span class="p">(</span><span class="o">...</span><span class="p">,</span> <span class="n">issue_types</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;label&quot;</span><span class="p">:</span> <span class="p">{}})</span>
+</pre></div>
+</div>
+</div>
+</section>
+<section id="outlier-issue">
+<h3>Outlier Issue<a class="headerlink" href="#outlier-issue" title="Permalink to this heading">#</a></h3>
+<p>Examples that are very different from the rest of the dataset (i.e. potentially out-of-distribution or rare/anomalous instances).</p>
+<p>Outlier issues are calculated based on provided <code class="xref py py-obj docutils literal notranslate"><span class="pre">features</span></code> , <code class="xref py py-obj docutils literal notranslate"><span class="pre">knn_graph</span></code> , or <code class="xref py py-obj docutils literal notranslate"><span class="pre">pred_probs</span></code>.
+If you do not provide one of these arguments, this type of issue will not be considered.
+This article describes how outlier issues are detected in a dataset: <a class="reference external" href="https://cleanlab.ai/blog/outlier-detection/">https://cleanlab.ai/blog/outlier-detection/</a>.</p>
+<p>When based on <code class="xref py py-obj docutils literal notranslate"><span class="pre">features</span></code> or <code class="xref py py-obj docutils literal notranslate"><span class="pre">knn_graph</span></code>, the outlier quality of each example is scored inversely proportional to its distance to its K nearest neighbors in the dataset.</p>
+<p>When based on <code class="xref py py-obj docutils literal notranslate"><span class="pre">pred_probs</span></code>, the outlier quality of each example is scored inversely proportional to the uncertainty in its prediction.</p>
+<p>Modeling data with outliers may have unexpected consequences.
+Closely inspect them and consider removing some outliers that may be negatively affecting your models.</p>
+<p>Learn more about the methods used to detect outliers in our article: <a class="reference external" href="https://cleanlab.ai/blog/outlier-detection/">Out-of-Distribution Detection via Embeddings or Predictions</a></p>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>This type of issue has the issue name <code class="xref py py-obj docutils literal notranslate"><span class="pre">&quot;outlier&quot;</span></code>.</p>
+<p>Run a check for this particular kind of issue by calling <a class="reference internal" href="../datalab.html#cleanlab.datalab.datalab.Datalab.find_issues" title="cleanlab.datalab.datalab.Datalab.find_issues"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Datalab.find_issues()</span></code></a> like so:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># `lab` is a Datalab instance</span>
+<span class="n">lab</span><span class="o">.</span><span class="n">find_issues</span><span class="p">(</span><span class="o">...</span><span class="p">,</span> <span class="n">issue_types</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;outlier&quot;</span><span class="p">:</span> <span class="p">{}})</span>
+</pre></div>
+</div>
+</div>
+</section>
+<section id="near-duplicate-issue">
+<h3>(Near) Duplicate Issue<a class="headerlink" href="#near-duplicate-issue" title="Permalink to this heading">#</a></h3>
+<p>A (near) duplicate issue refers to two or more examples in a dataset that are extremely similar to each other, relative to the rest of the dataset.
+The examples flagged with this issue may be exactly duplicated, or lie atypically close together when represented as vectors (i.e. feature embeddings).
+Near duplicated examples may record the same information with different:</p>
+<ul class="simple">
+<li><p>Abbreviations, misspellings, typos, formatting, etc. in text data.</p></li>
+<li><p>Compression formats, resolutions, or sampling rates in image, video, and audio data.</p></li>
+<li><p>Minor variations which naturally occur in many types of data (e.g. translated versions of an image).</p></li>
+</ul>
+<p>Near Duplicate issues are calculated based on provided <code class="xref py py-obj docutils literal notranslate"><span class="pre">features</span></code> or <code class="xref py py-obj docutils literal notranslate"><span class="pre">knn_graph</span></code>.
+If you do not provide one of these arguments, this type of issue will not be considered.</p>
+<p>Datalab defines near duplicates as those examples whose distance to their nearest neighbor (in the space of provided <code class="xref py py-obj docutils literal notranslate"><span class="pre">features</span></code>) in the dataset is less than <code class="xref py py-obj docutils literal notranslate"><span class="pre">c</span> <span class="pre">*</span> <span class="pre">D</span></code>, where <code class="xref py py-obj docutils literal notranslate"><span class="pre">0</span> <span class="pre">&lt;</span> <span class="pre">c</span> <span class="pre">&lt;</span> <span class="pre">1</span></code> is a small constant, and <code class="xref py py-obj docutils literal notranslate"><span class="pre">D</span></code> is the median (over the full dataset) of such distances between each example and its nearest neighbor.
+Scoring the numeric quality of an example in terms of the near duplicate issue type is done proportionally to its distance to its nearest neighbor.</p>
+<p>Including near-duplicate examples in a dataset may negatively impact a ML model’s generalization performance and lead to overfitting.
+In particular, it is questionable to include examples in a test dataset which are (nearly) duplicated in the corresponding training dataset.
+More generally, examples which happen to be duplicated can affect the final modeling results much more than other examples — so you should at least be aware of their presence.</p>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>This type of issue has the issue name <code class="xref py py-obj docutils literal notranslate"><span class="pre">&quot;near_duplicate&quot;</span></code>.</p>
+<p>Run a check for this particular kind of issue by calling <a class="reference internal" href="../datalab.html#cleanlab.datalab.datalab.Datalab.find_issues" title="cleanlab.datalab.datalab.Datalab.find_issues"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Datalab.find_issues()</span></code></a> like so:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># `lab` is a Datalab instance</span>
+<span class="n">lab</span><span class="o">.</span><span class="n">find_issues</span><span class="p">(</span><span class="o">...</span><span class="p">,</span> <span class="n">issue_types</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;near_duplicate&quot;</span><span class="p">:</span> <span class="p">{}})</span>
+</pre></div>
+</div>
+</div>
+</section>
+<section id="non-iid-issue">
+<h3>Non-IID Issue<a class="headerlink" href="#non-iid-issue" title="Permalink to this heading">#</a></h3>
+<p>Whether the dataset exhibits statistically significant violations of the IID assumption like:  changepoints or shift, drift, autocorrelation, etc. The specific form of violation considered is whether the examples are ordered such that almost adjacent examples tend to have more similar feature values. If you care about this check, do <strong>not</strong> first shuffle your dataset – this check is entirely based on the sequential order of your data.</p>
+<p>The Non-IID issue is detected based on provided <code class="xref py py-obj docutils literal notranslate"><span class="pre">features</span></code> or <code class="xref py py-obj docutils literal notranslate"><span class="pre">knn_graph</span></code>. If you do not provide one of these arguments, this type of issue will not be considered.</p>
+<p>Mathematically, the <strong>overall</strong> Non-IID score for the dataset is defined as the p-value of a statistical test for whether the distribution of <em>index-gap</em> values differs between group A vs. group B defined as follows. For a pair of examples in the dataset <code class="xref py py-obj docutils literal notranslate"><span class="pre">x1,</span> <span class="pre">x2</span></code>, we define their <em>index-gap</em> as the distance between the indices of these examples in the ordering of the data (e.g. if <code class="xref py py-obj docutils literal notranslate"><span class="pre">x1</span></code> is the 10th example and <code class="xref py py-obj docutils literal notranslate"><span class="pre">x2</span></code> is the 100th example in the dataset, their index-gap is 90). We construct group A from pairs of examples which are amongst the K nearest neighbors of each other, where neighbors are defined based on the provided <code class="xref py py-obj docutils literal notranslate"><span class="pre">knn_graph</span></code> or via distances in the space of the provided vector <code class="xref py py-obj docutils literal notranslate"><span class="pre">features</span></code> . Group B is constructed from random pairs of examples in the dataset.</p>
+<p>The Non-IID quality score for each example <code class="xref py py-obj docutils literal notranslate"><span class="pre">x</span></code> is defined via a similarly computed p-value but with Group A constructed from the K nearest neighbors of <code class="xref py py-obj docutils literal notranslate"><span class="pre">x</span></code> and Group B constructed from  random examples from the dataset paired with <code class="xref py py-obj docutils literal notranslate"><span class="pre">x</span></code>. Learn more about the math behind this method in our paper: <a class="reference external" href="https://arxiv.org/abs/2305.15696">Detecting Dataset Drift and Non-IID Sampling via k-Nearest Neighbors</a></p>
+<p>The assumption that examples in a dataset are Independent and Identically Distributed (IID) is  fundamental to most proper modeling.  Detecting all possible violations of the IID assumption is statistically impossible. This issue type only considers specific forms of violation where examples that tend to be closer together in the dataset ordering also tend to have more similar feature values. This includes scenarios where:</p>
+<ul class="simple">
+<li><p>The underlying distribution from which examples stem is evolving over time (not identically distributed).</p></li>
+<li><p>An example can influence the values of future examples in the dataset (not independent).</p></li>
+</ul>
+<p>For datasets with low non-IID score, you should consider why your data are not IID and act accordingly. For example, if the data distribution is drifting over time, consider employing a time-based train/test split instead of a random partition.  Note that shuffling the data ahead of time will ensure a good non-IID score, but this is not always a fix to the underlying problem (e.g. future deployment data may stem from a different distribution, or you may overlook the fact that examples influence each other). We thus recommend <strong>not</strong> shuffling your data to be able to diagnose this issue if it exists.</p>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>This type of issue has the issue name <code class="xref py py-obj docutils literal notranslate"><span class="pre">&quot;non_iid&quot;</span></code>.</p>
+<p>Run a check for this particular kind of issue by calling <a class="reference internal" href="../datalab.html#cleanlab.datalab.datalab.Datalab.find_issues" title="cleanlab.datalab.datalab.Datalab.find_issues"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Datalab.find_issues()</span></code></a> like so:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># `lab` is a Datalab instance</span>
+<span class="n">lab</span><span class="o">.</span><span class="n">find_issues</span><span class="p">(</span><span class="o">...</span><span class="p">,</span> <span class="n">issue_types</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;non_iid&quot;</span><span class="p">:</span> <span class="p">{}})</span>
+</pre></div>
+</div>
+</div>
+</section>
+<section id="class-imbalance-issue">
+<h3>Class Imbalance Issue<a class="headerlink" href="#class-imbalance-issue" title="Permalink to this heading">#</a></h3>
+<p>Class imbalance is diagnosed just using the <code class="xref py py-obj docutils literal notranslate"><span class="pre">labels</span></code> provided as part of the dataset. The overall class imbalance quality score of a dataset is the proportion of examples belonging to the rarest class <code class="xref py py-obj docutils literal notranslate"><span class="pre">q</span></code>. If this proportion <code class="xref py py-obj docutils literal notranslate"><span class="pre">q</span></code> falls below a threshold, then we say this dataset suffers from the class imbalance issue.</p>
+<p>In a dataset identified as having class imbalance, the class imbalance quality score for each example is set equal to <code class="xref py py-obj docutils literal notranslate"><span class="pre">q</span></code> if it is labeled as the rarest class, and is equal to 1 for all other examples.</p>
+<p>Class imbalance in a dataset can lead to subpar model performance for the under-represented class. Consider collecting more data from the under-represented class, or at least take special care while modeling via techniques like over/under-sampling, SMOTE, asymmetric class weighting, etc.</p>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>This type of issue has the issue name <code class="xref py py-obj docutils literal notranslate"><span class="pre">&quot;class_imbalance&quot;</span></code>.</p>
+<p>Run a check for this particular kind of issue by calling <a class="reference internal" href="../datalab.html#cleanlab.datalab.datalab.Datalab.find_issues" title="cleanlab.datalab.datalab.Datalab.find_issues"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Datalab.find_issues()</span></code></a> like so:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># `lab` is a Datalab instance</span>
+<span class="n">lab</span><span class="o">.</span><span class="n">find_issues</span><span class="p">(</span><span class="o">...</span><span class="p">,</span> <span class="n">issue_types</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;class_imbalance&quot;</span><span class="p">:</span> <span class="p">{}})</span>
+</pre></div>
+</div>
+</div>
+</section>
+<section id="image-specific-issues">
+<h3>Image-specific Issues<a class="headerlink" href="#image-specific-issues" title="Permalink to this heading">#</a></h3>
+<p>For image datasets which are properly specified as such, Datalab can detect additional types of image-specific issues (if the necessary optional dependencies are installed).
+Specifically, low-quality images which are too: dark/bright, blurry, low information, abnormally sized, etc.
+Descriptions of these image-specific issues are provided in the <a class="reference external" href="https://github.com/cleanlab/cleanvision">CleanVision package</a> and its documentation.</p>
+</section>
+<section id="underperforming-group-issue">
+<h3>Underperforming Group Issue<a class="headerlink" href="#underperforming-group-issue" title="Permalink to this heading">#</a></h3>
+<p>An underperforming group refers to a cluster of similar examples (i.e. a slice) in the dataset for which the ML model predictions are poor.  The examples in this underperforming group may have noisy labels or feature values, or the trained ML model may not have learned how to properly handle them (consider collecting more data from this subpopulation or up-weighting the existing data from this group).</p>
+<p>Underperforming Group issues are detected based on one of:</p>
+<ul class="simple">
+<li><p>provided <code class="xref py py-obj docutils literal notranslate"><span class="pre">pred_probs</span></code> and <code class="xref py py-obj docutils literal notranslate"><span class="pre">features</span></code>,</p></li>
+<li><p>provided <code class="xref py py-obj docutils literal notranslate"><span class="pre">pred_probs</span></code> and <code class="xref py py-obj docutils literal notranslate"><span class="pre">knn_graph</span></code>, or</p></li>
+<li><p>provided <code class="xref py py-obj docutils literal notranslate"><span class="pre">pred_probs</span></code> and <code class="xref py py-obj docutils literal notranslate"><span class="pre">cluster_ids</span></code>. (This option is for advanced users, see the <a class="reference external" href="../../../tutorials/faq.html#How-do-I-specify-pre-computed-data-slices/clusters-when-detecting-the-Underperforming-Group-Issue?">FAQ</a> for more details.)</p></li>
+</ul>
+<p>If you do not provide both these arguments, this type of issue will not be considered.</p>
+<p>To find the underperforming group, Cleanlab clusters the data using the provided <code class="xref py py-obj docutils literal notranslate"><span class="pre">features</span></code> and determines the cluster <code class="xref py py-obj docutils literal notranslate"><span class="pre">c</span></code> with the lowest average model predictive performance. Model predictive performance is evaluated via the model’s self-confidence of the given labels, calculated using <a class="reference internal" href="../../rank.html#cleanlab.rank.get_self_confidence_for_each_label" title="cleanlab.rank.get_self_confidence_for_each_label"><code class="xref py py-func docutils literal notranslate"><span class="pre">rank.get_self_confidence_for_each_label</span></code></a>. Suppose the average predictive power across the full dataset is <code class="xref py py-obj docutils literal notranslate"><span class="pre">r</span></code> and is <code class="xref py py-obj docutils literal notranslate"><span class="pre">q</span></code> within a cluster of examples. This cluster is considered to be an underperforming group if <code class="xref py py-obj docutils literal notranslate"><span class="pre">q/r</span></code> falls below a threshold. A dataset suffers from the Underperforming Group issue if there exists such a cluster within it.
+The underperforming group quality score is equal to <code class="xref py py-obj docutils literal notranslate"><span class="pre">q/r</span></code> for examples belonging to the underperforming group, and is equal to 1 for all other examples.
+Advanced users:  If you have pre-computed cluster assignments for each example in the dataset, you can pass them explicitly to <a class="reference internal" href="../datalab.html#cleanlab.datalab.datalab.Datalab.find_issues" title="cleanlab.datalab.datalab.Datalab.find_issues"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Datalab.find_issues</span></code></a> using the <code class="xref py py-obj docutils literal notranslate"><span class="pre">cluster_ids</span></code> key in the <code class="xref py py-obj docutils literal notranslate"><span class="pre">issue_types</span></code> dict argument.  This is useful for tabular datasets where you want to group/slice the data based on a categorical column. An integer encoding of the categorical column can be passed as cluster assignments for finding the underperforming group, based on the data slices you define.</p>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>This type of issue has the issue name <code class="xref py py-obj docutils literal notranslate"><span class="pre">&quot;underperforming_group&quot;</span></code>.</p>
+<p>Run a check for this particular kind of issue by calling <a class="reference internal" href="../datalab.html#cleanlab.datalab.datalab.Datalab.find_issues" title="cleanlab.datalab.datalab.Datalab.find_issues"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Datalab.find_issues()</span></code></a> like so:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># `lab` is a Datalab instance</span>
+<span class="n">lab</span><span class="o">.</span><span class="n">find_issues</span><span class="p">(</span><span class="o">...</span><span class="p">,</span> <span class="n">issue_types</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;underperforming_group&quot;</span><span class="p">:</span> <span class="p">{}})</span>
+</pre></div>
+</div>
+</div>
+</section>
+<section id="null-issue">
+<h3>Null Issue<a class="headerlink" href="#null-issue" title="Permalink to this heading">#</a></h3>
+<p>Examples identified with the null issue correspond to rows that have null/missing values across all feature columns (i.e. the entire row is missing values).</p>
+<p>Null issues are detected based on provided <code class="xref py py-obj docutils literal notranslate"><span class="pre">features</span></code>.  If you do not provide <code class="xref py py-obj docutils literal notranslate"><span class="pre">features</span></code>, this type of issue will not be considered.</p>
+<p>Each example’s null issue quality score equals the proportion of features values in this row that are not null/missing. The overall dataset null issue quality score
+equals the average of the individual examples’ quality scores.</p>
+<p>Presence of null examples in the dataset can lead to errors when training ML models. It can also
+result in the model learning incorrect patterns due to the null values.</p>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>This type of issue has the issue name <code class="xref py py-obj docutils literal notranslate"><span class="pre">&quot;null&quot;</span></code>.</p>
+<p>Run a check for this particular kind of issue by calling <a class="reference internal" href="../datalab.html#cleanlab.datalab.datalab.Datalab.find_issues" title="cleanlab.datalab.datalab.Datalab.find_issues"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Datalab.find_issues()</span></code></a> like so:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># `lab` is a Datalab instance</span>
+<span class="n">lab</span><span class="o">.</span><span class="n">find_issues</span><span class="p">(</span><span class="o">...</span><span class="p">,</span> <span class="n">issue_types</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;null&quot;</span><span class="p">:</span> <span class="p">{}})</span>
+</pre></div>
+</div>
+</div>
+</section>
+<section id="data-valuation-issue">
+<h3>Data Valuation Issue<a class="headerlink" href="#data-valuation-issue" title="Permalink to this heading">#</a></h3>
+<p>The examples in the dataset with lowest data valuation scores contribute least to a trained ML model’s performance (those whose value falls below a threshold are flagged with this type of issue).</p>
+<p>Data valuation issues can only be detected based on a provided <code class="xref py py-obj docutils literal notranslate"><span class="pre">knn_graph</span></code> (or one pre-computed during the computation of other issue types).  If you do not provide this argument and there isn’t a <code class="xref py py-obj docutils literal notranslate"><span class="pre">knn_graph</span></code> already stored in the Datalab object, this type of issue will not be considered.</p>
+<p>The data valuation score is an approximate Data Shapley value, calculated based on the labels of the top k nearest neighbors of an example. The details of this KNN-Shapley value could be found in the papers: <a class="reference external" href="https://arxiv.org/abs/1908.08619">Efficient Task-Specific Data Valuation for Nearest Neighbor Algorithms</a> and <a class="reference external" href="https://arxiv.org/abs/1911.07128">Scalability vs. Utility: Do We Have to Sacrifice One for the Other in Data Importance Quantification?</a>.</p>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>This type of issue has the issue name <code class="xref py py-obj docutils literal notranslate"><span class="pre">&quot;data_valuation&quot;</span></code>.</p>
+<p>Run a check for this particular kind of issue by calling <a class="reference internal" href="../datalab.html#cleanlab.datalab.datalab.Datalab.find_issues" title="cleanlab.datalab.datalab.Datalab.find_issues"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Datalab.find_issues()</span></code></a> like so:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># `lab` is a Datalab instance</span>
+<span class="n">lab</span><span class="o">.</span><span class="n">find_issues</span><span class="p">(</span><span class="o">...</span><span class="p">,</span> <span class="n">issue_types</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;data_valuation&quot;</span><span class="p">:</span> <span class="p">{}})</span>
+</pre></div>
+</div>
+</div>
+</section>
+</section>
+<section id="optional-issue-parameters">
+<h2>Optional Issue Parameters<a class="headerlink" href="#optional-issue-parameters" title="Permalink to this heading">#</a></h2>
+<p>Here is the dict of possible (<strong>optional</strong>) parameter values that can be specified via the argument <code class="xref py py-obj docutils literal notranslate"><span class="pre">issue_types</span></code> to <a class="reference internal" href="../datalab.html#cleanlab.datalab.datalab.Datalab.find_issues" title="cleanlab.datalab.datalab.Datalab.find_issues"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Datalab.find_issues</span></code></a>.
+Optionally specify these to exert greater control over how issues are detected in your dataset.
+Appropriate defaults are used for any parameters you do not specify, so no need to specify all of these!</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">possible_issue_types</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;label&quot;</span><span class="p">:</span> <span class="n">label_kwargs</span><span class="p">,</span> <span class="s2">&quot;outlier&quot;</span><span class="p">:</span> <span class="n">outlier_kwargs</span><span class="p">,</span>
+    <span class="s2">&quot;near_duplicate&quot;</span><span class="p">:</span> <span class="n">near_duplicate_kwargs</span><span class="p">,</span> <span class="s2">&quot;non_iid&quot;</span><span class="p">:</span> <span class="n">non_iid_kwargs</span><span class="p">,</span>
+    <span class="s2">&quot;class_imbalance&quot;</span><span class="p">:</span> <span class="n">class_imbalance_kwargs</span><span class="p">,</span> <span class="s2">&quot;underperforming_group&quot;</span><span class="p">:</span> <span class="n">underperforming_group_kwargs</span><span class="p">,</span>
+    <span class="s2">&quot;null&quot;</span><span class="p">:</span> <span class="n">null_kwargs</span><span class="p">,</span> <span class="s2">&quot;data_valuation&quot;</span><span class="p">:</span> <span class="n">data_valuation_kwargs</span><span class="p">,</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>where the possible <code class="xref py py-obj docutils literal notranslate"><span class="pre">kwargs</span></code> dicts for each key are described in the sections below.</p>
+<section id="label-issue-parameters">
+<h3>Label Issue Parameters<a class="headerlink" href="#label-issue-parameters" title="Permalink to this heading">#</a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">label_kwargs</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;k&quot;</span><span class="p">:</span> <span class="c1"># number of nearest neighbors to consider when computing pred_probs from features,</span>
+    <span class="s2">&quot;health_summary_parameters&quot;</span><span class="p">:</span> <span class="c1"># dict of potential keyword arguments to method `dataset.health_summary()`,</span>
+    <span class="s2">&quot;clean_learning_kwargs&quot;</span><span class="p">:</span> <span class="c1"># dict of keyword arguments to constructor `CleanLearning()` including keys like: &quot;find_label_issues_kwargs&quot; or &quot;label_quality_scores_kwargs&quot;,</span>
+    <span class="s2">&quot;thresholds&quot;</span><span class="p">:</span> <span class="c1"># `thresholds` argument to `CleanLearning.find_label_issues()`,</span>
+    <span class="s2">&quot;noise_matrix&quot;</span><span class="p">:</span> <span class="c1"># `noise_matrix` argument to `CleanLearning.find_label_issues()`,</span>
+    <span class="s2">&quot;inverse_noise_matrix&quot;</span><span class="p">:</span> <span class="c1"># `inverse_noise_matrix` argument to `CleanLearning.find_label_issues()`,</span>
+    <span class="s2">&quot;save_space&quot;</span><span class="p">:</span> <span class="c1"># `save_space` argument to `CleanLearning.find_label_issues()`,</span>
+    <span class="s2">&quot;clf_kwargs&quot;</span><span class="p">:</span> <span class="c1"># `clf_kwargs` argument to `CleanLearning.find_label_issues()`. Currently has no effect.,</span>
+    <span class="s2">&quot;validation_func&quot;</span><span class="p">:</span> <span class="c1"># `validation_func` argument to `CleanLearning.fit()`. Currently has no effect.,</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<div class="admonition attention">
+<p class="admonition-title">Attention</p>
+<p><code class="docutils literal notranslate"><span class="pre">health_summary_parameters</span></code> and <code class="docutils literal notranslate"><span class="pre">health_summary_kwargs</span></code> can work in tandem to determine the arguments to be used in the call to <a class="reference internal" href="../../dataset.html#cleanlab.dataset.health_summary" title="cleanlab.dataset.health_summary"><code class="xref py py-meth docutils literal notranslate"><span class="pre">dataset.health_summary</span></code></a>.</p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>For more information, view the source code of:  <a class="reference internal" href="../internal/issue_manager/label.html#cleanlab.datalab.internal.issue_manager.label.LabelIssueManager" title="cleanlab.datalab.internal.issue_manager.label.LabelIssueManager"><code class="xref py py-class docutils literal notranslate"><span class="pre">datalab.internal.issue_manager.label.LabelIssueManager</span></code></a>.</p>
+</div>
+</section>
+<section id="outlier-issue-parameters">
+<h3>Outlier Issue Parameters<a class="headerlink" href="#outlier-issue-parameters" title="Permalink to this heading">#</a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">outlier_kwargs</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;threshold&quot;</span><span class="p">:</span> <span class="c1"># floating value between 0 and 1 that sets the sensitivity of the outlier detection algorithms, based on either features or pred_probs..</span>
+    <span class="s2">&quot;ood_kwargs&quot;</span><span class="p">:</span> <span class="c1"># dict of keyword arguments to constructor `OutOfDistribution()`{</span>
+            <span class="s2">&quot;params&quot;</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="c1"># NOTE: Each of the following keyword arguments can also be provided outside &quot;ood_kwargs&quot;</span>
+
+                    <span class="s2">&quot;knn&quot;</span><span class="p">:</span> <span class="c1"># `knn` argument to constructor `OutOfDistribution()`. Used with features,</span>
+                    <span class="s2">&quot;k&quot;</span><span class="p">:</span> <span class="c1"># `k` argument to constructor `OutOfDistribution()`. Used with features,</span>
+                    <span class="s2">&quot;t&quot;</span><span class="p">:</span> <span class="c1"># `t` argument to constructor `OutOfDistribution()`. Used with features,</span>
+                    <span class="s2">&quot;adjust_pred_probs&quot;</span><span class="p">:</span> <span class="c1"># `adjust_pred_probs` argument to constructor `OutOfDistribution()`. Used with pred_probs,</span>
+                    <span class="s2">&quot;method&quot;</span><span class="p">:</span> <span class="c1"># `method` argument to constructor `OutOfDistribution()`. Used with pred_probs,</span>
+                    <span class="s2">&quot;confident_thresholds&quot;</span><span class="p">:</span> <span class="c1"># `confident_thresholds` argument to constructor `OutOfDistribution()`. Used with pred_probs,</span>
+            <span class="p">},</span>
+    <span class="p">},</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>For more information, view the source code of:  <a class="reference internal" href="../internal/issue_manager/outlier.html#cleanlab.datalab.internal.issue_manager.outlier.OutlierIssueManager" title="cleanlab.datalab.internal.issue_manager.outlier.OutlierIssueManager"><code class="xref py py-class docutils literal notranslate"><span class="pre">datalab.internal.issue_manager.outlier.OutlierIssueManager</span></code></a>.</p>
+</div>
+</section>
+<section id="duplicate-issue-parameters">
+<h3>Duplicate Issue Parameters<a class="headerlink" href="#duplicate-issue-parameters" title="Permalink to this heading">#</a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">near_duplicate_kwargs</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;metric&quot;</span><span class="p">:</span> <span class="c1"># string representing the distance metric used in nearest neighbors search (passed as argument to `NearestNeighbors`), if necessary,</span>
+    <span class="s2">&quot;k&quot;</span><span class="p">:</span> <span class="c1"># integer representing the number of nearest neighbors for nearest neighbors search (passed as argument to `NearestNeighbors`), if necessary,</span>
+    <span class="s2">&quot;threshold&quot;</span><span class="p">:</span> <span class="c1"># `threshold` argument to constructor of `NearDuplicateIssueManager()`. Non-negative floating value that determines the maximum distance between two examples to be considered outliers, relative to the median distance to the nearest neighbors,</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<div class="admonition attention">
+<p class="admonition-title">Attention</p>
+<p><code class="xref py py-obj docutils literal notranslate"><span class="pre">k</span></code> does not affect the results of the (near) duplicate search algorithm. It only affects the construction of the knn graph, if necessary.</p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>For more information, view the source code of:  <a class="reference internal" href="../internal/issue_manager/duplicate.html#cleanlab.datalab.internal.issue_manager.duplicate.NearDuplicateIssueManager" title="cleanlab.datalab.internal.issue_manager.duplicate.NearDuplicateIssueManager"><code class="xref py py-class docutils literal notranslate"><span class="pre">datalab.internal.issue_manager.duplicate.NearDuplicateIssueManager</span></code></a>.</p>
+</div>
+</section>
+<section id="non-iid-issue-parameters">
+<h3>Non-IID Issue Parameters<a class="headerlink" href="#non-iid-issue-parameters" title="Permalink to this heading">#</a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">non_iid_kwargs</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;metric&quot;</span><span class="p">:</span> <span class="c1"># `metric` argument to constructor of `NonIIDIssueManager`. String for the distance metric used for nearest neighbors search if necessary. `metric` argument to constructor of `sklearn.neighbors.NearestNeighbors`,</span>
+    <span class="s2">&quot;k&quot;</span><span class="p">:</span> <span class="c1"># `k` argument to constructor of `NonIIDIssueManager`. Integer representing the number of nearest neighbors for nearest neighbors search if necessary. `n_neighbors` argument to constructor of `sklearn.neighbors.NearestNeighbors`,</span>
+    <span class="s2">&quot;num_permutations&quot;</span><span class="p">:</span> <span class="c1"># `num_permutations` argument to constructor of `NonIIDIssueManager`,</span>
+    <span class="s2">&quot;seed&quot;</span><span class="p">:</span> <span class="c1"># seed for numpy&#39;s random number generator (used for permutation tests),</span>
+    <span class="s2">&quot;significance_threshold&quot;</span><span class="p">:</span> <span class="c1"># `significance_threshold` argument to constructor of `NonIIDIssueManager`. Floating value between 0 and 1 that determines the overall signicance of non-IID issues found in the dataset.</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>For more information, view the source code of:  <a class="reference internal" href="../internal/issue_manager/noniid.html#cleanlab.datalab.internal.issue_manager.noniid.NonIIDIssueManager" title="cleanlab.datalab.internal.issue_manager.noniid.NonIIDIssueManager"><code class="xref py py-class docutils literal notranslate"><span class="pre">datalab.internal.issue_manager.noniid.NonIIDIssueManager</span></code></a>.</p>
+</div>
+</section>
+<section id="imbalance-issue-parameters">
+<h3>Imbalance Issue Parameters<a class="headerlink" href="#imbalance-issue-parameters" title="Permalink to this heading">#</a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">class_imbalance_kwargs</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;threshold&quot;</span><span class="p">:</span> <span class="c1"># `threshold` argument to constructor of `ClassImbalanceIssueManager`. Non-negative floating value between 0 and 1 indicating the minimum fraction of samples of each class that are present in a dataset without class imbalance.</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>For more information, view the source code of:  <a class="reference internal" href="../internal/issue_manager/imbalance.html#cleanlab.datalab.internal.issue_manager.imbalance.ClassImbalanceIssueManager" title="cleanlab.datalab.internal.issue_manager.imbalance.ClassImbalanceIssueManager"><code class="xref py py-class docutils literal notranslate"><span class="pre">datalab.internal.issue_manager.imbalance.ClassImbalanceIssueManager</span></code></a>.</p>
+</div>
+</section>
+<section id="underperforming-group-issue-parameters">
+<h3>Underperforming Group Issue Parameters<a class="headerlink" href="#underperforming-group-issue-parameters" title="Permalink to this heading">#</a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">underperforming_group_kwargs</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="c1"># Constructor arguments for `UnderperformingGroupIssueManager`</span>
+    <span class="s2">&quot;threshold&quot;</span><span class="p">:</span> <span class="c1"># Non-negative floating value between 0 and 1 used for determinining group of points with low confidence.</span>
+    <span class="s2">&quot;metric&quot;</span><span class="p">:</span> <span class="c1"># String for the distance metric used for nearest neighbors search if necessary. `metric` argument to constructor of `sklearn.neighbors.NearestNeighbors`.</span>
+    <span class="s2">&quot;k&quot;</span><span class="p">:</span> <span class="c1"># Integer representing the number of nearest neighbors for constructing the nearest neighbour graph. `n_neighbors` argument to constructor of `sklearn.neighbors.NearestNeighbors`.</span>
+    <span class="s2">&quot;min_cluster_samples&quot;</span><span class="p">:</span> <span class="c1"># Non-negative integer value specifying the minimum number of examples required for a cluster to be considered as the underperforming group. Used in `UnderperformingGroupIssueManager.filter_cluster_ids`.</span>
+    <span class="s2">&quot;clustering_kwargs&quot;</span><span class="p">:</span> <span class="c1"># Key-value pairs representing arguments for the constructor of the clustering algorithm class (e.g. `sklearn.cluster.DBSCAN`).</span>
+
+    <span class="c1"># Argument for the find_issues() method of UnderperformingGroupIssueManager</span>
+    <span class="s2">&quot;cluster_ids&quot;</span><span class="p">:</span> <span class="c1"># A 1-D numpy array containing cluster labels for each sample in the dataset. If passed, these cluster labels are used for determining the underperforming group.</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>For more information, view the source code of:  <a class="reference internal" href="../internal/issue_manager/underperforming_group.html#cleanlab.datalab.internal.issue_manager.underperforming_group.UnderperformingGroupIssueManager" title="cleanlab.datalab.internal.issue_manager.underperforming_group.UnderperformingGroupIssueManager"><code class="xref py py-class docutils literal notranslate"><span class="pre">datalab.internal.issue_manager.underperforming_group.UnderperformingGroupIssueManager</span></code></a>.</p>
+<p>For more information on generating <code class="xref py py-obj docutils literal notranslate"><span class="pre">cluster_ids</span></code> for this issue manager, refer to this <a class="reference external" href="../../../tutorials/faq.html#How-do-I-specify-pre-computed-data-slices/clusters-when-detecting-the-Underperforming-Group-Issue?">FAQ Section</a>.</p>
+</div>
+</section>
+<section id="null-issue-parameters">
+<h3>Null Issue Parameters<a class="headerlink" href="#null-issue-parameters" title="Permalink to this heading">#</a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">null_kwargs</span> <span class="o">=</span> <span class="p">{}</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>For more information, view the source code of:  <a class="reference internal" href="../internal/issue_manager/null.html#cleanlab.datalab.internal.issue_manager.null.NullIssueManager" title="cleanlab.datalab.internal.issue_manager.null.NullIssueManager"><code class="xref py py-class docutils literal notranslate"><span class="pre">datalab.internal.issue_manager.null.NullIssueManager</span></code></a>.</p>
+</div>
+</section>
+<section id="data-valuation-issue-parameters">
+<h3>Data Valuation Issue Parameters<a class="headerlink" href="#data-valuation-issue-parameters" title="Permalink to this heading">#</a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">data_valuation_kwargs</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;k&quot;</span><span class="p">:</span> <span class="c1"># Number of nearest neighbors used to calculate data valuation scores,</span>
+    <span class="s2">&quot;threshold&quot;</span><span class="p">:</span> <span class="c1"># Examples with scores below this  threshold will be flagged with a data valuation issue</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>For more information, view the source code of:  <a class="reference internal" href="../internal/issue_manager/data_valuation.html#cleanlab.datalab.internal.issue_manager.data_valuation.DataValuationIssueManager" title="cleanlab.datalab.internal.issue_manager.data_valuation.DataValuationIssueManager"><code class="xref py py-class docutils literal notranslate"><span class="pre">datalab.internal.issue_manager.data_valuation.DataValuationIssueManager</span></code></a>.</p>
+</div>
+</section>
+<section id="image-issue-parameters">
+<h3>Image Issue Parameters<a class="headerlink" href="#image-issue-parameters" title="Permalink to this heading">#</a></h3>
+<p>To customize optional parameters for specific image issue types, you can provide a dictionary format corresponding to each image issue. The following codeblock demonstrates how to specify optional parameters for all image issues. However, it’s important to note that providing optional parameters for specific image issues is not mandatory. If no specific parameters are provided, defaults will be used for those issues.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">image_issue_types_kwargs</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;dark&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;threshold&quot;</span><span class="p">:</span> <span class="mf">0.32</span><span class="p">},</span> <span class="c1"># `threshold` argument for dark issue type. Non-negative floating value between 0 and 1, lower value implies fewer samples will be marked as issue and vice versa.</span>
+    <span class="s2">&quot;light&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;threshold&quot;</span><span class="p">:</span> <span class="mf">0.05</span><span class="p">},</span> <span class="c1"># `threshold` argument for light issue type. Non-negative floating value between 0 and 1, lower value implies fewer samples will be marked as issue and vice versa.</span>
+    <span class="s2">&quot;blurry&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;threshold&quot;</span><span class="p">:</span> <span class="mf">0.29</span><span class="p">},</span> <span class="c1"># `threshold` argument for blurry issue type. Non-negative floating value between 0 and 1, lower value implies fewer samples will be marked as issue and vice versa.</span>
+    <span class="s2">&quot;low_information&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;threshold&quot;</span><span class="p">:</span> <span class="mf">0.3</span><span class="p">},</span> <span class="c1"># `threshold` argument for low_information issue type. Non-negative floating value between 0 and 1, lower value implies fewer samples will be marked as issue and vice versa.</span>
+    <span class="s2">&quot;odd_aspect_ratio&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;threshold&quot;</span><span class="p">:</span> <span class="mf">0.35</span><span class="p">},</span> <span class="c1"># `threshold` argument for odd_aspect_ratio issue type. Non-negative floating value between 0 and 1, lower value implies fewer samples will be marked as issue and vice versa.</span>
+    <span class="s2">&quot;odd_size&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;threshold&quot;</span><span class="p">:</span> <span class="mf">10.0</span><span class="p">},</span> <span class="c1"># `threshold` argument for odd_size issue type. Non-negative integer value between starting from 0, unlike other issues, here higher value implies fewer samples will be selected.</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>For more information, view the cleanvision <a class="reference external" href="https://cleanvision.readthedocs.io/en/latest/tutorials/tutorial.html#5.-Check-for-an-issue-with-a-different-threshold">docs</a>.</p>
+</div>
+</section>
+<section id="cleanlab-studio-easy-mode">
+<h3>Cleanlab Studio (Easy Mode)<a class="headerlink" href="#cleanlab-studio-easy-mode" title="Permalink to this heading">#</a></h3>
+<p><a class="reference external" href="https://cleanlab.ai/blog/data-centric-ai/">Cleanlab Studio</a> is a fully automated platform that can detect the same data issues as this package, as well as <a class="reference external" href="https://help.cleanlab.ai/guide/concepts/cleanlab_columns/">many more types of issues</a>, all without you having to do any Machine Learning (or even write any code). Beyond being 100x faster to use and producing more useful results, <a class="reference external" href="https://cleanlab.ai/blog/data-centric-ai/">Cleanlab Studio</a> also provides an intelligent data correction interface for you to quickly fix the issues detected in your dataset (a single data scientist can fix millions of data points thanks to AI suggestions).</p>
+<p><a class="reference external" href="https://cleanlab.ai/blog/data-centric-ai/">Cleanlab Studio</a> offers a powerful AutoML system (with Foundation models) that is useful for more than improving data quality. With a few clicks, you can: find + fix issues in your dataset, identify the best type of ML model and train/tune it, and deploy this model to serve accurate predictions for new data. Also use the same AutoML to auto-label large datasets (a single user can label millions of data points thanks to powerful Foundation models). <a class="reference external" href="https://cleanlab.ai/signup/">Try Cleanlab Studio for free!</a></p>
+<a class="reference internal image-reference" href="https://raw.githubusercontent.com/cleanlab/assets/master/cleanlab/ml-with-cleanlab-studio.png"><img alt="Stages of modern AI pipeline that can now be automated with Cleanlab Studio" src="https://raw.githubusercontent.com/cleanlab/assets/master/cleanlab/ml-with-cleanlab-studio.png" style="width: 800px;" /></a>
+</section>
+</section>
+</section>
+ 
+        </article>
+      </div>
+      <footer>
+         
+        <div class="related-pages">
+          <a class="next-page" href="../../../tutorials/indepth_overview.html">
+              <div class="page-info">
+                <div class="context">
+                  <span>Next</span>
+                </div>
+                <div class="title">The Workflows of Data-centric AI for Classification with Noisy Labels</div>
+              </div>
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+            </a>
+          <a class="prev-page" href="../../../tutorials/datalab/tabular.html">
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+              <div class="page-info">
+                <div class="context">
+                  <span>Previous</span>
+                </div>
+                
+                <div class="title">Detecting Issues in Tabular Data (Numeric/Categorical columns) with Datalab</div>
+                
+              </div>
+            </a>
+        </div>
+        <div class="bottom-of-page">
+          <div class="left-details">
+            <div class="copyright">
+                Copyright &#169; 2024, Cleanlab Inc.
+            </div>
+            Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
+            
+            <a href="https://github.com/pradyunsg/furo">Furo</a>
+            
+          </div>
+          <div class="right-details">
+            <div class="icons">
+              <a class="muted-link " href="https://github.com/cleanlab/cleanlab" aria-label="GitHub">
+                <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 16 16">
+                    <path fill-rule="evenodd" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0 0 16 8c0-4.42-3.58-8-8-8z"></path>
+                </svg>
+            </a>
+              
+            </div>
+          </div>
+        </div>
+        
+
+<script type="text/javascript">
+    window.addEventListener("load", () => {
+        let elements = document.getElementsByClassName("left-details");
+
+        elements[0].insertAdjacentHTML(
+            "afterbegin",
+            `<code class="docutils literal notranslate"><span class="pre">cleanlab</span></code> is distributed on <a href="https://pypi.org/project/cleanlab/">PyPI</a> and <a href="https://anaconda.org/conda-forge/cleanlab">conda</a>.`
+        );
+    });
+</script>
+
+
+      </footer>
+    </div>
+    <aside class="toc-drawer">
+      
+      
+      <div class="toc-sticky toc-scroll">
+        <div class="toc-title-container">
+          <span class="toc-title">
+            On this page
+          </span>
+        </div>
+        <div class="toc-tree-container">
+          <div class="toc-tree">
+            <ul>
+<li><a class="reference internal" href="#">Datalab Issue Types</a><ul>
+<li><a class="reference internal" href="#types-of-issues-datalab-can-detect">Types of issues Datalab can detect</a><ul>
+<li><a class="reference internal" href="#estimates-for-each-issue-type">Estimates for Each Issue Type</a></li>
+<li><a class="reference internal" href="#label-issue">Label Issue</a></li>
+<li><a class="reference internal" href="#outlier-issue">Outlier Issue</a></li>
+<li><a class="reference internal" href="#near-duplicate-issue">(Near) Duplicate Issue</a></li>
+<li><a class="reference internal" href="#non-iid-issue">Non-IID Issue</a></li>
+<li><a class="reference internal" href="#class-imbalance-issue">Class Imbalance Issue</a></li>
+<li><a class="reference internal" href="#image-specific-issues">Image-specific Issues</a></li>
+<li><a class="reference internal" href="#underperforming-group-issue">Underperforming Group Issue</a></li>
+<li><a class="reference internal" href="#null-issue">Null Issue</a></li>
+<li><a class="reference internal" href="#data-valuation-issue">Data Valuation Issue</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#optional-issue-parameters">Optional Issue Parameters</a><ul>
+<li><a class="reference internal" href="#label-issue-parameters">Label Issue Parameters</a></li>
+<li><a class="reference internal" href="#outlier-issue-parameters">Outlier Issue Parameters</a></li>
+<li><a class="reference internal" href="#duplicate-issue-parameters">Duplicate Issue Parameters</a></li>
+<li><a class="reference internal" href="#non-iid-issue-parameters">Non-IID Issue Parameters</a></li>
+<li><a class="reference internal" href="#imbalance-issue-parameters">Imbalance Issue Parameters</a></li>
+<li><a class="reference internal" href="#underperforming-group-issue-parameters">Underperforming Group Issue Parameters</a></li>
+<li><a class="reference internal" href="#null-issue-parameters">Null Issue Parameters</a></li>
+<li><a class="reference internal" href="#data-valuation-issue-parameters">Data Valuation Issue Parameters</a></li>
+<li><a class="reference internal" href="#image-issue-parameters">Image Issue Parameters</a></li>
+<li><a class="reference internal" href="#cleanlab-studio-easy-mode">Cleanlab Studio (Easy Mode)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+          </div>
+        </div>
+      </div>
+      
+      
+    </aside>
+  </div>
+</div><script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js?v=2b91c5f0"></script>
+    <script src="../../../_static/doctools.js?v=888ff710"></script>
+    <script src="../../../_static/sphinx_highlight.js?v=4825356b"></script>
+    <script src="../../../_static/scripts/furo.js?v=32e29ea5"></script>
+    <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../../../_static/copybutton.js?v=30646c52"></script>
+    <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@jupyter-widgets/html-manager@^1.0.1/dist/embed-amd.js"></script>
+    
+<script async defer src="https://buttons.github.io/buttons.js"></script>
+</body>
+</html>
