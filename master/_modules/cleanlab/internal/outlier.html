@@ -635,6 +635,10 @@
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="c1"># Map ood_features_scores to range 0-1 with 0 = most concerning</span>
     <span class="n">ood_features_scores</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span> <span class="o">*</span> <span class="n">avg_distances</span> <span class="o">/</span> <span class="n">scaling_factor</span> <span class="o">*</span> <span class="n">t</span><span class="p">)</span>
+
+    <span class="c1"># Set scores to 1 if the average distance is close to 0</span>
+    <span class="n">inds</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">isclose</span><span class="p">(</span><span class="n">avg_distances</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+    <span class="n">ood_features_scores</span><span class="p">[</span><span class="n">inds</span><span class="p">]</span> <span class="o">=</span> <span class="mf">1.0</span>
     <span class="k">return</span> <span class="n">ood_features_scores</span></div>
 </pre></div> 
         </article>
