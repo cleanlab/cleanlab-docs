@@ -1,0 +1,1491 @@
+<!doctype html>
+<html class="no-js" lang="en" data-content_root="">
+  <head><meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width,initial-scale=1"/>
+    <meta name="color-scheme" content="light dark"><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+        <script async src="https://www.googletagmanager.com/gtag/js?id=G-EV8RVEFX82"></script>
+        <script>
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            
+            gtag('config', 'G-EV8RVEFX82');
+            
+        </script>
+    <meta property="og:title" content="Find Noisy Labels in Regression Datasets" />
+<meta property="og:type" content="website" />
+<meta property="og:url" content="https://docs.cleanlab.ai/stable/tutorials/regression.html" />
+<meta property="og:site_name" content="cleanlab" />
+<meta property="og:description" content="This 5-minute quickstart tutorial uses cleanlab to find potentially incorrect numeric values in a dataset column by means of a regression model. Unlike classification models, regression predicts nu..." />
+<meta property="og:image" content="https://raw.githubusercontent.com/cleanlab/assets/master/cleanlab/clos-preview-card.png" />
+<meta property="og:image:alt" content="cleanlab" />
+<meta name="description" content="This 5-minute quickstart tutorial uses cleanlab to find potentially incorrect numeric values in a dataset column by means of a regression model. Unlike classification models, regression predicts nu..." />
+<link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="Find Label Errors in Token Classification (Text) Datasets" href="token_classification.html" /><link rel="prev" title="Find Label Errors in Multi-Label Classification Datasets" href="multilabel_classification.html" />
+
+    <link rel="shortcut icon" href="https://raw.githubusercontent.com/cleanlab/assets/a4483476d449f2f05a4c7cde329e72358099cc07/cleanlab/cleanlab_favicon.svg"/><!-- Generated with Sphinx 7.1.2 and Furo 2023.09.10 -->
+        <title>Find Noisy Labels in Regression Datasets - cleanlab</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=a746c00c" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?v=135e06be" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/tabs.css?v=a5c4661c" />
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/katex-math.css?v=91adb8b6" />
+    <link rel="stylesheet" type="text/css" href="../_static/nbsphinx-code-cells.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?v=36a5483c" />
+    <link rel="stylesheet" type="text/css" href="../_static/css/custom.css?v=96bccb3e" />
+    
+    
+
+
+<style>
+  body {
+    --color-code-background: #f8f8f8;
+  --color-code-foreground: black;
+  
+  }
+  @media not print {
+    body[data-theme="dark"] {
+      --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+    }
+    @media (prefers-color-scheme: dark) {
+      body:not([data-theme="light"]) {
+        --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+      }
+    }
+  }
+</style></head>
+  <body>
+    
+    <script>
+      document.body.dataset.theme = localStorage.getItem("theme") || "auto";
+    </script>
+    
+
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+  <symbol id="svg-toc" viewBox="0 0 24 24">
+    <title>Contents</title>
+    <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 1024 1024">
+      <path d="M408 442h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8zm-8 204c0 4.4 3.6 8 8 8h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56zm504-486H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zm0 632H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zM115.4 518.9L271.7 642c5.8 4.6 14.4.5 14.4-6.9V388.9c0-7.4-8.5-11.5-14.4-6.9L115.4 505.1a8.74 8.74 0 0 0 0 13.8z"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-menu" viewBox="0 0 24 24">
+    <title>Menu</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-menu">
+      <line x1="3" y1="12" x2="21" y2="12"></line>
+      <line x1="3" y1="6" x2="21" y2="6"></line>
+      <line x1="3" y1="18" x2="21" y2="18"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-arrow-right" viewBox="0 0 24 24">
+    <title>Expand</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-chevron-right">
+      <polyline points="9 18 15 12 9 6"></polyline>
+    </svg>
+  </symbol>
+  <symbol id="svg-sun" viewBox="0 0 24 24">
+    <title>Light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="feather-sun">
+      <circle cx="12" cy="12" r="5"></circle>
+      <line x1="12" y1="1" x2="12" y2="3"></line>
+      <line x1="12" y1="21" x2="12" y2="23"></line>
+      <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+      <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+      <line x1="1" y1="12" x2="3" y2="12"></line>
+      <line x1="21" y1="12" x2="23" y2="12"></line>
+      <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+      <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon" viewBox="0 0 24 24">
+    <title>Dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-moon">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454z" />
+    </svg>
+  </symbol>
+  <symbol id="svg-sun-half" viewBox="0 0 24 24">
+    <title>Auto light/dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-shadow">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+      <circle cx="12" cy="12" r="9" />
+      <path d="M13 12h5" />
+      <path d="M13 15h4" />
+      <path d="M13 18h1" />
+      <path d="M13 9h4" />
+      <path d="M13 6h1" />
+    </svg>
+  </symbol>
+</svg>
+
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation">
+<input type="checkbox" class="sidebar-toggle" name="__toc" id="__toc">
+<label class="overlay sidebar-overlay" for="__navigation">
+  <div class="visually-hidden">Hide navigation sidebar</div>
+</label>
+<label class="overlay toc-overlay" for="__toc">
+  <div class="visually-hidden">Hide table of contents sidebar</div>
+</label>
+
+
+
+<div class="page">
+  <header class="mobile-header">
+    <div class="header-left">
+      <label class="nav-overlay-icon" for="__navigation">
+        <div class="visually-hidden">Toggle site navigation sidebar</div>
+        <i class="icon"><svg><use href="#svg-menu"></use></svg></i>
+      </label>
+    </div>
+    <div class="header-center">
+      <a href="../index.html"><div class="brand">cleanlab</div></a>
+    </div>
+    <div class="header-right">
+      <div class="theme-toggle-container theme-toggle-header">
+        <button class="theme-toggle">
+          <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+          <svg class="theme-icon-when-auto"><use href="#svg-sun-half"></use></svg>
+          <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+          <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+        </button>
+      </div>
+      <label class="toc-overlay-icon toc-header-icon" for="__toc">
+        <div class="visually-hidden">Toggle table of contents sidebar</div>
+        <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+      </label>
+    </div>
+  </header>
+  <aside class="sidebar-drawer">
+    <div class="sidebar-container">
+      
+      <div class="sidebar-sticky"><a style="padding-bottom: 0px;" class="sidebar-brand" href="../index.html">
+    
+    <div class="sidebar-logo-container">
+        <img class="sidebar-logo" src="https://raw.githubusercontent.com/cleanlab/assets/master/cleanlab/cleanlab_logo_only.png" alt="Logo" />
+    </div>
+    
+    <span style="margin-bottom:0px" class="sidebar-brand-text">
+        cleanlab
+    </span>
+    
+</a>
+
+<div class="centered">
+    <a style="margin-top: 6px;" class="github-button" href="https://github.com/cleanlab/cleanlab" data-size="large" data-show-count="true"
+    aria-label="Star cleanlab/cleanlab on GitHub">Star</a>
+</div>
+<form class="sidebar-search-container" method="get" action="../search.html" role="search">
+  <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
+  <input type="hidden" name="check_keywords" value="yes">
+  <input type="hidden" name="area" value="default">
+</form>
+<div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
+  <ul>
+<li class="toctree-l1"><a class="reference internal" href="../index.html">Quickstart</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Tutorials</span></p>
+<ul class="current">
+<li class="toctree-l1 has-children"><a class="reference internal" href="datalab/index.html">Datalab Tutorials</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle navigation of Datalab Tutorials</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="datalab/datalab_quickstart.html">Detecting Common Data Issues with Datalab</a></li>
+<li class="toctree-l2"><a class="reference internal" href="datalab/datalab_advanced.html">Advanced Data Auditing with Datalab</a></li>
+<li class="toctree-l2"><a class="reference internal" href="datalab/text.html">Text Dataset</a></li>
+<li class="toctree-l2"><a class="reference internal" href="datalab/tabular.html">Tabular Data (Numeric/Categorical)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../cleanlab/datalab/guide/issue_type_description.html">Guide to Datalab Issue Types</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="indepth_overview.html">Workflows of Data-Centric AI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="image.html">Image Classification</a></li>
+<li class="toctree-l1"><a class="reference internal" href="text.html">Text Classification</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tabular.html">Tabular Classification</a></li>
+<li class="toctree-l1"><a class="reference internal" href="audio.html">Audio Classification</a></li>
+<li class="toctree-l1"><a class="reference internal" href="dataset_health.html">Find Dataset-level Issues</a></li>
+<li class="toctree-l1"><a class="reference internal" href="outliers.html">Identifying Outliers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="multiannotator.html">Improving Consensus Labels for Multiannotator Data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="multilabel_classification.html">Multi-Label Classification</a></li>
+<li class="toctree-l1 current current-page"><a class="current reference internal" href="#">Noisy Labels in Regression</a></li>
+<li class="toctree-l1"><a class="reference internal" href="token_classification.html">Token Classification (text)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="segmentation.html">Image Segmentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="object_detection.html">Object Detection</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pred_probs_cross_val.html">Predicted Probabilities via Cross Validation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="faq.html">FAQ</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API Reference</span></p>
+<ul>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../cleanlab/datalab/index.html">datalab</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><div class="visually-hidden">Toggle navigation of datalab</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../cleanlab/datalab/guide/index.html">Datalab guides</a><input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" role="switch" type="checkbox"/><label for="toctree-checkbox-3"><div class="visually-hidden">Toggle navigation of Datalab guides</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../cleanlab/datalab/guide/issue_type_description.html">Datalab Issue Types</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../cleanlab/datalab/guide/custom_issue_manager.html">Creating Your Own Issues Manager</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../cleanlab/datalab/datalab.html">datalab</a></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../cleanlab/datalab/internal/index.html">internal</a><input class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" role="switch" type="checkbox"/><label for="toctree-checkbox-4"><div class="visually-hidden">Toggle navigation of internal</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../cleanlab/datalab/internal/data.html">data</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../cleanlab/datalab/internal/data_issues.html">data_issues</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../cleanlab/datalab/internal/issue_finder.html">issue_finder</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../cleanlab/datalab/internal/factory.html">factory</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../cleanlab/datalab/internal/model_outputs.html">model_outputs</a></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../cleanlab/datalab/internal/issue_manager/index.html">issue_manager</a><input class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" role="switch" type="checkbox"/><label for="toctree-checkbox-5"><div class="visually-hidden">Toggle navigation of issue_manager</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="../cleanlab/datalab/internal/issue_manager/issue_manager.html">Base issue_manager module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../cleanlab/datalab/internal/issue_manager/label.html">label</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../cleanlab/datalab/internal/issue_manager/outlier.html">outlier</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../cleanlab/datalab/internal/issue_manager/duplicate.html">duplicate</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../cleanlab/datalab/internal/issue_manager/noniid.html">noniid</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../cleanlab/datalab/internal/issue_manager/imbalance.html">imbalance</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../cleanlab/datalab/internal/issue_manager/underperforming_group.html">underperforming_group</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../cleanlab/datalab/internal/issue_manager/null.html">null</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../cleanlab/datalab/internal/issue_manager/data_valuation.html">data_valuation</a></li>
+<li class="toctree-l4 has-children"><a class="reference internal" href="../cleanlab/datalab/internal/issue_manager/regression/index.html">regression</a><input class="toctree-checkbox" id="toctree-checkbox-6" name="toctree-checkbox-6" role="switch" type="checkbox"/><label for="toctree-checkbox-6"><div class="visually-hidden">Toggle navigation of regression</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l5"><a class="reference internal" href="../cleanlab/datalab/internal/issue_manager/regression/label.html">label</a></li>
+</ul>
+</li>
+<li class="toctree-l4 has-children"><a class="reference internal" href="../cleanlab/datalab/internal/issue_manager/multilabel/index.html">multilabel</a><input class="toctree-checkbox" id="toctree-checkbox-7" name="toctree-checkbox-7" role="switch" type="checkbox"/><label for="toctree-checkbox-7"><div class="visually-hidden">Toggle navigation of multilabel</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l5"><a class="reference internal" href="../cleanlab/datalab/internal/issue_manager/multilabel/label.html">label</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../cleanlab/datalab/internal/report.html">report</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../cleanlab/datalab/internal/task.html">task</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../cleanlab/classification.html">classification</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cleanlab/filter.html">filter</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cleanlab/rank.html">rank</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cleanlab/count.html">count</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cleanlab/dataset.html">dataset</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cleanlab/outlier.html">outlier</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cleanlab/multiannotator.html">multiannotator</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../cleanlab/multilabel_classification/index.html">multilabel_classification</a><input class="toctree-checkbox" id="toctree-checkbox-8" name="toctree-checkbox-8" role="switch" type="checkbox"/><label for="toctree-checkbox-8"><div class="visually-hidden">Toggle navigation of multilabel_classification</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../cleanlab/multilabel_classification/filter.html">filter</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../cleanlab/multilabel_classification/rank.html">rank</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../cleanlab/multilabel_classification/dataset.html">dataset</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../cleanlab/regression/index.html">regression</a><input class="toctree-checkbox" id="toctree-checkbox-9" name="toctree-checkbox-9" role="switch" type="checkbox"/><label for="toctree-checkbox-9"><div class="visually-hidden">Toggle navigation of regression</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../cleanlab/regression/rank.html">regression.rank</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../cleanlab/regression/learn.html">regression.learn</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../cleanlab/token_classification/index.html">token_classification</a><input class="toctree-checkbox" id="toctree-checkbox-10" name="toctree-checkbox-10" role="switch" type="checkbox"/><label for="toctree-checkbox-10"><div class="visually-hidden">Toggle navigation of token_classification</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../cleanlab/token_classification/filter.html">filter</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../cleanlab/token_classification/rank.html">rank</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../cleanlab/token_classification/summary.html">summary</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../cleanlab/segmentation/index.html">segmentation</a><input class="toctree-checkbox" id="toctree-checkbox-11" name="toctree-checkbox-11" role="switch" type="checkbox"/><label for="toctree-checkbox-11"><div class="visually-hidden">Toggle navigation of segmentation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../cleanlab/segmentation/rank.html">rank</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../cleanlab/segmentation/filter.html">filter</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../cleanlab/segmentation/summary.html">summary</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../cleanlab/object_detection/index.html">object_detection</a><input class="toctree-checkbox" id="toctree-checkbox-12" name="toctree-checkbox-12" role="switch" type="checkbox"/><label for="toctree-checkbox-12"><div class="visually-hidden">Toggle navigation of object_detection</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../cleanlab/object_detection/rank.html">rank</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../cleanlab/object_detection/filter.html">filter</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../cleanlab/object_detection/summary.html">summary</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../cleanlab/benchmarking/index.html">benchmarking</a><input class="toctree-checkbox" id="toctree-checkbox-13" name="toctree-checkbox-13" role="switch" type="checkbox"/><label for="toctree-checkbox-13"><div class="visually-hidden">Toggle navigation of benchmarking</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../cleanlab/benchmarking/noise_generation.html">noise_generation</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../cleanlab/models/index.html">models</a><input class="toctree-checkbox" id="toctree-checkbox-14" name="toctree-checkbox-14" role="switch" type="checkbox"/><label for="toctree-checkbox-14"><div class="visually-hidden">Toggle navigation of models</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../cleanlab/models/keras.html">keras</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../cleanlab/models/fasttext.html">fasttext</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../cleanlab/experimental/index.html">experimental</a><input class="toctree-checkbox" id="toctree-checkbox-15" name="toctree-checkbox-15" role="switch" type="checkbox"/><label for="toctree-checkbox-15"><div class="visually-hidden">Toggle navigation of experimental</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../cleanlab/experimental/label_issues_batched.html">label_issues_batched</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../cleanlab/experimental/span_classification.html">span_classification</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../cleanlab/experimental/mnist_pytorch.html">mnist_pytorch</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../cleanlab/experimental/coteaching.html">coteaching</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../cleanlab/experimental/cifar_cnn.html">cifar_cnn</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../cleanlab/internal/index.html">internal</a><input class="toctree-checkbox" id="toctree-checkbox-16" name="toctree-checkbox-16" role="switch" type="checkbox"/><label for="toctree-checkbox-16"><div class="visually-hidden">Toggle navigation of internal</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../cleanlab/internal/util.html">util</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../cleanlab/internal/latent_algebra.html">latent_algebra</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../cleanlab/internal/label_quality_utils.html">label_quality_utils</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../cleanlab/internal/multilabel_utils.html">multilabel_utils</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../cleanlab/internal/multilabel_scorer.html">multilabel_scorer</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../cleanlab/internal/outlier.html">outlier</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../cleanlab/internal/token_classification_utils.html">token_classification_utils</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../cleanlab/internal/validation.html">validation</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Guides</span></p>
+<ul>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../cleanlab/datalab/guide/index.html">Datalab issue types</a><input class="toctree-checkbox" id="toctree-checkbox-17" name="toctree-checkbox-17" role="switch" type="checkbox"/><label for="toctree-checkbox-17"><div class="visually-hidden">Toggle navigation of Datalab issue types</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../cleanlab/datalab/guide/issue_type_description.html">Datalab Issue Types</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../cleanlab/datalab/guide/custom_issue_manager.html">Creating Your Own Issues Manager</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/cleanlab/cleanlab/blob/master/CONTRIBUTING.md">How to contribute</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Links</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference external" href="https://cleanlab.ai">Website</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/cleanlab/cleanlab">GitHub</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://pypi.org/project/cleanlab/">PyPI</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://anaconda.org/conda-forge/cleanlab">Conda</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://cleanlab.ai/slack">Community Discussions</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://cleanlab.ai/blog/">Blog</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://www.youtube.com/@CleanlabAI/playlists">Videos</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://cleanlab.ai/blog/data-centric-ai/">Cleanlab Studio (Easy Mode)</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://help.cleanlab.ai">Cleanlab Studio Docs</a></li>
+</ul>
+
+</div>
+
+
+<!-- Start of versioning -->
+
+<div class="sidebar-tree">
+    <p class="caption" role="heading">
+        <span class="caption-text">Versions</span>
+    </p>
+    <ul>
+        <li class="toctree-l1">
+            <a
+                id="version_number"
+                class="reference internal"
+                href="/"
+                >stable</a
+            >
+        </li>
+        <li class="toctree-l1">
+            <a
+                id="commit_hash"
+                class="reference internal"
+                href="/master/"
+                >developer</a
+            >
+        </li>
+        
+        <li class="toctree-l1">
+            <a
+                id="v2.6.3"
+                class="reference internal"
+                href="/v2.6.3/"
+                >v2.6.3</a
+            >
+        </li>
+        
+        <li class="toctree-l1">
+            <a
+                id="v2.6.2"
+                class="reference internal"
+                href="/v2.6.2/"
+                >v2.6.2</a
+            >
+        </li>
+        
+        <li class="toctree-l1">
+            <a
+                id="v2.6.1"
+                class="reference internal"
+                href="/v2.6.1/"
+                >v2.6.1</a
+            >
+        </li>
+        
+        <li class="toctree-l1">
+            <a
+                id="v2.6.0"
+                class="reference internal"
+                href="/v2.6.0/"
+                >v2.6.0</a
+            >
+        </li>
+        
+        <li class="toctree-l1">
+            <a
+                id="v2.5.0"
+                class="reference internal"
+                href="/v2.5.0/"
+                >v2.5.0</a
+            >
+        </li>
+        
+        <li class="toctree-l1">
+            <a
+                id="v2.4.0"
+                class="reference internal"
+                href="/v2.4.0/"
+                >v2.4.0</a
+            >
+        </li>
+        
+        <li class="toctree-l1">
+            <a
+                id="v2.3.1"
+                class="reference internal"
+                href="/v2.3.1/"
+                >v2.3.1</a
+            >
+        </li>
+        
+        <li class="toctree-l1">
+            <a
+                id="v2.3.0"
+                class="reference internal"
+                href="/v2.3.0/"
+                >v2.3.0</a
+            >
+        </li>
+        
+        <li class="toctree-l1">
+            <a
+                id="v2.2.0"
+                class="reference internal"
+                href="/v2.2.0/"
+                >v2.2.0</a
+            >
+        </li>
+        
+        <li class="toctree-l1">
+            <a
+                id="v2.1.0"
+                class="reference internal"
+                href="/v2.1.0/"
+                >v2.1.0</a
+            >
+        </li>
+        
+        <li class="toctree-l1">
+            <a
+                id="v2.0.0"
+                class="reference internal"
+                href="/v2.0.0/"
+                >v2.0.0</a
+            >
+        </li>
+        
+        <li class="toctree-l1">
+            <a
+                id="v1.0.1"
+                class="reference internal"
+                href="/v1.0.1/"
+                >v1.0.1</a
+            >
+        </li>
+        
+    </ul>
+</div>
+
+<br>
+<br>
+
+<script
+    type="text/javascript"
+    src="/versioning.js"
+></script>
+
+<script type="text/javascript">
+    window.addEventListener("load", () => {
+        const version_number = Version.version_number;
+        const commit_hash = Version.commit_hash;
+
+        document.getElementById("version_number").innerHTML =
+            "stable <code class='docutils literal notranslate'><span class='pre'> (" +
+            version_number +
+            ")</span></code>";
+        document.getElementById("commit_hash").innerHTML =
+            "master <code class='docutils literal notranslate'><span class='pre'> (" +
+            commit_hash.slice(0, 7) +
+            "&hellip;)</span></code>";
+    });
+</script>
+
+<!-- End of versioning -->
+
+</div>
+      </div>
+      
+    </div>
+  </aside>
+  <div class="main">
+    <div class="content">
+      <div class="article-container">
+        <a href="#" class="back-to-top muted-link">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12z"></path>
+          </svg>
+          <span>Back to top</span>
+        </a>
+        <div class="content-icon-container">
+          
+<div class="theme-toggle-container theme-toggle-content">
+            <button class="theme-toggle">
+              <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+              <svg class="theme-icon-when-auto"><use href="#svg-sun-half"></use></svg>
+              <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+              <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+            </button>
+          </div>
+          <label class="toc-overlay-icon toc-content-icon" for="__toc">
+            <div class="visually-hidden">Toggle table of contents sidebar</div>
+            <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+          </label>
+        </div>
+        <article role="main">
+          
+
+<noscript>
+  <div class="admonition warning">
+    <p class="admonition-title">Warning</p>
+    <p>Parts of this site uses JavaScript, but your browser does not support it.</p>
+  </div>
+</noscript>
+
+
+
+<!-- Start of Version Warning Banner -->
+
+<p id="doc_ver_warning"></p>
+
+<script
+    type="text/javascript"
+    src="/versioning.js"
+></script>
+<script type="text/javascript">
+    window.addEventListener("load", () => {
+        const version_number = Version.version_number;
+        const path_arr = window.location.pathname.split("/");
+
+        if (path_arr.includes("master")) {
+            document.getElementById("doc_ver_warning").innerHTML =
+            `<div class="admonition warning">
+            <p class="admonition-title">Warning</p>
+            <p>This version of the documentation corresponds to the master branch of <code class="docutils literal notranslate"><span class="pre">cleanlab</span></code> source code from <a href="https://github.com/cleanlab/cleanlab/">GitHub</a>. To see the documentation for the latest <code class="docutils literal notranslate"><span class="pre">pip</span></code>-installed version, click <a href="/">here</a>.</p>
+            </div>`;
+        } else if (!path_arr.includes(version_number) && !path_arr.includes("stable")) {
+            document.getElementById("doc_ver_warning").innerHTML =
+            `<div class="admonition warning">
+            <p class="admonition-title">Warning</p>
+            <p>This documentation is for an old version (<code class="docutils literal notranslate"><span class="pre">v2.6.3</span></code>) of <code class="docutils literal notranslate"><span class="pre">cleanlab</span></code>. To see the documentation for the latest stable version (<code class="docutils literal notranslate"><span class="pre">` + version_number + `</span></code>), click <a href="/">here</a>.</p>
+            </div>`;
+        } else {
+            document.getElementById("doc_ver_warning").remove();
+        }
+    });
+</script>
+
+<!-- End of Version Warning Banner -->
+
+ <style>
+    .nbinput .prompt,
+    .nboutput .prompt {
+        display: none;
+    }
+
+    .output_area {
+        max-height: 300px;
+        overflow: auto;
+    }
+
+    .dataframe {
+        background: #D7D7D7;
+    }
+
+    th {
+        color:black;
+    }
+</style>
+
+<script type="text/javascript">
+    window.addEventListener('load', () => {
+        const h1_element = document.getElementsByTagName("h1");
+        h1_element[0].insertAdjacentHTML("afterend", `
+        <p>
+            <a style="background-color:white;color:black;padding:4px 12px;text-decoration:none;display:inline-block;border-radius:8px;box-shadow:0 2px 4px 0 rgba(0, 0, 0, 0.2), 0 3px 10px 0 rgba(0, 0, 0, 0.19)" href="https://colab.research.google.com/github/cleanlab/cleanlab-docs/blob/master/v2.6.3/tutorials/regression.ipynb" target="_blank">
+            <img src="https://colab.research.google.com/img/colab_favicon_256px.png" alt="" style="width:40px;height:40px;vertical-align:middle">
+            <span style="vertical-align:middle">Run in Google Colab</span>
+            </a>
+        </p>
+        `);
+    })
+
+</script><section id="Find-Noisy-Labels-in-Regression-Datasets">
+<h1>Find Noisy Labels in Regression Datasets<a class="headerlink" href="#Find-Noisy-Labels-in-Regression-Datasets" title="Permalink to this heading">#</a></h1>
+<p>This 5-minute quickstart tutorial uses cleanlab to find potentially incorrect numeric values in a dataset column by means of a regression model. Unlike classification models, regression predicts numeric quantities such as price, income, age,… Response values in regression datasets may be corrupted due to: data entry or measurement errors, noise from sensors or other processes, or broken data pipelines. To find corrupted values in a numeric column, we treat it as the target value, i.e. label,
+to be predicted by a regression model and then use cleanlab to decide when the model predictions are trustworthy while deviating from the observed label value.</p>
+<p>In this tutorial, we consider a student grades dataset, which records three exam grades and some optional notes for over 900 students, each being assigned a final score. Combined with any regression model of your choosing, cleanlab automatically identifies examples in this dataset that have incorrect final scores.</p>
+<p><strong>Overview of what we’ll do in this tutorial:</strong></p>
+<ul class="simple">
+<li><p>Fit a simple Gradient Boosting model (any other model could be used) on the exam-score and notes (covariates) in order to compute out-of-sample predictions of the final grade (the response variable in our regression).</p></li>
+<li><p>Use cleanlab’s <code class="docutils literal notranslate"><span class="pre">CleanLearning.find_label_issues()</span></code> method to identify potentially incorrect final grade values based on outputs from this regression model.</p></li>
+<li><p>Train a more robust version of the same model after dropping the identified label errors using CleanLearning.</p></li>
+<li><p>Run an alternative workflow to detect errors via cleanlab’s <code class="docutils literal notranslate"><span class="pre">Datalab</span></code> audit, which can simultaneously estimate <strong>many other types of data issues</strong>.</p></li>
+</ul>
+<div class="admonition note">
+<p class="admonition-title">Quickstart</p>
+<p>Already have an sklearn-compatible regression <code class="docutils literal notranslate"><span class="pre">model</span></code>, features/covariates <code class="docutils literal notranslate"><span class="pre">X</span></code>, and a label/target variable <code class="docutils literal notranslate"><span class="pre">y</span></code>? Run the code below to train your <code class="docutils literal notranslate"><span class="pre">model</span></code> and identify potentially incorrect <code class="docutils literal notranslate"><span class="pre">y</span></code> values in your dataset.</p>
+<div class="markdown" style="background:white;margin:16px"><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">cleanlab.regression.learn</span> <span class="kn">import</span> <span class="n">CleanLearning</span>
+
+<span class="n">cl</span> <span class="o">=</span> <span class="n">CleanLearning</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
+<span class="n">cl</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+<span class="n">label_issues</span> <span class="o">=</span> <span class="n">cl</span><span class="o">.</span><span class="n">get_label_issues</span><span class="p">()</span>
+<span class="n">preds</span> <span class="o">=</span> <span class="n">cl</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_test</span><span class="p">)</span>  <span class="c1"># predictions from a version of your model trained on auto-cleaned data</span>
+</pre></div>
+</div>
+</div>
+<p>Is your model/data not compatible with <code class="docutils literal notranslate"><span class="pre">CleanLearning</span></code>? You can instead run cross-validation on your model to get out-of-sample <code class="docutils literal notranslate"><span class="pre">predictions</span></code>. With that, run the code below to find data and label issues in your regression dataset:</p>
+<div class="markdown" style="background:white;margin:16px"><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">cleanlab</span> <span class="kn">import</span> <span class="n">Datalab</span>
+
+<span class="c1"># Assuming your dataset has a label column named &#39;label&#39;</span>
+<span class="n">lab</span> <span class="o">=</span> <span class="n">Datalab</span><span class="p">(</span><span class="n">dataset</span><span class="p">,</span> <span class="n">label_name</span><span class="o">=</span><span class="s1">&#39;label&#39;</span><span class="p">,</span> <span class="n">task</span><span class="o">=</span><span class="s1">&#39;regression&#39;</span><span class="p">)</span>
+<span class="c1"># To detect more data issue types, optionally supply `features` (numeric dataset values or model embeddings of the data)</span>
+<span class="n">lab</span><span class="o">.</span><span class="n">find_issues</span><span class="p">(</span><span class="n">pred_probs</span><span class="o">=</span><span class="n">predictions</span><span class="p">,</span> <span class="n">features</span><span class="o">=</span><span class="n">features</span><span class="p">)</span>
+
+<span class="n">lab</span><span class="o">.</span><span class="n">report</span><span class="p">()</span>
+</pre></div>
+</div>
+</div></div><section id="1.-Install-required-dependencies">
+<h2>1. Install required dependencies<a class="headerlink" href="#1.-Install-required-dependencies" title="Permalink to this heading">#</a></h2>
+<p>You can use <code class="docutils literal notranslate"><span class="pre">pip</span></code> to install all packages required for this tutorial as follows:</p>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">!</span>pip<span class="w"> </span>install<span class="w"> </span>scikit-learn<span class="w"> </span>matplotlib&gt;<span class="o">=</span><span class="m">3</span>.6.0
+<span class="o">!</span>pip<span class="w"> </span>install<span class="w"> </span>cleanlab<span class="o">[</span>datalab<span class="o">]</span>
+<span class="c1"># Make sure to install the version corresponding to this tutorial</span>
+<span class="c1"># E.g. if viewing master branch documentation:</span>
+<span class="c1">#     !pip install git+https://github.com/cleanlab/cleanlab.git</span>
+</pre></div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">from</span> <span class="nn">sklearn.ensemble</span> <span class="kn">import</span> <span class="n">HistGradientBoostingRegressor</span>
+<span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="kn">import</span> <span class="n">cross_val_predict</span>
+<span class="kn">from</span> <span class="nn">sklearn.metrics</span> <span class="kn">import</span> <span class="n">r2_score</span>
+
+<span class="kn">from</span> <span class="nn">cleanlab.regression.learn</span> <span class="kn">import</span> <span class="n">CleanLearning</span>
+</pre></div>
+</div>
+</div>
+</section>
+<section id="2.-Load-and-process-the-data">
+<h2>2. Load and process the data<a class="headerlink" href="#2.-Load-and-process-the-data" title="Permalink to this heading">#</a></h2>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">train_data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">&quot;https://s.cleanlab.ai/student_grades_r/train.csv&quot;</span><span class="p">)</span>
+<span class="n">test_data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">&quot;https://s.cleanlab.ai/student_grades_r/test.csv&quot;</span><span class="p">)</span>
+<span class="n">train_data</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
+</pre></div>
+</div>
+<div class="output_area rendered_html docutils container">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>exam_1</th>
+      <th>exam_2</th>
+      <th>exam_3</th>
+      <th>notes</th>
+      <th>final_score</th>
+      <th>true_final_score</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>72</td>
+      <td>81</td>
+      <td>80</td>
+      <td>NaN</td>
+      <td>73.3</td>
+      <td>73.3</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>89</td>
+      <td>62</td>
+      <td>93</td>
+      <td>NaN</td>
+      <td>83.8</td>
+      <td>83.8</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>97</td>
+      <td>0</td>
+      <td>94</td>
+      <td>NaN</td>
+      <td>73.5</td>
+      <td>73.5</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>80</td>
+      <td>76</td>
+      <td>96</td>
+      <td>missed class frequently -10</td>
+      <td>78.6</td>
+      <td>78.6</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>67</td>
+      <td>87</td>
+      <td>95</td>
+      <td>missed homework frequently -10</td>
+      <td>74.1</td>
+      <td>74.1</td>
+    </tr>
+  </tbody>
+</table>
+</div></div>
+</div>
+<p>In the DataFrame above, <code class="docutils literal notranslate"><span class="pre">final_score</span></code> represents the noisy scores and <code class="docutils literal notranslate"><span class="pre">true_final_score</span></code> represents the ground truth. Note that ground truth is usually not available in real-world datasets, and is just added in this tutorial dataset for demonstration purposes.</p>
+<p>We show a 3D scatter plot of the exam grades, with the color hue corresponding to the final score for each student. Incorrect datapoints are marked with an <strong>X</strong>.</p>
+<details><summary><p>See the code to visualize the data. <strong>(click to expand)</strong></p>
+</summary><div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Note: This pulldown content is for docs.cleanlab.ai, if running on local Jupyter or Colab, please ignore it.</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">from</span> <span class="nn">mpl_toolkits.mplot3d</span> <span class="kn">import</span> <span class="n">Axes3D</span>
+
+<span class="k">def</span> <span class="nf">plot_data</span><span class="p">(</span><span class="n">train_data</span><span class="p">,</span> <span class="n">errors_idx</span><span class="p">):</span>
+    <span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
+    <span class="n">ax</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">111</span><span class="p">,</span> <span class="n">projection</span><span class="o">=</span><span class="s1">&#39;3d&#39;</span><span class="p">)</span>
+
+    <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span> <span class="o">=</span> <span class="n">train_data</span><span class="p">[</span><span class="s2">&quot;exam_1&quot;</span><span class="p">],</span> <span class="n">train_data</span><span class="p">[</span><span class="s2">&quot;exam_2&quot;</span><span class="p">],</span> <span class="n">train_data</span><span class="p">[</span><span class="s2">&quot;exam_3&quot;</span><span class="p">]</span>
+    <span class="n">labels</span> <span class="o">=</span> <span class="n">train_data</span><span class="p">[</span><span class="s2">&quot;final_score&quot;</span><span class="p">]</span>
+
+    <span class="n">img</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="n">labels</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s2">&quot;jet&quot;</span><span class="p">)</span>
+    <span class="n">fig</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">img</span><span class="p">)</span>
+
+    <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
+        <span class="n">x</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">errors_idx</span><span class="p">],</span>
+        <span class="n">y</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">errors_idx</span><span class="p">],</span>
+        <span class="n">z</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">errors_idx</span><span class="p">],</span>
+        <span class="s2">&quot;x&quot;</span><span class="p">,</span>
+        <span class="n">markeredgecolor</span><span class="o">=</span><span class="s2">&quot;black&quot;</span><span class="p">,</span>
+        <span class="n">markersize</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
+        <span class="n">markeredgewidth</span><span class="o">=</span><span class="mf">2.5</span><span class="p">,</span>
+        <span class="n">alpha</span><span class="o">=</span><span class="mf">0.8</span><span class="p">,</span>
+        <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Label Errors&quot;</span>
+    <span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+</pre></div>
+</div>
+</details><div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">errors_mask</span> <span class="o">=</span> <span class="n">train_data</span><span class="p">[</span><span class="s2">&quot;final_score&quot;</span><span class="p">]</span> <span class="o">!=</span> <span class="n">train_data</span><span class="p">[</span><span class="s2">&quot;true_final_score&quot;</span><span class="p">]</span>
+<span class="n">errors_idx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">errors_mask</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)</span>
+
+<span class="n">plot_data</span><span class="p">(</span><span class="n">train_data</span><span class="p">,</span> <span class="n">errors_idx</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/tutorials_regression_14_0.png" src="../_images/tutorials_regression_14_0.png" />
+</div>
+</div>
+<p>Next we preprocess the data by applying one-hot encoding to features with categorical data (this is optional if your regression model can work directly with categorical features).</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">feature_columns</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;exam_1&quot;</span><span class="p">,</span> <span class="s2">&quot;exam_2&quot;</span><span class="p">,</span> <span class="s2">&quot;exam_3&quot;</span><span class="p">,</span> <span class="s2">&quot;notes&quot;</span><span class="p">]</span>
+<span class="n">predicted_column</span> <span class="o">=</span> <span class="s2">&quot;final_score&quot;</span>
+
+<span class="n">X_train_raw</span><span class="p">,</span> <span class="n">y_train</span> <span class="o">=</span> <span class="n">train_data</span><span class="p">[</span><span class="n">feature_columns</span><span class="p">],</span> <span class="n">train_data</span><span class="p">[</span><span class="n">predicted_column</span><span class="p">]</span>
+<span class="n">X_test_raw</span><span class="p">,</span> <span class="n">y_test</span> <span class="o">=</span> <span class="n">test_data</span><span class="p">[</span><span class="n">feature_columns</span><span class="p">],</span> <span class="n">test_data</span><span class="p">[</span><span class="n">predicted_column</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">categorical_features</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;notes&quot;</span><span class="p">]</span>
+<span class="n">X_train</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">get_dummies</span><span class="p">(</span><span class="n">X_train_raw</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="n">categorical_features</span><span class="p">)</span>
+<span class="n">X_test</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">get_dummies</span><span class="p">(</span><span class="n">X_test_raw</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="n">categorical_features</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Bringing Your Own Data (BYOD)?</p>
+<p>Assign your data’s features to variable <code class="docutils literal notranslate"><span class="pre">X</span></code> and the target values to variable <code class="docutils literal notranslate"><span class="pre">y</span></code> instead, then continue with the rest of the tutorial.</p>
+</div>
+</section>
+<section id="3.-Define-a-regression-model-and-use-cleanlab-to-find-potential-label-errors">
+<h2>3. Define a regression model and use cleanlab to find potential label errors<a class="headerlink" href="#3.-Define-a-regression-model-and-use-cleanlab-to-find-potential-label-errors" title="Permalink to this heading">#</a></h2>
+<p>We’ll first demonstrate regression with noisy labels via the <code class="docutils literal notranslate"><span class="pre">CleanLearning</span></code> class that can wrap any scikit-learn compatible regression model you have. <code class="docutils literal notranslate"><span class="pre">CleanLearning</span></code> uses your model to estimate label issues (i.e. noisy <code class="docutils literal notranslate"><span class="pre">y</span></code>-values) and train a more robust version of the same model when the original data contains noisy labels.</p>
+<p>Here we define a <code class="docutils literal notranslate"><span class="pre">CleanLearning</span></code> object with a histogram-based gradient boosting model (sklearn version of XGBoost) and use the <code class="docutils literal notranslate"><span class="pre">find_label_issues</span></code> method to find potential errors in our dataset’s numeric label column. Any other sklearn-compatible regression model could be used, such as <code class="docutils literal notranslate"><span class="pre">LinearRegression</span></code> or <code class="docutils literal notranslate"><span class="pre">RandomForestRegressor</span></code> (or you can easily wrap arbitrary custom models to be compatible with the sklearn API).</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">model</span> <span class="o">=</span> <span class="n">HistGradientBoostingRegressor</span><span class="p">()</span>
+<span class="n">cl</span> <span class="o">=</span> <span class="n">CleanLearning</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">label_issues</span> <span class="o">=</span> <span class="n">cl</span><span class="o">.</span><span class="n">find_label_issues</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">CleanLearning</span></code> internally fits multiple copies of our regression model via cross-validation and bootstrapping in order to compute predictions and uncertainty estimates for the dataset. These are used to identify label issues (i.e. likely corrupted <code class="docutils literal notranslate"><span class="pre">y</span></code>-values).</p>
+<p>This method returns a Dataframe containing a label quality score (between 0 and 1) for each example in your dataset. Lower scores indicate examples more likely to be mislabeled with an erroneous <code class="docutils literal notranslate"><span class="pre">y</span></code> value. The Dataframe also contains a boolean column specifying whether or not each example is identified to have a label issue (indicating its <code class="docutils literal notranslate"><span class="pre">y</span></code>-value appears potentially corrupted).</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">label_issues</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
+</pre></div>
+</div>
+<div class="output_area rendered_html docutils container">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>is_label_issue</th>
+      <th>label_quality</th>
+      <th>given_label</th>
+      <th>predicted_label</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>False</td>
+      <td>0.385101</td>
+      <td>73.3</td>
+      <td>76.499503</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>False</td>
+      <td>0.698255</td>
+      <td>83.8</td>
+      <td>82.776647</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>True</td>
+      <td>0.109373</td>
+      <td>73.5</td>
+      <td>63.170547</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>False</td>
+      <td>0.481096</td>
+      <td>78.6</td>
+      <td>75.984759</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>False</td>
+      <td>0.645270</td>
+      <td>74.1</td>
+      <td>75.795928</td>
+    </tr>
+  </tbody>
+</table>
+</div></div>
+</div>
+<p>We can get the subset of examples flagged with label issues, and also sort by label quality score to find the indices of the 10 most likely mislabeled examples in our regression dataset.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[12]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">identified_issues</span> <span class="o">=</span> <span class="n">label_issues</span><span class="p">[</span><span class="n">label_issues</span><span class="p">[</span><span class="s2">&quot;is_label_issue&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="kc">True</span><span class="p">]</span>
+<span class="n">lowest_quality_labels</span> <span class="o">=</span> <span class="n">label_issues</span><span class="p">[</span><span class="s2">&quot;label_quality&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">argsort</span><span class="p">()[:</span><span class="mi">10</span><span class="p">]</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[13]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span>
+    <span class="sa">f</span><span class="s2">&quot;cleanlab found </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">identified_issues</span><span class="p">)</span><span class="si">}</span><span class="s2"> potential label errors in the dataset.</span><span class="se">\n</span><span class="s2">&quot;</span>
+    <span class="sa">f</span><span class="s2">&quot;Here are indices of the top 10 most likely errors: </span><span class="se">\n</span><span class="s2"> </span><span class="si">{</span><span class="n">lowest_quality_labels</span><span class="si">}</span><span class="s2">&quot;</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+cleanlab found 141 potential label errors in the dataset.
+Here are indices of the top 10 most likely errors:
+ [659 367  56 318 305 560 657 688 117 160]
+</pre></div></div>
+</div>
+<p>Let’s review some of the values most likely to be erroneous. To help us inspect these datapoints, we define a method to print any example from the dataset, together with its given (original) label and the suggested alternative label predicted by your regression model.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[14]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">view_datapoint</span><span class="p">(</span><span class="n">index</span><span class="p">):</span>
+    <span class="n">given_labels</span> <span class="o">=</span> <span class="n">label_issues</span><span class="p">[</span><span class="s2">&quot;given_label&quot;</span><span class="p">]</span>
+    <span class="n">predicted_labels</span> <span class="o">=</span> <span class="n">label_issues</span><span class="p">[</span><span class="s2">&quot;predicted_label&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span>
+        <span class="p">[</span><span class="n">X_train_raw</span><span class="p">,</span> <span class="n">given_labels</span><span class="p">,</span> <span class="n">predicted_labels</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span>
+    <span class="p">)</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">index</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[15]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">view_datapoint</span><span class="p">(</span><span class="n">lowest_quality_labels</span><span class="p">[:</span><span class="mi">5</span><span class="p">])</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[15]:
+</pre></div>
+</div>
+<div class="output_area rendered_html docutils container">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>exam_1</th>
+      <th>exam_2</th>
+      <th>exam_3</th>
+      <th>notes</th>
+      <th>given_label</th>
+      <th>predicted_label</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>659</th>
+      <td>67</td>
+      <td>93</td>
+      <td>93</td>
+      <td>NaN</td>
+      <td>17.4</td>
+      <td>84.1</td>
+    </tr>
+    <tr>
+      <th>367</th>
+      <td>78</td>
+      <td>0</td>
+      <td>86</td>
+      <td>NaN</td>
+      <td>0.0</td>
+      <td>56.7</td>
+    </tr>
+    <tr>
+      <th>56</th>
+      <td>75</td>
+      <td>83</td>
+      <td>69</td>
+      <td>NaN</td>
+      <td>8.9</td>
+      <td>71.7</td>
+    </tr>
+    <tr>
+      <th>318</th>
+      <td>41</td>
+      <td>88</td>
+      <td>98</td>
+      <td>missed class frequently -10</td>
+      <td>0.0</td>
+      <td>71.9</td>
+    </tr>
+    <tr>
+      <th>305</th>
+      <td>97</td>
+      <td>0</td>
+      <td>90</td>
+      <td>NaN</td>
+      <td>19.1</td>
+      <td>61.6</td>
+    </tr>
+  </tbody>
+</table>
+</div></div>
+</div>
+<p>These are very clear errors that cleanlab has identified in this data! Note that the <code class="docutils literal notranslate"><span class="pre">given_label</span></code> does not correctly reflect the final grade that these student should be getting.</p>
+<p>cleanlab has shortlisted the most likely label errors to speed up your data cleaning process. With this list, you can decide whether to fix these label issues or remove erroneous examples from the dataset.</p>
+</section>
+<section id="4.-Train-a-more-robust-model-from-noisy-labels">
+<h2>4. Train a more robust model from noisy labels<a class="headerlink" href="#4.-Train-a-more-robust-model-from-noisy-labels" title="Permalink to this heading">#</a></h2>
+<p>Fixing the label issues manually may be time-consuming, but cleanlab can filter these noisy examples and train a model on the remaining clean data for you automatically.</p>
+<p>To establish a baseline, let’s first train and evaluate our original Gradient Boosting model.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[17]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">baseline_model</span> <span class="o">=</span> <span class="n">HistGradientBoostingRegressor</span><span class="p">()</span>
+<span class="n">baseline_model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
+
+<span class="n">preds_og</span> <span class="o">=</span> <span class="n">baseline_model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_test</span><span class="p">)</span>
+<span class="n">r2_og</span> <span class="o">=</span> <span class="n">r2_score</span><span class="p">(</span><span class="n">y_test</span><span class="p">,</span> <span class="n">preds_og</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;r-squared score of original model: </span><span class="si">{</span><span class="n">r2_og</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+r-squared score of original model: 0.838
+</pre></div></div>
+</div>
+<p>Now that we have a baseline, let’s check if using <code class="docutils literal notranslate"><span class="pre">CleanLearning</span></code> improves our test accuracy.</p>
+<p><code class="docutils literal notranslate"><span class="pre">CleanLearning</span></code> provides a wrapper that can be applied to any scikit-learn compatible model. The resulting model object can be used in the same manner, but it will now train more robustly if the data has noisy labels.</p>
+<p>We can use the same <code class="docutils literal notranslate"><span class="pre">CleanLearning</span></code> object defined above, and pass the label issues we already computed into <code class="docutils literal notranslate"><span class="pre">.fit()</span></code> via the <code class="docutils literal notranslate"><span class="pre">label_issues</span></code> argument. This accelerates things; if we did not provide the label issues, then they would be re-estimated via cross-validation. After the issues are estimated, <code class="docutils literal notranslate"><span class="pre">CleanLearning</span></code> simply removes the examples with label issues and retrains your model on the remaining clean data.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[18]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">found_label_issues</span> <span class="o">=</span> <span class="n">cl</span><span class="o">.</span><span class="n">get_label_issues</span><span class="p">()</span>
+<span class="n">cl</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">label_issues</span><span class="o">=</span><span class="n">found_label_issues</span><span class="p">)</span>
+
+<span class="n">preds_cl</span> <span class="o">=</span> <span class="n">cl</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_test</span><span class="p">)</span>
+<span class="n">r2_cl</span> <span class="o">=</span> <span class="n">r2_score</span><span class="p">(</span><span class="n">y_test</span><span class="p">,</span> <span class="n">preds_cl</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;r-squared score of cleanlab&#39;s model: </span><span class="si">{</span><span class="n">r2_cl</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+r-squared score of cleanlab&#39;s model: 0.926
+</pre></div></div>
+</div>
+<p>We can see that the coefficient of determination (r-squared score) of the test set improved as a result of the data cleaning. Note that this will not always be the case, especially when we are evaluating on test data that are themselves noisy. The best practice is to run cleanlab to identify potential label issues and then manually review them, before blindly trusting any evaluation metrics. In particular, the most effort should be made to ensure high-quality test data, which is supposed to
+reflect the expected performance of our model during deployment.</p>
+</section>
+<section id="5.-Other-ways-to-find-noisy-labels-in-regression-datasets">
+<h2>5. Other ways to find noisy labels in regression datasets<a class="headerlink" href="#5.-Other-ways-to-find-noisy-labels-in-regression-datasets" title="Permalink to this heading">#</a></h2>
+<p>The <code class="docutils literal notranslate"><span class="pre">CleanLearning</span></code> workflow above requires a sklearn-compatible model. If your model or data format is not compatible with the requirements for using <code class="docutils literal notranslate"><span class="pre">CleanLearning</span></code>, you can instead run <a class="reference external" href="https://docs.cleanlab.ai/stable/tutorials/pred_probs_cross_val.html">cross-validation on your regression model to get out-of-sample predictions</a>, and then use the <code class="docutils literal notranslate"><span class="pre">Datalab</span></code> audit to estimate label quality scores for each example in your dataset.</p>
+<p>This approach requires two inputs:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">labels</span></code>: numpy array of given labels in the dataset.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">predictions</span></code>: numpy array of predictions for each example in the dataset from your favorite model (these should be out-of-sample predictions to get the best results).</p></li>
+</ul>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[19]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Get out-of-sample predictions using cross-validation:</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">HistGradientBoostingRegressor</span><span class="p">()</span>
+<span class="n">predictions</span> <span class="o">=</span> <span class="n">cross_val_predict</span><span class="p">(</span><span class="n">estimator</span><span class="o">=</span><span class="n">model</span><span class="p">,</span> <span class="n">X</span><span class="o">=</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">y_train</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[20]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">cleanlab</span> <span class="kn">import</span> <span class="n">Datalab</span>
+
+<span class="n">lab</span> <span class="o">=</span> <span class="n">Datalab</span><span class="p">(</span>
+    <span class="n">data</span><span class="o">=</span><span class="n">train_data</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;true_final_score&quot;</span><span class="p">]),</span>
+    <span class="n">label_name</span><span class="o">=</span><span class="s2">&quot;final_score&quot;</span><span class="p">,</span>
+    <span class="n">task</span><span class="o">=</span><span class="s2">&quot;regression&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="n">lab</span><span class="o">.</span><span class="n">find_issues</span><span class="p">(</span>
+    <span class="n">pred_probs</span><span class="o">=</span><span class="n">predictions</span><span class="p">,</span>
+    <span class="n">issue_types</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;label&quot;</span><span class="p">:</span> <span class="p">{}},</span>  <span class="c1"># specify we&#39;re only interested in label issues here</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Finding label issues ...
+
+Audit complete. 50 issues found in the dataset.
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[21]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">label_issues</span> <span class="o">=</span> <span class="n">lab</span><span class="o">.</span><span class="n">get_issues</span><span class="p">(</span><span class="s2">&quot;label&quot;</span><span class="p">)</span>
+
+<span class="n">label_issues</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="s2">&quot;label_score&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[21]:
+</pre></div>
+</div>
+<div class="output_area rendered_html docutils container">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>is_label_issue</th>
+      <th>label_score</th>
+      <th>given_label</th>
+      <th>predicted_label</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>318</th>
+      <td>True</td>
+      <td>1.968627e-09</td>
+      <td>0.0</td>
+      <td>78.228799</td>
+    </tr>
+    <tr>
+      <th>659</th>
+      <td>True</td>
+      <td>2.646674e-08</td>
+      <td>17.4</td>
+      <td>86.402962</td>
+    </tr>
+    <tr>
+      <th>56</th>
+      <td>True</td>
+      <td>4.323818e-08</td>
+      <td>8.9</td>
+      <td>75.952758</td>
+    </tr>
+    <tr>
+      <th>160</th>
+      <td>True</td>
+      <td>2.422144e-07</td>
+      <td>0.0</td>
+      <td>60.456908</td>
+    </tr>
+    <tr>
+      <th>367</th>
+      <td>True</td>
+      <td>8.465815e-07</td>
+      <td>0.0</td>
+      <td>55.753968</td>
+    </tr>
+  </tbody>
+</table>
+</div></div>
+</div>
+<p>As before, these label quality scores are continuous values in the range [0,1] where 1 represents a clean label (given label appears correct) and 0 a represents dirty label (given label appears corrupted, i.e. the numeric value may be incorrect). You can sort examples by their label quality scores to inspect the most-likely corrupted datapoints.</p>
+<p>If possible, we recommend you use <code class="docutils literal notranslate"><span class="pre">CleanLearning</span></code> to wrap your regression model (over providing its pre-computed predictions) for the most accurate label error detection (that properly accounts for aleatoric/epistemic uncertainty in the regression model). To understand how these approaches work, refer to our paper: <a class="reference external" href="https://arxiv.org/abs/2305.16583">Detecting Errors in Numerical Data via any Regression Model</a></p>
+<p>You can alternatively provide <code class="docutils literal notranslate"><span class="pre">features</span></code> to <code class="docutils literal notranslate"><span class="pre">Datalab</span></code> instead of pre-computed predictions. These are (preprocessed) numeric dataset covariates, aka independent variables to the regression model (such as neural network embeddings of your raw data). Internally, this is equivalent to using <code class="docutils literal notranslate"><span class="pre">CleanLearning</span></code> to find label issues if you also possible provide your sklearn-compatible regression model to <code class="docutils literal notranslate"><span class="pre">Datalab.find_issues</span></code>. But you can simultaneously detect many more types of issues in your
+dataset beyond mislabeling via Datalab (simply drop the <code class="docutils literal notranslate"><span class="pre">issue_types</span></code> argument below).</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[23]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">lab</span> <span class="o">=</span> <span class="n">Datalab</span><span class="p">(</span>
+    <span class="n">data</span><span class="o">=</span><span class="n">train_data</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;true_final_score&quot;</span><span class="p">]),</span>
+    <span class="n">label_name</span><span class="o">=</span><span class="s2">&quot;final_score&quot;</span><span class="p">,</span>
+    <span class="n">task</span><span class="o">=</span><span class="s2">&quot;regression&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="n">lab</span><span class="o">.</span><span class="n">find_issues</span><span class="p">(</span>
+    <span class="n">features</span><span class="o">=</span><span class="n">X_train</span><span class="p">,</span>
+    <span class="n">issue_types</span><span class="o">=</span><span class="p">{</span>  <span class="c1"># Optional drop this to simultaneously detect many types of data/label issues</span>
+        <span class="s2">&quot;label&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="c1"># Optional: Specify which type of sklearn-compatible regression model is used to find label errors</span>
+            <span class="s2">&quot;clean_learning_kwargs&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;model&quot;</span><span class="p">:</span> <span class="n">HistGradientBoostingRegressor</span><span class="p">()}</span>
+        <span class="p">}</span>
+    <span class="p">},</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Finding label issues ...
+
+Audit complete. 141 issues found in the dataset.
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[24]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">label_issues</span> <span class="o">=</span> <span class="n">lab</span><span class="o">.</span><span class="n">get_issues</span><span class="p">(</span><span class="s2">&quot;label&quot;</span><span class="p">)</span>
+
+<span class="n">label_issues</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="s2">&quot;label_score&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[24]:
+</pre></div>
+</div>
+<div class="output_area rendered_html docutils container">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>is_label_issue</th>
+      <th>label_score</th>
+      <th>given_label</th>
+      <th>predicted_label</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>659</th>
+      <td>True</td>
+      <td>5.791186e-12</td>
+      <td>17.4</td>
+      <td>84.110719</td>
+    </tr>
+    <tr>
+      <th>367</th>
+      <td>True</td>
+      <td>6.485156e-10</td>
+      <td>0.0</td>
+      <td>56.670640</td>
+    </tr>
+    <tr>
+      <th>56</th>
+      <td>True</td>
+      <td>1.225300e-09</td>
+      <td>8.9</td>
+      <td>71.749976</td>
+    </tr>
+    <tr>
+      <th>318</th>
+      <td>True</td>
+      <td>1.499679e-09</td>
+      <td>0.0</td>
+      <td>71.947007</td>
+    </tr>
+    <tr>
+      <th>305</th>
+      <td>True</td>
+      <td>4.067882e-08</td>
+      <td>19.1</td>
+      <td>61.648396</td>
+    </tr>
+  </tbody>
+</table>
+</div></div>
+</div>
+<p>While this tutorial focused on label issues, cleanlab’s <code class="docutils literal notranslate"><span class="pre">Datalab</span></code> object can automatically detect many other types of issues in your dataset (outliers, near duplicates, etc). Simply remove the <code class="docutils literal notranslate"><span class="pre">issue_types</span></code> argument from the above call to <code class="docutils literal notranslate"><span class="pre">Datalab.find_issues()</span></code> above and <code class="docutils literal notranslate"><span class="pre">Datalab</span></code> will more comprehensively audit your dataset (a default regression model will be used if you don’t specify the model type). Refer to our <a class="reference external" href="./datalab/datalab_quickstart.html">Datalab quickstart tutorial</a> to
+learn how to interpret the results (the interpretation remains mostly the same across different types of ML tasks).</p>
+<p><strong>Summary:</strong> To detect many types of issues in your regression dataset, we recommend using <code class="docutils literal notranslate"><span class="pre">Datalab</span></code> with provided <code class="docutils literal notranslate"><span class="pre">features</span></code> plus the best regression model you know for your data. If your goal is to train a robust regression model with noisy data rather than detect data/label issues, then use <code class="docutils literal notranslate"><span class="pre">CleanLearning</span></code>. Alternatively, if you don’t have a sklearn-compatible regression model or already have pre-computed predictions from the model you’d like to rely on, you can pass these predictions
+into <code class="docutils literal notranslate"><span class="pre">Datalab</span></code> directly to find issues based on them instead of providing a regression model.</p>
+</section>
+</section>
+ 
+        </article>
+      </div>
+      <footer>
+         
+        <div class="related-pages">
+          <a class="next-page" href="token_classification.html">
+              <div class="page-info">
+                <div class="context">
+                  <span>Next</span>
+                </div>
+                <div class="title">Find Label Errors in Token Classification (Text) Datasets</div>
+              </div>
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+            </a>
+          <a class="prev-page" href="multilabel_classification.html">
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+              <div class="page-info">
+                <div class="context">
+                  <span>Previous</span>
+                </div>
+                
+                <div class="title">Find Label Errors in Multi-Label Classification Datasets</div>
+                
+              </div>
+            </a>
+        </div>
+        <div class="bottom-of-page">
+          <div class="left-details">
+            <div class="copyright">
+                Copyright &#169; 2024, Cleanlab Inc.
+            </div>
+            Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
+            
+            <a href="https://github.com/pradyunsg/furo">Furo</a>
+            
+          </div>
+          <div class="right-details">
+            <div class="icons">
+              <a class="muted-link " href="https://github.com/cleanlab/cleanlab" aria-label="GitHub">
+                <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 16 16">
+                    <path fill-rule="evenodd" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0 0 16 8c0-4.42-3.58-8-8-8z"></path>
+                </svg>
+            </a>
+              
+            </div>
+          </div>
+        </div>
+        
+
+<script type="text/javascript">
+    window.addEventListener("load", () => {
+        let elements = document.getElementsByClassName("left-details");
+
+        elements[0].insertAdjacentHTML(
+            "afterbegin",
+            `<code class="docutils literal notranslate"><span class="pre">cleanlab</span></code> is distributed on <a href="https://pypi.org/project/cleanlab/">PyPI</a> and <a href="https://anaconda.org/conda-forge/cleanlab">conda</a>.`
+        );
+    });
+</script>
+
+
+      </footer>
+    </div>
+    <aside class="toc-drawer">
+      
+      
+      <div class="toc-sticky toc-scroll">
+        <div class="toc-title-container">
+          <span class="toc-title">
+            On this page
+          </span>
+        </div>
+        <div class="toc-tree-container">
+          <div class="toc-tree">
+            <ul>
+<li><a class="reference internal" href="#">Find Noisy Labels in Regression Datasets</a><ul>
+<li><a class="reference internal" href="#1.-Install-required-dependencies">1. Install required dependencies</a></li>
+<li><a class="reference internal" href="#2.-Load-and-process-the-data">2. Load and process the data</a></li>
+<li><a class="reference internal" href="#3.-Define-a-regression-model-and-use-cleanlab-to-find-potential-label-errors">3. Define a regression model and use cleanlab to find potential label errors</a></li>
+<li><a class="reference internal" href="#4.-Train-a-more-robust-model-from-noisy-labels">4. Train a more robust model from noisy labels</a></li>
+<li><a class="reference internal" href="#5.-Other-ways-to-find-noisy-labels-in-regression-datasets">5. Other ways to find noisy labels in regression datasets</a></li>
+</ul>
+</li>
+</ul>
+
+          </div>
+        </div>
+      </div>
+      
+      
+    </aside>
+  </div>
+</div><script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js?v=2b91c5f0"></script>
+    <script src="../_static/doctools.js?v=888ff710"></script>
+    <script src="../_static/sphinx_highlight.js?v=4825356b"></script>
+    <script src="../_static/scripts/furo.js?v=32e29ea5"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=30646c52"></script>
+    <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@jupyter-widgets/html-manager@^1.0.1/dist/embed-amd.js"></script>
+    
+<script async defer src="https://buttons.github.io/buttons.js"></script>
+</body>
+</html>
