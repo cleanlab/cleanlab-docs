@@ -601,17 +601,19 @@
 <span class="sd">&quot;&quot;&quot;</span>
 
 <span class="kn">import</span> <span class="nn">warnings</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Union</span>
+
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">from</span> <span class="nn">cleanlab.count</span> <span class="kn">import</span> <span class="n">get_confident_thresholds</span>
-<span class="kn">from</span> <span class="nn">sklearn.neighbors</span> <span class="kn">import</span> <span class="n">NearestNeighbors</span>
 <span class="kn">from</span> <span class="nn">sklearn.exceptions</span> <span class="kn">import</span> <span class="n">NotFittedError</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Union</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Dict</span>
+<span class="kn">from</span> <span class="nn">sklearn.neighbors</span> <span class="kn">import</span> <span class="n">NearestNeighbors</span>
+
+<span class="kn">from</span> <span class="nn">cleanlab.count</span> <span class="kn">import</span> <span class="n">get_confident_thresholds</span>
 <span class="kn">from</span> <span class="nn">cleanlab.internal.label_quality_utils</span> <span class="kn">import</span> <span class="p">(</span>
     <span class="n">_subtract_confident_thresholds</span><span class="p">,</span>
     <span class="n">get_normalized_entropy</span><span class="p">,</span>
 <span class="p">)</span>
 <span class="kn">from</span> <span class="nn">cleanlab.internal.numerics</span> <span class="kn">import</span> <span class="n">softmax</span>
-<span class="kn">from</span> <span class="nn">cleanlab.internal.outlier</span> <span class="kn">import</span> <span class="n">transform_distances_to_scores</span>
+<span class="kn">from</span> <span class="nn">cleanlab.internal.outlier</span> <span class="kn">import</span> <span class="n">correct_precision_errors</span><span class="p">,</span> <span class="n">transform_distances_to_scores</span>
 <span class="kn">from</span> <span class="nn">cleanlab.internal.validation</span> <span class="kn">import</span> <span class="n">assert_valid_inputs</span><span class="p">,</span> <span class="n">labels_to_array</span>
 <span class="kn">from</span> <span class="nn">cleanlab.typing</span> <span class="kn">import</span> <span class="n">LabelLike</span>
 
@@ -1049,6 +1051,13 @@
 
         <span class="n">ood_features_scores</span> <span class="o">=</span> <span class="n">transform_distances_to_scores</span><span class="p">(</span>
             <span class="n">avg_knn_distances</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="n">scaling_factor</span><span class="o">=</span><span class="n">scaling_factor</span>
+        <span class="p">)</span>
+        <span class="n">distance_metric</span> <span class="o">=</span> <span class="n">knn</span><span class="o">.</span><span class="n">metric</span>
+        <span class="n">p</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">if</span> <span class="n">distance_metric</span> <span class="o">==</span> <span class="s2">&quot;minkowski&quot;</span><span class="p">:</span>
+            <span class="n">p</span> <span class="o">=</span> <span class="n">knn</span><span class="o">.</span><span class="n">p</span>
+        <span class="n">ood_features_scores</span> <span class="o">=</span> <span class="n">correct_precision_errors</span><span class="p">(</span>
+            <span class="n">ood_features_scores</span><span class="p">,</span> <span class="n">avg_knn_distances</span><span class="p">,</span> <span class="n">knn</span><span class="o">.</span><span class="n">metric</span><span class="p">,</span> <span class="n">p</span><span class="o">=</span><span class="n">p</span>
         <span class="p">)</span>
         <span class="k">return</span> <span class="p">(</span><span class="n">ood_features_scores</span><span class="p">,</span> <span class="n">knn</span><span class="p">)</span></div>
 

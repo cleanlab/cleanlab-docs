@@ -597,6 +597,9 @@
 <tr class="row-odd"><td><p><a class="reference internal" href="#cleanlab.internal.outlier.transform_distances_to_scores" title="cleanlab.internal.outlier.transform_distances_to_scores"><code class="xref py py-obj docutils literal notranslate"><span class="pre">transform_distances_to_scores</span></code></a>(avg_distances, ...)</p></td>
 <td><p>Returns an outlier score for each example based on its average distance to its k nearest neighbors.</p></td>
 </tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#cleanlab.internal.outlier.correct_precision_errors" title="cleanlab.internal.outlier.correct_precision_errors"><code class="xref py py-obj docutils literal notranslate"><span class="pre">correct_precision_errors</span></code></a>(scores, ...[, C, p])</p></td>
+<td><p>Ensure that scores where avg_distances are below the tolerance threshold get a score of one.</p></td>
+</tr>
 </tbody>
 </table>
 </div>
@@ -643,6 +646,30 @@ results in more pronounced differentiation between the scores of examples lying 
 <span class="go">array([0.88988177, 0.80519832])</span>
 </pre></div>
 </div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="cleanlab.internal.outlier.correct_precision_errors">
+<span class="sig-prename descclassname"><span class="pre">cleanlab.internal.outlier.</span></span><span class="sig-name descname"><span class="pre">correct_precision_errors</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">scores</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">avg_distances</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metric</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">C</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">100</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/cleanlab/internal/outlier.html#correct_precision_errors"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cleanlab.internal.outlier.correct_precision_errors" title="Permalink to this definition">#</a></dt>
+<dd><p>Ensure that scores where avg_distances are below the tolerance threshold get a score of one.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>scores</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">np.ndarray</span></code>) – An array of scores of shape <code class="docutils literal notranslate"><span class="pre">(N)</span></code>, where N is the number of examples.
+Each entry represents a score between 0 and 1.</p></li>
+<li><p><strong>avg_distances</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">np.ndarray</span></code>) – An array of distances of shape <code class="docutils literal notranslate"><span class="pre">(N)</span></code>, where N is the number of examples.
+Each entry represents an example’s average distance to its k nearest neighbors.</p></li>
+<li><p><strong>metric</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>) – The metric used by the knn algorithm to calculate the distances.
+It must be ‘cosine’, ‘euclidean’ or ‘minkowski’, otherwise this function does nothing.</p></li>
+<li><p><strong>C</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>, <em>default</em> <code class="docutils literal notranslate"><span class="pre">100</span></code>) – Multiplier used to increase the tolerance of the acceptable precision differences.</p></li>
+<li><p><strong>p</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>, <em>default</em> <code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code>) – This value is only used when metric is ‘minkowski’.
+A ValueError will be raised if metric is ‘minkowski’ and ‘p’ was not provided.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>fixed_scores</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">np.ndarray</span></code>) – An array of scores of shape <code class="docutils literal notranslate"><span class="pre">(N,)</span></code> for N examples with scores between 0 and 1.</p>
+</dd>
+</dl>
 </dd></dl>
 
 </section>
@@ -724,6 +751,7 @@ results in more pronounced differentiation between the scores of examples lying 
             <ul>
 <li><a class="reference internal" href="#">outlier</a><ul>
 <li><a class="reference internal" href="#cleanlab.internal.outlier.transform_distances_to_scores"><code class="docutils literal notranslate"><span class="pre">transform_distances_to_scores()</span></code></a></li>
+<li><a class="reference internal" href="#cleanlab.internal.outlier.correct_precision_errors"><code class="docutils literal notranslate"><span class="pre">correct_precision_errors()</span></code></a></li>
 </ul>
 </li>
 </ul>
