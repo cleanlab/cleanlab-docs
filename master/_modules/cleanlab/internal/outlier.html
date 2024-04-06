@@ -598,7 +598,7 @@
 <span class="sd">Helper functions used internally for outlier detection tasks.</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Union</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Optional</span>
 
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 
@@ -657,35 +657,38 @@
     <span class="n">avg_distances</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
     <span class="n">metric</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
     <span class="n">C</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">100</span><span class="p">,</span>
-    <span class="n">p</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">p</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Ensure that scores where avg_distances are below the tolerance threshold get a score of one.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    scores : np.ndarray</span>
+<span class="sd">    scores :</span>
 <span class="sd">        An array of scores of shape ``(N)``, where N is the number of examples.</span>
 <span class="sd">        Each entry represents a score between 0 and 1.</span>
 
-<span class="sd">    avg_distances : np.ndarray</span>
+<span class="sd">    avg_distances :</span>
 <span class="sd">        An array of distances of shape ``(N)``, where N is the number of examples.</span>
 <span class="sd">        Each entry represents an example&#39;s average distance to its k nearest neighbors.</span>
 
-<span class="sd">    metric : str</span>
+<span class="sd">    metric :</span>
 <span class="sd">        The metric used by the knn algorithm to calculate the distances.</span>
 <span class="sd">        It must be &#39;cosine&#39;, &#39;euclidean&#39; or &#39;minkowski&#39;, otherwise this function does nothing.</span>
 
-<span class="sd">    C : int, default=100</span>
+<span class="sd">    C :</span>
 <span class="sd">        Multiplier used to increase the tolerance of the acceptable precision differences.</span>
+<span class="sd">        It is a multiplicative factor of the machine epsilon that is used to calculate the tolerance.</span>
+<span class="sd">        For the type of values that are used in the distances, a value of 100 should be a sensible</span>
+<span class="sd">        default value for small values of the distances, below the order of 1.</span>
 
-<span class="sd">    p : int, default=None</span>
+<span class="sd">    p :</span>
 <span class="sd">        This value is only used when metric is &#39;minkowski&#39;.</span>
 <span class="sd">        A ValueError will be raised if metric is &#39;minkowski&#39; and &#39;p&#39; was not provided.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
-<span class="sd">    fixed_scores : np.ndarray</span>
+<span class="sd">    fixed_scores :</span>
 <span class="sd">        An array of scores of shape ``(N,)`` for N examples with scores between 0 and 1.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">metric</span> <span class="o">==</span> <span class="s2">&quot;cosine&quot;</span><span class="p">:</span>

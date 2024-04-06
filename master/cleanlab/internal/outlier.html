@@ -655,19 +655,22 @@ results in more pronounced differentiation between the scores of examples lying 
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>scores</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">np.ndarray</span></code>) – An array of scores of shape <code class="docutils literal notranslate"><span class="pre">(N)</span></code>, where N is the number of examples.
+<li><p><strong>scores</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></span>) – An array of scores of shape <code class="docutils literal notranslate"><span class="pre">(N)</span></code>, where N is the number of examples.
 Each entry represents a score between 0 and 1.</p></li>
-<li><p><strong>avg_distances</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">np.ndarray</span></code>) – An array of distances of shape <code class="docutils literal notranslate"><span class="pre">(N)</span></code>, where N is the number of examples.
+<li><p><strong>avg_distances</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></span>) – An array of distances of shape <code class="docutils literal notranslate"><span class="pre">(N)</span></code>, where N is the number of examples.
 Each entry represents an example’s average distance to its k nearest neighbors.</p></li>
-<li><p><strong>metric</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>) – The metric used by the knn algorithm to calculate the distances.
+<li><p><strong>metric</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span>) – The metric used by the knn algorithm to calculate the distances.
 It must be ‘cosine’, ‘euclidean’ or ‘minkowski’, otherwise this function does nothing.</p></li>
-<li><p><strong>C</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>, <em>default</em> <code class="docutils literal notranslate"><span class="pre">100</span></code>) – Multiplier used to increase the tolerance of the acceptable precision differences.</p></li>
-<li><p><strong>p</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>, <em>default</em> <code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code>) – This value is only used when metric is ‘minkowski’.
+<li><p><strong>C</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></span>) – Multiplier used to increase the tolerance of the acceptable precision differences.
+It is a multiplicative factor of the machine epsilon that is used to calculate the tolerance.
+For the type of values that are used in the distances, a value of 100 should be a sensible
+default value for small values of the distances, below the order of 1.</p></li>
+<li><p><strong>p</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>]</span>) – This value is only used when metric is ‘minkowski’.
 A ValueError will be raised if metric is ‘minkowski’ and ‘p’ was not provided.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p><strong>fixed_scores</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">np.ndarray</span></code>) – An array of scores of shape <code class="docutils literal notranslate"><span class="pre">(N,)</span></code> for N examples with scores between 0 and 1.</p>
+<dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">fixed_scores</span></code> – An array of scores of shape <code class="docutils literal notranslate"><span class="pre">(N,)</span></code> for N examples with scores between 0 and 1.</p>
 </dd>
 </dl>
 </dd></dl>
