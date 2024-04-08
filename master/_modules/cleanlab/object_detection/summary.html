@@ -821,7 +821,7 @@
 
 
 <div class="viewcode-block" id="plot_class_size_distributions"><a class="viewcode-back" href="../../../cleanlab/object_detection/summary.html#cleanlab.object_detection.summary.plot_class_size_distributions">[docs]</a><span class="k">def</span> <span class="nf">plot_class_size_distributions</span><span class="p">(</span>
-    <span class="n">labels</span><span class="p">,</span> <span class="n">predictions</span><span class="p">,</span> <span class="n">class_names</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">class_to_show</span><span class="o">=</span><span class="n">MAX_CLASS_TO_SHOW</span>
+    <span class="n">labels</span><span class="p">,</span> <span class="n">predictions</span><span class="p">,</span> <span class="n">class_names</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">class_to_show</span><span class="o">=</span><span class="n">MAX_CLASS_TO_SHOW</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span>
 <span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Plots the size distributions for bounding boxes for each class.</span>
@@ -845,6 +845,9 @@
 <span class="sd">    class_to_show: optional</span>
 <span class="sd">        The number of classes to show in the plots. Classes over `class_to_show` are hidden. If this argument is provided, then the classes are sorted by the number of instances in the dataset.</span>
 <span class="sd">        Defaults to `MAX_CLASS_TO_SHOW` which is set to 10.</span>
+
+<span class="sd">    kwargs:</span>
+<span class="sd">        Additional keyword arguments to pass to `plt.show()`.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">try</span><span class="p">:</span>
         <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
@@ -871,10 +874,10 @@
             <span class="n">axs</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;count&quot;</span><span class="p">)</span>
             <span class="n">axs</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;annotated&quot;</span> <span class="k">if</span> <span class="n">i</span> <span class="o">==</span> <span class="mi">0</span> <span class="k">else</span> <span class="s2">&quot;predicted&quot;</span><span class="p">)</span>
 
-        <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span></div>
+        <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="plot_class_distribution"><a class="viewcode-back" href="../../../cleanlab/object_detection/summary.html#cleanlab.object_detection.summary.plot_class_distribution">[docs]</a><span class="k">def</span> <span class="nf">plot_class_distribution</span><span class="p">(</span><span class="n">labels</span><span class="p">,</span> <span class="n">predictions</span><span class="p">,</span> <span class="n">class_names</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="plot_class_distribution"><a class="viewcode-back" href="../../../cleanlab/object_detection/summary.html#cleanlab.object_detection.summary.plot_class_distribution">[docs]</a><span class="k">def</span> <span class="nf">plot_class_distribution</span><span class="p">(</span><span class="n">labels</span><span class="p">,</span> <span class="n">predictions</span><span class="p">,</span> <span class="n">class_names</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Plots the distribution of class labels associated with all annotated bounding boxes and predicted bounding boxes in the dataset.</span>
 
@@ -892,6 +895,9 @@
 
 <span class="sd">    class_names: optional</span>
 <span class="sd">        Optional dictionary mapping one-hot-encoded class labels back to their original class names in the format ``{&quot;integer-label&quot;: &quot;original-class-name&quot;}``.</span>
+
+<span class="sd">    kwargs:</span>
+<span class="sd">        Additional keyword arguments to pass to `plt.show()` (matplotlib.pyplot.show).</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">try</span><span class="p">:</span>
         <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
@@ -907,7 +913,7 @@
         <span class="n">axs</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">pie</span><span class="p">(</span><span class="n">d</span><span class="o">.</span><span class="n">values</span><span class="p">(),</span> <span class="n">labels</span><span class="o">=</span><span class="n">d</span><span class="o">.</span><span class="n">keys</span><span class="p">(),</span> <span class="n">autopct</span><span class="o">=</span><span class="s2">&quot;</span><span class="si">%1.1f%%</span><span class="s2">&quot;</span><span class="p">)</span>
         <span class="n">axs</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;Annotated&quot;</span> <span class="k">if</span> <span class="n">i</span> <span class="o">==</span> <span class="mi">0</span> <span class="k">else</span> <span class="s2">&quot;Predicted&quot;</span><span class="p">)</span>
 
-    <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span></div>
+    <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="visualize"><a class="viewcode-back" href="../../../cleanlab/object_detection/summary.html#cleanlab.object_detection.summary.visualize">[docs]</a><span class="k">def</span> <span class="nf">visualize</span><span class="p">(</span>
@@ -920,6 +926,7 @@
     <span class="n">class_names</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="n">Any</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">figsize</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">save_path</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Display the annotated bounding boxes (given labels) and predicted bounding boxes (model predictions) for a particular image.</span>
 <span class="sd">    Given labels are shown in red, model predictions in blue.</span>
@@ -960,6 +967,9 @@
 <span class="sd">    figsize:</span>
 <span class="sd">        Optional figure size for plotting the image.</span>
 <span class="sd">        Corresponds to ``matplotlib.figure.figsize``.</span>
+
+<span class="sd">    kwargs:</span>
+<span class="sd">        Additional keyword arguments to pass to `plt.show()` (matplotlib.pyplot.show).</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">try</span><span class="p">:</span>
         <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
@@ -1031,7 +1041,7 @@
             <span class="n">transparent</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
             <span class="n">pad_inches</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span>
         <span class="p">)</span>
-    <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span></div>
+    <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 
 <span class="k">def</span> <span class="nf">_get_per_class_confusion_matrix_dict_</span><span class="p">(</span>
