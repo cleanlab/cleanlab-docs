@@ -599,14 +599,15 @@
 
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 
-<span class="kn">from</span> <span class="nn">cleanlab.multilabel_classification.filter</span> <span class="kn">import</span> <span class="n">find_label_issues</span>
-<span class="kn">from</span> <span class="nn">cleanlab.multilabel_classification.rank</span> <span class="kn">import</span> <span class="n">get_label_quality_scores</span>
 <span class="kn">from</span> <span class="nn">cleanlab.datalab.internal.issue_manager</span> <span class="kn">import</span> <span class="n">IssueManager</span>
 <span class="kn">from</span> <span class="nn">cleanlab.internal.multilabel_utils</span> <span class="kn">import</span> <span class="n">onehot2int</span>
+<span class="kn">from</span> <span class="nn">cleanlab.multilabel_classification.filter</span> <span class="kn">import</span> <span class="n">find_label_issues</span>
+<span class="kn">from</span> <span class="nn">cleanlab.multilabel_classification.rank</span> <span class="kn">import</span> <span class="n">get_label_quality_scores</span>
 
 <span class="k">if</span> <span class="n">TYPE_CHECKING</span><span class="p">:</span>  <span class="c1"># pragma: no cover</span>
-    <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
     <span class="kn">import</span> <span class="nn">numpy.typing</span> <span class="k">as</span> <span class="nn">npt</span>
+    <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+
     <span class="kn">from</span> <span class="nn">cleanlab.datalab.datalab</span> <span class="kn">import</span> <span class="n">Datalab</span>
 
 
@@ -644,7 +645,7 @@
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">datalab</span><span class="p">)</span>
 
     <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">_process_find_label_issues_kwargs</span><span class="p">(</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+    <span class="k">def</span> <span class="nf">_process_find_label_issues_kwargs</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Searches for keyword arguments that are meant for the</span>
 <span class="sd">        multilabel_classification.filter.find_label_issues method call.</span>
 
@@ -652,24 +653,22 @@
 <span class="sd">        --------</span>
 <span class="sd">        &gt;&gt;&gt; from cleanlab.datalab.internal.issue_manager.multilabel.label import MultilabelIssueManager</span>
 <span class="sd">        &gt;&gt;&gt; MultilabelIssueManager._process_find_label_issues_kwargs(frac_noise=0.9)</span>
-<span class="sd">        {&#39;frac_noise&#39;: 0.1}</span>
+<span class="sd">        {&#39;frac_noise&#39;: 0.9}</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">accepted_kwargs</span> <span class="o">=</span> <span class="p">(</span>
-            <span class="p">[</span>
-                <span class="s2">&quot;filter_by&quot;</span><span class="p">,</span>
-                <span class="s2">&quot;frac_noise&quot;</span><span class="p">,</span>
-                <span class="s2">&quot;num_to_remove_per_class&quot;</span><span class="p">,</span>
-                <span class="s2">&quot;min_examples_per_class&quot;</span><span class="p">,</span>
-                <span class="s2">&quot;confident_joint&quot;</span><span class="p">,</span>
-                <span class="s2">&quot;n_jobs&quot;</span><span class="p">,</span>
-                <span class="s2">&quot;verbose&quot;</span><span class="p">,</span>
-                <span class="s2">&quot;low_memory&quot;</span><span class="p">,</span>
-            <span class="p">],</span>
-        <span class="p">)</span>
+        <span class="n">accepted_kwargs</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="s2">&quot;filter_by&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;frac_noise&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;num_to_remove_per_class&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;min_examples_per_class&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;confident_joint&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;n_jobs&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;verbose&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;low_memory&quot;</span><span class="p">,</span>
+        <span class="p">]</span>
         <span class="k">return</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="n">v</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="k">if</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">accepted_kwargs</span> <span class="ow">and</span> <span class="n">v</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">}</span>
 
     <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">_process_get_label_quality_scores_kwargs</span><span class="p">(</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+    <span class="k">def</span> <span class="nf">_process_get_label_quality_scores_kwargs</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Searches for keyword arguments that are meant for the</span>
 <span class="sd">        multilabel_classification.rank.get_label_quality_scores method call.</span>
 
@@ -677,9 +676,9 @@
 <span class="sd">        --------</span>
 <span class="sd">        &gt;&gt;&gt; from cleanlab.datalab.internal.issue_manager.multilabel.label import MultilabelIssueManager</span>
 <span class="sd">        &gt;&gt;&gt; MultilabelIssueManager._process_get_label_quality_scores_kwargs(method=&quot;self_confidence&quot;)</span>
-<span class="sd">        {&#39;method&#39;: &quot;self_confidence&quot;}</span>
+<span class="sd">        {&#39;method&#39;: &#39;self_confidence&#39;}</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">accepted_kwargs</span> <span class="o">=</span> <span class="p">([</span><span class="s2">&quot;method&quot;</span><span class="p">,</span> <span class="s2">&quot;adjust_pred_probs&quot;</span><span class="p">,</span> <span class="s2">&quot;aggregator_kwargs&quot;</span><span class="p">],)</span>
+        <span class="n">accepted_kwargs</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;method&quot;</span><span class="p">,</span> <span class="s2">&quot;adjust_pred_probs&quot;</span><span class="p">,</span> <span class="s2">&quot;aggregator_kwargs&quot;</span><span class="p">]</span>
         <span class="k">return</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="n">v</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="k">if</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">accepted_kwargs</span> <span class="ow">and</span> <span class="n">v</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">}</span>
 
 <div class="viewcode-block" id="MultilabelIssueManager.find_issues"><a class="viewcode-back" href="../../../../../../cleanlab/datalab/internal/issue_manager/multilabel/label.html#cleanlab.datalab.internal.issue_manager.multilabel.label.MultilabelIssueManager.find_issues">[docs]</a>    <span class="k">def</span> <span class="nf">find_issues</span><span class="p">(</span>
@@ -701,12 +700,12 @@
         <span class="n">is_issue_column</span> <span class="o">=</span> <span class="n">find_label_issues</span><span class="p">(</span>
             <span class="n">labels</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">datalab</span><span class="o">.</span><span class="n">labels</span><span class="p">,</span>
             <span class="n">pred_probs</span><span class="o">=</span><span class="n">pred_probs</span><span class="p">,</span>
-            <span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">_process_find_label_issues_kwargs</span><span class="p">(</span><span class="n">kwargs</span><span class="p">),</span>
+            <span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">_process_find_label_issues_kwargs</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">),</span>
         <span class="p">)</span>
         <span class="n">scores</span> <span class="o">=</span> <span class="n">get_label_quality_scores</span><span class="p">(</span>
             <span class="n">labels</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">datalab</span><span class="o">.</span><span class="n">labels</span><span class="p">,</span>
             <span class="n">pred_probs</span><span class="o">=</span><span class="n">pred_probs</span><span class="p">,</span>
-            <span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">_process_get_label_quality_scores_kwargs</span><span class="p">(</span><span class="n">kwargs</span><span class="p">),</span>
+            <span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">_process_get_label_quality_scores_kwargs</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">),</span>
         <span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">issues</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
@@ -723,14 +722,12 @@
 
 <div class="viewcode-block" id="MultilabelIssueManager.collect_info"><a class="viewcode-back" href="../../../../../../cleanlab/datalab/internal/issue_manager/multilabel/label.html#cleanlab.datalab.internal.issue_manager.multilabel.label.MultilabelIssueManager.collect_info">[docs]</a>    <span class="k">def</span> <span class="nf">collect_info</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">given_labels</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]],</span> <span class="n">predicted_labels</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]]</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
         <span class="n">issues_info</span> <span class="o">=</span> <span class="p">{</span>
             <span class="s2">&quot;given_label&quot;</span><span class="p">:</span> <span class="n">given_labels</span><span class="p">,</span>
             <span class="s2">&quot;predicted_label&quot;</span><span class="p">:</span> <span class="n">predicted_labels</span><span class="p">,</span>
         <span class="p">}</span>
-        <span class="n">info_dict</span> <span class="o">=</span> <span class="p">{</span><span class="o">**</span><span class="n">issues_info</span><span class="p">}</span>
-
-        <span class="k">return</span> <span class="n">info_dict</span></div></div>
+        <span class="k">return</span> <span class="n">issues_info</span></div></div>
 </pre></div> 
         </article>
       </div>
