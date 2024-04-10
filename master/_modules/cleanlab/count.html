@@ -608,43 +608,40 @@
 <span class="sd">* multi-label classification where each example can be labeled as belonging to multiple classes (e.g. ``labels = [[1,2],[1],[0],[],...]``)</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
-<span class="kn">from</span> <span class="nn">sklearn.linear_model</span> <span class="kn">import</span> <span class="n">LogisticRegression</span> <span class="k">as</span> <span class="n">LogReg</span>
-<span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="kn">import</span> <span class="n">StratifiedKFold</span>
-<span class="kn">from</span> <span class="nn">sklearn.metrics</span> <span class="kn">import</span> <span class="n">confusion_matrix</span>
-<span class="kn">import</span> <span class="nn">sklearn.base</span>
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">warnings</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Union</span><span class="p">,</span> <span class="n">Optional</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Union</span>
 
-<span class="kn">from</span> <span class="nn">cleanlab.typing</span> <span class="kn">import</span> <span class="n">LabelLike</span>
-<span class="kn">from</span> <span class="nn">cleanlab.internal.multilabel_utils</span> <span class="kn">import</span> <span class="n">stack_complement</span><span class="p">,</span> <span class="n">get_onehot_num_classes</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">sklearn.base</span>
+<span class="kn">from</span> <span class="nn">sklearn.linear_model</span> <span class="kn">import</span> <span class="n">LogisticRegression</span> <span class="k">as</span> <span class="n">LogReg</span>
+<span class="kn">from</span> <span class="nn">sklearn.metrics</span> <span class="kn">import</span> <span class="n">confusion_matrix</span>
+<span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="kn">import</span> <span class="n">StratifiedKFold</span>
+
 <span class="kn">from</span> <span class="nn">cleanlab.internal.constants</span> <span class="kn">import</span> <span class="p">(</span>
-    <span class="n">TINY_VALUE</span><span class="p">,</span>
     <span class="n">CONFIDENT_THRESHOLDS_LOWER_BOUND</span><span class="p">,</span>
     <span class="n">FLOATING_POINT_COMPARISON</span><span class="p">,</span>
-<span class="p">)</span>
-
-<span class="kn">from</span> <span class="nn">cleanlab.internal.util</span> <span class="kn">import</span> <span class="p">(</span>
-    <span class="n">value_counts_fill_missing_classes</span><span class="p">,</span>
-    <span class="n">clip_values</span><span class="p">,</span>
-    <span class="n">clip_noise_rates</span><span class="p">,</span>
-    <span class="n">round_preserving_row_totals</span><span class="p">,</span>
-    <span class="n">append_extra_datapoint</span><span class="p">,</span>
-    <span class="n">train_val_split</span><span class="p">,</span>
-    <span class="n">get_num_classes</span><span class="p">,</span>
-    <span class="n">get_unique_classes</span><span class="p">,</span>
-    <span class="n">is_torch_dataset</span><span class="p">,</span>
-    <span class="n">is_tensorflow_dataset</span><span class="p">,</span>
+    <span class="n">TINY_VALUE</span><span class="p">,</span>
 <span class="p">)</span>
 <span class="kn">from</span> <span class="nn">cleanlab.internal.latent_algebra</span> <span class="kn">import</span> <span class="p">(</span>
     <span class="n">compute_inv_noise_matrix</span><span class="p">,</span>
-    <span class="n">compute_py</span><span class="p">,</span>
     <span class="n">compute_noise_matrix_from_inverse</span><span class="p">,</span>
+    <span class="n">compute_py</span><span class="p">,</span>
 <span class="p">)</span>
-<span class="kn">from</span> <span class="nn">cleanlab.internal.validation</span> <span class="kn">import</span> <span class="p">(</span>
-    <span class="n">assert_valid_inputs</span><span class="p">,</span>
-    <span class="n">labels_to_array</span><span class="p">,</span>
+<span class="kn">from</span> <span class="nn">cleanlab.internal.multilabel_utils</span> <span class="kn">import</span> <span class="n">get_onehot_num_classes</span><span class="p">,</span> <span class="n">stack_complement</span>
+<span class="kn">from</span> <span class="nn">cleanlab.internal.util</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">append_extra_datapoint</span><span class="p">,</span>
+    <span class="n">clip_noise_rates</span><span class="p">,</span>
+    <span class="n">clip_values</span><span class="p">,</span>
+    <span class="n">get_num_classes</span><span class="p">,</span>
+    <span class="n">get_unique_classes</span><span class="p">,</span>
+    <span class="n">is_tensorflow_dataset</span><span class="p">,</span>
+    <span class="n">is_torch_dataset</span><span class="p">,</span>
+    <span class="n">round_preserving_row_totals</span><span class="p">,</span>
+    <span class="n">train_val_split</span><span class="p">,</span>
+    <span class="n">value_counts_fill_missing_classes</span><span class="p">,</span>
 <span class="p">)</span>
+<span class="kn">from</span> <span class="nn">cleanlab.internal.validation</span> <span class="kn">import</span> <span class="n">assert_valid_inputs</span><span class="p">,</span> <span class="n">labels_to_array</span>
+<span class="kn">from</span> <span class="nn">cleanlab.typing</span> <span class="kn">import</span> <span class="n">LabelLike</span>
 
 
 <div class="viewcode-block" id="num_label_issues"><a class="viewcode-back" href="../../cleanlab/count.html#cleanlab.count.num_label_issues">[docs]</a><span class="k">def</span> <span class="nf">num_label_issues</span><span class="p">(</span>
@@ -2038,7 +2035,7 @@
         <span class="c1">#  this approach is that there will be no standard value returned for missing classes.</span>
         <span class="n">labels</span> <span class="o">=</span> <span class="n">labels_to_array</span><span class="p">(</span><span class="n">labels</span><span class="p">)</span>
         <span class="n">all_classes</span> <span class="o">=</span> <span class="nb">range</span><span class="p">(</span><span class="n">pred_probs</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
-        <span class="n">unique_classes</span> <span class="o">=</span> <span class="n">get_unique_classes</span><span class="p">(</span><span class="n">labels</span><span class="p">)</span>
+        <span class="n">unique_classes</span> <span class="o">=</span> <span class="n">get_unique_classes</span><span class="p">(</span><span class="n">labels</span><span class="p">,</span> <span class="n">multi_label</span><span class="o">=</span><span class="n">multi_label</span><span class="p">)</span>
         <span class="n">BIG_VALUE</span> <span class="o">=</span> <span class="mi">2</span>
         <span class="n">confident_thresholds</span> <span class="o">=</span> <span class="p">[</span>
             <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">pred_probs</span><span class="p">[:,</span> <span class="n">k</span><span class="p">][</span><span class="n">labels</span> <span class="o">==</span> <span class="n">k</span><span class="p">])</span> <span class="k">if</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">unique_classes</span> <span class="k">else</span> <span class="n">BIG_VALUE</span>
