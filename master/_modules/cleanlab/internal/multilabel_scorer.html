@@ -602,13 +602,14 @@
 
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="kn">import</span> <span class="n">cross_val_predict</span>
-<span class="kn">from</span> <span class="nn">cleanlab.internal.multilabel_utils</span> <span class="kn">import</span> <span class="n">_is_multilabel</span><span class="p">,</span> <span class="n">stack_complement</span>
+
 <span class="kn">from</span> <span class="nn">cleanlab.internal.label_quality_utils</span> <span class="kn">import</span> <span class="n">_subtract_confident_thresholds</span>
+<span class="kn">from</span> <span class="nn">cleanlab.internal.multilabel_utils</span> <span class="kn">import</span> <span class="n">_is_multilabel</span><span class="p">,</span> <span class="n">stack_complement</span>
 <span class="kn">from</span> <span class="nn">cleanlab.internal.numerics</span> <span class="kn">import</span> <span class="n">softmax</span>
 <span class="kn">from</span> <span class="nn">cleanlab.rank</span> <span class="kn">import</span> <span class="p">(</span>
-    <span class="n">get_self_confidence_for_each_label</span><span class="p">,</span>
-    <span class="n">get_normalized_margin_for_each_label</span><span class="p">,</span>
     <span class="n">get_confidence_weighted_entropy_for_each_label</span><span class="p">,</span>
+    <span class="n">get_normalized_margin_for_each_label</span><span class="p">,</span>
+    <span class="n">get_self_confidence_for_each_label</span><span class="p">,</span>
 <span class="p">)</span>
 
 
@@ -1178,17 +1179,10 @@
 <span class="sd">           [0.8, 0.2]])</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="nf">compute_class_py</span><span class="p">(</span><span class="n">y_slice</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
-        <span class="c1"># Should only consider a single class at a time</span>
-        <span class="k">assert</span> <span class="n">y_slice</span><span class="o">.</span><span class="n">ndim</span> <span class="o">==</span> <span class="mi">1</span>
-        <span class="n">unique_values</span><span class="p">,</span> <span class="n">counts</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">y_slice</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">return_counts</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-        <span class="n">N</span> <span class="o">=</span> <span class="n">y_slice</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">unique_values</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
-            <span class="c1"># Should be 0 and 1, pad with 0 probability if either is missing.</span>
-            <span class="n">counts</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="n">N</span><span class="p">]</span> <span class="k">if</span> <span class="n">unique_values</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="mi">1</span> <span class="k">else</span> <span class="p">[</span><span class="n">N</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
-        <span class="k">return</span> <span class="n">counts</span> <span class="o">/</span> <span class="n">N</span>
-
-    <span class="n">py</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">apply_along_axis</span><span class="p">(</span><span class="n">compute_class_py</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">arr</span><span class="o">=</span><span class="n">y</span><span class="o">.</span><span class="n">T</span><span class="p">)</span>
+    <span class="n">N</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">y</span><span class="o">.</span><span class="n">shape</span>
+    <span class="n">fraction_0</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">y</span> <span class="o">==</span> <span class="mi">0</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span> <span class="o">/</span> <span class="n">N</span>
+    <span class="n">fraction_1</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">fraction_0</span>
+    <span class="n">py</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">column_stack</span><span class="p">((</span><span class="n">fraction_0</span><span class="p">,</span> <span class="n">fraction_1</span><span class="p">))</span>
     <span class="k">return</span> <span class="n">py</span></div>
 
 
@@ -1196,9 +1190,7 @@
 
 
 <span class="k">def</span> <span class="nf">_get_split_generator</span><span class="p">(</span><span class="n">labels</span><span class="p">,</span> <span class="n">cv</span><span class="p">):</span>
-    <span class="n">unique_labels</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">labels</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
-    <span class="n">label_to_index</span> <span class="o">=</span> <span class="p">{</span><span class="nb">tuple</span><span class="p">(</span><span class="n">label</span><span class="p">):</span> <span class="n">i</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">label</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">unique_labels</span><span class="p">)}</span>
-    <span class="n">multilabel_ids</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">label_to_index</span><span class="p">[</span><span class="nb">tuple</span><span class="p">(</span><span class="n">label</span><span class="p">)]</span> <span class="k">for</span> <span class="n">label</span> <span class="ow">in</span> <span class="n">labels</span><span class="p">])</span>
+    <span class="n">_</span><span class="p">,</span> <span class="n">multilabel_ids</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">labels</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">return_inverse</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
     <span class="n">split_generator</span> <span class="o">=</span> <span class="n">cv</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">X</span><span class="o">=</span><span class="n">multilabel_ids</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">multilabel_ids</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">split_generator</span>
 
