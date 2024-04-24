@@ -660,6 +660,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">health_summary_parameters</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
             <span class="n">health_summary_parameters</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span> <span class="k">if</span> <span class="n">health_summary_parameters</span> <span class="k">else</span> <span class="p">{}</span>
         <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_find_issues_inputs</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;features&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span> <span class="s2">&quot;pred_probs&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">}</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_reset</span><span class="p">()</span>
 
     <span class="nd">@staticmethod</span>
@@ -722,7 +723,10 @@
 <span class="sd">        features :</span>
 <span class="sd">            The features for each example.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">pred_probs</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_find_issues_inputs</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s2">&quot;pred_probs&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">})</span>
         <span class="k">if</span> <span class="n">pred_probs</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_find_issues_inputs</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s2">&quot;features&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">})</span>
             <span class="k">if</span> <span class="n">features</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
                 <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
                     <span class="s2">&quot;Either pred_probs or features must be provided to find label issues.&quot;</span>
@@ -855,6 +859,7 @@
             <span class="o">**</span><span class="n">health_summary_info</span><span class="p">,</span>
             <span class="o">**</span><span class="n">cl_info</span><span class="p">,</span>
             <span class="s2">&quot;confident_thresholds&quot;</span><span class="p">:</span> <span class="n">confident_thresholds</span><span class="o">.</span><span class="n">tolist</span><span class="p">(),</span>
+            <span class="s2">&quot;find_issues_inputs&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_find_issues_inputs</span><span class="p">,</span>
         <span class="p">}</span>
 
         <span class="k">return</span> <span class="n">info_dict</span></div>

@@ -667,6 +667,11 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">threshold</span> <span class="o">=</span> <span class="n">threshold</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_embeddings</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_metric</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># type: ignore</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_find_issues_inputs</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;features&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+            <span class="s2">&quot;pred_probs&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+            <span class="s2">&quot;knn_graph&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="p">}</span>
 
 <div class="viewcode-block" id="OutlierIssueManager.find_issues"><a class="viewcode-back" href="../../../../../cleanlab/datalab/internal/issue_manager/outlier.html#cleanlab.datalab.internal.issue_manager.outlier.OutlierIssueManager.find_issues">[docs]</a>    <span class="k">def</span> <span class="nf">find_issues</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
@@ -685,13 +690,16 @@
             <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">distances</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span>
             <span class="n">avg_distances</span> <span class="o">=</span> <span class="n">distances</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
             <span class="n">median_avg_distance</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">median</span><span class="p">(</span><span class="n">avg_distances</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_find_issues_inputs</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s2">&quot;knn_graph&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">})</span>
             <span class="n">scores</span> <span class="o">=</span> <span class="n">transform_distances_to_scores</span><span class="p">(</span>
                 <span class="n">avg_distances</span><span class="p">,</span> <span class="n">t</span><span class="o">=</span><span class="n">t</span><span class="p">,</span> <span class="n">scaling_factor</span><span class="o">=</span><span class="n">median_avg_distance</span>
             <span class="p">)</span>
         <span class="k">elif</span> <span class="n">features</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">scores</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_score_with_features</span><span class="p">(</span><span class="n">features</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_find_issues_inputs</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s2">&quot;features&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">})</span>
         <span class="k">elif</span> <span class="n">pred_probs</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">scores</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_score_with_pred_probs</span><span class="p">(</span><span class="n">pred_probs</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_find_issues_inputs</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s2">&quot;pred_probs&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">})</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;knn_graph&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
                 <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
@@ -710,6 +718,7 @@
             <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">distances</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span>
             <span class="p">(</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">threshold</span><span class="p">,</span>
+                <span class="n">issue_threshold</span><span class="p">,</span>  <span class="c1"># Useful info for detecting issues in test data</span>
                 <span class="n">is_issue_column</span><span class="p">,</span>
             <span class="p">)</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_compute_threshold_and_issue_column_from_distances</span><span class="p">(</span><span class="n">distances</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">threshold</span><span class="p">)</span>
 
@@ -720,7 +729,10 @@
                 <span class="bp">self</span><span class="o">.</span><span class="n">threshold</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">DEFAULT_THRESHOLDS</span><span class="p">[</span><span class="s2">&quot;pred_probs&quot;</span><span class="p">]</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="mi">0</span> <span class="o">&lt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">threshold</span><span class="p">:</span>
                 <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;threshold must be non-negative, but got </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">threshold</span><span class="si">}</span><span class="s2">.&quot;</span><span class="p">)</span>
-            <span class="n">is_issue_column</span> <span class="o">=</span> <span class="n">scores</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">threshold</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">median</span><span class="p">(</span><span class="n">scores</span><span class="p">)</span>
+            <span class="n">issue_threshold</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">threshold</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">median</span><span class="p">(</span><span class="n">scores</span><span class="p">)</span>
+            <span class="p">)</span>  <span class="c1"># Useful info for detecting issues in test data</span>
+            <span class="n">is_issue_column</span> <span class="o">=</span> <span class="n">scores</span> <span class="o">&lt;</span> <span class="n">issue_threshold</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">issues</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
             <span class="p">{</span>
@@ -731,7 +743,7 @@
 
         <span class="bp">self</span><span class="o">.</span><span class="n">summary</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">make_summary</span><span class="p">(</span><span class="n">score</span><span class="o">=</span><span class="n">scores</span><span class="o">.</span><span class="n">mean</span><span class="p">())</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">info</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">collect_info</span><span class="p">(</span><span class="n">knn_graph</span><span class="o">=</span><span class="n">knn_graph</span><span class="p">)</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">info</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">collect_info</span><span class="p">(</span><span class="n">issue_threshold</span><span class="o">=</span><span class="n">issue_threshold</span><span class="p">,</span> <span class="n">knn_graph</span><span class="o">=</span><span class="n">knn_graph</span><span class="p">)</span></div>
 
     <span class="k">def</span> <span class="nf">_process_knn_graph_from_inputs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">kwargs</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="n">csr_matrix</span><span class="p">,</span> <span class="kc">None</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Determine if a knn_graph is provided in the kwargs or if one is already stored in the associated Datalab instance.&quot;&quot;&quot;</span>
@@ -754,7 +766,7 @@
 
     <span class="k">def</span> <span class="nf">_compute_threshold_and_issue_column_from_distances</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">distances</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">threshold</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]:</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]:</span>
         <span class="n">avg_distances</span> <span class="o">=</span> <span class="n">distances</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">threshold</span><span class="p">:</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">threshold</span><span class="p">,</span> <span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">))</span> <span class="ow">and</span> <span class="mi">0</span> <span class="o">&lt;=</span> <span class="n">threshold</span> <span class="o">&lt;=</span> <span class="mi">1</span><span class="p">):</span>
@@ -763,9 +775,15 @@
                 <span class="p">)</span>
         <span class="k">if</span> <span class="n">threshold</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">threshold</span> <span class="o">=</span> <span class="n">OutlierIssueManager</span><span class="o">.</span><span class="n">DEFAULT_THRESHOLDS</span><span class="p">[</span><span class="s2">&quot;features&quot;</span><span class="p">]</span>
-        <span class="n">q3_distance</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">percentile</span><span class="p">(</span><span class="n">avg_distances</span><span class="p">,</span> <span class="mi">75</span><span class="p">)</span>
-        <span class="n">iqr_scale</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">/</span> <span class="n">threshold</span> <span class="o">-</span> <span class="mi">1</span> <span class="k">if</span> <span class="n">threshold</span> <span class="o">!=</span> <span class="mi">0</span> <span class="k">else</span> <span class="n">np</span><span class="o">.</span><span class="n">inf</span>
-        <span class="k">return</span> <span class="n">threshold</span><span class="p">,</span> <span class="n">avg_distances</span> <span class="o">&gt;</span> <span class="n">q3_distance</span> <span class="o">+</span> <span class="n">iqr_scale</span> <span class="o">*</span> <span class="n">iqr</span><span class="p">(</span><span class="n">avg_distances</span><span class="p">)</span>
+
+        <span class="k">def</span> <span class="nf">compute_issue_threshold</span><span class="p">(</span><span class="n">avg_distances</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">threshold</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+            <span class="n">q3_distance</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">percentile</span><span class="p">(</span><span class="n">avg_distances</span><span class="p">,</span> <span class="mi">75</span><span class="p">)</span>
+            <span class="n">iqr_scale</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">/</span> <span class="n">threshold</span> <span class="o">-</span> <span class="mi">1</span> <span class="k">if</span> <span class="n">threshold</span> <span class="o">!=</span> <span class="mi">0</span> <span class="k">else</span> <span class="n">np</span><span class="o">.</span><span class="n">inf</span>
+            <span class="n">issue_threshold</span> <span class="o">=</span> <span class="n">q3_distance</span> <span class="o">+</span> <span class="n">iqr_scale</span> <span class="o">*</span> <span class="n">iqr</span><span class="p">(</span><span class="n">avg_distances</span><span class="p">)</span>
+            <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="n">issue_threshold</span><span class="p">)</span>
+
+        <span class="n">issue_threshold</span> <span class="o">=</span> <span class="n">compute_issue_threshold</span><span class="p">(</span><span class="n">avg_distances</span><span class="p">,</span> <span class="n">threshold</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">threshold</span><span class="p">,</span> <span class="n">issue_threshold</span><span class="p">,</span> <span class="n">avg_distances</span> <span class="o">&gt;</span> <span class="n">issue_threshold</span>
 
     <span class="k">def</span> <span class="nf">_process_knn_graph_from_features</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">kwargs</span><span class="p">:</span> <span class="n">Dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">csr_matrix</span><span class="p">:</span>
         <span class="c1"># Check if the weighted knn graph exists in info</span>
@@ -786,10 +804,16 @@
 
         <span class="k">return</span> <span class="n">knn_graph</span>
 
-<div class="viewcode-block" id="OutlierIssueManager.collect_info"><a class="viewcode-back" href="../../../../../cleanlab/datalab/internal/issue_manager/outlier.html#cleanlab.datalab.internal.issue_manager.outlier.OutlierIssueManager.collect_info">[docs]</a>    <span class="k">def</span> <span class="nf">collect_info</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">knn_graph</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">csr_matrix</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+<div class="viewcode-block" id="OutlierIssueManager.collect_info"><a class="viewcode-back" href="../../../../../cleanlab/datalab/internal/issue_manager/outlier.html#cleanlab.datalab.internal.issue_manager.outlier.OutlierIssueManager.collect_info">[docs]</a>    <span class="k">def</span> <span class="nf">collect_info</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="o">*</span><span class="p">,</span>
+        <span class="n">issue_threshold</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+        <span class="n">knn_graph</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">csr_matrix</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
         <span class="n">issues_dict</span> <span class="o">=</span> <span class="p">{</span>
             <span class="s2">&quot;average_ood_score&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">issues</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">issue_score_key</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">(),</span>
             <span class="s2">&quot;threshold&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">threshold</span><span class="p">,</span>
+            <span class="s2">&quot;issue_threshold&quot;</span><span class="p">:</span> <span class="n">issue_threshold</span><span class="p">,</span>
         <span class="p">}</span>
         <span class="n">pred_probs_issues_dict</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="n">feature_issues_dict</span> <span class="o">=</span> <span class="p">{}</span>
@@ -815,7 +839,10 @@
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">ood</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s2">&quot;confident_thresholds&quot;</span><span class="p">]</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">pass</span>  <span class="c1">#</span>
         <span class="n">statistics_dict</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_build_statistics_dictionary</span><span class="p">(</span><span class="n">knn_graph</span><span class="o">=</span><span class="n">knn_graph</span><span class="p">)</span>
-        <span class="n">ood_params_dict</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ood</span><span class="o">.</span><span class="n">params</span>
+        <span class="n">ood_params_dict</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;ood&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">ood</span><span class="p">,</span>
+            <span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">ood</span><span class="o">.</span><span class="n">params</span><span class="p">,</span>
+        <span class="p">}</span>
         <span class="n">knn_dict</span> <span class="o">=</span> <span class="p">{</span>
             <span class="o">**</span><span class="n">pred_probs_issues_dict</span><span class="p">,</span>
             <span class="o">**</span><span class="n">feature_issues_dict</span><span class="p">,</span>
@@ -825,6 +852,7 @@
             <span class="o">**</span><span class="n">ood_params_dict</span><span class="p">,</span>  <span class="c1"># type: ignore[arg-type]</span>
             <span class="o">**</span><span class="n">knn_dict</span><span class="p">,</span>
             <span class="o">**</span><span class="n">statistics_dict</span><span class="p">,</span>
+            <span class="s2">&quot;find_issues_inputs&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_find_issues_inputs</span><span class="p">,</span>
         <span class="p">}</span>
         <span class="k">return</span> <span class="n">info_dict</span></div>
 
