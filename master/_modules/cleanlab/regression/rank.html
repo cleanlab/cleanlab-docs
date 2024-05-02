@@ -604,9 +604,10 @@
 <span class="sd">If you have a sklearn-compatible regression model, consider using `cleanlab.regression.learn.CleanLearning` instead, which can more accurately identify noisy label values.</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Callable</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Union</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">from</span> <span class="nn">numpy.typing</span> <span class="kn">import</span> <span class="n">ArrayLike</span>
+<span class="kn">from</span> <span class="nn">scipy.spatial.distance</span> <span class="kn">import</span> <span class="n">euclidean</span>
 <span class="kn">from</span> <span class="nn">sklearn.neighbors</span> <span class="kn">import</span> <span class="n">NearestNeighbors</span>
 
 <span class="kn">from</span> <span class="nn">cleanlab.outlier</span> <span class="kn">import</span> <span class="n">OutOfDistribution</span>
@@ -721,7 +722,7 @@
     <span class="o">*</span><span class="p">,</span>
     <span class="n">residual_scale</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">5</span><span class="p">,</span>
     <span class="n">frac_neighbors</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.5</span><span class="p">,</span>
-    <span class="n">neighbor_metric</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;euclidean&quot;</span><span class="p">,</span>
+    <span class="n">neighbor_metric</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Callable</span><span class="p">]]</span> <span class="o">=</span> <span class="s2">&quot;euclidean&quot;</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Returns OUTRE based label-quality scores.</span>
 
@@ -742,8 +743,9 @@
 <span class="sd">    frac_neighbors: float, default = 0.5</span>
 <span class="sd">        Fraction of examples in dataset that should be considered as `n_neighbors` in the ``NearestNeighbors`` object used internally to assess outliers.</span>
 
-<span class="sd">    neighbor_metric: str, default = &quot;euclidean&quot;</span>
+<span class="sd">    neighbor_metric: Optional[str or callable], default = None</span>
 <span class="sd">        The parameter is passed to sklearn NearestNeighbors. # TODO add reference to sklearn.NearestNeighbor?</span>
+<span class="sd">        If None, the metric is chosen based on the number of features in the dataset.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
@@ -759,6 +761,11 @@
     <span class="n">features</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">labels</span><span class="p">,</span> <span class="n">residual</span><span class="p">])</span><span class="o">.</span><span class="n">T</span>
 
     <span class="n">neighbors</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">ceil</span><span class="p">(</span><span class="n">frac_neighbors</span> <span class="o">*</span> <span class="n">labels</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
+    <span class="k">if</span> <span class="n">neighbor_metric</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">features</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">100</span><span class="p">:</span>
+            <span class="n">neighbor_metric</span> <span class="o">=</span> <span class="s2">&quot;euclidean&quot;</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">neighbor_metric</span> <span class="o">=</span> <span class="n">euclidean</span>
     <span class="n">knn</span> <span class="o">=</span> <span class="n">NearestNeighbors</span><span class="p">(</span><span class="n">n_neighbors</span><span class="o">=</span><span class="n">neighbors</span><span class="p">,</span> <span class="n">metric</span><span class="o">=</span><span class="n">neighbor_metric</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">features</span><span class="p">)</span>
     <span class="n">ood</span> <span class="o">=</span> <span class="n">OutOfDistribution</span><span class="p">(</span><span class="n">params</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;knn&quot;</span><span class="p">:</span> <span class="n">knn</span><span class="p">})</span>
 

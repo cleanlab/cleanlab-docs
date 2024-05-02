@@ -613,17 +613,30 @@ OOD scores may be estimated from either: numeric feature embeddings or predicted
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>params</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code>, <em>default</em> = <code class="docutils literal notranslate"><span class="pre">{}</span></code>) – <p>Optional keyword arguments to control how this estimator is fit. Effect of arguments passed in depends on if
 <cite>OutOfDistribution</cite> estimator will rely on <cite>features</cite> or <cite>pred_probs</cite>. These are stored as an instance attribute <cite>self.params</cite>.</p>
-<dl class="simple">
-<dt>If <cite>features</cite> is passed in during <code class="docutils literal notranslate"><span class="pre">fit()</span></code>, <cite>params</cite> could contain following keys:</dt><dd><ul class="simple">
-<li><dl class="simple">
+<dl>
+<dt>If <cite>features</cite> is passed in during <code class="docutils literal notranslate"><span class="pre">fit()</span></code>, <cite>params</cite> could contain following keys:</dt><dd><ul>
+<li><dl>
 <dt>knn: sklearn.neighbors.NearestNeighbors, default = None</dt><dd><p>Instantiated <code class="docutils literal notranslate"><span class="pre">NearestNeighbors</span></code> object that’s been fitted on a dataset in the same feature space.
 Note that the distance metric and <cite>n_neighbors</cite> is specified when instantiating this class.
 You can also pass in a subclass of <code class="docutils literal notranslate"><span class="pre">sklearn.neighbors.NearestNeighbors</span></code> which allows you to use faster
 approximate neighbor libraries as long as you wrap them behind the same sklearn API.
 If you specify <code class="docutils literal notranslate"><span class="pre">knn</span></code> here, there is no need to later call <code class="docutils literal notranslate"><span class="pre">fit()</span></code> before calling <code class="docutils literal notranslate"><span class="pre">score()</span></code>.
-If <code class="docutils literal notranslate"><span class="pre">knn</span> <span class="pre">=</span> <span class="pre">None</span></code>, then by default: <code class="docutils literal notranslate"><span class="pre">knn</span> <span class="pre">=</span> <span class="pre">sklearn.neighbors.NearestNeighbors(n_neighbors=k,</span> <span class="pre">metric=dist_metric).fit(features)</span></code>
-where <code class="docutils literal notranslate"><span class="pre">dist_metric</span> <span class="pre">==</span> <span class="pre">&quot;cosine&quot;</span></code> if <code class="docutils literal notranslate"><span class="pre">dim(features)</span> <span class="pre">&gt;</span> <span class="pre">3</span></code> or <code class="docutils literal notranslate"><span class="pre">dist_metric</span> <span class="pre">==</span> <span class="pre">&quot;euclidean&quot;</span></code> otherwise.
-See: <a class="reference external" href="https://scikit-learn.org/stable/modules/neighbors.html">https://scikit-learn.org/stable/modules/neighbors.html</a></p>
+If <code class="docutils literal notranslate"><span class="pre">knn</span> <span class="pre">is</span> <span class="pre">None</span></code>, then by default:
+The knn object is instantiated as <code class="docutils literal notranslate"><span class="pre">sklearn.neighbors.NearestNeighbors(n_neighbors=k,</span> <span class="pre">metric=dist_metric).fit(features)</span></code>.
+- If <code class="docutils literal notranslate"><span class="pre">dim(features)</span> <span class="pre">&gt;</span> <span class="pre">3</span></code>, the distance metric is set to “cosine”.
+- If <code class="docutils literal notranslate"><span class="pre">dim(features)</span> <span class="pre">&lt;=</span> <span class="pre">3</span></code>, the distance metric is set to “euclidean”.</p>
+<blockquote>
+<div><dl class="simple">
+<dt>The implementation of the euclidean distance metric depends on the number of examples in the features array:</dt><dd><ul class="simple">
+<li><p>For more than 100 rows, it uses scikit-learn’s “euclidean” metric. This is for efficiency reasons reasons.</p></li>
+<li><p>For 100 or fewer rows, it uses scipy’s <code class="docutils literal notranslate"><span class="pre">scipy.spatial.distance.euclidean</span></code> metric. This is for numerical stability reasons.</p></li>
+</ul>
+</dd>
+</dl>
+</div></blockquote>
+<p>See: <a class="reference external" href="https://scikit-learn.org/stable/modules/neighbors.html">https://scikit-learn.org/stable/modules/neighbors.html</a>
+See: <a class="reference external" href="https://scikit-learn.org/stable/modules/generated/sklearn.metrics.pairwise.euclidean_distances.html">https://scikit-learn.org/stable/modules/generated/sklearn.metrics.pairwise.euclidean_distances.html</a>
+See: <a class="reference external" href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.spatial.distance.euclidean.html">https://docs.scipy.org/doc/scipy/reference/generated/scipy.spatial.distance.euclidean.html</a></p>
 </dd>
 </dl>
 </li>
