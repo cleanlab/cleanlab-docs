@@ -597,13 +597,17 @@
 <span class="sd">&quot;&quot;&quot;Methods to rank and score images in an object detection dataset (object detection data), based on how likely they</span>
 <span class="sd">are to contain label errors. &quot;&quot;&quot;</span>
 
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">TYPE_CHECKING</span><span class="p">,</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">TypeVar</span>
 <span class="kn">import</span> <span class="nn">warnings</span>
+<span class="kn">import</span> <span class="nn">copy</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 
 <span class="kn">from</span> <span class="nn">cleanlab.internal.constants</span> <span class="kn">import</span> <span class="p">(</span>
     <span class="n">ALPHA</span><span class="p">,</span>
     <span class="n">CUSTOM_SCORE_WEIGHT_BADLOC</span><span class="p">,</span>
     <span class="n">CUSTOM_SCORE_WEIGHT_OVERLOOKED</span><span class="p">,</span>
     <span class="n">CUSTOM_SCORE_WEIGHT_SWAP</span><span class="p">,</span>
+    <span class="n">EPSILON</span><span class="p">,</span>
     <span class="n">EUC_FACTOR</span><span class="p">,</span>
     <span class="n">HIGH_PROBABILITY_THRESHOLD</span><span class="p">,</span>
     <span class="n">LOW_PROBABILITY_THRESHOLD</span><span class="p">,</span>
@@ -612,17 +616,12 @@
     <span class="n">TEMPERATURE</span><span class="p">,</span>
     <span class="n">LABEL_OVERLAP_THRESHOLD</span><span class="p">,</span>
 <span class="p">)</span>
-
-
-<span class="kn">import</span> <span class="nn">copy</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">TYPE_CHECKING</span><span class="p">,</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">TypeVar</span>
-
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">from</span> <span class="nn">cleanlab.internal.object_detection_utils</span> <span class="kn">import</span> <span class="p">(</span>
     <span class="n">softmin1d</span><span class="p">,</span>
     <span class="n">assert_valid_aggregation_weights</span><span class="p">,</span>
     <span class="n">assert_valid_inputs</span><span class="p">,</span>
 <span class="p">)</span>
+
 
 <span class="k">if</span> <span class="n">TYPE_CHECKING</span><span class="p">:</span>  <span class="c1"># pragma: no cover</span>
     <span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">TypedDict</span>
@@ -958,7 +957,9 @@
     <span class="c1"># compute the intersection over union by taking the intersection</span>
     <span class="c1"># area and dividing it by the sum of prediction + ground-truth</span>
     <span class="c1"># areas - the interesection area</span>
-    <span class="n">iou</span> <span class="o">=</span> <span class="n">intersection_area</span> <span class="o">/</span> <span class="nb">float</span><span class="p">(</span><span class="n">bb1_area</span> <span class="o">+</span> <span class="n">bb2_area</span> <span class="o">-</span> <span class="n">intersection_area</span><span class="p">)</span>
+    <span class="n">iou</span> <span class="o">=</span> <span class="n">intersection_area</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">clip</span><span class="p">(</span>
+        <span class="nb">float</span><span class="p">(</span><span class="n">bb1_area</span> <span class="o">+</span> <span class="n">bb2_area</span> <span class="o">-</span> <span class="n">intersection_area</span><span class="p">),</span> <span class="n">a_min</span><span class="o">=</span><span class="n">EPSILON</span><span class="p">,</span> <span class="n">a_max</span><span class="o">=</span><span class="kc">None</span>
+    <span class="p">)</span>  <span class="c1"># avoid division by 0</span>
     <span class="c1"># There are some hyper-parameters here like consider tile area/object area</span>
     <span class="k">return</span> <span class="n">iou</span>
 
