@@ -1,0 +1,1290 @@
+<!doctype html>
+<html class="no-js" lang="en" data-content_root="">
+  <head><meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width,initial-scale=1"/>
+    <meta name="color-scheme" content="light dark"><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+        <script async src="https://www.googletagmanager.com/gtag/js?id=G-EV8RVEFX82"></script>
+        <script>
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            
+            gtag('config', 'G-EV8RVEFX82');
+            
+        </script>
+    <meta property="og:title" content="Text Classification with Noisy Labels" />
+<meta property="og:type" content="website" />
+<meta property="og:url" content="https://docs.cleanlab.ai/stable/tutorials/clean_learning/text.html" />
+<meta property="og:site_name" content="cleanlab" />
+<meta property="og:description" content="Consider Using Datalab If you are interested in detecting a wide variety of issues in your text dataset, check out the Datalab text tutorial. Datalab can detect many other types of data issues beyo..." />
+<meta property="og:image" content="https://raw.githubusercontent.com/cleanlab/assets/master/cleanlab/clos-preview-card.png" />
+<meta property="og:image:alt" content="cleanlab" />
+<meta name="description" content="Consider Using Datalab If you are interested in detecting a wide variety of issues in your text dataset, check out the Datalab text tutorial. Datalab can detect many other types of data issues beyo..." />
+<link rel="index" title="Index" href="../../genindex.html" /><link rel="search" title="Search" href="../../search.html" /><link rel="next" title="Classification with Structured/Tabular Data and Noisy Labels" href="tabular.html" /><link rel="prev" title="CleanLearning Tutorials" href="index.html" />
+
+    <link rel="shortcut icon" href="https://raw.githubusercontent.com/cleanlab/assets/a4483476d449f2f05a4c7cde329e72358099cc07/cleanlab/cleanlab_favicon.svg"/><!-- Generated with Sphinx 7.1.2 and Furo 2023.09.10 -->
+        <title>Text Classification with Noisy Labels - cleanlab</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=a746c00c" />
+    <link rel="stylesheet" type="text/css" href="../../_static/styles/furo.css?v=135e06be" />
+    <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../../_static/tabs.css?v=a5c4661c" />
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/katex-math.css?v=91adb8b6" />
+    <link rel="stylesheet" type="text/css" href="../../_static/nbsphinx-code-cells.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/styles/furo-extensions.css?v=36a5483c" />
+    <link rel="stylesheet" type="text/css" href="../../_static/css/custom.css?v=96bccb3e" />
+    
+    
+
+
+<style>
+  body {
+    --color-code-background: #f8f8f8;
+  --color-code-foreground: black;
+  
+  }
+  @media not print {
+    body[data-theme="dark"] {
+      --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+    }
+    @media (prefers-color-scheme: dark) {
+      body:not([data-theme="light"]) {
+        --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+      }
+    }
+  }
+</style></head>
+  <body>
+    
+    <script>
+      document.body.dataset.theme = localStorage.getItem("theme") || "auto";
+    </script>
+    
+
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+  <symbol id="svg-toc" viewBox="0 0 24 24">
+    <title>Contents</title>
+    <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 1024 1024">
+      <path d="M408 442h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8zm-8 204c0 4.4 3.6 8 8 8h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56zm504-486H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zm0 632H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zM115.4 518.9L271.7 642c5.8 4.6 14.4.5 14.4-6.9V388.9c0-7.4-8.5-11.5-14.4-6.9L115.4 505.1a8.74 8.74 0 0 0 0 13.8z"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-menu" viewBox="0 0 24 24">
+    <title>Menu</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-menu">
+      <line x1="3" y1="12" x2="21" y2="12"></line>
+      <line x1="3" y1="6" x2="21" y2="6"></line>
+      <line x1="3" y1="18" x2="21" y2="18"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-arrow-right" viewBox="0 0 24 24">
+    <title>Expand</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-chevron-right">
+      <polyline points="9 18 15 12 9 6"></polyline>
+    </svg>
+  </symbol>
+  <symbol id="svg-sun" viewBox="0 0 24 24">
+    <title>Light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="feather-sun">
+      <circle cx="12" cy="12" r="5"></circle>
+      <line x1="12" y1="1" x2="12" y2="3"></line>
+      <line x1="12" y1="21" x2="12" y2="23"></line>
+      <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+      <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+      <line x1="1" y1="12" x2="3" y2="12"></line>
+      <line x1="21" y1="12" x2="23" y2="12"></line>
+      <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+      <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon" viewBox="0 0 24 24">
+    <title>Dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-moon">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454z" />
+    </svg>
+  </symbol>
+  <symbol id="svg-sun-half" viewBox="0 0 24 24">
+    <title>Auto light/dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-shadow">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+      <circle cx="12" cy="12" r="9" />
+      <path d="M13 12h5" />
+      <path d="M13 15h4" />
+      <path d="M13 18h1" />
+      <path d="M13 9h4" />
+      <path d="M13 6h1" />
+    </svg>
+  </symbol>
+</svg>
+
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation">
+<input type="checkbox" class="sidebar-toggle" name="__toc" id="__toc">
+<label class="overlay sidebar-overlay" for="__navigation">
+  <div class="visually-hidden">Hide navigation sidebar</div>
+</label>
+<label class="overlay toc-overlay" for="__toc">
+  <div class="visually-hidden">Hide table of contents sidebar</div>
+</label>
+
+
+
+<div class="page">
+  <header class="mobile-header">
+    <div class="header-left">
+      <label class="nav-overlay-icon" for="__navigation">
+        <div class="visually-hidden">Toggle site navigation sidebar</div>
+        <i class="icon"><svg><use href="#svg-menu"></use></svg></i>
+      </label>
+    </div>
+    <div class="header-center">
+      <a href="../../index.html"><div class="brand">cleanlab</div></a>
+    </div>
+    <div class="header-right">
+      <div class="theme-toggle-container theme-toggle-header">
+        <button class="theme-toggle">
+          <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+          <svg class="theme-icon-when-auto"><use href="#svg-sun-half"></use></svg>
+          <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+          <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+        </button>
+      </div>
+      <label class="toc-overlay-icon toc-header-icon" for="__toc">
+        <div class="visually-hidden">Toggle table of contents sidebar</div>
+        <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+      </label>
+    </div>
+  </header>
+  <aside class="sidebar-drawer">
+    <div class="sidebar-container">
+      
+      <div class="sidebar-sticky"><a style="padding-bottom: 0px;" class="sidebar-brand" href="../../index.html">
+    
+    <div class="sidebar-logo-container">
+        <img class="sidebar-logo" src="https://raw.githubusercontent.com/cleanlab/assets/master/cleanlab/cleanlab_logo_only.png" alt="Logo" />
+    </div>
+    
+    <span style="margin-bottom:0px" class="sidebar-brand-text">
+        cleanlab
+    </span>
+    
+</a>
+
+<div class="centered">
+    <a style="margin-top: 6px;" class="github-button" href="https://github.com/cleanlab/cleanlab" data-size="large" data-show-count="true"
+    aria-label="Star cleanlab/cleanlab on GitHub">Star</a>
+</div>
+<form class="sidebar-search-container" method="get" action="../../search.html" role="search">
+  <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
+  <input type="hidden" name="check_keywords" value="yes">
+  <input type="hidden" name="area" value="default">
+</form>
+<div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
+  <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../index.html">Quickstart</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Tutorials</span></p>
+<ul class="current">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../datalab/index.html">Datalab Tutorials</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle navigation of Datalab Tutorials</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../datalab/datalab_quickstart.html">Detecting Common Data Issues with Datalab</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../datalab/datalab_advanced.html">Advanced Data Auditing with Datalab</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../datalab/text.html">Text Data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../datalab/tabular.html">Tabular Data (Numeric/Categorical)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../datalab/image.html">Image Data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../datalab/audio.html">Audio Data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cleanlab/datalab/guide/issue_type_description.html">Guide to Datalab Issue Types</a></li>
+</ul>
+</li>
+<li class="toctree-l1 current has-children"><a class="reference internal" href="index.html">CleanLearning Tutorials</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><div class="visually-hidden">Toggle navigation of CleanLearning Tutorials</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="current">
+<li class="toctree-l2 current current-page"><a class="current reference internal" href="#">Text Classification</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tabular.html">Tabular Classification (Numeric/Categorical)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../indepth_overview.html">Workflows of Data-Centric AI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../dataset_health.html">Analyze Dataset-level Issues</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../outliers.html">Outlier Detection</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../multiannotator.html">Improving Consensus Labels for Multiannotator Data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../multilabel_classification.html">Multi-Label Classification</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../regression.html">Noisy Labels in Regression</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../token_classification.html">Token Classification (text)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../segmentation.html">Image Segmentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../object_detection.html">Object Detection</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../pred_probs_cross_val.html">Predicted Probabilities via Cross Validation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../faq.html">FAQ</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API Reference</span></p>
+<ul>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../cleanlab/datalab/index.html">datalab</a><input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" role="switch" type="checkbox"/><label for="toctree-checkbox-3"><div class="visually-hidden">Toggle navigation of datalab</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../cleanlab/datalab/guide/index.html">Datalab guides</a><input class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" role="switch" type="checkbox"/><label for="toctree-checkbox-4"><div class="visually-hidden">Toggle navigation of Datalab guides</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../cleanlab/datalab/guide/issue_type_description.html">Datalab Issue Types</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../cleanlab/datalab/guide/custom_issue_manager.html">Creating Your Own Issues Manager</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../cleanlab/datalab/datalab.html">datalab</a></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../cleanlab/datalab/internal/index.html">internal</a><input class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" role="switch" type="checkbox"/><label for="toctree-checkbox-5"><div class="visually-hidden">Toggle navigation of internal</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../cleanlab/datalab/internal/data.html">data</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../cleanlab/datalab/internal/data_issues.html">data_issues</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../cleanlab/datalab/internal/issue_finder.html">issue_finder</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../cleanlab/datalab/internal/factory.html">factory</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../cleanlab/datalab/internal/model_outputs.html">model_outputs</a></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../../cleanlab/datalab/internal/issue_manager/index.html">issue_manager</a><input class="toctree-checkbox" id="toctree-checkbox-6" name="toctree-checkbox-6" role="switch" type="checkbox"/><label for="toctree-checkbox-6"><div class="visually-hidden">Toggle navigation of issue_manager</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../cleanlab/datalab/internal/issue_manager/issue_manager.html">Base issue_manager module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../cleanlab/datalab/internal/issue_manager/label.html">label</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../cleanlab/datalab/internal/issue_manager/outlier.html">outlier</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../cleanlab/datalab/internal/issue_manager/duplicate.html">duplicate</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../cleanlab/datalab/internal/issue_manager/noniid.html">noniid</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../cleanlab/datalab/internal/issue_manager/imbalance.html">imbalance</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../cleanlab/datalab/internal/issue_manager/underperforming_group.html">underperforming_group</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../cleanlab/datalab/internal/issue_manager/null.html">null</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../cleanlab/datalab/internal/issue_manager/data_valuation.html">data_valuation</a></li>
+<li class="toctree-l4 has-children"><a class="reference internal" href="../../cleanlab/datalab/internal/issue_manager/regression/index.html">regression</a><input class="toctree-checkbox" id="toctree-checkbox-7" name="toctree-checkbox-7" role="switch" type="checkbox"/><label for="toctree-checkbox-7"><div class="visually-hidden">Toggle navigation of regression</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l5"><a class="reference internal" href="../../cleanlab/datalab/internal/issue_manager/regression/label.html">label</a></li>
+</ul>
+</li>
+<li class="toctree-l4 has-children"><a class="reference internal" href="../../cleanlab/datalab/internal/issue_manager/multilabel/index.html">multilabel</a><input class="toctree-checkbox" id="toctree-checkbox-8" name="toctree-checkbox-8" role="switch" type="checkbox"/><label for="toctree-checkbox-8"><div class="visually-hidden">Toggle navigation of multilabel</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l5"><a class="reference internal" href="../../cleanlab/datalab/internal/issue_manager/multilabel/label.html">label</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../cleanlab/datalab/internal/report.html">report</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../cleanlab/datalab/internal/task.html">task</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../cleanlab/classification.html">classification</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../cleanlab/filter.html">filter</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../cleanlab/rank.html">rank</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../cleanlab/count.html">count</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../cleanlab/dataset.html">dataset</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../cleanlab/outlier.html">outlier</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../cleanlab/multiannotator.html">multiannotator</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../cleanlab/data_valuation.html">data_valuation</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../cleanlab/multilabel_classification/index.html">multilabel_classification</a><input class="toctree-checkbox" id="toctree-checkbox-9" name="toctree-checkbox-9" role="switch" type="checkbox"/><label for="toctree-checkbox-9"><div class="visually-hidden">Toggle navigation of multilabel_classification</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../cleanlab/multilabel_classification/filter.html">filter</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cleanlab/multilabel_classification/rank.html">rank</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cleanlab/multilabel_classification/dataset.html">dataset</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../cleanlab/regression/index.html">regression</a><input class="toctree-checkbox" id="toctree-checkbox-10" name="toctree-checkbox-10" role="switch" type="checkbox"/><label for="toctree-checkbox-10"><div class="visually-hidden">Toggle navigation of regression</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../cleanlab/regression/rank.html">regression.rank</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cleanlab/regression/learn.html">regression.learn</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../cleanlab/token_classification/index.html">token_classification</a><input class="toctree-checkbox" id="toctree-checkbox-11" name="toctree-checkbox-11" role="switch" type="checkbox"/><label for="toctree-checkbox-11"><div class="visually-hidden">Toggle navigation of token_classification</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../cleanlab/token_classification/filter.html">filter</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cleanlab/token_classification/rank.html">rank</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cleanlab/token_classification/summary.html">summary</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../cleanlab/segmentation/index.html">segmentation</a><input class="toctree-checkbox" id="toctree-checkbox-12" name="toctree-checkbox-12" role="switch" type="checkbox"/><label for="toctree-checkbox-12"><div class="visually-hidden">Toggle navigation of segmentation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../cleanlab/segmentation/rank.html">rank</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cleanlab/segmentation/filter.html">filter</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cleanlab/segmentation/summary.html">summary</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../cleanlab/object_detection/index.html">object_detection</a><input class="toctree-checkbox" id="toctree-checkbox-13" name="toctree-checkbox-13" role="switch" type="checkbox"/><label for="toctree-checkbox-13"><div class="visually-hidden">Toggle navigation of object_detection</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../cleanlab/object_detection/rank.html">rank</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cleanlab/object_detection/filter.html">filter</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cleanlab/object_detection/summary.html">summary</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../cleanlab/benchmarking/index.html">benchmarking</a><input class="toctree-checkbox" id="toctree-checkbox-14" name="toctree-checkbox-14" role="switch" type="checkbox"/><label for="toctree-checkbox-14"><div class="visually-hidden">Toggle navigation of benchmarking</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../cleanlab/benchmarking/noise_generation.html">noise_generation</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../cleanlab/models/index.html">models</a><input class="toctree-checkbox" id="toctree-checkbox-15" name="toctree-checkbox-15" role="switch" type="checkbox"/><label for="toctree-checkbox-15"><div class="visually-hidden">Toggle navigation of models</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../cleanlab/models/keras.html">keras</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cleanlab/models/fasttext.html">fasttext</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../cleanlab/experimental/index.html">experimental</a><input class="toctree-checkbox" id="toctree-checkbox-16" name="toctree-checkbox-16" role="switch" type="checkbox"/><label for="toctree-checkbox-16"><div class="visually-hidden">Toggle navigation of experimental</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../cleanlab/experimental/label_issues_batched.html">label_issues_batched</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cleanlab/experimental/span_classification.html">span_classification</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cleanlab/experimental/mnist_pytorch.html">mnist_pytorch</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cleanlab/experimental/coteaching.html">coteaching</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cleanlab/experimental/cifar_cnn.html">cifar_cnn</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../cleanlab/internal/index.html">internal</a><input class="toctree-checkbox" id="toctree-checkbox-17" name="toctree-checkbox-17" role="switch" type="checkbox"/><label for="toctree-checkbox-17"><div class="visually-hidden">Toggle navigation of internal</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../cleanlab/internal/util.html">util</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cleanlab/internal/latent_algebra.html">latent_algebra</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cleanlab/internal/label_quality_utils.html">label_quality_utils</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cleanlab/internal/multilabel_utils.html">multilabel_utils</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cleanlab/internal/multilabel_scorer.html">multilabel_scorer</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cleanlab/internal/outlier.html">outlier</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cleanlab/internal/token_classification_utils.html">token_classification_utils</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cleanlab/internal/validation.html">validation</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Guides</span></p>
+<ul>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../cleanlab/datalab/guide/index.html">Datalab issue types</a><input class="toctree-checkbox" id="toctree-checkbox-18" name="toctree-checkbox-18" role="switch" type="checkbox"/><label for="toctree-checkbox-18"><div class="visually-hidden">Toggle navigation of Datalab issue types</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../cleanlab/datalab/guide/issue_type_description.html">Datalab Issue Types</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cleanlab/datalab/guide/custom_issue_manager.html">Creating Your Own Issues Manager</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/cleanlab/cleanlab/blob/master/CONTRIBUTING.md">How to contribute</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Links</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference external" href="https://cleanlab.ai">Website</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/cleanlab/cleanlab">GitHub</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://pypi.org/project/cleanlab/">PyPI</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://anaconda.org/conda-forge/cleanlab">Conda</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://cleanlab.ai/slack">Community Discussions</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://cleanlab.ai/blog/">Blog</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://www.youtube.com/@CleanlabAI/playlists">Videos</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://cleanlab.ai/blog/data-centric-ai/">Cleanlab Studio (Easy Mode)</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://help.cleanlab.ai">Cleanlab Studio Docs</a></li>
+</ul>
+
+</div>
+
+
+<!-- Start of versioning -->
+
+<div class="sidebar-tree">
+    <p class="caption" role="heading">
+        <span class="caption-text">Versions</span>
+    </p>
+    <ul>
+        <li class="toctree-l1">
+            <a
+                id="version_number"
+                class="reference internal"
+                href="/"
+                >stable</a
+            >
+        </li>
+        <li class="toctree-l1">
+            <a
+                id="commit_hash"
+                class="reference internal"
+                href="/master/"
+                >developer</a
+            >
+        </li>
+        
+        <li class="toctree-l1">
+            <a
+                id="v2.6.3"
+                class="reference internal"
+                href="/v2.6.3/"
+                >v2.6.3</a
+            >
+        </li>
+        
+        <li class="toctree-l1">
+            <a
+                id="v2.6.2"
+                class="reference internal"
+                href="/v2.6.2/"
+                >v2.6.2</a
+            >
+        </li>
+        
+        <li class="toctree-l1">
+            <a
+                id="v2.6.1"
+                class="reference internal"
+                href="/v2.6.1/"
+                >v2.6.1</a
+            >
+        </li>
+        
+        <li class="toctree-l1">
+            <a
+                id="v2.6.0"
+                class="reference internal"
+                href="/v2.6.0/"
+                >v2.6.0</a
+            >
+        </li>
+        
+        <li class="toctree-l1">
+            <a
+                id="v2.5.0"
+                class="reference internal"
+                href="/v2.5.0/"
+                >v2.5.0</a
+            >
+        </li>
+        
+        <li class="toctree-l1">
+            <a
+                id="v2.4.0"
+                class="reference internal"
+                href="/v2.4.0/"
+                >v2.4.0</a
+            >
+        </li>
+        
+        <li class="toctree-l1">
+            <a
+                id="v2.3.1"
+                class="reference internal"
+                href="/v2.3.1/"
+                >v2.3.1</a
+            >
+        </li>
+        
+        <li class="toctree-l1">
+            <a
+                id="v2.3.0"
+                class="reference internal"
+                href="/v2.3.0/"
+                >v2.3.0</a
+            >
+        </li>
+        
+        <li class="toctree-l1">
+            <a
+                id="v2.2.0"
+                class="reference internal"
+                href="/v2.2.0/"
+                >v2.2.0</a
+            >
+        </li>
+        
+        <li class="toctree-l1">
+            <a
+                id="v2.1.0"
+                class="reference internal"
+                href="/v2.1.0/"
+                >v2.1.0</a
+            >
+        </li>
+        
+        <li class="toctree-l1">
+            <a
+                id="v2.0.0"
+                class="reference internal"
+                href="/v2.0.0/"
+                >v2.0.0</a
+            >
+        </li>
+        
+        <li class="toctree-l1">
+            <a
+                id="v1.0.1"
+                class="reference internal"
+                href="/v1.0.1/"
+                >v1.0.1</a
+            >
+        </li>
+        
+    </ul>
+</div>
+
+<br>
+<br>
+
+<script
+    type="text/javascript"
+    src="/versioning.js"
+></script>
+
+<script type="text/javascript">
+    window.addEventListener("load", () => {
+        const version_number = Version.version_number;
+        const commit_hash = Version.commit_hash;
+
+        document.getElementById("version_number").innerHTML =
+            "stable <code class='docutils literal notranslate'><span class='pre'> (" +
+            version_number +
+            ")</span></code>";
+        document.getElementById("commit_hash").innerHTML =
+            "master <code class='docutils literal notranslate'><span class='pre'> (" +
+            commit_hash.slice(0, 7) +
+            "&hellip;)</span></code>";
+    });
+</script>
+
+<!-- End of versioning -->
+
+</div>
+      </div>
+      
+    </div>
+  </aside>
+  <div class="main">
+    <div class="content">
+      <div class="article-container">
+        <a href="#" class="back-to-top muted-link">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12z"></path>
+          </svg>
+          <span>Back to top</span>
+        </a>
+        <div class="content-icon-container">
+          
+<div class="theme-toggle-container theme-toggle-content">
+            <button class="theme-toggle">
+              <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+              <svg class="theme-icon-when-auto"><use href="#svg-sun-half"></use></svg>
+              <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+              <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+            </button>
+          </div>
+          <label class="toc-overlay-icon toc-content-icon" for="__toc">
+            <div class="visually-hidden">Toggle table of contents sidebar</div>
+            <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+          </label>
+        </div>
+        <article role="main">
+          
+
+<noscript>
+  <div class="admonition warning">
+    <p class="admonition-title">Warning</p>
+    <p>Parts of this site uses JavaScript, but your browser does not support it.</p>
+  </div>
+</noscript>
+
+
+
+<!-- Start of Version Warning Banner -->
+
+<p id="doc_ver_warning"></p>
+
+<script
+    type="text/javascript"
+    src="/versioning.js"
+></script>
+<script type="text/javascript">
+    window.addEventListener("load", () => {
+        const version_number = Version.version_number;
+        const path_arr = window.location.pathname.split("/");
+
+        if (path_arr.includes("master")) {
+            document.getElementById("doc_ver_warning").innerHTML =
+            `<div class="admonition warning">
+            <p class="admonition-title">Warning</p>
+            <p>This version of the documentation corresponds to the master branch of <code class="docutils literal notranslate"><span class="pre">cleanlab</span></code> source code from <a href="https://github.com/cleanlab/cleanlab/">GitHub</a>. To see the documentation for the latest <code class="docutils literal notranslate"><span class="pre">pip</span></code>-installed version, click <a href="/">here</a>.</p>
+            </div>`;
+        } else if (!path_arr.includes(version_number) && !path_arr.includes("stable")) {
+            document.getElementById("doc_ver_warning").innerHTML =
+            `<div class="admonition warning">
+            <p class="admonition-title">Warning</p>
+            <p>This documentation is for an old version (<code class="docutils literal notranslate"><span class="pre">v2.6.4</span></code>) of <code class="docutils literal notranslate"><span class="pre">cleanlab</span></code>. To see the documentation for the latest stable version (<code class="docutils literal notranslate"><span class="pre">` + version_number + `</span></code>), click <a href="/">here</a>.</p>
+            </div>`;
+        } else {
+            document.getElementById("doc_ver_warning").remove();
+        }
+    });
+</script>
+
+<!-- End of Version Warning Banner -->
+
+ <style>
+    .nbinput .prompt,
+    .nboutput .prompt {
+        display: none;
+    }
+
+    .output_area {
+        max-height: 300px;
+        overflow: auto;
+    }
+
+    .dataframe {
+        background: #D7D7D7;
+    }
+
+    th {
+        color:black;
+    }
+</style>
+
+<script type="text/javascript">
+    window.addEventListener('load', () => {
+        const h1_element = document.getElementsByTagName("h1");
+        h1_element[0].insertAdjacentHTML("afterend", `
+        <p>
+            <a style="background-color:white;color:black;padding:4px 12px;text-decoration:none;display:inline-block;border-radius:8px;box-shadow:0 2px 4px 0 rgba(0, 0, 0, 0.2), 0 3px 10px 0 rgba(0, 0, 0, 0.19)" href="https://colab.research.google.com/github/cleanlab/cleanlab-docs/blob/master/v2.6.4/tutorials/clean_learning/text.ipynb" target="_blank">
+            <img src="https://colab.research.google.com/img/colab_favicon_256px.png" alt="" style="width:40px;height:40px;vertical-align:middle">
+            <span style="vertical-align:middle">Run in Google Colab</span>
+            </a>
+        </p>
+        `);
+    })
+
+</script><section id="Text-Classification-with-Noisy-Labels">
+<h1>Text Classification with Noisy Labels<a class="headerlink" href="#Text-Classification-with-Noisy-Labels" title="Permalink to this heading">#</a></h1>
+<div class="admonition note">
+<p class="admonition-title">Consider Using Datalab</p>
+<p>If you are interested in detecting a wide variety of issues in your text dataset, check out the <a class="reference external" href="https://docs.cleanlab.ai/stable/tutorials/datalab/text.html">Datalab text tutorial</a>. Datalab can detect many other types of data issues beyond label issues, whereas CleanLearning is a convenience method to handle noisy labels with sklearn-compatible classification models.</p>
+</div>
+<p>In this 5-minute quickstart tutorial, we use cleanlab to find potential label errors in an intent classification dataset composed of (text) customer service requests at an online bank. We consider a subset of the <a class="reference external" href="https://arxiv.org/abs/2106.04564">Banking77-OOS Dataset</a> containing 1,000 customer service requests which can be classified into 10 categories corresponding to the intent of the request. cleanlab will shortlist examples that confuse our ML model the most; many of which are potential
+label errors, out-of-scope examples, or otherwise ambiguous examples. cleanlab’s <code class="docutils literal notranslate"><span class="pre">CleanLearning</span></code> class automatically detects and filters out such badly labeled data, in order to train a more robust version of any Machine Learning model. No change to your existing modeling code is required!</p>
+<p><strong>Overview of what we’ll do in this tutorial:</strong></p>
+<ul class="simple">
+<li><p>Define a ML model that can be trained on our dataset (here we use Logistic Regression applied to text embeddings from a pretrained Transformer network, you can use any text classifier model).</p></li>
+<li><p>Use <code class="docutils literal notranslate"><span class="pre">CleanLearning</span></code> to wrap this ML model and compute out-of-sample predicted class probabilites, which allow us to identify potential label errors in the dataset.</p></li>
+<li><p>Train a more robust version of the same ML model after dropping the detected label errors using <code class="docutils literal notranslate"><span class="pre">CleanLearning</span></code>.</p></li>
+</ul>
+<div class="admonition note">
+<p class="admonition-title">Quickstart</p>
+<p>Already have an sklearn compatible <code class="docutils literal notranslate"><span class="pre">model</span></code>, <code class="docutils literal notranslate"><span class="pre">data</span></code> and given <code class="docutils literal notranslate"><span class="pre">labels</span></code>? Run the code below to train your <code class="docutils literal notranslate"><span class="pre">model</span></code> and get label issues using <code class="docutils literal notranslate"><span class="pre">CleanLearning</span></code>.</p>
+<p>You can subsequently use the same <code class="docutils literal notranslate"><span class="pre">CleanLearning</span></code> object to train a more robust model (only trained on the clean data) by calling the <code class="docutils literal notranslate"><span class="pre">.fit()</span></code> method and passing in the <code class="docutils literal notranslate"><span class="pre">label_issues</span></code> found earlier.</p>
+<div class="markdown" style="background:white;margin:16px"><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">cleanlab.classification</span> <span class="kn">import</span> <span class="n">CleanLearning</span>
+
+<span class="n">cl</span> <span class="o">=</span> <span class="n">CleanLearning</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
+<span class="n">label_issues</span> <span class="o">=</span> <span class="n">cl</span><span class="o">.</span><span class="n">find_label_issues</span><span class="p">(</span><span class="n">train_data</span><span class="p">,</span> <span class="n">labels</span><span class="p">)</span>  <span class="c1"># identify mislabeled examples</span>
+
+<span class="n">cl</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">train_data</span><span class="p">,</span> <span class="n">labels</span><span class="p">,</span> <span class="n">label_issues</span><span class="o">=</span><span class="n">label_issues</span><span class="p">)</span>
+<span class="n">preds</span> <span class="o">=</span> <span class="n">cl</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">test_data</span><span class="p">)</span>  <span class="c1"># predictions from a version of your model</span>
+                               <span class="c1"># trained on auto-cleaned data</span>
+</pre></div>
+</div>
+</div>
+<p>Is your model/data not compatible with <code class="docutils literal notranslate"><span class="pre">CleanLearning</span></code>? You can instead run cross-validation on your model to get out-of-sample <code class="docutils literal notranslate"><span class="pre">pred_probs</span></code>. Then run the code below to get label issue indices ranked by their inferred severity.</p>
+<div class="markdown" style="background:white;margin:16px"><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">cleanlab.filter</span> <span class="kn">import</span> <span class="n">find_label_issues</span>
+
+<span class="n">ranked_label_issues</span> <span class="o">=</span> <span class="n">find_label_issues</span><span class="p">(</span>
+    <span class="n">labels</span><span class="p">,</span>
+    <span class="n">pred_probs</span><span class="p">,</span>
+    <span class="n">return_indices_ranked_by</span><span class="o">=</span><span class="s2">&quot;self_confidence&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div></div><section id="1.-Install-required-dependencies">
+<h2>1. Install required dependencies<a class="headerlink" href="#1.-Install-required-dependencies" title="Permalink to this heading">#</a></h2>
+<p>You can use <code class="docutils literal notranslate"><span class="pre">pip</span></code> to install all packages required for this tutorial as follows:</p>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">!</span>pip<span class="w"> </span>install<span class="w"> </span>sentence-transformers
+<span class="o">!</span>pip<span class="w"> </span>install<span class="w"> </span>cleanlab
+<span class="c1"># Make sure to install the version corresponding to this tutorial</span>
+<span class="c1"># E.g. if viewing master branch documentation:</span>
+<span class="c1">#     !pip install git+https://github.com/cleanlab/cleanlab.git</span>
+</pre></div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">re</span>
+<span class="kn">import</span> <span class="nn">string</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">from</span> <span class="nn">sklearn.metrics</span> <span class="kn">import</span> <span class="n">accuracy_score</span>
+<span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="kn">import</span> <span class="n">train_test_split</span><span class="p">,</span> <span class="n">cross_val_predict</span>
+<span class="kn">from</span> <span class="nn">sklearn.preprocessing</span> <span class="kn">import</span> <span class="n">LabelEncoder</span>
+<span class="kn">from</span> <span class="nn">sklearn.linear_model</span> <span class="kn">import</span> <span class="n">LogisticRegression</span>
+<span class="kn">from</span> <span class="nn">sentence_transformers</span> <span class="kn">import</span> <span class="n">SentenceTransformer</span>
+
+<span class="kn">from</span> <span class="nn">cleanlab.classification</span> <span class="kn">import</span> <span class="n">CleanLearning</span>
+</pre></div>
+</div>
+</div>
+</section>
+<section id="2.-Load-and-format-the-text-dataset">
+<h2>2. Load and format the text dataset<a class="headerlink" href="#2.-Load-and-format-the-text-dataset" title="Permalink to this heading">#</a></h2>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">&quot;https://s.cleanlab.ai/banking-intent-classification.csv&quot;</span><span class="p">)</span>
+<span class="n">data</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
+</pre></div>
+</div>
+<div class="output_area rendered_html docutils container">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>text</th>
+      <th>label</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>i accidentally made a payment to a wrong account. what should i do?</td>
+      <td>cancel_transfer</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>i no longer want to transfer funds, can we cancel that transaction?</td>
+      <td>cancel_transfer</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>cancel my transfer, please.</td>
+      <td>cancel_transfer</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>i want to revert this mornings transaction.</td>
+      <td>cancel_transfer</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>i just realised i made the wrong payment yesterday. can you please change it to the right account? it's my rent payment and really really needs to be in the right account by tomorrow</td>
+      <td>cancel_transfer</td>
+    </tr>
+  </tbody>
+</table>
+</div></div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">raw_texts</span><span class="p">,</span> <span class="n">raw_labels</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s2">&quot;text&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="n">data</span><span class="p">[</span><span class="s2">&quot;label&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span>
+
+<span class="n">raw_train_texts</span><span class="p">,</span> <span class="n">raw_test_texts</span><span class="p">,</span> <span class="n">raw_train_labels</span><span class="p">,</span> <span class="n">raw_test_labels</span> <span class="o">=</span> <span class="n">train_test_split</span><span class="p">(</span><span class="n">raw_texts</span><span class="p">,</span> <span class="n">raw_labels</span><span class="p">,</span> <span class="n">test_size</span><span class="o">=</span><span class="mf">0.1</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">num_classes</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">raw_train_labels</span><span class="p">))</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;This dataset has </span><span class="si">{</span><span class="n">num_classes</span><span class="si">}</span><span class="s2"> classes.&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Classes: </span><span class="si">{</span><span class="nb">set</span><span class="p">(</span><span class="n">raw_train_labels</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+This dataset has 10 classes.
+Classes: {&#39;visa_or_mastercard&#39;, &#39;getting_spare_card&#39;, &#39;lost_or_stolen_phone&#39;, &#39;apple_pay_or_google_pay&#39;, &#39;beneficiary_not_allowed&#39;, &#39;change_pin&#39;, &#39;card_payment_fee_charged&#39;, &#39;supported_cards_and_currencies&#39;, &#39;cancel_transfer&#39;, &#39;card_about_to_expire&#39;}
+</pre></div></div>
+</div>
+<p>Let’s print the first example in the train set.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Example Label: </span><span class="si">{</span><span class="n">raw_train_labels</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Example Text: </span><span class="si">{</span><span class="n">raw_train_texts</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Example Label: getting_spare_card
+Example Text: can i have another card in addition to my first one?
+</pre></div></div>
+</div>
+<p>The data is stored as two numpy arrays for each the train and test set:</p>
+<ol class="arabic simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">raw_train_texts</span></code> and <code class="docutils literal notranslate"><span class="pre">raw_test_texts</span></code> store the customer service requests utterances in text format</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">raw_train_labels</span></code> and <code class="docutils literal notranslate"><span class="pre">raw_test_labels</span></code> store the intent categories (labels) for each example</p></li>
+</ol>
+<p>First, we need to perform label enconding on the labels, cleanlab’s functions require the labels for each example to be an interger integer in 0, 1, …, num_classes - 1. We will use sklearn’s <code class="docutils literal notranslate"><span class="pre">LabelEncoder</span></code> to encode our labels.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">encoder</span> <span class="o">=</span> <span class="n">LabelEncoder</span><span class="p">()</span>
+<span class="n">encoder</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">raw_train_labels</span><span class="p">)</span>
+
+<span class="n">train_labels</span> <span class="o">=</span> <span class="n">encoder</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">raw_train_labels</span><span class="p">)</span>
+<span class="n">test_labels</span> <span class="o">=</span> <span class="n">encoder</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">raw_test_labels</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Bringing Your Own Data (BYOD)?</p>
+<p>You can easily replace the above with your own text dataset, and continue with the rest of the tutorial.</p>
+<p>Your classes (and entries of <code class="docutils literal notranslate"><span class="pre">train_labels</span></code> / <code class="docutils literal notranslate"><span class="pre">test_labels</span></code>) should be represented as integer indices 0, 1, …, num_classes - 1. For example, if your dataset has 7 examples from 3 classes, <code class="docutils literal notranslate"><span class="pre">train_labels</span></code> might be: <code class="docutils literal notranslate"><span class="pre">np.array([2,0,0,1,2,0,1])</span></code></p>
+</div>
+<p>Next we convert the text strings into vectors better suited as inputs for our ML model.</p>
+<p>We will use numeric representations from a pretrained Transformer model as embeddings of our text. The <a class="reference external" href="https://huggingface.co/docs/hub/sentence-transformers">Sentence Transformers</a> library offers simple methods to compute these embeddings for text data. Here, we load the pretrained <code class="docutils literal notranslate"><span class="pre">electra-small-discriminator</span></code> model, and then run our data through network to extract a vector embedding of each example.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">transformer</span> <span class="o">=</span> <span class="n">SentenceTransformer</span><span class="p">(</span><span class="s1">&#39;google/electra-small-discriminator&#39;</span><span class="p">)</span>
+
+<span class="n">train_texts</span> <span class="o">=</span> <span class="n">transformer</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="n">raw_train_texts</span><span class="p">)</span>
+<span class="n">test_texts</span> <span class="o">=</span> <span class="n">transformer</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="n">raw_test_texts</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<script type="application/vnd.jupyter.widget-view+json">{"version_major": 2, "version_minor": 0, "model_id": "d0a27695496247ecafd8eee0c9ae95b0"}</script></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<script type="application/vnd.jupyter.widget-view+json">{"version_major": 2, "version_minor": 0, "model_id": "150a313709ac476d81cec10ec7477012"}</script></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<script type="application/vnd.jupyter.widget-view+json">{"version_major": 2, "version_minor": 0, "model_id": "0205a5a031b7462e901bfebcf4742559"}</script></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<script type="application/vnd.jupyter.widget-view+json">{"version_major": 2, "version_minor": 0, "model_id": "38ac8838dabc4da5a43d6cf0453896cd"}</script></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<script type="application/vnd.jupyter.widget-view+json">{"version_major": 2, "version_minor": 0, "model_id": "29b999205f224aa885c1c133efa35181"}</script></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<script type="application/vnd.jupyter.widget-view+json">{"version_major": 2, "version_minor": 0, "model_id": "1d8b6c69d1e4472ebfefe5ed6414b33e"}</script></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<script type="application/vnd.jupyter.widget-view+json">{"version_major": 2, "version_minor": 0, "model_id": "d63c14cb7e25485b99d38cbef5009607"}</script></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area stderr docutils container">
+<div class="highlight"><pre>
+No sentence-transformers model found with name /home/runner/.cache/torch/sentence_transformers/google_electra-small-discriminator. Creating a new one with MEAN pooling.
+/opt/hostedtoolcache/Python/3.11.9/x64/lib/python3.11/site-packages/torch/_utils.py:831: UserWarning: TypedStorage is deprecated. It will be removed in the future and UntypedStorage will be the only storage class. This should only matter to you if you are using storages directly.  To access UntypedStorage directly, use tensor.untyped_storage() instead of tensor.storage()
+  return self.fget.__get__(instance, owner)()
+</pre></div></div>
+</div>
+<p>Our subsequent ML model will directly operate on elements of <code class="docutils literal notranslate"><span class="pre">train_texts</span></code> and <code class="docutils literal notranslate"><span class="pre">test_texts</span></code> in order to classify the customer service requests.</p>
+</section>
+<section id="3.-Define-a-classification-model-and-use-cleanlab-to-find-potential-label-errors">
+<h2>3. Define a classification model and use cleanlab to find potential label errors<a class="headerlink" href="#3.-Define-a-classification-model-and-use-cleanlab-to-find-potential-label-errors" title="Permalink to this heading">#</a></h2>
+<p>A typical way to leverage pretrained networks for a particular classification task is to add a linear output layer and fine-tune the network parameters on the new data. However this can be computationally intensive. Alternatively, we can freeze the pretrained weights of the network and only train the output layer without having to rely on GPU(s). Here we do this conveniently by fitting a scikit-learn linear model on top of the extracted embeddings.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">model</span> <span class="o">=</span> <span class="n">LogisticRegression</span><span class="p">(</span><span class="n">max_iter</span><span class="o">=</span><span class="mi">400</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<p>We can define the <code class="docutils literal notranslate"><span class="pre">CleanLearning</span></code> object with our Logistic Regression model and use <code class="docutils literal notranslate"><span class="pre">find_label_issues</span></code> to identify potential label errors.</p>
+<p><code class="docutils literal notranslate"><span class="pre">CleanLearning</span></code> provides a wrapper class that can easily be applied to any scikit-learn compatible model, which can be used to find potential label issues and train a more robust model if the original data contains noisy labels.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">cv_n_folds</span> <span class="o">=</span> <span class="mi">5</span>  <span class="c1"># for efficiency; values like 5 or 10 will generally work better</span>
+
+<span class="n">cl</span> <span class="o">=</span> <span class="n">CleanLearning</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">cv_n_folds</span><span class="o">=</span><span class="n">cv_n_folds</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[12]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">label_issues</span> <span class="o">=</span> <span class="n">cl</span><span class="o">.</span><span class="n">find_label_issues</span><span class="p">(</span><span class="n">X</span><span class="o">=</span><span class="n">train_texts</span><span class="p">,</span> <span class="n">labels</span><span class="o">=</span><span class="n">train_labels</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">find_label_issues</span></code> method above will perform cross validation to compute out-of-sample predicted probabilites for each example, which is used to identify label issues.</p>
+<p>This method returns a dataframe containing a label quality score for each example. These numeric scores lie between 0 and 1, where lower scores indicate examples more likely to be mislabeled. The dataframe also contains a boolean column specifying whether or not each example is identified to have a label issue (indicating it is likely mislabeled). Note that the given and predicted labels here are encoded as intergers as that was the format expected by <code class="docutils literal notranslate"><span class="pre">cleanlab</span></code>, we will inverse transform them
+later in this tutorial.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[13]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">label_issues</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[13]:
+</pre></div>
+</div>
+<div class="output_area rendered_html docutils container">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>is_label_issue</th>
+      <th>label_quality</th>
+      <th>given_label</th>
+      <th>predicted_label</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>False</td>
+      <td>0.858371</td>
+      <td>6</td>
+      <td>6</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>False</td>
+      <td>0.547274</td>
+      <td>3</td>
+      <td>3</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>False</td>
+      <td>0.826228</td>
+      <td>7</td>
+      <td>7</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>False</td>
+      <td>0.966008</td>
+      <td>8</td>
+      <td>8</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>False</td>
+      <td>0.792449</td>
+      <td>4</td>
+      <td>4</td>
+    </tr>
+  </tbody>
+</table>
+</div></div>
+</div>
+<p>We can get the subset of examples flagged with label issues, and also sort by label quality score to find the indices of the 10 most likely mislabeled examples in our dataset.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[14]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">identified_issues</span> <span class="o">=</span> <span class="n">label_issues</span><span class="p">[</span><span class="n">label_issues</span><span class="p">[</span><span class="s2">&quot;is_label_issue&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="kc">True</span><span class="p">]</span>
+<span class="n">lowest_quality_labels</span> <span class="o">=</span> <span class="n">label_issues</span><span class="p">[</span><span class="s2">&quot;label_quality&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">argsort</span><span class="p">()[:</span><span class="mi">10</span><span class="p">]</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[15]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span>
+    <span class="sa">f</span><span class="s2">&quot;cleanlab found </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">identified_issues</span><span class="p">)</span><span class="si">}</span><span class="s2"> potential label errors in the dataset.</span><span class="se">\n</span><span class="s2">&quot;</span>
+    <span class="sa">f</span><span class="s2">&quot;Here are indices of the top 10 most likely errors: </span><span class="se">\n</span><span class="s2"> </span><span class="si">{</span><span class="n">lowest_quality_labels</span><span class="si">}</span><span class="s2">&quot;</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+cleanlab found 44 potential label errors in the dataset.
+Here are indices of the top 10 most likely errors:
+ [646 390 628 121 702 863 456 135 337 735]
+</pre></div></div>
+</div>
+<p>Let’s review some of the most likely label errors. To help us inspect these datapoints, we define a method to print any example from the dataset, together with its given (original) label and the suggested alternative label from cleanlab.</p>
+<p>We then display some of the top-ranked label issues identified by cleanlab:</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[16]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">print_as_df</span><span class="p">(</span><span class="n">index</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
+        <span class="p">{</span>
+            <span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="n">raw_train_texts</span><span class="p">,</span>
+            <span class="s2">&quot;given_label&quot;</span><span class="p">:</span> <span class="n">raw_train_labels</span><span class="p">,</span>
+            <span class="s2">&quot;predicted_label&quot;</span><span class="p">:</span> <span class="n">encoder</span><span class="o">.</span><span class="n">inverse_transform</span><span class="p">(</span><span class="n">label_issues</span><span class="p">[</span><span class="s2">&quot;predicted_label&quot;</span><span class="p">]),</span>
+        <span class="p">},</span>
+    <span class="p">)</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">index</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[17]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">print_as_df</span><span class="p">(</span><span class="n">lowest_quality_labels</span><span class="p">[:</span><span class="mi">5</span><span class="p">])</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[17]:
+</pre></div>
+</div>
+<div class="output_area rendered_html docutils container">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>text</th>
+      <th>given_label</th>
+      <th>predicted_label</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>646</th>
+      <td>i was charged for getting cash.</td>
+      <td>card_about_to_expire</td>
+      <td>card_payment_fee_charged</td>
+    </tr>
+    <tr>
+      <th>390</th>
+      <td>can i change my pin on holiday?</td>
+      <td>beneficiary_not_allowed</td>
+      <td>change_pin</td>
+    </tr>
+    <tr>
+      <th>628</th>
+      <td>will i be sent a new card before mine expires?</td>
+      <td>apple_pay_or_google_pay</td>
+      <td>card_about_to_expire</td>
+    </tr>
+    <tr>
+      <th>121</th>
+      <td>Would you rather fight one horse-sized duck or 100 duck-sized horses?</td>
+      <td>lost_or_stolen_phone</td>
+      <td>getting_spare_card</td>
+    </tr>
+    <tr>
+      <th>702</th>
+      <td>please tell me how to change my pin.</td>
+      <td>beneficiary_not_allowed</td>
+      <td>change_pin</td>
+    </tr>
+  </tbody>
+</table>
+</div></div>
+</div>
+<p>These are very clear label errors that cleanlab has identified in this data! Note that the <code class="docutils literal notranslate"><span class="pre">given_label</span></code> does not correctly reflect the intent of these requests, whoever produced this dataset made many mistakes that are important to address before modeling the data.</p>
+<p>cleanlab has shortlisted the most likely label errors to speed up your data cleaning process. With this list, you can decide whether to fix these label issues or remove ambiguous examples from the dataset.</p>
+</section>
+<section id="4.-Train-a-more-robust-model-from-noisy-labels">
+<h2>4. Train a more robust model from noisy labels<a class="headerlink" href="#4.-Train-a-more-robust-model-from-noisy-labels" title="Permalink to this heading">#</a></h2>
+<p>Fixing the label issues manually may be time-consuming, but cleanlab can filter these noisy examples and train a model on the remaining clean data for you automatically.</p>
+<p>To establish a baseline, let’s first train and evaluate our original Logistic Regression model.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[18]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">baseline_model</span> <span class="o">=</span> <span class="n">LogisticRegression</span><span class="p">(</span><span class="n">max_iter</span><span class="o">=</span><span class="mi">400</span><span class="p">)</span>  <span class="c1"># note we first re-instantiate the model</span>
+<span class="n">baseline_model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="o">=</span><span class="n">train_texts</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">train_labels</span><span class="p">)</span>
+
+<span class="n">preds</span> <span class="o">=</span> <span class="n">baseline_model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">test_texts</span><span class="p">)</span>
+<span class="n">acc_og</span> <span class="o">=</span> <span class="n">accuracy_score</span><span class="p">(</span><span class="n">test_labels</span><span class="p">,</span> <span class="n">preds</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2"> Test accuracy of original model: </span><span class="si">{</span><span class="n">acc_og</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+
+ Test accuracy of original model: 0.87
+</pre></div></div>
+</div>
+<p>Now that we have a baseline, let’s check if using <code class="docutils literal notranslate"><span class="pre">CleanLearning</span></code> improves our test accuracy.</p>
+<p><code class="docutils literal notranslate"><span class="pre">CleanLearning</span></code> provides a wrapper that can be applied to any scikit-learn compatible model. The resulting model object can be used in the same manner, but it will now train more robustly if the data has noisy labels.</p>
+<p>We can use the same <code class="docutils literal notranslate"><span class="pre">CleanLearning</span></code> object defined above, and pass the label issues we already computed into <code class="docutils literal notranslate"><span class="pre">.fit()</span></code> via the <code class="docutils literal notranslate"><span class="pre">label_issues</span></code> argument. This accelerates things; if we did not provide the label issues, then they would be recomputed via cross-validation. After that <code class="docutils literal notranslate"><span class="pre">CleanLearning</span></code> simply deletes the examples with label issues and retrains your model on the remaining data.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[19]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">cl</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="o">=</span><span class="n">train_texts</span><span class="p">,</span> <span class="n">labels</span><span class="o">=</span><span class="n">train_labels</span><span class="p">,</span> <span class="n">label_issues</span><span class="o">=</span><span class="n">cl</span><span class="o">.</span><span class="n">get_label_issues</span><span class="p">())</span>
+
+<span class="n">pred_labels</span> <span class="o">=</span> <span class="n">cl</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">test_texts</span><span class="p">)</span>
+<span class="n">acc_cl</span> <span class="o">=</span> <span class="n">accuracy_score</span><span class="p">(</span><span class="n">test_labels</span><span class="p">,</span> <span class="n">pred_labels</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Test accuracy of cleanlab&#39;s model: </span><span class="si">{</span><span class="n">acc_cl</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Test accuracy of cleanlab&#39;s model: 0.89
+</pre></div></div>
+</div>
+<p>We can see that the test set accuracy slightly improved as a result of the data cleaning. Note that this will not always be the case, especially when we are evaluating on test data that are themselves noisy. The best practice is to run cleanlab to identify potential label issues and then manually review them, before blindly trusting any accuracy metrics. In particular, the most effort should be made to ensure high-quality test data, which is supposed to reflect the expected performance of our
+model during deployment.</p>
+<script type="application/vnd.jupyter.widget-state+json">
+{"state": {"a5aed677d2164c8195a42653b01d4dd5": {"model_name": "LayoutModel", "model_module": "@jupyter-widgets/base", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets/base", "_model_module_version": "2.0.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border_bottom": null, "border_left": null, "border_right": null, "border_top": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "68eb4d52077e49449ffb828bfca9bc12": {"model_name": "ProgressStyleModel", "model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "ProgressStyleModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "StyleView", "bar_color": null, "description_width": ""}}, "a62143ae59954d669b11f3e62d2790eb": {"model_name": "FloatProgressModel", "model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "state": {"_dom_classes": [], "_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "FloatProgressModel", "_view_count": null, "_view_module": "@jupyter-widgets/controls", "_view_module_version": "2.0.0", "_view_name": "ProgressView", "bar_style": "success", "description": "", "description_allow_html": false, "layout": "IPY_MODEL_a5aed677d2164c8195a42653b01d4dd5", "max": 391.0, "min": 0.0, "orientation": "horizontal", "style": "IPY_MODEL_68eb4d52077e49449ffb828bfca9bc12", "tabbable": null, "tooltip": null, "value": 391.0}}, "186ccdf20439402a942d00b7b78d28b9": {"model_name": "LayoutModel", "model_module": "@jupyter-widgets/base", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets/base", "_model_module_version": "2.0.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border_bottom": null, "border_left": null, "border_right": null, "border_top": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "09eecdacf89b4ca081be2fa55cf2b45c": {"model_name": "HTMLStyleModel", "model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "HTMLStyleModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "StyleView", "background": null, "description_width": "", "font_size": null, "text_color": null}}, "de4b2c71a19c44d5a868301d223f06b4": {"model_name": "HTMLModel", "model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "state": {"_dom_classes": [], "_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "HTMLModel", "_view_count": null, "_view_module": "@jupyter-widgets/controls", "_view_module_version": "2.0.0", "_view_name": "HTMLView", "description": "", "description_allow_html": false, "layout": "IPY_MODEL_186ccdf20439402a942d00b7b78d28b9", "placeholder": "\u200b", "style": "IPY_MODEL_09eecdacf89b4ca081be2fa55cf2b45c", "tabbable": null, "tooltip": null, "value": ".gitattributes:\u2007100%"}}, "e86d435de9c64932a333ca7cf75d9928": {"model_name": "LayoutModel", "model_module": "@jupyter-widgets/base", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets/base", "_model_module_version": "2.0.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border_bottom": null, "border_left": null, "border_right": null, "border_top": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "8aee63279657481693b824e0b486e1d5": {"model_name": "HTMLStyleModel", "model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "HTMLStyleModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "StyleView", "background": null, "description_width": "", "font_size": null, "text_color": null}}, "5916d7c4c3064785908967111d0b5246": {"model_name": "HTMLModel", "model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "state": {"_dom_classes": [], "_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "HTMLModel", "_view_count": null, "_view_module": "@jupyter-widgets/controls", "_view_module_version": "2.0.0", "_view_name": "HTMLView", "description": "", "description_allow_html": false, "layout": "IPY_MODEL_e86d435de9c64932a333ca7cf75d9928", "placeholder": "\u200b", "style": "IPY_MODEL_8aee63279657481693b824e0b486e1d5", "tabbable": null, "tooltip": null, "value": "\u2007391/391\u2007[00:00&lt;00:00,\u200767.5kB/s]"}}, "b0adc9b9960b41a394c1e884413c5920": {"model_name": "LayoutModel", "model_module": "@jupyter-widgets/base", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets/base", "_model_module_version": "2.0.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border_bottom": null, "border_left": null, "border_right": null, "border_top": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "d0a27695496247ecafd8eee0c9ae95b0": {"model_name": "HBoxModel", "model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "state": {"_dom_classes": [], "_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "HBoxModel", "_view_count": null, "_view_module": "@jupyter-widgets/controls", "_view_module_version": "2.0.0", "_view_name": "HBoxView", "box_style": "", "children": ["IPY_MODEL_de4b2c71a19c44d5a868301d223f06b4", "IPY_MODEL_a62143ae59954d669b11f3e62d2790eb", "IPY_MODEL_5916d7c4c3064785908967111d0b5246"], "layout": "IPY_MODEL_b0adc9b9960b41a394c1e884413c5920", "tabbable": null, "tooltip": null}}, "68af00c8fa2a4585b2e0b8ea0c328b6d": {"model_name": "LayoutModel", "model_module": "@jupyter-widgets/base", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets/base", "_model_module_version": "2.0.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border_bottom": null, "border_left": null, "border_right": null, "border_top": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "bfafe24cbe914728b1086b2e6a17b4f4": {"model_name": "ProgressStyleModel", "model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "ProgressStyleModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "StyleView", "bar_color": null, "description_width": ""}}, "a36d341c7df94fa6ba280d502432743c": {"model_name": "FloatProgressModel", "model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "state": {"_dom_classes": [], "_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "FloatProgressModel", "_view_count": null, "_view_module": "@jupyter-widgets/controls", "_view_module_version": "2.0.0", "_view_name": "ProgressView", "bar_style": "success", "description": "", "description_allow_html": false, "layout": "IPY_MODEL_68af00c8fa2a4585b2e0b8ea0c328b6d", "max": 2211.0, "min": 0.0, "orientation": "horizontal", "style": "IPY_MODEL_bfafe24cbe914728b1086b2e6a17b4f4", "tabbable": null, "tooltip": null, "value": 2211.0}}, "4c78dc9c0d224dbf91167ac95b1f5760": {"model_name": "LayoutModel", "model_module": "@jupyter-widgets/base", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets/base", "_model_module_version": "2.0.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border_bottom": null, "border_left": null, "border_right": null, "border_top": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "75753d5cf8e249fcb37af7639875005c": {"model_name": "HTMLStyleModel", "model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "HTMLStyleModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "StyleView", "background": null, "description_width": "", "font_size": null, "text_color": null}}, "c94fb584403f40589bb2108bec92a8a1": {"model_name": "HTMLModel", "model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "state": {"_dom_classes": [], "_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "HTMLModel", "_view_count": null, "_view_module": "@jupyter-widgets/controls", "_view_module_version": "2.0.0", "_view_name": "HTMLView", "description": "", "description_allow_html": false, "layout": "IPY_MODEL_4c78dc9c0d224dbf91167ac95b1f5760", "placeholder": "\u200b", "style": "IPY_MODEL_75753d5cf8e249fcb37af7639875005c", "tabbable": null, "tooltip": null, "value": "README.md:\u2007100%"}}, "c2f8f674dd94492f84fbe8ad01278894": {"model_name": "LayoutModel", "model_module": "@jupyter-widgets/base", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets/base", "_model_module_version": "2.0.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border_bottom": null, "border_left": null, "border_right": null, "border_top": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "9f744c940293444fa898ac96f6b4c8a3": {"model_name": "HTMLStyleModel", "model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "HTMLStyleModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "StyleView", "background": null, "description_width": "", "font_size": null, "text_color": null}}, "e28c5d770e7e463bba4e5219dcd2e0b2": {"model_name": "HTMLModel", "model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "state": {"_dom_classes": [], "_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "HTMLModel", "_view_count": null, "_view_module": "@jupyter-widgets/controls", "_view_module_version": "2.0.0", "_view_name": "HTMLView", "description": "", "description_allow_html": false, "layout": "IPY_MODEL_c2f8f674dd94492f84fbe8ad01278894", "placeholder": "\u200b", "style": "IPY_MODEL_9f744c940293444fa898ac96f6b4c8a3", "tabbable": null, "tooltip": null, "value": "\u20072.21k/2.21k\u2007[00:00&lt;00:00,\u2007405kB/s]"}}, "012805e5e923448cbcce23d37e9b3dab": {"model_name": "LayoutModel", "model_module": "@jupyter-widgets/base", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets/base", "_model_module_version": "2.0.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border_bottom": null, "border_left": null, "border_right": null, "border_top": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "150a313709ac476d81cec10ec7477012": {"model_name": "HBoxModel", "model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "state": {"_dom_classes": [], "_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "HBoxModel", "_view_count": null, "_view_module": "@jupyter-widgets/controls", "_view_module_version": "2.0.0", "_view_name": "HBoxView", "box_style": "", "children": ["IPY_MODEL_c94fb584403f40589bb2108bec92a8a1", "IPY_MODEL_a36d341c7df94fa6ba280d502432743c", "IPY_MODEL_e28c5d770e7e463bba4e5219dcd2e0b2"], "layout": "IPY_MODEL_012805e5e923448cbcce23d37e9b3dab", "tabbable": null, "tooltip": null}}, "6073a3a99fb14025aaf99d2b18943ad5": {"model_name": "LayoutModel", "model_module": "@jupyter-widgets/base", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets/base", "_model_module_version": "2.0.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border_bottom": null, "border_left": null, "border_right": null, "border_top": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "7fcbcb1504a248c99be690fa68e2519c": {"model_name": "ProgressStyleModel", "model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "ProgressStyleModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "StyleView", "bar_color": null, "description_width": ""}}, "a12426b3070a492b8aac48680a50fa0a": {"model_name": "FloatProgressModel", "model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "state": {"_dom_classes": [], "_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "FloatProgressModel", "_view_count": null, "_view_module": "@jupyter-widgets/controls", "_view_module_version": "2.0.0", "_view_name": "ProgressView", "bar_style": "success", "description": "", "description_allow_html": false, "layout": "IPY_MODEL_6073a3a99fb14025aaf99d2b18943ad5", "max": 665.0, "min": 0.0, "orientation": "horizontal", "style": "IPY_MODEL_7fcbcb1504a248c99be690fa68e2519c", "tabbable": null, "tooltip": null, "value": 665.0}}, "15f795d5e39e4d4f8b9c9b230f641eac": {"model_name": "LayoutModel", "model_module": "@jupyter-widgets/base", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets/base", "_model_module_version": "2.0.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border_bottom": null, "border_left": null, "border_right": null, "border_top": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "9c3f5166c0854e3c94b0d543e8fd6331": {"model_name": "HTMLStyleModel", "model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "HTMLStyleModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "StyleView", "background": null, "description_width": "", "font_size": null, "text_color": null}}, "ccb2c22eeed0452a84e0587af7cfdb72": {"model_name": "HTMLModel", "model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "state": {"_dom_classes": [], "_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "HTMLModel", "_view_count": null, "_view_module": "@jupyter-widgets/controls", "_view_module_version": "2.0.0", "_view_name": "HTMLView", "description": "", "description_allow_html": false, "layout": "IPY_MODEL_15f795d5e39e4d4f8b9c9b230f641eac", "placeholder": "\u200b", "style": "IPY_MODEL_9c3f5166c0854e3c94b0d543e8fd6331", "tabbable": null, "tooltip": null, "value": "config.json:\u2007100%"}}, "f0ad8fcb4d5e41c7bf3d834dd4d10c3e": {"model_name": "LayoutModel", "model_module": "@jupyter-widgets/base", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets/base", "_model_module_version": "2.0.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border_bottom": null, "border_left": null, "border_right": null, "border_top": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "5f9579fb18c041959057a6e371d3e54d": {"model_name": "HTMLStyleModel", "model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "HTMLStyleModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "StyleView", "background": null, "description_width": "", "font_size": null, "text_color": null}}, "afab5ca52d734607b409528fa0aa2a63": {"model_name": "HTMLModel", "model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "state": {"_dom_classes": [], "_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "HTMLModel", "_view_count": null, "_view_module": "@jupyter-widgets/controls", "_view_module_version": "2.0.0", "_view_name": "HTMLView", "description": "", "description_allow_html": false, "layout": "IPY_MODEL_f0ad8fcb4d5e41c7bf3d834dd4d10c3e", "placeholder": "\u200b", "style": "IPY_MODEL_5f9579fb18c041959057a6e371d3e54d", "tabbable": null, "tooltip": null, "value": "\u2007665/665\u2007[00:00&lt;00:00,\u2007122kB/s]"}}, "2e1d7d82ea13415ab41caf93da40842f": {"model_name": "LayoutModel", "model_module": "@jupyter-widgets/base", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets/base", "_model_module_version": "2.0.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border_bottom": null, "border_left": null, "border_right": null, "border_top": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "0205a5a031b7462e901bfebcf4742559": {"model_name": "HBoxModel", "model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "state": {"_dom_classes": [], "_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "HBoxModel", "_view_count": null, "_view_module": "@jupyter-widgets/controls", "_view_module_version": "2.0.0", "_view_name": "HBoxView", "box_style": "", "children": ["IPY_MODEL_ccb2c22eeed0452a84e0587af7cfdb72", "IPY_MODEL_a12426b3070a492b8aac48680a50fa0a", "IPY_MODEL_afab5ca52d734607b409528fa0aa2a63"], "layout": "IPY_MODEL_2e1d7d82ea13415ab41caf93da40842f", "tabbable": null, "tooltip": null}}, "c30bcf32320f479ab2a2f2507665e59f": {"model_name": "LayoutModel", "model_module": "@jupyter-widgets/base", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets/base", "_model_module_version": "2.0.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border_bottom": null, "border_left": null, "border_right": null, "border_top": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "1ea3696b133e41669a75c3a7f2fff38a": {"model_name": "ProgressStyleModel", "model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "ProgressStyleModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "StyleView", "bar_color": null, "description_width": ""}}, "14d1060244dc4144a94510d7da5de37d": {"model_name": "FloatProgressModel", "model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "state": {"_dom_classes": [], "_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "FloatProgressModel", "_view_count": null, "_view_module": "@jupyter-widgets/controls", "_view_module_version": "2.0.0", "_view_name": "ProgressView", "bar_style": "success", "description": "", "description_allow_html": false, "layout": "IPY_MODEL_c30bcf32320f479ab2a2f2507665e59f", "max": 54245363.0, "min": 0.0, "orientation": "horizontal", "style": "IPY_MODEL_1ea3696b133e41669a75c3a7f2fff38a", "tabbable": null, "tooltip": null, "value": 54245363.0}}, "a3e13e787d7d4d0093f789765f03be05": {"model_name": "LayoutModel", "model_module": "@jupyter-widgets/base", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets/base", "_model_module_version": "2.0.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border_bottom": null, "border_left": null, "border_right": null, "border_top": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "bd04b79220b4432788fd5aeedcf52c34": {"model_name": "HTMLStyleModel", "model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "HTMLStyleModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "StyleView", "background": null, "description_width": "", "font_size": null, "text_color": null}}, "58bbd304e39b4ca4aefd594460ddcbed": {"model_name": "HTMLModel", "model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "state": {"_dom_classes": [], "_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "HTMLModel", "_view_count": null, "_view_module": "@jupyter-widgets/controls", "_view_module_version": "2.0.0", "_view_name": "HTMLView", "description": "", "description_allow_html": false, "layout": "IPY_MODEL_a3e13e787d7d4d0093f789765f03be05", "placeholder": "\u200b", "style": "IPY_MODEL_bd04b79220b4432788fd5aeedcf52c34", "tabbable": null, "tooltip": null, "value": "pytorch_model.bin:\u2007100%"}}, "ca51e8c472984eb58d42313ec12e725f": {"model_name": "LayoutModel", "model_module": "@jupyter-widgets/base", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets/base", "_model_module_version": "2.0.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border_bottom": null, "border_left": null, "border_right": null, "border_top": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "def7aecb40764fd19e9b65c48cf9a35d": {"model_name": "HTMLStyleModel", "model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "HTMLStyleModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "StyleView", "background": null, "description_width": "", "font_size": null, "text_color": null}}, "2e9683f0d6414ff9acce1b310753a114": {"model_name": "HTMLModel", "model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "state": {"_dom_classes": [], "_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "HTMLModel", "_view_count": null, "_view_module": "@jupyter-widgets/controls", "_view_module_version": "2.0.0", "_view_name": "HTMLView", "description": "", "description_allow_html": false, "layout": "IPY_MODEL_ca51e8c472984eb58d42313ec12e725f", "placeholder": "\u200b", "style": "IPY_MODEL_def7aecb40764fd19e9b65c48cf9a35d", "tabbable": null, "tooltip": null, "value": "\u200754.2M/54.2M\u2007[00:00&lt;00:00,\u2007132MB/s]"}}, "38c5e8dd664748cb9c4150be4a722cd6": {"model_name": "LayoutModel", "model_module": "@jupyter-widgets/base", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets/base", "_model_module_version": "2.0.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border_bottom": null, "border_left": null, "border_right": null, "border_top": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "38ac8838dabc4da5a43d6cf0453896cd": {"model_name": "HBoxModel", "model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "state": {"_dom_classes": [], "_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "HBoxModel", "_view_count": null, "_view_module": "@jupyter-widgets/controls", "_view_module_version": "2.0.0", "_view_name": "HBoxView", "box_style": "", "children": ["IPY_MODEL_58bbd304e39b4ca4aefd594460ddcbed", "IPY_MODEL_14d1060244dc4144a94510d7da5de37d", "IPY_MODEL_2e9683f0d6414ff9acce1b310753a114"], "layout": "IPY_MODEL_38c5e8dd664748cb9c4150be4a722cd6", "tabbable": null, "tooltip": null}}, "3ec027502f874bebad1f0afe29f3aa77": {"model_name": "LayoutModel", "model_module": "@jupyter-widgets/base", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets/base", "_model_module_version": "2.0.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border_bottom": null, "border_left": null, "border_right": null, "border_top": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "b4667406fae64a5aa362cf43e2dfa064": {"model_name": "ProgressStyleModel", "model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "ProgressStyleModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "StyleView", "bar_color": null, "description_width": ""}}, "ffd77d1ee490413abfe13665d69e3bc7": {"model_name": "FloatProgressModel", "model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "state": {"_dom_classes": [], "_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "FloatProgressModel", "_view_count": null, "_view_module": "@jupyter-widgets/controls", "_view_module_version": "2.0.0", "_view_name": "ProgressView", "bar_style": "success", "description": "", "description_allow_html": false, "layout": "IPY_MODEL_3ec027502f874bebad1f0afe29f3aa77", "max": 466062.0, "min": 0.0, "orientation": "horizontal", "style": "IPY_MODEL_b4667406fae64a5aa362cf43e2dfa064", "tabbable": null, "tooltip": null, "value": 466062.0}}, "1ad76299a71d4a459e25efc18a770cff": {"model_name": "LayoutModel", "model_module": "@jupyter-widgets/base", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets/base", "_model_module_version": "2.0.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border_bottom": null, "border_left": null, "border_right": null, "border_top": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "aa05e3e6039e4471aa72d0c073143ec5": {"model_name": "HTMLStyleModel", "model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "HTMLStyleModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "StyleView", "background": null, "description_width": "", "font_size": null, "text_color": null}}, "9d3071de78444e4d953cadb2492207d2": {"model_name": "HTMLModel", "model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "state": {"_dom_classes": [], "_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "HTMLModel", "_view_count": null, "_view_module": "@jupyter-widgets/controls", "_view_module_version": "2.0.0", "_view_name": "HTMLView", "description": "", "description_allow_html": false, "layout": "IPY_MODEL_1ad76299a71d4a459e25efc18a770cff", "placeholder": "\u200b", "style": "IPY_MODEL_aa05e3e6039e4471aa72d0c073143ec5", "tabbable": null, "tooltip": null, "value": "tokenizer.json:\u2007100%"}}, "4c1876427380486e8a9c9d9f77d27974": {"model_name": "LayoutModel", "model_module": "@jupyter-widgets/base", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets/base", "_model_module_version": "2.0.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border_bottom": null, "border_left": null, "border_right": null, "border_top": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "0fc668fb195643e999fc30935db04d3c": {"model_name": "HTMLStyleModel", "model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "HTMLStyleModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "StyleView", "background": null, "description_width": "", "font_size": null, "text_color": null}}, "c575e3dccb214bd88f6c7d8fdefb7941": {"model_name": "HTMLModel", "model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "state": {"_dom_classes": [], "_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "HTMLModel", "_view_count": null, "_view_module": "@jupyter-widgets/controls", "_view_module_version": "2.0.0", "_view_name": "HTMLView", "description": "", "description_allow_html": false, "layout": "IPY_MODEL_4c1876427380486e8a9c9d9f77d27974", "placeholder": "\u200b", "style": "IPY_MODEL_0fc668fb195643e999fc30935db04d3c", "tabbable": null, "tooltip": null, "value": "\u2007466k/466k\u2007[00:00&lt;00:00,\u20075.36MB/s]"}}, "311919478fec4be28e90347aad8cbd95": {"model_name": "LayoutModel", "model_module": "@jupyter-widgets/base", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets/base", "_model_module_version": "2.0.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border_bottom": null, "border_left": null, "border_right": null, "border_top": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "29b999205f224aa885c1c133efa35181": {"model_name": "HBoxModel", "model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "state": {"_dom_classes": [], "_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "HBoxModel", "_view_count": null, "_view_module": "@jupyter-widgets/controls", "_view_module_version": "2.0.0", "_view_name": "HBoxView", "box_style": "", "children": ["IPY_MODEL_9d3071de78444e4d953cadb2492207d2", "IPY_MODEL_ffd77d1ee490413abfe13665d69e3bc7", "IPY_MODEL_c575e3dccb214bd88f6c7d8fdefb7941"], "layout": "IPY_MODEL_311919478fec4be28e90347aad8cbd95", "tabbable": null, "tooltip": null}}, "2bebc8df2613457a9b3faad534af885e": {"model_name": "LayoutModel", "model_module": "@jupyter-widgets/base", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets/base", "_model_module_version": "2.0.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border_bottom": null, "border_left": null, "border_right": null, "border_top": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "53d37af355924ceda3b7591b8b20bca9": {"model_name": "ProgressStyleModel", "model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "ProgressStyleModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "StyleView", "bar_color": null, "description_width": ""}}, "cf87e33faf28458e92243b8643138648": {"model_name": "FloatProgressModel", "model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "state": {"_dom_classes": [], "_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "FloatProgressModel", "_view_count": null, "_view_module": "@jupyter-widgets/controls", "_view_module_version": "2.0.0", "_view_name": "ProgressView", "bar_style": "success", "description": "", "description_allow_html": false, "layout": "IPY_MODEL_2bebc8df2613457a9b3faad534af885e", "max": 48.0, "min": 0.0, "orientation": "horizontal", "style": "IPY_MODEL_53d37af355924ceda3b7591b8b20bca9", "tabbable": null, "tooltip": null, "value": 48.0}}, "f4ab9dc7474d499c903a5252654a1f45": {"model_name": "LayoutModel", "model_module": "@jupyter-widgets/base", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets/base", "_model_module_version": "2.0.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border_bottom": null, "border_left": null, "border_right": null, "border_top": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "3b195610b4414ce3a3005a6ea602ca05": {"model_name": "HTMLStyleModel", "model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "HTMLStyleModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "StyleView", "background": null, "description_width": "", "font_size": null, "text_color": null}}, "42f2303cb47e4a9ab3f96db7365cee43": {"model_name": "HTMLModel", "model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "state": {"_dom_classes": [], "_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "HTMLModel", "_view_count": null, "_view_module": "@jupyter-widgets/controls", "_view_module_version": "2.0.0", "_view_name": "HTMLView", "description": "", "description_allow_html": false, "layout": "IPY_MODEL_f4ab9dc7474d499c903a5252654a1f45", "placeholder": "\u200b", "style": "IPY_MODEL_3b195610b4414ce3a3005a6ea602ca05", "tabbable": null, "tooltip": null, "value": "tokenizer_config.json:\u2007100%"}}, "a4faeb91595e4ecba006f011c648e0fb": {"model_name": "LayoutModel", "model_module": "@jupyter-widgets/base", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets/base", "_model_module_version": "2.0.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border_bottom": null, "border_left": null, "border_right": null, "border_top": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "69e80506d2ef4b179e015b157d28f681": {"model_name": "HTMLStyleModel", "model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "HTMLStyleModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "StyleView", "background": null, "description_width": "", "font_size": null, "text_color": null}}, "7b9e32aa7fef46e28e30b8d13a4435ae": {"model_name": "HTMLModel", "model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "state": {"_dom_classes": [], "_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "HTMLModel", "_view_count": null, "_view_module": "@jupyter-widgets/controls", "_view_module_version": "2.0.0", "_view_name": "HTMLView", "description": "", "description_allow_html": false, "layout": "IPY_MODEL_a4faeb91595e4ecba006f011c648e0fb", "placeholder": "\u200b", "style": "IPY_MODEL_69e80506d2ef4b179e015b157d28f681", "tabbable": null, "tooltip": null, "value": "\u200748.0/48.0\u2007[00:00&lt;00:00,\u20078.68kB/s]"}}, "3f9a61440e4d497b846b59fb8678f241": {"model_name": "LayoutModel", "model_module": "@jupyter-widgets/base", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets/base", "_model_module_version": "2.0.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border_bottom": null, "border_left": null, "border_right": null, "border_top": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "1d8b6c69d1e4472ebfefe5ed6414b33e": {"model_name": "HBoxModel", "model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "state": {"_dom_classes": [], "_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "HBoxModel", "_view_count": null, "_view_module": "@jupyter-widgets/controls", "_view_module_version": "2.0.0", "_view_name": "HBoxView", "box_style": "", "children": ["IPY_MODEL_42f2303cb47e4a9ab3f96db7365cee43", "IPY_MODEL_cf87e33faf28458e92243b8643138648", "IPY_MODEL_7b9e32aa7fef46e28e30b8d13a4435ae"], "layout": "IPY_MODEL_3f9a61440e4d497b846b59fb8678f241", "tabbable": null, "tooltip": null}}, "f3587761d1c94940bebee5a4031d9c8c": {"model_name": "LayoutModel", "model_module": "@jupyter-widgets/base", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets/base", "_model_module_version": "2.0.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border_bottom": null, "border_left": null, "border_right": null, "border_top": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "9ddaa2389ac14ffca05a04353c1fdcc3": {"model_name": "ProgressStyleModel", "model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "ProgressStyleModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "StyleView", "bar_color": null, "description_width": ""}}, "2fce8d3a515742aa93321b5b67b0ea35": {"model_name": "FloatProgressModel", "model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "state": {"_dom_classes": [], "_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "FloatProgressModel", "_view_count": null, "_view_module": "@jupyter-widgets/controls", "_view_module_version": "2.0.0", "_view_name": "ProgressView", "bar_style": "success", "description": "", "description_allow_html": false, "layout": "IPY_MODEL_f3587761d1c94940bebee5a4031d9c8c", "max": 231508.0, "min": 0.0, "orientation": "horizontal", "style": "IPY_MODEL_9ddaa2389ac14ffca05a04353c1fdcc3", "tabbable": null, "tooltip": null, "value": 231508.0}}, "2a7ab4cb44b24b20ae708f51ba39aea8": {"model_name": "LayoutModel", "model_module": "@jupyter-widgets/base", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets/base", "_model_module_version": "2.0.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border_bottom": null, "border_left": null, "border_right": null, "border_top": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "9976d5b72f624d1d84bbcb05b84b9776": {"model_name": "HTMLStyleModel", "model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "HTMLStyleModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "StyleView", "background": null, "description_width": "", "font_size": null, "text_color": null}}, "5edfd0b7b7b642dc8efa9da3b80b7a6e": {"model_name": "HTMLModel", "model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "state": {"_dom_classes": [], "_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "HTMLModel", "_view_count": null, "_view_module": "@jupyter-widgets/controls", "_view_module_version": "2.0.0", "_view_name": "HTMLView", "description": "", "description_allow_html": false, "layout": "IPY_MODEL_2a7ab4cb44b24b20ae708f51ba39aea8", "placeholder": "\u200b", "style": "IPY_MODEL_9976d5b72f624d1d84bbcb05b84b9776", "tabbable": null, "tooltip": null, "value": "vocab.txt:\u2007100%"}}, "c7d198113c054615a305d6bf65aa2eb8": {"model_name": "LayoutModel", "model_module": "@jupyter-widgets/base", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets/base", "_model_module_version": "2.0.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border_bottom": null, "border_left": null, "border_right": null, "border_top": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "62e9c7536ed64b8596d47535c040eb48": {"model_name": "HTMLStyleModel", "model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "HTMLStyleModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "StyleView", "background": null, "description_width": "", "font_size": null, "text_color": null}}, "7ffed5bcfa3542a6b5b477cbfde702a2": {"model_name": "HTMLModel", "model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "state": {"_dom_classes": [], "_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "HTMLModel", "_view_count": null, "_view_module": "@jupyter-widgets/controls", "_view_module_version": "2.0.0", "_view_name": "HTMLView", "description": "", "description_allow_html": false, "layout": "IPY_MODEL_c7d198113c054615a305d6bf65aa2eb8", "placeholder": "\u200b", "style": "IPY_MODEL_62e9c7536ed64b8596d47535c040eb48", "tabbable": null, "tooltip": null, "value": "\u2007232k/232k\u2007[00:00&lt;00:00,\u200733.8MB/s]"}}, "25aaff6db9fe422ca65d148e3c802f4e": {"model_name": "LayoutModel", "model_module": "@jupyter-widgets/base", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets/base", "_model_module_version": "2.0.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border_bottom": null, "border_left": null, "border_right": null, "border_top": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "d63c14cb7e25485b99d38cbef5009607": {"model_name": "HBoxModel", "model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "state": {"_dom_classes": [], "_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "HBoxModel", "_view_count": null, "_view_module": "@jupyter-widgets/controls", "_view_module_version": "2.0.0", "_view_name": "HBoxView", "box_style": "", "children": ["IPY_MODEL_5edfd0b7b7b642dc8efa9da3b80b7a6e", "IPY_MODEL_2fce8d3a515742aa93321b5b67b0ea35", "IPY_MODEL_7ffed5bcfa3542a6b5b477cbfde702a2"], "layout": "IPY_MODEL_25aaff6db9fe422ca65d148e3c802f4e", "tabbable": null, "tooltip": null}}}, "version_major": 2, "version_minor": 0}
+</script></section>
+</section>
+ 
+        </article>
+      </div>
+      <footer>
+         
+        <div class="related-pages">
+          <a class="next-page" href="tabular.html">
+              <div class="page-info">
+                <div class="context">
+                  <span>Next</span>
+                </div>
+                <div class="title">Classification with Structured/Tabular Data and Noisy Labels</div>
+              </div>
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+            </a>
+          <a class="prev-page" href="index.html">
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+              <div class="page-info">
+                <div class="context">
+                  <span>Previous</span>
+                </div>
+                
+                <div class="title">CleanLearning Tutorials</div>
+                
+              </div>
+            </a>
+        </div>
+        <div class="bottom-of-page">
+          <div class="left-details">
+            <div class="copyright">
+                Copyright &#169; 2024, Cleanlab Inc.
+            </div>
+            Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
+            
+            <a href="https://github.com/pradyunsg/furo">Furo</a>
+            
+          </div>
+          <div class="right-details">
+            <div class="icons">
+              <a class="muted-link " href="https://github.com/cleanlab/cleanlab" aria-label="GitHub">
+                <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 16 16">
+                    <path fill-rule="evenodd" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0 0 16 8c0-4.42-3.58-8-8-8z"></path>
+                </svg>
+            </a>
+              
+            </div>
+          </div>
+        </div>
+        
+
+<script type="text/javascript">
+    window.addEventListener("load", () => {
+        let elements = document.getElementsByClassName("left-details");
+
+        elements[0].insertAdjacentHTML(
+            "afterbegin",
+            `<code class="docutils literal notranslate"><span class="pre">cleanlab</span></code> is distributed on <a href="https://pypi.org/project/cleanlab/">PyPI</a> and <a href="https://anaconda.org/conda-forge/cleanlab">conda</a>.`
+        );
+    });
+</script>
+
+
+      </footer>
+    </div>
+    <aside class="toc-drawer">
+      
+      
+      <div class="toc-sticky toc-scroll">
+        <div class="toc-title-container">
+          <span class="toc-title">
+            On this page
+          </span>
+        </div>
+        <div class="toc-tree-container">
+          <div class="toc-tree">
+            <ul>
+<li><a class="reference internal" href="#">Text Classification with Noisy Labels</a><ul>
+<li><a class="reference internal" href="#1.-Install-required-dependencies">1. Install required dependencies</a></li>
+<li><a class="reference internal" href="#2.-Load-and-format-the-text-dataset">2. Load and format the text dataset</a></li>
+<li><a class="reference internal" href="#3.-Define-a-classification-model-and-use-cleanlab-to-find-potential-label-errors">3. Define a classification model and use cleanlab to find potential label errors</a></li>
+<li><a class="reference internal" href="#4.-Train-a-more-robust-model-from-noisy-labels">4. Train a more robust model from noisy labels</a></li>
+</ul>
+</li>
+</ul>
+
+          </div>
+        </div>
+      </div>
+      
+      
+    </aside>
+  </div>
+</div><script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js?v=2b91c5f0"></script>
+    <script src="../../_static/doctools.js?v=888ff710"></script>
+    <script src="../../_static/sphinx_highlight.js?v=4825356b"></script>
+    <script src="../../_static/scripts/furo.js?v=32e29ea5"></script>
+    <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../../_static/copybutton.js?v=30646c52"></script>
+    <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@jupyter-widgets/html-manager@^1.0.1/dist/embed-amd.js"></script>
+    
+<script async defer src="https://buttons.github.io/buttons.js"></script>
+</body>
+</html>
