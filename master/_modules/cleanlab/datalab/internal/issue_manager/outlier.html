@@ -312,6 +312,12 @@
 <li class="toctree-l2"><a class="reference internal" href="../../../../../cleanlab/internal/label_quality_utils.html">label_quality_utils</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../../../cleanlab/internal/multilabel_utils.html">multilabel_utils</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../../../cleanlab/internal/multilabel_scorer.html">multilabel_scorer</a></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../../../cleanlab/internal/neighbor/index.html">neighbor</a><input class="toctree-checkbox" id="toctree-checkbox-18" name="toctree-checkbox-18" role="switch" type="checkbox"/><label for="toctree-checkbox-18"><div class="visually-hidden">Toggle navigation of neighbor</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../cleanlab/internal/neighbor/knn_graph.html">knn_graph</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../cleanlab/internal/neighbor/metric.html">metric</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../cleanlab/internal/neighbor/search.html">search</a></li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="../../../../../cleanlab/internal/outlier.html">outlier</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../../../cleanlab/internal/token_classification_utils.html">token_classification_utils</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../../../cleanlab/internal/validation.html">validation</a></li>
@@ -320,7 +326,7 @@
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Guides</span></p>
 <ul>
-<li class="toctree-l1 has-children"><a class="reference internal" href="../../../../../cleanlab/datalab/guide/index.html">Datalab issue types</a><input class="toctree-checkbox" id="toctree-checkbox-18" name="toctree-checkbox-18" role="switch" type="checkbox"/><label for="toctree-checkbox-18"><div class="visually-hidden">Toggle navigation of Datalab issue types</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../../../cleanlab/datalab/guide/index.html">Datalab issue types</a><input class="toctree-checkbox" id="toctree-checkbox-19" name="toctree-checkbox-19" role="switch" type="checkbox"/><label for="toctree-checkbox-19"><div class="visually-hidden">Toggle navigation of Datalab issue types</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../../../../cleanlab/datalab/guide/issue_type_description.html">Datalab Issue Types</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../../../cleanlab/datalab/guide/custom_issue_manager.html">Creating Your Own Issues Manager</a></li>
 </ul>
@@ -612,6 +618,7 @@
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 
 <span class="kn">from</span> <span class="nn">cleanlab.datalab.internal.issue_manager</span> <span class="kn">import</span> <span class="n">IssueManager</span>
+<span class="kn">from</span> <span class="nn">cleanlab.internal.neighbor.knn_graph</span> <span class="kn">import</span> <span class="n">construct_knn_graph_from_index</span>
 <span class="kn">from</span> <span class="nn">cleanlab.outlier</span> <span class="kn">import</span> <span class="n">OutOfDistribution</span><span class="p">,</span> <span class="n">transform_distances_to_scores</span>
 
 <span class="k">if</span> <span class="n">TYPE_CHECKING</span><span class="p">:</span>  <span class="c1"># pragma: no cover</span>
@@ -808,7 +815,7 @@
             <span class="c1"># If the pre-existing knn graph has fewer neighbors than the knn object,</span>
             <span class="c1"># then we need to recompute the knn graph</span>
             <span class="k">assert</span> <span class="n">knn</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">ood</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s2">&quot;knn&quot;</span><span class="p">]</span>  <span class="c1"># type: ignore[union-attr]</span>
-            <span class="n">knn_graph</span> <span class="o">=</span> <span class="n">knn</span><span class="o">.</span><span class="n">kneighbors_graph</span><span class="p">(</span><span class="n">mode</span><span class="o">=</span><span class="s2">&quot;distance&quot;</span><span class="p">)</span>  <span class="c1"># type: ignore[union-attr]</span>
+            <span class="n">knn_graph</span> <span class="o">=</span> <span class="n">construct_knn_graph_from_index</span><span class="p">(</span><span class="n">knn</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_metric</span> <span class="o">=</span> <span class="n">knn</span><span class="o">.</span><span class="n">metric</span>  <span class="c1"># type: ignore[union-attr]</span>
 
         <span class="k">return</span> <span class="n">knn_graph</span>

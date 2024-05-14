@@ -312,6 +312,12 @@
 <li class="toctree-l2"><a class="reference internal" href="../../../../../cleanlab/internal/label_quality_utils.html">label_quality_utils</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../../../cleanlab/internal/multilabel_utils.html">multilabel_utils</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../../../cleanlab/internal/multilabel_scorer.html">multilabel_scorer</a></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../../../cleanlab/internal/neighbor/index.html">neighbor</a><input class="toctree-checkbox" id="toctree-checkbox-18" name="toctree-checkbox-18" role="switch" type="checkbox"/><label for="toctree-checkbox-18"><div class="visually-hidden">Toggle navigation of neighbor</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../cleanlab/internal/neighbor/knn_graph.html">knn_graph</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../cleanlab/internal/neighbor/metric.html">metric</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../cleanlab/internal/neighbor/search.html">search</a></li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="../../../../../cleanlab/internal/outlier.html">outlier</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../../../cleanlab/internal/token_classification_utils.html">token_classification_utils</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../../../cleanlab/internal/validation.html">validation</a></li>
@@ -320,7 +326,7 @@
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Guides</span></p>
 <ul>
-<li class="toctree-l1 has-children"><a class="reference internal" href="../../../../../cleanlab/datalab/guide/index.html">Datalab issue types</a><input class="toctree-checkbox" id="toctree-checkbox-18" name="toctree-checkbox-18" role="switch" type="checkbox"/><label for="toctree-checkbox-18"><div class="visually-hidden">Toggle navigation of Datalab issue types</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../../../cleanlab/datalab/guide/index.html">Datalab issue types</a><input class="toctree-checkbox" id="toctree-checkbox-19" name="toctree-checkbox-19" role="switch" type="checkbox"/><label for="toctree-checkbox-19"><div class="visually-hidden">Toggle navigation of Datalab issue types</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../../../../cleanlab/datalab/guide/issue_type_description.html">Datalab Issue Types</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../../../cleanlab/datalab/guide/custom_issue_manager.html">Creating Your Own Issues Manager</a></li>
 </ul>
@@ -611,13 +617,10 @@
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 <span class="kn">from</span> <span class="nn">scipy.sparse</span> <span class="kn">import</span> <span class="n">csr_matrix</span>
-<span class="kn">from</span> <span class="nn">scipy.spatial.distance</span> <span class="kn">import</span> <span class="n">euclidean</span>
-<span class="kn">from</span> <span class="nn">sklearn.neighbors</span> <span class="kn">import</span> <span class="n">NearestNeighbors</span>
-<span class="kn">from</span> <span class="nn">sklearn.exceptions</span> <span class="kn">import</span> <span class="n">NotFittedError</span>
-<span class="kn">from</span> <span class="nn">sklearn.utils.validation</span> <span class="kn">import</span> <span class="n">check_is_fitted</span>
 <span class="kn">from</span> <span class="nn">sklearn.cluster</span> <span class="kn">import</span> <span class="n">DBSCAN</span>
 
 <span class="kn">from</span> <span class="nn">cleanlab.datalab.internal.issue_manager</span> <span class="kn">import</span> <span class="n">IssueManager</span>
+<span class="kn">from</span> <span class="nn">cleanlab.internal.neighbor.knn_graph</span> <span class="kn">import</span> <span class="n">create_knn_graph_and_index</span>
 <span class="kn">from</span> <span class="nn">cleanlab.rank</span> <span class="kn">import</span> <span class="n">get_self_confidence_for_each_label</span>
 
 <span class="k">if</span> <span class="n">TYPE_CHECKING</span><span class="p">:</span>  <span class="c1"># pragma: no cover</span>
@@ -742,31 +745,10 @@
         <span class="n">metric_changes</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">metric</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">metric</span> <span class="o">!=</span> <span class="n">old_knn_metric</span>
 
         <span class="k">if</span> <span class="n">knn_graph</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">metric_changes</span><span class="p">:</span>
-            <span class="k">if</span> <span class="n">features</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-                    <span class="s2">&quot;If a knn_graph is not provided, features must be provided to fit a new knn.&quot;</span>
-                <span class="p">)</span>
-            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">metric</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">metric</span> <span class="o">=</span> <span class="p">(</span>
-                    <span class="s2">&quot;cosine&quot;</span>
-                    <span class="k">if</span> <span class="n">features</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">3</span>
-                    <span class="k">else</span> <span class="s2">&quot;euclidean&quot;</span> <span class="k">if</span> <span class="n">features</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">100</span> <span class="k">else</span> <span class="n">euclidean</span>
-                <span class="p">)</span>
-            <span class="n">knn</span> <span class="o">=</span> <span class="n">NearestNeighbors</span><span class="p">(</span><span class="n">n_neighbors</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">k</span><span class="p">,</span> <span class="n">metric</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">metric</span><span class="p">)</span>
-
-            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">metric</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">metric</span> <span class="o">!=</span> <span class="n">knn</span><span class="o">.</span><span class="n">metric</span><span class="p">:</span>
-                <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
-                    <span class="sa">f</span><span class="s2">&quot;Metric </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">metric</span><span class="si">}</span><span class="s2"> does not match metric </span><span class="si">{</span><span class="n">knn</span><span class="o">.</span><span class="n">metric</span><span class="si">}</span><span class="s2"> used to fit knn. &quot;</span>
-                    <span class="s2">&quot;Most likely an existing NearestNeighbors object was passed in, but a different &quot;</span>
-                    <span class="s2">&quot;metric was specified.&quot;</span>
-                <span class="p">)</span>
+            <span class="n">knn_graph</span><span class="p">,</span> <span class="n">knn</span> <span class="o">=</span> <span class="n">create_knn_graph_and_index</span><span class="p">(</span>
+                <span class="n">features</span><span class="p">,</span> <span class="n">n_neighbors</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">k</span><span class="p">,</span> <span class="n">metric</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">metric</span>
+            <span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">metric</span> <span class="o">=</span> <span class="n">knn</span><span class="o">.</span><span class="n">metric</span>
-
-            <span class="k">try</span><span class="p">:</span>
-                <span class="n">check_is_fitted</span><span class="p">(</span><span class="n">knn</span><span class="p">)</span>
-            <span class="k">except</span> <span class="n">NotFittedError</span><span class="p">:</span>
-                <span class="n">knn</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">features</span><span class="p">)</span>
-            <span class="n">knn_graph</span> <span class="o">=</span> <span class="n">knn</span><span class="o">.</span><span class="n">kneighbors_graph</span><span class="p">(</span><span class="n">mode</span><span class="o">=</span><span class="s2">&quot;distance&quot;</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">knn_graph</span></div>
 
 <div class="viewcode-block" id="UnderperformingGroupIssueManager.perform_clustering"><a class="viewcode-back" href="../../../../../cleanlab/datalab/internal/issue_manager/underperforming_group.html#cleanlab.datalab.internal.issue_manager.underperforming_group.UnderperformingGroupIssueManager.perform_clustering">[docs]</a>    <span class="k">def</span> <span class="nf">perform_clustering</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">knn_graph</span><span class="p">:</span> <span class="n">csr_matrix</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">npt</span><span class="o">.</span><span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">int_</span><span class="p">]:</span>
