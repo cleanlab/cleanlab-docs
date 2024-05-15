@@ -637,15 +637,12 @@
 <span class="sd">&quot;&quot;&quot;</span>
 
 <span class="kn">import</span> <span class="nn">warnings</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Union</span>
+
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Union</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Optional</span>
-
-<span class="kn">from</span> <span class="nn">cleanlab.rank</span> <span class="kn">import</span> <span class="n">get_label_quality_scores</span>
-<span class="kn">from</span> <span class="nn">cleanlab.internal.util</span> <span class="kn">import</span> <span class="n">get_num_classes</span><span class="p">,</span> <span class="n">value_counts</span>
 <span class="kn">from</span> <span class="nn">cleanlab.internal.constants</span> <span class="kn">import</span> <span class="n">CLIPPING_LOWER_BOUND</span>
-
 <span class="kn">from</span> <span class="nn">cleanlab.internal.multiannotator_utils</span> <span class="kn">import</span> <span class="p">(</span>
     <span class="n">assert_valid_inputs_multiannotator</span><span class="p">,</span>
     <span class="n">assert_valid_pred_probs</span><span class="p">,</span>
@@ -653,6 +650,8 @@
     <span class="n">find_best_temp_scaler</span><span class="p">,</span>
     <span class="n">temp_scale_pred_probs</span><span class="p">,</span>
 <span class="p">)</span>
+<span class="kn">from</span> <span class="nn">cleanlab.internal.util</span> <span class="kn">import</span> <span class="n">get_num_classes</span><span class="p">,</span> <span class="n">value_counts</span>
+<span class="kn">from</span> <span class="nn">cleanlab.rank</span> <span class="kn">import</span> <span class="n">get_label_quality_scores</span>
 
 
 <div class="viewcode-block" id="get_label_quality_multiannotator"><a class="viewcode-back" href="../../cleanlab/multiannotator.html#cleanlab.multiannotator.get_label_quality_multiannotator">[docs]</a><span class="k">def</span> <span class="nf">get_label_quality_multiannotator</span><span class="p">(</span>
@@ -1556,33 +1555,38 @@
     <span class="k">else</span><span class="p">:</span>
         <span class="n">num_classes</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">nanmax</span><span class="p">(</span><span class="n">labels_multiannotator</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">get_labels_mode</span><span class="p">(</span><span class="n">label_count</span><span class="p">,</span> <span class="n">num_classes</span><span class="p">):</span>
-        <span class="n">max_count_idx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">label_count</span> <span class="o">==</span> <span class="n">np</span><span class="o">.</span><span class="n">nanmax</span><span class="p">(</span><span class="n">label_count</span><span class="p">))[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">float</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">pad</span><span class="p">(</span>
-            <span class="n">max_count_idx</span><span class="p">,</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">num_classes</span> <span class="o">-</span> <span class="nb">len</span><span class="p">(</span><span class="n">max_count_idx</span><span class="p">)),</span> <span class="s2">&quot;constant&quot;</span><span class="p">,</span> <span class="n">constant_values</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">NaN</span>
-        <span class="p">)</span>
+    <span class="n">array_idx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">labels_multiannotator</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+    <span class="n">label_count</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">labels_multiannotator</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">num_classes</span><span class="p">))</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">labels_multiannotator</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]):</span>
+        <span class="n">not_nan_mask</span> <span class="o">=</span> <span class="o">~</span><span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">labels_multiannotator</span><span class="p">[:,</span> <span class="n">i</span><span class="p">])</span>
+        <span class="c1"># Get the indexes where the label is not missing for the annotator i as int.</span>
+        <span class="n">label_index</span> <span class="o">=</span> <span class="n">labels_multiannotator</span><span class="p">[</span><span class="n">not_nan_mask</span><span class="p">,</span> <span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
+        <span class="c1"># Increase the counts of those labels by 1.</span>
+        <span class="n">label_count</span><span class="p">[</span><span class="n">array_idx</span><span class="p">[</span><span class="n">not_nan_mask</span><span class="p">],</span> <span class="n">label_index</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
+
+    <span class="n">mode_labels_multiannotator</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">full</span><span class="p">(</span><span class="n">label_count</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">)</span>
+    <span class="n">modes_mask</span> <span class="o">=</span> <span class="n">label_count</span> <span class="o">==</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">label_count</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">insert_index</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">modes_mask</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">int</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">modes_mask</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]):</span>
+        <span class="n">mode_index</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">modes_mask</span><span class="p">[:,</span> <span class="n">i</span><span class="p">])[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">mode_labels_multiannotator</span><span class="p">[</span><span class="n">mode_index</span><span class="p">,</span> <span class="n">insert_index</span><span class="p">[</span><span class="n">mode_index</span><span class="p">]]</span> <span class="o">=</span> <span class="n">i</span>
+        <span class="n">insert_index</span><span class="p">[</span><span class="n">mode_index</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
 
     <span class="n">majority_vote_label</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">full</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">labels_multiannotator</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">)</span>
-    <span class="n">label_count</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">apply_along_axis</span><span class="p">(</span>
-        <span class="k">lambda</span> <span class="n">s</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">bincount</span><span class="p">(</span><span class="n">s</span><span class="p">[</span><span class="o">~</span><span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">s</span><span class="p">)]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">),</span> <span class="n">minlength</span><span class="o">=</span><span class="n">num_classes</span><span class="p">),</span>
-        <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
-        <span class="n">arr</span><span class="o">=</span><span class="n">labels_multiannotator</span><span class="p">,</span>
-    <span class="p">)</span>
-    <span class="n">mode_labels_multiannotator</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">apply_along_axis</span><span class="p">(</span>
-        <span class="n">get_labels_mode</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">arr</span><span class="o">=</span><span class="n">label_count</span><span class="p">,</span> <span class="n">num_classes</span><span class="o">=</span><span class="n">num_classes</span>
-    <span class="p">)</span>
-
-    <span class="n">nontied_idx</span> <span class="o">=</span> <span class="p">[]</span>
-    <span class="n">tied_idx</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+    <span class="n">label_mode_count</span> <span class="o">=</span> <span class="p">(</span><span class="o">~</span><span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">mode_labels_multiannotator</span><span class="p">))</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
 
     <span class="c1"># obtaining consensus using annotator majority vote</span>
-    <span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="n">label_mode</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">mode_labels_multiannotator</span><span class="p">):</span>
-        <span class="n">label_mode</span> <span class="o">=</span> <span class="n">label_mode</span><span class="p">[</span><span class="o">~</span><span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">label_mode</span><span class="p">)]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
-        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">label_mode</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
-            <span class="n">majority_vote_label</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span> <span class="o">=</span> <span class="n">label_mode</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-            <span class="n">nontied_idx</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">idx</span><span class="p">)</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">tied_idx</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span> <span class="o">=</span> <span class="n">label_mode</span>
+    <span class="n">mode_count_one_mask</span> <span class="o">=</span> <span class="n">label_mode_count</span> <span class="o">==</span> <span class="mi">1</span>
+    <span class="n">majority_vote_label</span><span class="p">[</span><span class="n">mode_count_one_mask</span><span class="p">]</span> <span class="o">=</span> <span class="n">mode_labels_multiannotator</span><span class="p">[</span><span class="n">mode_count_one_mask</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span>
+    <span class="n">nontied_idx</span> <span class="o">=</span> <span class="n">array_idx</span><span class="p">[</span><span class="n">mode_count_one_mask</span><span class="p">]</span>
+    <span class="n">tied_idx</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="n">i</span><span class="p">:</span> <span class="n">label_mode</span><span class="p">[:</span><span class="n">count</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">label_mode</span><span class="p">,</span> <span class="n">count</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span>
+            <span class="n">array_idx</span><span class="p">[</span><span class="o">~</span><span class="n">mode_count_one_mask</span><span class="p">],</span>
+            <span class="n">mode_labels_multiannotator</span><span class="p">[</span><span class="o">~</span><span class="n">mode_count_one_mask</span><span class="p">,</span> <span class="p">:],</span>
+            <span class="n">label_mode_count</span><span class="p">[</span><span class="o">~</span><span class="n">mode_count_one_mask</span><span class="p">],</span>
+        <span class="p">)</span>
+    <span class="p">}</span>
 
     <span class="c1"># tiebreak 1: using pred_probs (if provided)</span>
     <span class="k">if</span> <span class="n">pred_probs</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">tied_idx</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
@@ -1902,9 +1906,9 @@
 <span class="sd">        An array of shape ``(N,)`` with the fraction of annotators that agree with each consensus label.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">annotator_agreement</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">labels_multiannotator</span><span class="p">))</span>
-    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">labels</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">labels_multiannotator</span><span class="p">):</span>
-        <span class="n">annotator_agreement</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">labels</span><span class="p">[</span><span class="o">~</span><span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">labels</span><span class="p">)]</span> <span class="o">==</span> <span class="n">consensus_label</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
-
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">labels_multiannotator</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]):</span>
+        <span class="n">annotator_agreement</span> <span class="o">+=</span> <span class="n">labels_multiannotator</span><span class="p">[:,</span> <span class="n">i</span><span class="p">]</span> <span class="o">==</span> <span class="n">consensus_label</span>
+    <span class="n">annotator_agreement</span> <span class="o">/=</span> <span class="p">(</span><span class="o">~</span><span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">labels_multiannotator</span><span class="p">))</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">annotator_agreement</span>
 
 
@@ -1979,24 +1983,22 @@
 <span class="sd">    annotator_agreement : float</span>
 <span class="sd">        An float repesenting the agreement of each annotator with other annotators that labeled the same examples.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">annotator_agreement_per_example</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">labels_multiannotator</span><span class="p">))</span>
-
-    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">labels</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">labels_multiannotator</span><span class="p">):</span>
-        <span class="n">labels_subset</span> <span class="o">=</span> <span class="n">labels</span><span class="p">[</span><span class="o">~</span><span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">labels</span><span class="p">)]</span>
-        <span class="n">examples_num_annotators</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">labels_subset</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">examples_num_annotators</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
-            <span class="n">annotator_agreement_per_example</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
-                <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">labels_subset</span> <span class="o">==</span> <span class="n">labels</span><span class="p">[</span><span class="n">annotator_idx</span><span class="p">])</span> <span class="o">-</span> <span class="mi">1</span>
-            <span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">examples_num_annotators</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
-
     <span class="n">adjusted_num_annotations</span> <span class="o">=</span> <span class="n">num_annotations</span> <span class="o">-</span> <span class="mi">1</span>
     <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">adjusted_num_annotations</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-        <span class="n">annotator_agreement</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">NaN</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="n">annotator_agreement</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">average</span><span class="p">(</span>
-            <span class="n">annotator_agreement_per_example</span><span class="p">,</span> <span class="n">weights</span><span class="o">=</span><span class="n">num_annotations</span> <span class="o">-</span> <span class="mi">1</span>
-        <span class="p">)</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">NaN</span>
 
+    <span class="n">multi_annotations_mask</span> <span class="o">=</span> <span class="n">num_annotations</span> <span class="o">&gt;</span> <span class="mi">1</span>
+    <span class="n">annotator_agreement_per_example</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">labels_multiannotator</span><span class="p">))</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">labels_multiannotator</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]):</span>
+        <span class="n">annotator_agreement_per_example</span><span class="p">[</span><span class="n">multi_annotations_mask</span><span class="p">]</span> <span class="o">+=</span> <span class="p">(</span>
+            <span class="n">labels_multiannotator</span><span class="p">[</span><span class="n">multi_annotations_mask</span><span class="p">,</span> <span class="n">annotator_idx</span><span class="p">]</span>
+            <span class="o">==</span> <span class="n">labels_multiannotator</span><span class="p">[</span><span class="n">multi_annotations_mask</span><span class="p">,</span> <span class="n">i</span><span class="p">]</span>
+        <span class="p">)</span>
+    <span class="n">annotator_agreement_per_example</span><span class="p">[</span><span class="n">multi_annotations_mask</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="n">annotator_agreement_per_example</span><span class="p">[</span><span class="n">multi_annotations_mask</span><span class="p">]</span> <span class="o">-</span> <span class="mi">1</span>
+    <span class="p">)</span> <span class="o">/</span> <span class="n">adjusted_num_annotations</span><span class="p">[</span><span class="n">multi_annotations_mask</span><span class="p">]</span>
+
+    <span class="n">annotator_agreement</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">average</span><span class="p">(</span><span class="n">annotator_agreement_per_example</span><span class="p">,</span> <span class="n">weights</span><span class="o">=</span><span class="n">num_annotations</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">annotator_agreement</span>
 
 
@@ -2086,35 +2088,30 @@
         <span class="n">adjusted_annotator_agreement</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">clip</span><span class="p">(</span>
             <span class="mi">1</span> <span class="o">-</span> <span class="p">(</span><span class="n">annotator_error</span> <span class="o">/</span> <span class="n">most_likely_class_error</span><span class="p">),</span> <span class="n">a_min</span><span class="o">=</span><span class="n">CLIPPING_LOWER_BOUND</span><span class="p">,</span> <span class="n">a_max</span><span class="o">=</span><span class="kc">None</span>
         <span class="p">)</span>
-
         <span class="c1"># compute model weight</span>
         <span class="n">model_error</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">prior_pred_probs_subset</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="n">consensus_label_subset</span><span class="p">)</span>
         <span class="n">model_weight</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span>
             <span class="p">[(</span><span class="mi">1</span> <span class="o">-</span> <span class="p">(</span><span class="n">model_error</span> <span class="o">/</span> <span class="n">most_likely_class_error</span><span class="p">)),</span> <span class="n">CLIPPING_LOWER_BOUND</span><span class="p">]</span>
         <span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">num_annotations</span><span class="p">))</span>
 
+        <span class="n">non_nan_mask</span> <span class="o">=</span> <span class="o">~</span><span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">labels_multiannotator</span><span class="p">)</span>
+        <span class="n">annotation_weight</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">labels_multiannotator</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">labels_multiannotator</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]):</span>
+            <span class="n">annotation_weight</span><span class="p">[</span><span class="n">non_nan_mask</span><span class="p">[:,</span> <span class="n">i</span><span class="p">]]</span> <span class="o">+=</span> <span class="n">adjusted_annotator_agreement</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+        <span class="n">total_weight</span> <span class="o">=</span> <span class="n">annotation_weight</span> <span class="o">+</span> <span class="n">model_weight</span>
+
         <span class="c1"># compute weighted average</span>
         <span class="n">post_pred_probs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">full</span><span class="p">(</span><span class="n">prior_pred_probs</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">)</span>
-        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">labels</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">labels_multiannotator</span><span class="p">):</span>
-            <span class="n">labels_mask</span> <span class="o">=</span> <span class="o">~</span><span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">labels</span><span class="p">)</span>
-            <span class="n">labels_subset</span> <span class="o">=</span> <span class="n">labels</span><span class="p">[</span><span class="n">labels_mask</span><span class="p">]</span>
-            <span class="n">post_pred_probs</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
-                <span class="n">np</span><span class="o">.</span><span class="n">average</span><span class="p">(</span>
-                    <span class="p">[</span><span class="n">prior_pred_probs</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">true_label</span><span class="p">]]</span>
-                    <span class="o">+</span> <span class="p">[</span>
-                        <span class="p">(</span>
-                            <span class="n">consensus_likelihood</span>
-                            <span class="k">if</span> <span class="n">annotator_label</span> <span class="o">==</span> <span class="n">true_label</span>
-                            <span class="k">else</span> <span class="n">non_consensus_likelihood</span>
-                        <span class="p">)</span>
-                        <span class="k">for</span> <span class="n">annotator_label</span> <span class="ow">in</span> <span class="n">labels_subset</span>
-                    <span class="p">],</span>
-                    <span class="n">weights</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">(</span>
-                        <span class="p">([</span><span class="n">model_weight</span><span class="p">],</span> <span class="n">adjusted_annotator_agreement</span><span class="p">[</span><span class="n">labels_mask</span><span class="p">])</span>
-                    <span class="p">),</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">prior_pred_probs</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]):</span>
+            <span class="n">post_pred_probs</span><span class="p">[:,</span> <span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">prior_pred_probs</span><span class="p">[:,</span> <span class="n">i</span><span class="p">]</span> <span class="o">*</span> <span class="n">model_weight</span>
+            <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">labels_multiannotator</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]):</span>
+                <span class="n">mask</span> <span class="o">=</span> <span class="o">~</span><span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">labels_multiannotator</span><span class="p">[:,</span> <span class="n">k</span><span class="p">])</span>
+                <span class="n">post_pred_probs</span><span class="p">[</span><span class="n">mask</span><span class="p">,</span> <span class="n">i</span><span class="p">]</span> <span class="o">+=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span>
+                    <span class="n">labels_multiannotator</span><span class="p">[</span><span class="n">mask</span><span class="p">,</span> <span class="n">k</span><span class="p">]</span> <span class="o">==</span> <span class="n">i</span><span class="p">,</span>
+                    <span class="n">adjusted_annotator_agreement</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">*</span> <span class="n">consensus_likelihood</span><span class="p">,</span>
+                    <span class="n">adjusted_annotator_agreement</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">*</span> <span class="n">non_consensus_likelihood</span><span class="p">,</span>
                 <span class="p">)</span>
-                <span class="k">for</span> <span class="n">true_label</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_classes</span><span class="p">)</span>
-            <span class="p">]</span>
+            <span class="n">post_pred_probs</span><span class="p">[:,</span> <span class="n">i</span><span class="p">]</span> <span class="o">/=</span> <span class="n">total_weight</span>
 
         <span class="n">return_model_weight</span> <span class="o">=</span> <span class="n">model_weight</span>
         <span class="n">return_annotator_weight</span> <span class="o">=</span> <span class="n">adjusted_annotator_agreement</span>

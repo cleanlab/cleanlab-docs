@@ -613,14 +613,16 @@
 <span class="sd">Helper methods used internally in cleanlab.multiannotator</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
-<span class="kn">from</span> <span class="nn">cleanlab.typing</span> <span class="kn">import</span> <span class="n">LabelLike</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Tuple</span>
 <span class="kn">import</span> <span class="nn">warnings</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Tuple</span>
+
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
-<span class="kn">from</span> <span class="nn">cleanlab.internal.validation</span> <span class="kn">import</span> <span class="n">assert_valid_class_labels</span>
+
 <span class="kn">from</span> <span class="nn">cleanlab.internal.numerics</span> <span class="kn">import</span> <span class="n">softmax</span>
 <span class="kn">from</span> <span class="nn">cleanlab.internal.util</span> <span class="kn">import</span> <span class="n">get_num_classes</span><span class="p">,</span> <span class="n">value_counts</span>
+<span class="kn">from</span> <span class="nn">cleanlab.internal.validation</span> <span class="kn">import</span> <span class="n">assert_valid_class_labels</span>
+<span class="kn">from</span> <span class="nn">cleanlab.typing</span> <span class="kn">import</span> <span class="n">LabelLike</span>
 
 <span class="n">SMALL_CONST</span> <span class="o">=</span> <span class="mf">1e-30</span>
 
@@ -684,11 +686,10 @@
 
         <span class="c1"># Raise warning if no examples with 2 or more annotators agree</span>
         <span class="c1"># TODO: might shift this later in the code to avoid extra compute</span>
-        <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">apply_along_axis</span><span class="p">(</span>
-            <span class="k">lambda</span> <span class="n">s</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array_equal</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">s</span><span class="p">[</span><span class="o">~</span><span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">s</span><span class="p">)]),</span> <span class="n">s</span><span class="p">[</span><span class="o">~</span><span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">s</span><span class="p">)]),</span>
-            <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
-            <span class="n">arr</span><span class="o">=</span><span class="n">labels_multiannotator</span><span class="p">,</span>
-        <span class="p">)</span><span class="o">.</span><span class="n">all</span><span class="p">():</span>
+        <span class="n">has_agreement</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">labels_multiannotator</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">bool</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">labels_multiannotator</span><span class="p">):</span>
+            <span class="n">has_agreement</span> <span class="o">|=</span> <span class="p">(</span><span class="n">labels_multiannotator</span> <span class="o">==</span> <span class="n">i</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">has_agreement</span><span class="o">.</span><span class="n">any</span><span class="p">():</span>
             <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s2">&quot;Annotators do not agree on any example. Check input data.&quot;</span><span class="p">)</span>
 
     <span class="c1"># Check labels</span>
