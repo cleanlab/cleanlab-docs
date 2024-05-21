@@ -614,13 +614,14 @@
 <span class="sd">&quot;&quot;&quot;</span>
 
 <span class="kn">import</span> <span class="nn">warnings</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Union</span>
+
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Union</span><span class="p">,</span> <span class="n">Tuple</span>
 
-<span class="kn">from</span> <span class="nn">cleanlab.typing</span> <span class="kn">import</span> <span class="n">DatasetLike</span><span class="p">,</span> <span class="n">LabelLike</span>
-<span class="kn">from</span> <span class="nn">cleanlab.internal.validation</span> <span class="kn">import</span> <span class="n">labels_to_array</span>
 <span class="kn">from</span> <span class="nn">cleanlab.internal.constants</span> <span class="kn">import</span> <span class="n">FLOATING_POINT_COMPARISON</span><span class="p">,</span> <span class="n">TINY_VALUE</span>
+<span class="kn">from</span> <span class="nn">cleanlab.internal.validation</span> <span class="kn">import</span> <span class="n">labels_to_array</span>
+<span class="kn">from</span> <span class="nn">cleanlab.typing</span> <span class="kn">import</span> <span class="n">DatasetLike</span><span class="p">,</span> <span class="n">LabelLike</span>
 
 
 <div class="viewcode-block" id="remove_noise_from_class"><a class="viewcode-back" href="../../../cleanlab/internal/util.html#cleanlab.internal.util.remove_noise_from_class">[docs]</a><span class="k">def</span> <span class="nf">remove_noise_from_class</span><span class="p">(</span><span class="n">noise_matrix</span><span class="p">,</span> <span class="n">class_without_noise</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
@@ -733,7 +734,7 @@
     <span class="k">return</span> <span class="n">x</span></div>
 
 
-<div class="viewcode-block" id="value_counts"><a class="viewcode-back" href="../../../cleanlab/internal/util.html#cleanlab.internal.util.value_counts">[docs]</a><span class="k">def</span> <span class="nf">value_counts</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">num_classes</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">multi_label</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<div class="viewcode-block" id="value_counts"><a class="viewcode-back" href="../../../cleanlab/internal/util.html#cleanlab.internal.util.value_counts">[docs]</a><span class="k">def</span> <span class="nf">value_counts</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">num_classes</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">multi_label</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Returns an np.ndarray of shape (K, 1), with the</span>
 <span class="sd">    value counts for every unique item in the labels list/array,</span>
 <span class="sd">    where K is the number of unique entries in labels.</span>
@@ -768,17 +769,27 @@
     <span class="k">if</span> <span class="n">multi_label</span><span class="p">:</span>
         <span class="n">x</span> <span class="o">=</span> <span class="p">[</span><span class="n">z</span> <span class="k">for</span> <span class="n">lst</span> <span class="ow">in</span> <span class="n">x</span> <span class="k">for</span> <span class="n">z</span> <span class="ow">in</span> <span class="n">lst</span><span class="p">]</span>  <span class="c1"># Flatten</span>
     <span class="n">unique_classes</span><span class="p">,</span> <span class="n">counts</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">return_counts</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="c1"># Early exit if num_classes is not provided or redundant</span>
     <span class="k">if</span> <span class="n">num_classes</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">num_classes</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">unique_classes</span><span class="p">):</span>
         <span class="k">return</span> <span class="n">counts</span>
+
     <span class="c1"># Else, there are missing classes</span>
-    <span class="k">if</span> <span class="n">num_classes</span> <span class="o">&lt;=</span> <span class="nb">max</span><span class="p">(</span><span class="n">unique_classes</span><span class="p">):</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Required: num_classes &gt; max(x), but </span><span class="si">{</span><span class="n">num_classes</span><span class="si">}</span><span class="s2"> &lt;= </span><span class="si">{</span><span class="nb">max</span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="si">}</span><span class="s2">.&quot;</span><span class="p">)</span>
+    <span class="n">labels_are_integers</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">issubdtype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="o">.</span><span class="n">dtype</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">integer</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">labels_are_integers</span> <span class="ow">and</span> <span class="n">num_classes</span> <span class="o">&lt;=</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">unique_classes</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Required: num_classes &gt; max(x), but </span><span class="si">{</span><span class="n">num_classes</span><span class="si">}</span><span class="s2"> &lt;= </span><span class="si">{</span><span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="si">}</span><span class="s2">.&quot;</span><span class="p">)</span>
+
     <span class="c1"># Add zero counts for all missing classes in [0, 1,..., num_classes-1]</span>
-    <span class="c1"># multi_label=False regardless because x was flattened.</span>
-    <span class="n">missing_classes</span> <span class="o">=</span> <span class="n">get_missing_classes</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">num_classes</span><span class="o">=</span><span class="n">num_classes</span><span class="p">,</span> <span class="n">multi_label</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-    <span class="n">missing_counts</span> <span class="o">=</span> <span class="p">[(</span><span class="n">z</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span> <span class="k">for</span> <span class="n">z</span> <span class="ow">in</span> <span class="n">missing_classes</span><span class="p">]</span>
+    <span class="n">total_counts</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">num_classes</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">int</span><span class="p">)</span>
+    <span class="c1"># Fill in counts for classes that are present.</span>
+    <span class="c1"># If labels are integers, unique_classes can be used directly as indices to place counts</span>
+    <span class="c1"># into the correct positions in total_counts array.</span>
+    <span class="c1"># If labels are strings, use a slice to fill counts sequentially since strings do not map to indices.</span>
+    <span class="n">count_ids</span> <span class="o">=</span> <span class="n">unique_classes</span> <span class="k">if</span> <span class="n">labels_are_integers</span> <span class="k">else</span> <span class="nb">slice</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">unique_classes</span><span class="p">))</span>
+    <span class="n">total_counts</span><span class="p">[</span><span class="n">count_ids</span><span class="p">]</span> <span class="o">=</span> <span class="n">counts</span>
+
     <span class="c1"># Return counts with zeros for all missing classes.</span>
-    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="o">*</span><span class="nb">sorted</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">unique_classes</span><span class="p">,</span> <span class="n">counts</span><span class="p">))</span> <span class="o">+</span> <span class="n">missing_counts</span><span class="p">)))[</span><span class="mi">1</span><span class="p">])</span></div>
+    <span class="k">return</span> <span class="n">total_counts</span></div>
 
 
 <div class="viewcode-block" id="value_counts_fill_missing_classes"><a class="viewcode-back" href="../../../cleanlab/internal/util.html#cleanlab.internal.util.value_counts_fill_missing_classes">[docs]</a><span class="k">def</span> <span class="nf">value_counts_fill_missing_classes</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">num_classes</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">multi_label</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
@@ -1175,9 +1186,7 @@
 <span class="sd">        or ``len(pre_X)`` if buffer_size cannot be determined, or None if no ShuffleDataset found.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">try</span><span class="p">:</span>
-        <span class="kn">from</span> <span class="nn">tensorflow.python.data.ops.dataset_ops</span> <span class="kn">import</span> <span class="p">(</span>
-            <span class="n">ShuffleDataset</span><span class="p">,</span>
-        <span class="p">)</span>
+        <span class="kn">from</span> <span class="nn">tensorflow.python.data.ops.dataset_ops</span> <span class="kn">import</span> <span class="n">ShuffleDataset</span>
 
         <span class="n">X_inputs</span> <span class="o">=</span> <span class="p">[</span><span class="n">X</span><span class="p">]</span>
         <span class="k">while</span> <span class="nb">len</span><span class="p">(</span><span class="n">X_inputs</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
