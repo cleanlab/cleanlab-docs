@@ -636,14 +636,15 @@
 <span class="p">)</span>
 <span class="kn">from</span> <span class="nn">cleanlab.datalab.internal.model_outputs</span> <span class="kn">import</span> <span class="p">(</span>
     <span class="n">MultiClassPredProbs</span><span class="p">,</span>
-    <span class="n">RegressionPredictions</span><span class="p">,</span>
     <span class="n">MultiLabelPredProbs</span><span class="p">,</span>
+    <span class="n">RegressionPredictions</span><span class="p">,</span>
 <span class="p">)</span>
 <span class="kn">from</span> <span class="nn">cleanlab.datalab.internal.task</span> <span class="kn">import</span> <span class="n">Task</span>
 
 <span class="k">if</span> <span class="n">TYPE_CHECKING</span><span class="p">:</span>  <span class="c1"># pragma: no cover</span>
-    <span class="kn">import</span> <span class="nn">numpy.typing</span> <span class="k">as</span> <span class="nn">npt</span>
     <span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Callable</span>
+
+    <span class="kn">import</span> <span class="nn">numpy.typing</span> <span class="k">as</span> <span class="nn">npt</span>
 
     <span class="kn">from</span> <span class="nn">cleanlab.datalab.datalab</span> <span class="kn">import</span> <span class="n">Datalab</span>
 
@@ -653,6 +654,7 @@
     <span class="s2">&quot;outlier&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;pred_probs&quot;</span><span class="p">,</span> <span class="s2">&quot;features&quot;</span><span class="p">,</span> <span class="s2">&quot;knn_graph&quot;</span><span class="p">],</span>
     <span class="s2">&quot;near_duplicate&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;features&quot;</span><span class="p">,</span> <span class="s2">&quot;knn_graph&quot;</span><span class="p">],</span>
     <span class="s2">&quot;non_iid&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;pred_probs&quot;</span><span class="p">,</span> <span class="s2">&quot;features&quot;</span><span class="p">,</span> <span class="s2">&quot;knn_graph&quot;</span><span class="p">],</span>
+    <span class="c1"># The underperforming_group issue type requires a pair of inputs: (pred_probs, &lt;any_of_the_other_three&gt;)</span>
     <span class="s2">&quot;underperforming_group&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;pred_probs&quot;</span><span class="p">,</span> <span class="s2">&quot;features&quot;</span><span class="p">,</span> <span class="s2">&quot;knn_graph&quot;</span><span class="p">,</span> <span class="s2">&quot;cluster_ids&quot;</span><span class="p">],</span>
     <span class="s2">&quot;data_valuation&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;features&quot;</span><span class="p">,</span> <span class="s2">&quot;knn_graph&quot;</span><span class="p">],</span>
     <span class="s2">&quot;class_imbalance&quot;</span><span class="p">:</span> <span class="p">[],</span>
@@ -1076,6 +1078,18 @@
         <span class="p">)</span>
         <span class="k">if</span> <span class="n">drop_class_imbalance_check</span><span class="p">:</span>
             <span class="n">issue_types_copy</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;class_imbalance&quot;</span><span class="p">)</span>
+
+        <span class="n">required_pairs_for_underperforming_group</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="p">(</span><span class="s2">&quot;pred_probs&quot;</span><span class="p">,</span> <span class="s2">&quot;features&quot;</span><span class="p">),</span>
+            <span class="p">(</span><span class="s2">&quot;pred_probs&quot;</span><span class="p">,</span> <span class="s2">&quot;knn_graph&quot;</span><span class="p">),</span>
+            <span class="p">(</span><span class="s2">&quot;pred_probs&quot;</span><span class="p">,</span> <span class="s2">&quot;cluster_ids&quot;</span><span class="p">),</span>
+        <span class="p">]</span>
+        <span class="n">drop_underperforming_group_check</span> <span class="o">=</span> <span class="s2">&quot;underperforming_group&quot;</span> <span class="ow">in</span> <span class="n">issue_types_copy</span> <span class="ow">and</span> <span class="ow">not</span> <span class="nb">any</span><span class="p">(</span>
+            <span class="nb">all</span><span class="p">(</span><span class="n">key</span> <span class="ow">in</span> <span class="n">kwargs</span> <span class="ow">and</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">key</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">pair</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">pair</span> <span class="ow">in</span> <span class="n">required_pairs_for_underperforming_group</span>
+        <span class="p">)</span>
+        <span class="k">if</span> <span class="n">drop_underperforming_group_check</span><span class="p">:</span>
+            <span class="n">issue_types_copy</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;underperforming_group&quot;</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="n">issue_types_copy</span></div></div>
 </pre></div> 
