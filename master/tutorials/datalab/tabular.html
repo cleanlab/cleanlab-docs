@@ -1352,13 +1352,20 @@ p-value: 0.0014153602099278074
 </table>
 </div></div>
 </div>
-<p>The results above show which examples cleanlab considers nearly duplicated (rows where <code class="docutils literal notranslate"><span class="pre">is_near_duplicate_issue</span> <span class="pre">==</span> <span class="pre">True</span></code>). Here, we see some examples that cleanlab has flagged as being nearly duplicated. Let’s view these examples to see how similar they are, starting with the top one.</p>
-<p>We compare this example (student 690) against the example cleanlab has identified in the <code class="docutils literal notranslate"><span class="pre">near_duplicate_sets</span></code> (student 246).</p>
+<p>The results above show which examples cleanlab considers nearly duplicated (rows where <code class="docutils literal notranslate"><span class="pre">is_near_duplicate_issue</span> <span class="pre">==</span> <span class="pre">True</span></code>). Here, we see some examples that cleanlab has flagged as being nearly duplicated. Let’s view these examples to see how similar they are</p>
+<p>Using the one of the lowest-scoring examples, let’s compare it against the identified near-duplicate sets.</p>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[15]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">X_raw</span><span class="o">.</span><span class="n">iloc</span><span class="p">[[</span><span class="mi">690</span><span class="p">,</span> <span class="mi">246</span><span class="p">]]</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Identify the row with the lowest near_duplicate_score</span>
+<span class="n">lowest_scoring_duplicate</span> <span class="o">=</span> <span class="n">duplicate_results</span><span class="p">[</span><span class="s2">&quot;near_duplicate_score&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">idxmin</span><span class="p">()</span>
+
+<span class="c1"># Extract the indices of the lowest scoring duplicate and its near duplicate sets</span>
+<span class="n">indices_to_display</span> <span class="o">=</span> <span class="p">[</span><span class="n">lowest_scoring_duplicate</span><span class="p">]</span> <span class="o">+</span> <span class="n">duplicate_results</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">lowest_scoring_duplicate</span><span class="p">,</span> <span class="s2">&quot;near_duplicate_sets&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+
+<span class="c1"># Display the relevant rows from the original dataset</span>
+<span class="n">X_raw</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">indices_to_display</span><span class="p">]</span>
 </pre></div>
 </div>
 </div>
@@ -1393,30 +1400,58 @@ p-value: 0.0014153602099278074
   </thead>
   <tbody>
     <tr>
-      <th>690</th>
-      <td>78.0</td>
-      <td>58.0</td>
-      <td>86.0</td>
-      <td>great final presentation +10</td>
+      <th>1</th>
+      <td>81.0</td>
+      <td>64.0</td>
+      <td>80.0</td>
+      <td>great participation +10</td>
     </tr>
     <tr>
-      <th>246</th>
-      <td>78.0</td>
-      <td>58.0</td>
-      <td>86.0</td>
-      <td>great final presentation +10</td>
+      <th>2</th>
+      <td>81.0</td>
+      <td>64.0</td>
+      <td>80.0</td>
+      <td>great participation +10</td>
+    </tr>
+    <tr>
+      <th>12</th>
+      <td>81.0</td>
+      <td>64.0</td>
+      <td>80.0</td>
+      <td>great participation +10</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>81.0</td>
+      <td>64.0</td>
+      <td>80.0</td>
+      <td>great participation +10</td>
+    </tr>
+    <tr>
+      <th>9</th>
+      <td>81.0</td>
+      <td>64.0</td>
+      <td>80.0</td>
+      <td>great participation +10</td>
     </tr>
   </tbody>
 </table>
 </div></div>
 </div>
-<p>These examples are exact duplicates! Perhaps the same information was accidentally recorded twice in this data.</p>
-<p>Similarly, let’s take a look at example 185 and the identified near duplicate, example 582:</p>
+<p>These examples are exact duplicates! Perhaps the same information was accidentally recorded multiple times in this data.</p>
+<p>Similarly, let’s take a look at another example and the identified near-duplicate sets:</p>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[16]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">X_raw</span><span class="o">.</span><span class="n">iloc</span><span class="p">[[</span><span class="mi">185</span><span class="p">,</span> <span class="mi">582</span><span class="p">]]</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Identify the next row not in the previous near duplicate set</span>
+<span class="n">second_lowest_scoring_duplicate</span> <span class="o">=</span> <span class="n">duplicate_results</span><span class="p">[</span><span class="s2">&quot;near_duplicate_score&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">indices_to_display</span><span class="p">)</span><span class="o">.</span><span class="n">idxmin</span><span class="p">()</span>
+
+<span class="c1"># Extract the indices of the second lowest scoring duplicate and its near duplicate sets</span>
+<span class="n">next_indices_to_display</span> <span class="o">=</span> <span class="p">[</span><span class="n">second_lowest_scoring_duplicate</span><span class="p">]</span> <span class="o">+</span> <span class="n">duplicate_results</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">second_lowest_scoring_duplicate</span><span class="p">,</span> <span class="s2">&quot;near_duplicate_sets&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+
+<span class="c1"># Display the relevant rows from the original dataset</span>
+<span class="n">X_raw</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">next_indices_to_display</span><span class="p">]</span>
 </pre></div>
 </div>
 </div>
@@ -1451,24 +1486,24 @@ p-value: 0.0014153602099278074
   </thead>
   <tbody>
     <tr>
-      <th>185</th>
-      <td>90.0</td>
-      <td>67.0</td>
-      <td>77.0</td>
-      <td>missed class frequently -10</td>
+      <th>27</th>
+      <td>86.0</td>
+      <td>80.0</td>
+      <td>89.0</td>
+      <td>NaN</td>
     </tr>
     <tr>
-      <th>582</th>
-      <td>90.0</td>
-      <td>67.0</td>
-      <td>77.0</td>
-      <td>missed class frequently -10</td>
+      <th>187</th>
+      <td>86.0</td>
+      <td>80.0</td>
+      <td>89.0</td>
+      <td>NaN</td>
     </tr>
   </tbody>
 </table>
 </div></div>
 </div>
-<p>We identified another exact duplicate in our dataset! Including near/exact duplicates in a dataset may have unintended effects on models; be wary about splitting them across training/test sets. Learn more about handling near duplicates detected in a dataset from <a class="reference external" href="../faq.html#How-to-handle-near-duplicate-data-identified-by-cleanlab?">the FAQ</a>.</p>
+<p>We identified another set of exact duplicates in our dataset! Including near/exact duplicates in a dataset may have unintended effects on models; be wary about splitting them across training/test sets. Learn more about handling near duplicates detected in a dataset from <a class="reference external" href="../faq.html#How-to-handle-near-duplicate-data-identified-by-cleanlab?">the FAQ</a>.</p>
 <p>This tutorial highlighted a straightforward approach to detect potentially incorrect information in any tabular dataset. Just use Datalab with any ML model – the better the model, the more accurate the data errors detected by Datalab will be!</p>
 </section>
 <section id="Easy-Mode">
