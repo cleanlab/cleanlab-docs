@@ -595,7 +595,6 @@
  <h1>Source code for cleanlab.internal.neighbor.knn_graph</h1><div class="highlight"><pre>
 <span></span><span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">annotations</span>
 <span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">TYPE_CHECKING</span><span class="p">,</span> <span class="n">Tuple</span>
-<span class="kn">import</span> <span class="nn">warnings</span>
 
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">from</span> <span class="nn">scipy.sparse</span> <span class="kn">import</span> <span class="n">csr_matrix</span>
@@ -1085,47 +1084,11 @@
     <span class="k">return</span> <span class="n">sorted_first_k_duplicate_inds</span>
 
 
-<span class="k">def</span> <span class="nf">_warn_missing_exact_duplicates</span><span class="p">(</span><span class="n">indices</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">exact_duplicate_sets</span><span class="p">:</span> <span class="nb">list</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Go through all sets of points in the sets of exact duplicates, and ensure that none are missing in the indices array.</span>
-
-<span class="sd">    Raises</span>
-<span class="sd">    ------</span>
-<span class="sd">    UserWarning :</span>
-<span class="sd">        A warning may be raised if there were some slots available for an exact duplicate that were missed.</span>
-<span class="sd">        This may happen if the number of exact duplicates in the existing KNN graph is lower than k,</span>
-<span class="sd">        but the set of exact duplicates is larger than what was included in the KNN graph.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="c1"># The number of neighbors to consider</span>
-    <span class="n">k</span> <span class="o">=</span> <span class="n">indices</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-
-    <span class="n">points_missing_exact_duplicates</span> <span class="o">=</span> <span class="p">[]</span>
-    <span class="k">for</span> <span class="n">duplicate_inds</span> <span class="ow">in</span> <span class="n">exact_duplicate_sets</span><span class="p">:</span>
-        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">duplicate_inds</span><span class="p">:</span>
-            <span class="n">inds</span> <span class="o">=</span> <span class="n">indices</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
-
-            <span class="n">same_point_indices</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">setdiff1d</span><span class="p">(</span><span class="n">duplicate_inds</span><span class="p">,</span> <span class="n">i</span><span class="p">)</span>
-
-            <span class="c1"># Figure out how many were already included in the original knn graph</span>
-            <span class="n">pre_existing_same_point_indices</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">intersect1d</span><span class="p">(</span><span class="n">same_point_indices</span><span class="p">,</span> <span class="n">inds</span><span class="p">)</span>
-
-            <span class="c1"># Optionally warn the user if there are more identical points than slots available in the existing knn graph</span>
-            <span class="n">same_point_indices_set_is_larger</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">pre_existing_same_point_indices</span><span class="p">)</span> <span class="o">&lt;</span> <span class="nb">len</span><span class="p">(</span>
-                <span class="n">same_point_indices</span>
-            <span class="p">)</span>
-            <span class="n">slots_larger</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">pre_existing_same_point_indices</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">k</span>
-            <span class="k">if</span> <span class="n">same_point_indices_set_is_larger</span> <span class="ow">and</span> <span class="n">slots_larger</span><span class="p">:</span>
-                <span class="n">points_missing_exact_duplicates</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
-
-    <span class="k">if</span> <span class="n">points_missing_exact_duplicates</span><span class="p">:</span>
-        <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s2">&quot;There were some slots available for an exact duplicate that were missed.&quot;</span><span class="p">)</span>
-
-
 <div class="viewcode-block" id="correct_knn_distances_and_indices"><a class="viewcode-back" href="../../../../cleanlab/internal/neighbor/knn_graph.html#cleanlab.internal.neighbor.knn_graph.correct_knn_distances_and_indices">[docs]</a><span class="k">def</span> <span class="nf">correct_knn_distances_and_indices</span><span class="p">(</span>
     <span class="n">features</span><span class="p">:</span> <span class="n">FeatureArray</span><span class="p">,</span>
     <span class="n">distances</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
     <span class="n">indices</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
     <span class="n">exact_duplicate_sets</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-    <span class="n">enable_warning</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Corrects the distances and indices of a k-nearest neighbors (KNN) graph</span>
@@ -1141,8 +1104,6 @@
 <span class="sd">        The indices of the k nearest neighbors for each point.</span>
 <span class="sd">    exact_duplicate_sets:</span>
 <span class="sd">        A list of numpy arrays, where each array contains the indices of exact duplicates in the feature array. If not provided, it will be computed from the feature array.</span>
-<span class="sd">    enable_warning :</span>
-<span class="sd">        Whether to enable warning messages if any row underestimates the number of exact duplicates.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
@@ -1150,15 +1111,6 @@
 <span class="sd">        The corrected distances between each point and its k nearest neighbors. Exact duplicates (based on the feature array) are ensured to have zero mutual distance.</span>
 <span class="sd">    corrected_indices :</span>
 <span class="sd">        The corrected indices of the k nearest neighbors for each point. Exact duplicates are ensured to be included in the k nearest neighbors, unless the number of exact duplicates exceeds k.</span>
-
-<span class="sd">    Raises</span>
-<span class="sd">    ------</span>
-<span class="sd">    UserWarning :</span>
-<span class="sd">        A warning may be raised if there were some slots available for an exact duplicate that were missed.</span>
-<span class="sd">        This may happen if the number of exact duplicates in the existing KNN graph is lower than k,</span>
-<span class="sd">        but the set of exact duplicates is larger than what was included in the KNN graph.</span>
-<span class="sd">        This warning may be disabled by setting enable_warning=False.</span>
-
 
 <span class="sd">    Example</span>
 <span class="sd">    -------</span>
@@ -1189,19 +1141,10 @@
 <span class="sd">    array([[0.], [0.], [1.41421356]])</span>
 <span class="sd">    &gt;&gt;&gt; corrected_indices</span>
 <span class="sd">    array([[1], [0], [0]])</span>
-
-
-<span class="sd">    Clearly, the first point misses its exact duplicate in the KNN graph. To raise a warning for such cases, set enable_warning=True.</span>
-
-<span class="sd">    &gt;&gt;&gt; corrected_distances, corrected_indices = correct_knn_distances_and_indices(X, distances, indices, enable_warning=True)</span>
-<span class="sd">    UserWarning: There were some slots available for an exact duplicate that were missed.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">if</span> <span class="n">exact_duplicate_sets</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">exact_duplicate_sets</span> <span class="o">=</span> <span class="n">_compute_exact_duplicate_sets</span><span class="p">(</span><span class="n">features</span><span class="p">)</span>
-
-    <span class="k">if</span> <span class="n">enable_warning</span><span class="p">:</span>
-        <span class="n">_warn_missing_exact_duplicates</span><span class="p">(</span><span class="n">indices</span><span class="p">,</span> <span class="n">exact_duplicate_sets</span><span class="p">)</span>
 
     <span class="c1"># Prepare the output arrays</span>
     <span class="n">corrected_distances</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">distances</span><span class="p">)</span>

@@ -876,7 +876,7 @@ with zero distance.</p></li>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="cleanlab.internal.neighbor.knn_graph.correct_knn_distances_and_indices">
-<span class="sig-prename descclassname"><span class="pre">cleanlab.internal.neighbor.knn_graph.</span></span><span class="sig-name descname"><span class="pre">correct_knn_distances_and_indices</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">features</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">distances</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">indices</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">exact_duplicate_sets</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">enable_warning</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/cleanlab/internal/neighbor/knn_graph.html#correct_knn_distances_and_indices"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cleanlab.internal.neighbor.knn_graph.correct_knn_distances_and_indices" title="Permalink to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">cleanlab.internal.neighbor.knn_graph.</span></span><span class="sig-name descname"><span class="pre">correct_knn_distances_and_indices</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">features</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">distances</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">indices</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">exact_duplicate_sets</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/cleanlab/internal/neighbor/knn_graph.html#correct_knn_distances_and_indices"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cleanlab.internal.neighbor.knn_graph.correct_knn_distances_and_indices" title="Permalink to this definition">#</a></dt>
 <dd><p>Corrects the distances and indices of a k-nearest neighbors (KNN) graph
 based on all exact duplicates detected in the feature array.</p>
 <dl class="field-list simple">
@@ -886,7 +886,6 @@ based on all exact duplicates detected in the feature array.</p>
 <li><p><strong>distances</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></span>) – The distances between each point and its k nearest neighbors.</p></li>
 <li><p><strong>indices</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></span>) – The indices of the k nearest neighbors for each point.</p></li>
 <li><p><strong>exact_duplicate_sets</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>]]</span>) – A list of numpy arrays, where each array contains the indices of exact duplicates in the feature array. If not provided, it will be computed from the feature array.</p></li>
-<li><p><strong>enable_warning</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></span>) – Whether to enable warning messages if any row underestimates the number of exact duplicates.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
@@ -898,12 +897,6 @@ based on all exact duplicates detected in the feature array.</p>
 <li><p><code class="xref py py-class docutils literal notranslate"><span class="pre">corrected_indices</span></code> – The corrected indices of the k nearest neighbors for each point. Exact duplicates are ensured to be included in the k nearest neighbors, unless the number of exact duplicates exceeds k.</p></li>
 </ul>
 </p>
-</dd>
-<dt class="field-even">Raises<span class="colon">:</span></dt>
-<dd class="field-even"><p><strong>UserWarning :</strong> – A warning may be raised if there were some slots available for an exact duplicate that were missed.
-    This may happen if the number of exact duplicates in the existing KNN graph is lower than k,
-    but the set of exact duplicates is larger than what was included in the KNN graph.
-    This warning may be disabled by setting enable_warning=False.</p>
 </dd>
 </dl>
 <p class="rubric">Example</p>
@@ -934,11 +927,6 @@ based on all exact duplicates detected in the feature array.</p>
 <span class="go">array([[0.], [0.], [1.41421356]])</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">corrected_indices</span>
 <span class="go">array([[1], [0], [0]])</span>
-</pre></div>
-</div>
-<p>Clearly, the first point misses its exact duplicate in the KNN graph. To raise a warning for such cases, set enable_warning=True.</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">corrected_distances</span><span class="p">,</span> <span class="n">corrected_indices</span> <span class="o">=</span> <span class="n">correct_knn_distances_and_indices</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">distances</span><span class="p">,</span> <span class="n">indices</span><span class="p">,</span> <span class="n">enable_warning</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-<span class="go">UserWarning: There were some slots available for an exact duplicate that were missed.</span>
 </pre></div>
 </div>
 </dd></dl>
