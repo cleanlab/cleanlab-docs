@@ -621,11 +621,20 @@
 <tr class="row-odd"><td><p><a class="reference internal" href="#cleanlab.internal.neighbor.knn_graph.features_to_knn" title="cleanlab.internal.neighbor.knn_graph.features_to_knn"><code class="xref py py-obj docutils literal notranslate"><span class="pre">features_to_knn</span></code></a>(features, *[, n_neighbors, ...])</p></td>
 <td><p>Build and fit a k-nearest neighbors search object from an array of numerical features.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#cleanlab.internal.neighbor.knn_graph.construct_knn_graph_from_index" title="cleanlab.internal.neighbor.knn_graph.construct_knn_graph_from_index"><code class="xref py py-obj docutils literal notranslate"><span class="pre">construct_knn_graph_from_index</span></code></a>(knn)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#cleanlab.internal.neighbor.knn_graph.construct_knn_graph_from_index" title="cleanlab.internal.neighbor.knn_graph.construct_knn_graph_from_index"><code class="xref py py-obj docutils literal notranslate"><span class="pre">construct_knn_graph_from_index</span></code></a>(knn[, ...])</p></td>
 <td><p>Construct a sparse distance matrix representation of KNN graph out of a fitted NearestNeighbors search object.</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="#cleanlab.internal.neighbor.knn_graph.create_knn_graph_and_index" title="cleanlab.internal.neighbor.knn_graph.create_knn_graph_and_index"><code class="xref py py-obj docutils literal notranslate"><span class="pre">create_knn_graph_and_index</span></code></a>(features, *[, ...])</p></td>
 <td><p>Calculate the KNN graph from the features if it is not provided in the kwargs.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#cleanlab.internal.neighbor.knn_graph.correct_knn_graph" title="cleanlab.internal.neighbor.knn_graph.correct_knn_graph"><code class="xref py py-obj docutils literal notranslate"><span class="pre">correct_knn_graph</span></code></a>(features, knn_graph)</p></td>
+<td><p>Corrects a k-nearest neighbors (KNN) graph by handling exact duplicates in the feature array.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#cleanlab.internal.neighbor.knn_graph.correct_knn_distances_and_indices_with_exact_duplicate_sets_inplace" title="cleanlab.internal.neighbor.knn_graph.correct_knn_distances_and_indices_with_exact_duplicate_sets_inplace"><code class="xref py py-obj docutils literal notranslate"><span class="pre">correct_knn_distances_and_indices_with_exact_duplicate_sets_inplace</span></code></a>(...)</p></td>
+<td><p>Corrects the distances and indices arrays of k-nearest neighbors (KNN) graphs by handling sets of exact duplicates explicitly.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#cleanlab.internal.neighbor.knn_graph.correct_knn_distances_and_indices" title="cleanlab.internal.neighbor.knn_graph.correct_knn_distances_and_indices"><code class="xref py py-obj docutils literal notranslate"><span class="pre">correct_knn_distances_and_indices</span></code></a>(features, ...)</p></td>
+<td><p>Corrects the distances and indices of a k-nearest neighbors (KNN) graph based on all exact duplicates detected in the feature array.</p></td>
 </tr>
 </tbody>
 </table>
@@ -672,12 +681,27 @@ unless the size of the feature array is too small or the user specifies a differ
 
 <dl class="py function">
 <dt class="sig sig-object py" id="cleanlab.internal.neighbor.knn_graph.construct_knn_graph_from_index">
-<span class="sig-prename descclassname"><span class="pre">cleanlab.internal.neighbor.knn_graph.</span></span><span class="sig-name descname"><span class="pre">construct_knn_graph_from_index</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">knn</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/cleanlab/internal/neighbor/knn_graph.html#construct_knn_graph_from_index"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cleanlab.internal.neighbor.knn_graph.construct_knn_graph_from_index" title="Permalink to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">cleanlab.internal.neighbor.knn_graph.</span></span><span class="sig-name descname"><span class="pre">construct_knn_graph_from_index</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">knn</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">correction_features</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/cleanlab/internal/neighbor/knn_graph.html#construct_knn_graph_from_index"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cleanlab.internal.neighbor.knn_graph.construct_knn_graph_from_index" title="Permalink to this definition">#</a></dt>
 <dd><p>Construct a sparse distance matrix representation of KNN graph out of a fitted NearestNeighbors search object.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>knn</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">NearestNeighbors</span></code></span>) – A NearestNeighbors object that has been fitted to a feature array.
-The knn graph is constructed based on the distances and indices of each feature row’s nearest neighbors.</p>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>knn</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">NearestNeighbors</span></code></span>) – A NearestNeighbors object that has been fitted to a feature array.
+The KNN graph is constructed based on the distances and indices of each feature row’s nearest neighbors.</p></li>
+<li><p><strong>correction_features</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>]</span>) – <p>The input feature array used to fit the NearestNeighbors object.
+If provided, the function the distances and indices of the neighbors will be corrected based on exact
+duplicates in the feature array.
+If not provided, no correction will be applied.</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>This function is designed to handle a specific case where a KNN index is used to construct a KNN graph by itself,
+and there is a need to detect and correct for exact duplicates in the feature array. However, relying on this
+function for such corrections is generally discouraged. There are other functions in the module that handle
+KNN graph construction with feature corrections in a more flexible and robust manner. Use this function only
+when there is a special need to correct distances and indices based on the feature array provided.</p>
+</div>
+</p></li>
+</ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">csr_matrix</span></code></span></p>
@@ -710,7 +734,7 @@ The knn graph is constructed based on the distances and indices of each feature 
 
 <dl class="py function">
 <dt class="sig sig-object py" id="cleanlab.internal.neighbor.knn_graph.create_knn_graph_and_index">
-<span class="sig-prename descclassname"><span class="pre">cleanlab.internal.neighbor.knn_graph.</span></span><span class="sig-name descname"><span class="pre">create_knn_graph_and_index</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">features</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_neighbors</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metric</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">sklearn_knn_kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/cleanlab/internal/neighbor/knn_graph.html#create_knn_graph_and_index"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cleanlab.internal.neighbor.knn_graph.create_knn_graph_and_index" title="Permalink to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">cleanlab.internal.neighbor.knn_graph.</span></span><span class="sig-name descname"><span class="pre">create_knn_graph_and_index</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">features</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_neighbors</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metric</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">correct_exact_duplicates</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">sklearn_knn_kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/cleanlab/internal/neighbor/knn_graph.html#create_knn_graph_and_index"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cleanlab.internal.neighbor.knn_graph.create_knn_graph_and_index" title="Permalink to this definition">#</a></dt>
 <dd><p>Calculate the KNN graph from the features if it is not provided in the kwargs.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -718,14 +742,18 @@ The knn graph is constructed based on the distances and indices of each feature 
 <li><p><strong>features</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>]</span>) – The input feature array, with shape (N, M), where N is the number of samples and M is the number of features.</p></li>
 <li><p><strong>n_neighbors</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>]</span>) – The number of nearest neighbors to consider. If None, a default value is determined based on the feature array size.</p></li>
 <li><p><strong>metric</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-data docutils literal notranslate"><span class="pre">Callable</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code>]</span>) – The distance metric to use for computing distances between points. If None, the metric is determined based on the feature array shape.</p></li>
+<li><p><strong>correct_exact_duplicates</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></span>) – Whether to correct the KNN graph to ensure that exact duplicates have zero mutual distance, and they are correctly included in the KNN graph.</p></li>
 <li><p><strong>**sklearn_knn_kwargs</strong> – Additional keyword arguments to be passed to the search index constructor.</p></li>
 </ul>
 </dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Tuple</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">csr_matrix</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">NearestNeighbors</span></code>]</span></p>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>ValueError :</strong> – If <cite>features</cite> is None, as it’s required to construct a KNN graph from scratch.</p>
 </dd>
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p><ul class="simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Tuple</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">csr_matrix</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">NearestNeighbors</span></code>]</span></p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><ul class="simple">
 <li><p><code class="xref py py-class docutils literal notranslate"><span class="pre">knn_graph</span></code> – A sparse, weighted adjacency matrix representing the KNN graph of the feature array.</p></li>
 <li><p><code class="xref py py-class docutils literal notranslate"><span class="pre">knn</span></code> – A k-nearest neighbors search object fitted to the input feature array. This object can be used to query the nearest neighbors of new data points.</p></li>
 </ul>
@@ -747,6 +775,170 @@ The knn graph is constructed based on the distances and indices of each feature 
 <span class="go">       [0.76210367, 0.        , 0.        ]])</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">knn</span>
 <span class="go">NearestNeighbors(metric=&lt;function euclidean at ...&gt;, n_neighbors=1)  # For demonstration purposes only. The actual metric may vary.</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="cleanlab.internal.neighbor.knn_graph.correct_knn_graph">
+<span class="sig-prename descclassname"><span class="pre">cleanlab.internal.neighbor.knn_graph.</span></span><span class="sig-name descname"><span class="pre">correct_knn_graph</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">features</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">knn_graph</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/cleanlab/internal/neighbor/knn_graph.html#correct_knn_graph"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cleanlab.internal.neighbor.knn_graph.correct_knn_graph" title="Permalink to this definition">#</a></dt>
+<dd><p>Corrects a k-nearest neighbors (KNN) graph by handling exact duplicates in the feature array.</p>
+<p>This utility function takes a precomputed KNN graph and the corresponding feature array,
+identifies sets of exact duplicate feature vectors, and corrects the KNN graph to properly
+reflect these duplicates. The corrected KNN graph is returned as a sparse CSR matrix.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>features</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">np.ndarray</span></code>) – The input feature array, with shape (N, M), where N is the number of samples and M is the number of features.</p></li>
+<li><p><strong>knn_graph</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">csr_matrix</span></code>) – A sparse matrix of shape (N, N) representing the k-nearest neighbors graph.
+The graph is expected to be in CSR (Compressed Sparse Row) format.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">csr_matrix</span></code></span></p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">csr_matrix</span></code> – A corrected KNN graph in CSR format with adjusted distances and indices to properly handle
+exact duplicates in the feature array.</p>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<ul class="simple">
+<li><p>This function assumes that the input <cite>knn_graph</cite> is already computed and provided in CSR format.</p></li>
+<li><p>The function modifies the KNN graph to ensure that exact duplicates are represented with zero distance
+and correctly updated neighbor indices.</p></li>
+<li><p>This function is useful for post-processing a KNN graph when exact duplicates were not handled during
+the initial KNN computation.</p></li>
+</ul>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="cleanlab.internal.neighbor.knn_graph.correct_knn_distances_and_indices_with_exact_duplicate_sets_inplace">
+<span class="sig-prename descclassname"><span class="pre">cleanlab.internal.neighbor.knn_graph.</span></span><span class="sig-name descname"><span class="pre">correct_knn_distances_and_indices_with_exact_duplicate_sets_inplace</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">distances</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">indices</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">exact_duplicate_sets</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/cleanlab/internal/neighbor/knn_graph.html#correct_knn_distances_and_indices_with_exact_duplicate_sets_inplace"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cleanlab.internal.neighbor.knn_graph.correct_knn_distances_and_indices_with_exact_duplicate_sets_inplace" title="Permalink to this definition">#</a></dt>
+<dd><p>Corrects the distances and indices arrays of k-nearest neighbors (KNN) graphs by handling sets
+of exact duplicates explicitly. This function modifies the input arrays in-place.</p>
+<p>This function ensures that exact duplicates are correctly represented in the KNN graph.
+It modifies the <cite>distances</cite> and <cite>indices</cite> arrays so that each set of exact duplicates
+points to itself with zero distance, and adjusts the nearest neighbors accordingly.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>distances</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></span>) – A 2D array of shape (N, k) representing the distances between each point of the N points and their k-nearest neighbors.
+This array will be modified in-place to reflect the corrections for exact duplicates (whose mutual distances are explicitly set to zero).</p></li>
+<li><p><strong>indices</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></span>) – A 2D array of shape (N, k) representing the indices of the nearest neighbors for each of the N points.
+This array will be modified in-place to reflect the corrections for exact duplicates.</p></li>
+<li><p><strong>exact_duplicate_sets</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>]</span>) – A list of 1D arrays, each containing the indices of points that are exact duplicates of each other.
+These sets will be used to correct the KNN graph by ensuring that duplicates are reflected as nearest neighbors
+with zero distance.</p></li>
+<li><p><strong>Overview</strong> (<em>High-Level</em>) – </p></li>
+<li><p><strong>-------------------</strong> – </p></li>
+<li><p><strong>k</strong> (<em>The function operates in two main scenarios based on the size</em><em> of </em><em>the duplicate sets relative to</em>) – </p></li>
+<li><p><strong>1</strong> (<em>2. Duplicate Set Size &lt; k +</em>) – <ul>
+<li><p>All nearest neighbors are exact duplicates.</p></li>
+<li><dl class="simple">
+<dt>The <cite>indices</cite> array is updated such that the first k+1 entries for each duplicate set point are used to represent the nearest neighbors</dt><dd><p>of all points in the duplicate set.</p>
+</dd>
+</dl>
+</li>
+<li><p>The rows of the <cite>distances</cite> array belonging to the duplicate set are set to zero.</p></li>
+</ul>
+</p></li>
+<li><p><strong>1</strong> – <ul>
+<li><p>Some of the nearest neighbors are not exact duplicates.</p></li>
+<li><p>Non-duplicate neighbors are shifted to the back of the list.</p></li>
+<li><p>The <cite>indices</cite> and <cite>distances</cite> arrays are updated accordingly to reflect the duplicates at the front with zero distance.</p></li>
+</ul>
+</p></li>
+<li><p><strong>Considerations</strong> (<em>User</em>) – </p></li>
+<li><p><strong>-------------------</strong> – </p></li>
+<li><p><strong>Validity</strong> (<em>- Input</em>) – </p></li>
+<li><p><strong>Modifications</strong> (<em>- In-Place</em>) – </p></li>
+<li><p><strong>Size</strong> (<em>- Duplicate Set</em>) – </p></li>
+<li><p><strong>Performance</strong> (<em>-</em>) – </p></li>
+<li><p><strong>Capabilities</strong> – </p></li>
+<li><p><strong>------------</strong> – </p></li>
+<li><p><strong>efficiently</strong> (<em>- Handles exact duplicate sets</em>) – </p></li>
+<li><p><strong>representation.</strong> (<em>ensuring correct KNN graph</em>) – </p></li>
+<li><p><strong>duplicates.</strong> (<em>- Adjusts neighbor indices to reflect the presence of</em>) – </p></li>
+<li><p><strong>duplicates.</strong> – </p></li>
+<li><p><strong>Limitations</strong> – </p></li>
+<li><p><strong>-----------</strong> – </p></li>
+<li><p><strong>graph.</strong> (<em>- Assumes that the input arrays</em><em> (</em><em>distances and indices</em><em>) </em><em>come from a precomputed KNN</em>) – </p></li>
+<li><p><strong>neighbors.</strong> (<em>- Does not handle near-duplicates</em><em> or </em><em>merge non-duplicate</em>) – </p></li>
+<li><p><strong>misidentification.</strong> (<em>- Requires careful construction</em><em> of </em><em>exact_duplicate_sets to avoid</em>) – </p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="cleanlab.internal.neighbor.knn_graph.correct_knn_distances_and_indices">
+<span class="sig-prename descclassname"><span class="pre">cleanlab.internal.neighbor.knn_graph.</span></span><span class="sig-name descname"><span class="pre">correct_knn_distances_and_indices</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">features</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">distances</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">indices</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">exact_duplicate_sets</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">enable_warning</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/cleanlab/internal/neighbor/knn_graph.html#correct_knn_distances_and_indices"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cleanlab.internal.neighbor.knn_graph.correct_knn_distances_and_indices" title="Permalink to this definition">#</a></dt>
+<dd><p>Corrects the distances and indices of a k-nearest neighbors (KNN) graph
+based on all exact duplicates detected in the feature array.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>features</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></span>) – The feature array used to construct the KNN graph.</p></li>
+<li><p><strong>distances</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></span>) – The distances between each point and its k nearest neighbors.</p></li>
+<li><p><strong>indices</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></span>) – The indices of the k nearest neighbors for each point.</p></li>
+<li><p><strong>exact_duplicate_sets</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>]]</span>) – A list of numpy arrays, where each array contains the indices of exact duplicates in the feature array. If not provided, it will be computed from the feature array.</p></li>
+<li><p><strong>enable_warning</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></span>) – Whether to enable warning messages if any row underestimates the number of exact duplicates.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">tuple</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>]</span></p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><ul class="simple">
+<li><p><code class="xref py py-class docutils literal notranslate"><span class="pre">corrected_distances</span></code> – The corrected distances between each point and its k nearest neighbors. Exact duplicates (based on the feature array) are ensured to have zero mutual distance.</p></li>
+<li><p><code class="xref py py-class docutils literal notranslate"><span class="pre">corrected_indices</span></code> – The corrected indices of the k nearest neighbors for each point. Exact duplicates are ensured to be included in the k nearest neighbors, unless the number of exact duplicates exceeds k.</p></li>
+</ul>
+</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>UserWarning :</strong> – A warning may be raised if there were some slots available for an exact duplicate that were missed.
+    This may happen if the number of exact duplicates in the existing KNN graph is lower than k,
+    but the set of exact duplicates is larger than what was included in the KNN graph.
+    This warning may be disabled by setting enable_warning=False.</p>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">X</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>
+<span class="gp">... </span>    <span class="p">[</span>
+<span class="gp">... </span>        <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
+<span class="gp">... </span>        <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="c1"># Exact duplicate of the previous point</span>
+<span class="gp">... </span>        <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="c1"># The distances between this point and the others is sqrt(2) (equally distant from both)</span>
+<span class="gp">... </span>    <span class="p">]</span>
+<span class="gp">... </span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">distances</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>  <span class="c1"># Distance to the 1-NN of each point</span>
+<span class="gp">... </span>    <span class="p">[</span>
+<span class="gp">... </span>        <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">2</span><span class="p">)],</span>  <span class="c1"># Should be [0]</span>
+<span class="gp">... </span>        <span class="p">[</span><span class="mf">1e-16</span><span class="p">],</span>       <span class="c1"># Should be [0]</span>
+<span class="gp">... </span>        <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">2</span><span class="p">)],</span>
+<span class="gp">... </span>    <span class="p">]</span>
+<span class="gp">... </span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">indices</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>  <span class="c1"># Index of the 1-NN of each point</span>
+<span class="gp">... </span>    <span class="p">[</span>
+<span class="gp">... </span>        <span class="p">[</span><span class="mi">2</span><span class="p">],</span>  <span class="c1"># Should be [1]</span>
+<span class="gp">... </span>        <span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+<span class="gp">... </span>        <span class="p">[</span><span class="mi">1</span><span class="p">],</span>  <span class="c1"># Might be [0] or [1]</span>
+<span class="gp">... </span>    <span class="p">]</span>
+<span class="gp">... </span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">corrected_distances</span><span class="p">,</span> <span class="n">corrected_indices</span> <span class="o">=</span> <span class="n">correct_knn_distances_and_indices</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">distances</span><span class="p">,</span> <span class="n">indices</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">corrected_distances</span>
+<span class="go">array([[0.], [0.], [1.41421356]])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">corrected_indices</span>
+<span class="go">array([[1], [0], [0]])</span>
+</pre></div>
+</div>
+<p>Clearly, the first point misses its exact duplicate in the KNN graph. To raise a warning for such cases, set enable_warning=True.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">corrected_distances</span><span class="p">,</span> <span class="n">corrected_indices</span> <span class="o">=</span> <span class="n">correct_knn_distances_and_indices</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">distances</span><span class="p">,</span> <span class="n">indices</span><span class="p">,</span> <span class="n">enable_warning</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="go">UserWarning: There were some slots available for an exact duplicate that were missed.</span>
 </pre></div>
 </div>
 </dd></dl>
@@ -833,6 +1025,9 @@ The knn graph is constructed based on the distances and indices of each feature 
 <li><a class="reference internal" href="#cleanlab.internal.neighbor.knn_graph.features_to_knn"><code class="docutils literal notranslate"><span class="pre">features_to_knn()</span></code></a></li>
 <li><a class="reference internal" href="#cleanlab.internal.neighbor.knn_graph.construct_knn_graph_from_index"><code class="docutils literal notranslate"><span class="pre">construct_knn_graph_from_index()</span></code></a></li>
 <li><a class="reference internal" href="#cleanlab.internal.neighbor.knn_graph.create_knn_graph_and_index"><code class="docutils literal notranslate"><span class="pre">create_knn_graph_and_index()</span></code></a></li>
+<li><a class="reference internal" href="#cleanlab.internal.neighbor.knn_graph.correct_knn_graph"><code class="docutils literal notranslate"><span class="pre">correct_knn_graph()</span></code></a></li>
+<li><a class="reference internal" href="#cleanlab.internal.neighbor.knn_graph.correct_knn_distances_and_indices_with_exact_duplicate_sets_inplace"><code class="docutils literal notranslate"><span class="pre">correct_knn_distances_and_indices_with_exact_duplicate_sets_inplace()</span></code></a></li>
+<li><a class="reference internal" href="#cleanlab.internal.neighbor.knn_graph.correct_knn_distances_and_indices"><code class="docutils literal notranslate"><span class="pre">correct_knn_distances_and_indices()</span></code></a></li>
 </ul>
 </li>
 </ul>

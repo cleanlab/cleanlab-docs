@@ -728,7 +728,8 @@
                 <span class="k">assert</span> <span class="p">(</span>
                     <span class="n">features</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
                 <span class="p">),</span> <span class="s2">&quot;features must be provided so that we can compute the knn graph.&quot;</span>
-                <span class="n">knn_graph</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_process_knn_graph_from_features</span><span class="p">(</span><span class="n">kwargs</span><span class="p">)</span>
+                <span class="n">knn_graph</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_process_knn_graph_from_features</span><span class="p">(</span><span class="n">features</span><span class="p">,</span> <span class="n">kwargs</span><span class="p">)</span>
+
             <span class="n">distances</span> <span class="o">=</span> <span class="n">knn_graph</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">knn_graph</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
 
             <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">distances</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span>
@@ -801,7 +802,7 @@
         <span class="n">issue_threshold</span> <span class="o">=</span> <span class="n">compute_issue_threshold</span><span class="p">(</span><span class="n">avg_distances</span><span class="p">,</span> <span class="n">threshold</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">threshold</span><span class="p">,</span> <span class="n">issue_threshold</span><span class="p">,</span> <span class="n">avg_distances</span> <span class="o">&gt;</span> <span class="n">issue_threshold</span>
 
-    <span class="k">def</span> <span class="nf">_process_knn_graph_from_features</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">kwargs</span><span class="p">:</span> <span class="n">Dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">csr_matrix</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">_process_knn_graph_from_features</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">features</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">kwargs</span><span class="p">:</span> <span class="n">Dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">csr_matrix</span><span class="p">:</span>
         <span class="c1"># Check if the weighted knn graph exists in info</span>
         <span class="n">knn_graph</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">datalab</span><span class="o">.</span><span class="n">get_info</span><span class="p">(</span><span class="s2">&quot;statistics&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;weighted_knn_graph&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
 
@@ -815,7 +816,7 @@
             <span class="c1"># If the pre-existing knn graph has fewer neighbors than the knn object,</span>
             <span class="c1"># then we need to recompute the knn graph</span>
             <span class="k">assert</span> <span class="n">knn</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">ood</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s2">&quot;knn&quot;</span><span class="p">]</span>  <span class="c1"># type: ignore[union-attr]</span>
-            <span class="n">knn_graph</span> <span class="o">=</span> <span class="n">construct_knn_graph_from_index</span><span class="p">(</span><span class="n">knn</span><span class="p">)</span>
+            <span class="n">knn_graph</span> <span class="o">=</span> <span class="n">construct_knn_graph_from_index</span><span class="p">(</span><span class="n">knn</span><span class="p">,</span> <span class="n">correction_features</span><span class="o">=</span><span class="n">features</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_metric</span> <span class="o">=</span> <span class="n">knn</span><span class="o">.</span><span class="n">metric</span>  <span class="c1"># type: ignore[union-attr]</span>
 
         <span class="k">return</span> <span class="n">knn_graph</span>
