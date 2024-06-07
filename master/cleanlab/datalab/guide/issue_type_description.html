@@ -618,13 +618,228 @@
 <p>This page describes the various types of issues that Datalab can detect in a dataset.
 For each type of issue, we explain: what it says about your data if detected, why this matters, and what parameters you can optionally specify to control the detection of this issue.</p>
 <p>In case you didn’t know: you can alternatively use <a class="reference external" href="https://cleanlab.ai/blog/data-centric-ai/">Cleanlab Studio</a> to detect the same data issues as this package, plus <a class="reference external" href="https://help.cleanlab.ai/guide/concepts/cleanlab_columns/">many more types of issues</a>, all without having to do any Machine Learning (or even write any code).</p>
+<div class="sphinx-tabs docutils container">
+<div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-0-0-0" aria-selected="true" class="sphinx-tabs-tab" id="tab-0-0-0" name="0-0" role="tab" tabindex="0">Classification task</button><button aria-controls="panel-0-0-1" aria-selected="false" class="sphinx-tabs-tab" id="tab-0-0-1" name="0-1" role="tab" tabindex="-1">Regression task</button><button aria-controls="panel-0-0-2" aria-selected="false" class="sphinx-tabs-tab" id="tab-0-0-2" name="0-2" role="tab" tabindex="-1">Multilabel task</button></div><div aria-labelledby="tab-0-0-0" class="sphinx-tabs-panel" id="panel-0-0-0" name="0-0" role="tabpanel" tabindex="0"><div class="table-wrapper colwidths-given docutils container">
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 20.0%" />
+<col style="width: 10.0%" />
+<col style="width: 20.0%" />
+<col style="width: 50.0%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Issue Name</p></th>
+<th class="head"><p>Default</p></th>
+<th class="head"><p>Column Name</p></th>
+<th class="head"><p>Required keyword arguments in <a class="reference internal" href="../datalab.html#cleanlab.datalab.datalab.Datalab.find_issues" title="cleanlab.datalab.datalab.Datalab.find_issues"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Datalab.find_issues</span></code></a></p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><a class="reference internal" href="#label-issue"><span class="std std-ref">label</span></a></p></td>
+<td><p>Yes</p></td>
+<td><p><a class="reference internal" href="#is-label-issue"><span class="std std-ref">is_label_issue</span></a></p>
+<p><a class="reference internal" href="#label-score"><span class="std std-ref">label_score</span></a></p>
+<p><a class="reference internal" href="#id6"><span class="std std-ref">given_label</span></a></p>
+<p><a class="reference internal" href="#predicted-label"><span class="std std-ref">predicted_label</span></a></p>
+</td>
+<td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">pred_probs</span></code> or <code class="xref py py-obj docutils literal notranslate"><span class="pre">features</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="../../../tutorials/datalab/text.html#Outlier-issues"><span class="std std-ref">outlier</span></a></p></td>
+<td><p>Yes</p></td>
+<td><p><a class="reference internal" href="#is-outlier-issue"><span class="std std-ref">is_outlier_issue</span></a></p>
+<p><a class="reference internal" href="#outlier-score"><span class="std std-ref">outlier_score</span></a></p>
+</td>
+<td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">pred_probs</span></code> or <code class="xref py py-obj docutils literal notranslate"><span class="pre">features</span></code> or <code class="xref py py-obj docutils literal notranslate"><span class="pre">knn_graph</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#near-duplicate-issue"><span class="std std-ref">near_duplicate</span></a></p></td>
+<td><p>Yes</p></td>
+<td><p><a class="reference internal" href="#is-near-duplicate-issue"><span class="std std-ref">is_near_duplicate_issue</span></a></p>
+<p><a class="reference internal" href="#near-duplicate-score"><span class="std std-ref">near_duplicate_score</span></a></p>
+<p><a class="reference internal" href="#near-duplicate-sets"><span class="std std-ref">near_duplicate_sets</span></a></p>
+<p><a class="reference internal" href="#distance-to-nearest-neighbor"><span class="std std-ref">distance_to_nearest_neighbor</span></a></p>
+</td>
+<td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">features</span></code> or <code class="xref py py-obj docutils literal notranslate"><span class="pre">knn_graph</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#non-iid-issue"><span class="std std-ref">non_iid</span></a></p></td>
+<td><p>Yes</p></td>
+<td><p><a class="reference internal" href="#is-non-iid-issue"><span class="std std-ref">is_non_iid_issue</span></a></p>
+<p><a class="reference internal" href="#non-iid-score"><span class="std std-ref">non_iid_score</span></a></p>
+</td>
+<td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">pred_probs</span></code> or <code class="xref py py-obj docutils literal notranslate"><span class="pre">features</span></code> or <code class="xref py py-obj docutils literal notranslate"><span class="pre">knn_graph</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#class-imbalance-issue"><span class="std std-ref">class_imbalance</span></a></p></td>
+<td><p>Yes</p></td>
+<td><p><a class="reference internal" href="#is-class-imbalance-issue"><span class="std std-ref">is_class_imbalance_issue</span></a></p>
+<p><a class="reference internal" href="#class-imbalance-score"><span class="std std-ref">class_imbalance_score</span></a></p>
+</td>
+<td><p>None <a class="footnote-reference brackets" href="#f1" id="id1" role="doc-noteref"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></a></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#underperforming-group-issue"><span class="std std-ref">underperforming_group</span></a></p></td>
+<td><p>Yes</p></td>
+<td><p><a class="reference internal" href="#is-underperforming-group-issue"><span class="std std-ref">is_underperforming_group_issue</span></a></p>
+<p><a class="reference internal" href="#underperforming-group-score"><span class="std std-ref">underperforming_group_score</span></a></p>
+</td>
+<td><p>(<code class="xref py py-obj docutils literal notranslate"><span class="pre">pred_probs</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">features</span></code>) or (<code class="xref py py-obj docutils literal notranslate"><span class="pre">pred_probs</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">knn_graph</span></code>) or (<code class="xref py py-obj docutils literal notranslate"><span class="pre">pred_probs</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">cluster_ids</span></code>) <a class="footnote-reference brackets" href="#f2" id="id2" role="doc-noteref"><span class="fn-bracket">[</span>2<span class="fn-bracket">]</span></a></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#null-issue"><span class="std std-ref">null</span></a></p></td>
+<td><p>Yes</p></td>
+<td><p><a class="reference internal" href="#is-null-issue"><span class="std std-ref">is_null_issue</span></a></p>
+<p><a class="reference internal" href="#null-score"><span class="std std-ref">null_score</span></a></p>
+</td>
+<td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">features</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#data-valuation-issue"><span class="std std-ref">data_valuation</span></a></p></td>
+<td><p>No</p></td>
+<td><p><a class="reference internal" href="#is-data-valuation-issue"><span class="std std-ref">is_data_valuation_issue</span></a></p>
+<p><a class="reference internal" href="#data-valuation-score"><span class="std std-ref">data_valuation_score</span></a></p>
+</td>
+<td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">knn_graph</span></code></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p class="rubric">Notes</p>
+<aside class="footnote-list brackets">
+<aside class="footnote brackets" id="f1" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id1">1</a><span class="fn-bracket">]</span></span>
+<p>Only runs if <code class="xref py py-obj docutils literal notranslate"><span class="pre">label_name</span></code> is provided in <code class="xref py py-obj docutils literal notranslate"><span class="pre">Datalab()</span></code> constructor</p>
+</aside>
+<aside class="footnote brackets" id="f2" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id2">2</a><span class="fn-bracket">]</span></span>
+<p><code class="xref py py-obj docutils literal notranslate"><span class="pre">cluster_ids</span></code> currently needs to be passed via <code class="xref py py-obj docutils literal notranslate"><span class="pre">issue_types</span></code></p>
+</aside>
+</aside>
+</div><div aria-labelledby="tab-0-0-1" class="sphinx-tabs-panel" hidden="true" id="panel-0-0-1" name="0-1" role="tabpanel" tabindex="0"><div class="table-wrapper colwidths-given docutils container">
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 20.0%" />
+<col style="width: 10.0%" />
+<col style="width: 20.0%" />
+<col style="width: 50.0%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Issue Name</p></th>
+<th class="head"><p>Default</p></th>
+<th class="head"><p>Column Name</p></th>
+<th class="head"><p>Required keyword arguments in <a class="reference internal" href="../datalab.html#cleanlab.datalab.datalab.Datalab.find_issues" title="cleanlab.datalab.datalab.Datalab.find_issues"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Datalab.find_issues</span></code></a></p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><a class="reference internal" href="#label-issue"><span class="std std-ref">label</span></a></p></td>
+<td><p>Yes</p></td>
+<td><p><a class="reference internal" href="#is-label-issue"><span class="std std-ref">is_label_issue</span></a></p>
+<p><a class="reference internal" href="#label-score"><span class="std std-ref">label_score</span></a></p>
+<p><a class="reference internal" href="#id6"><span class="std std-ref">given_label</span></a></p>
+<p><a class="reference internal" href="#predicted-label"><span class="std std-ref">predicted_label</span></a></p>
+</td>
+<td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">pred_probs</span></code> <a class="footnote-reference brackets" href="#f3" id="id3" role="doc-noteref"><span class="fn-bracket">[</span>3<span class="fn-bracket">]</span></a> or <code class="xref py py-obj docutils literal notranslate"><span class="pre">features</span></code> or (<code class="xref py py-obj docutils literal notranslate"><span class="pre">features</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">model</span></code>) <a class="footnote-reference brackets" href="#f4" id="id4" role="doc-noteref"><span class="fn-bracket">[</span>4<span class="fn-bracket">]</span></a></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="../../../tutorials/datalab/text.html#Outlier-issues"><span class="std std-ref">outlier</span></a></p></td>
+<td><p>Yes</p></td>
+<td><p><a class="reference internal" href="#is-outlier-issue"><span class="std std-ref">is_outlier_issue</span></a></p>
+<p><a class="reference internal" href="#outlier-score"><span class="std std-ref">outlier_score</span></a></p>
+</td>
+<td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">features</span></code> or <code class="xref py py-obj docutils literal notranslate"><span class="pre">knn_graph</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#near-duplicate-issue"><span class="std std-ref">near_duplicate</span></a></p></td>
+<td><p>Yes</p></td>
+<td><p><a class="reference internal" href="#is-near-duplicate-issue"><span class="std std-ref">is_near_duplicate_issue</span></a></p>
+<p><a class="reference internal" href="#near-duplicate-score"><span class="std std-ref">near_duplicate_score</span></a></p>
+</td>
+<td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">features</span></code> or <code class="xref py py-obj docutils literal notranslate"><span class="pre">knn_graph</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#non-iid-issue"><span class="std std-ref">non_iid</span></a></p></td>
+<td><p>Yes</p></td>
+<td><p><a class="reference internal" href="#is-non-iid-issue"><span class="std std-ref">is_non_iid_issue</span></a></p>
+<p><a class="reference internal" href="#non-iid-score"><span class="std std-ref">non_iid_score</span></a></p>
+</td>
+<td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">features</span></code> or <code class="xref py py-obj docutils literal notranslate"><span class="pre">knn_graph</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#null-issue"><span class="std std-ref">null</span></a></p></td>
+<td><p>Yes</p></td>
+<td><p><a class="reference internal" href="#is-null-issue"><span class="std std-ref">is_null_issue</span></a></p>
+<p><a class="reference internal" href="#null-score"><span class="std std-ref">null_score</span></a></p>
+</td>
+<td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">features</span></code></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p class="rubric">Notes</p>
+<aside class="footnote-list brackets">
+<aside class="footnote brackets" id="f3" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id3">3</a><span class="fn-bracket">]</span></span>
+<p><abbr title="Predicted Probabilities">pred_probs</abbr> gets reinterpreted as a <code class="xref py py-obj docutils literal notranslate"><span class="pre">predictions</span></code> argument internally</p>
+</aside>
+<aside class="footnote brackets" id="f4" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id4">4</a><span class="fn-bracket">]</span></span>
+<p><code class="xref py py-obj docutils literal notranslate"><span class="pre">model</span></code> currently needs to be passed as <code class="xref py py-obj docutils literal notranslate"><span class="pre">issue_types</span> <span class="pre">=</span> <span class="pre">{&quot;label&quot;:</span> <span class="pre">{&quot;clean_learning_kwargs&quot;:</span> <span class="pre">{&quot;model&quot;:</span> <span class="pre">your_regression_model}}}</span></code></p>
+</aside>
+</aside>
+</div><div aria-labelledby="tab-0-0-2" class="sphinx-tabs-panel" hidden="true" id="panel-0-0-2" name="0-2" role="tabpanel" tabindex="0"><div class="table-wrapper colwidths-given docutils container">
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 20.0%" />
+<col style="width: 10.0%" />
+<col style="width: 20.0%" />
+<col style="width: 50.0%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Issue Name</p></th>
+<th class="head"><p>Default</p></th>
+<th class="head"><p>Column Name</p></th>
+<th class="head"><p>Required keyword arguments in <a class="reference internal" href="../datalab.html#cleanlab.datalab.datalab.Datalab.find_issues" title="cleanlab.datalab.datalab.Datalab.find_issues"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Datalab.find_issues</span></code></a></p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><a class="reference internal" href="#label-issue"><span class="std std-ref">label</span></a></p></td>
+<td><p>Yes</p></td>
+<td><p><a class="reference internal" href="#is-label-issue"><span class="std std-ref">is_label_issue</span></a></p>
+<p><a class="reference internal" href="#label-score"><span class="std std-ref">label_score</span></a></p>
+<p><a class="reference internal" href="#id6"><span class="std std-ref">given_label</span></a></p>
+<p><a class="reference internal" href="#predicted-label"><span class="std std-ref">predicted_label</span></a></p>
+</td>
+<td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">pred_probs</span></code> or <code class="xref py py-obj docutils literal notranslate"><span class="pre">features</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="../../../tutorials/datalab/text.html#Outlier-issues"><span class="std std-ref">outlier</span></a></p></td>
+<td><p>Yes</p></td>
+<td><p><a class="reference internal" href="#is-outlier-issue"><span class="std std-ref">is_outlier_issue</span></a></p>
+<p><a class="reference internal" href="#outlier-score"><span class="std std-ref">outlier_score</span></a></p>
+</td>
+<td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">features</span></code> or <code class="xref py py-obj docutils literal notranslate"><span class="pre">knn_graph</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#near-duplicate-issue"><span class="std std-ref">near_duplicate</span></a></p></td>
+<td><p>Yes</p></td>
+<td><p><a class="reference internal" href="#is-near-duplicate-issue"><span class="std std-ref">is_near_duplicate_issue</span></a></p>
+<p><a class="reference internal" href="#near-duplicate-score"><span class="std std-ref">near_duplicate_score</span></a></p>
+</td>
+<td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">features</span></code> or <code class="xref py py-obj docutils literal notranslate"><span class="pre">knn_graph</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#non-iid-issue"><span class="std std-ref">non_iid</span></a></p></td>
+<td><p>Yes</p></td>
+<td><p><a class="reference internal" href="#is-non-iid-issue"><span class="std std-ref">is_non_iid_issue</span></a></p>
+<p><a class="reference internal" href="#non-iid-score"><span class="std std-ref">non_iid_score</span></a></p>
+</td>
+<td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">features</span></code> or <code class="xref py py-obj docutils literal notranslate"><span class="pre">knn_graph</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#null-issue"><span class="std std-ref">null</span></a></p></td>
+<td><p>Yes</p></td>
+<td><p><a class="reference internal" href="#is-null-issue"><span class="std std-ref">is_null_issue</span></a></p>
+<p><a class="reference internal" href="#null-score"><span class="std std-ref">null_score</span></a></p>
+</td>
+<td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">features</span></code></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div></div>
 <section id="estimates-for-each-issue-type">
 <h3>Estimates for Each Issue Type<a class="headerlink" href="#estimates-for-each-issue-type" title="Permalink to this heading">#</a></h3>
 <p>Datalab produces three estimates for <strong>each</strong> type of issue (called say <code class="xref py py-obj docutils literal notranslate"><span class="pre">&lt;ISSUE_NAME&gt;</span></code> here):</p>
 <ol class="arabic simple">
 <li><p>A numeric quality score <code class="xref py py-obj docutils literal notranslate"><span class="pre">&lt;ISSUE_NAME&gt;_score</span></code> (between 0 and 1) estimating how severe this issue is exhibited in each example from a dataset. Examples with higher scores are less likely to suffer from this issue. Access these via: the <a class="reference internal" href="../datalab.html#cleanlab.datalab.datalab.Datalab.issues" title="cleanlab.datalab.datalab.Datalab.issues"><code class="xref py py-attr docutils literal notranslate"><span class="pre">Datalab.issues</span></code></a> attribute or the method <a class="reference internal" href="../datalab.html#cleanlab.datalab.datalab.Datalab.get_issues" title="cleanlab.datalab.datalab.Datalab.get_issues"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Datalab.get_issues(&lt;ISSUE_NAME&gt;)</span></code></a>.</p></li>
 <li><p>A Boolean <code class="xref py py-obj docutils literal notranslate"><span class="pre">is_&lt;ISSUE_NAME&gt;_issue</span></code> flag for each example from a dataset. Examples where this has value  <code class="xref py py-obj docutils literal notranslate"><span class="pre">True</span></code> are those estimated to exhibit this issue. Access these via: the <a class="reference internal" href="../datalab.html#cleanlab.datalab.datalab.Datalab.issues" title="cleanlab.datalab.datalab.Datalab.issues"><code class="xref py py-attr docutils literal notranslate"><span class="pre">Datalab.issues</span></code></a> attribute or the method <a class="reference internal" href="../datalab.html#cleanlab.datalab.datalab.Datalab.get_issues" title="cleanlab.datalab.datalab.Datalab.get_issues"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Datalab.get_issues(&lt;ISSUE_NAME&gt;)</span></code></a>.</p></li>
-<li><p>An overall dataset quality score (between 0 and 1), quantifying how severe this issue is overall across the entire dataset. Datasets with higher scores do not exhibit this issue as badly overall. Access these via: the <a class="reference internal" href="../datalab.html#cleanlab.datalab.datalab.Datalab.issue_summary" title="cleanlab.datalab.datalab.Datalab.issue_summary"><code class="xref py py-attr docutils literal notranslate"><span class="pre">Datalab.issue_summary</span></code></a> attribute.</p></li>
+<li><p>An overall dataset quality score (between 0 and 1), quantifying how severe this issue is overall across the entire dataset. Datasets with higher scores do not exhibit this issue as badly overall. Access these via: the <a class="reference internal" href="../datalab.html#cleanlab.datalab.datalab.Datalab.issue_summary" title="cleanlab.datalab.datalab.Datalab.issue_summary"><code class="xref py py-attr docutils literal notranslate"><span class="pre">Datalab.issue_summary</span></code></a> attribute or the method <a class="reference internal" href="../datalab.html#cleanlab.datalab.datalab.Datalab.get_issue_summary" title="cleanlab.datalab.datalab.Datalab.get_issue_summary"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Datalab.get_issue_summary(&lt;ISSUE_NAME&gt;)</span></code></a>.</p></li>
 </ol>
 <p><strong>Example (for the outlier issue type)</strong></p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">issue_name</span> <span class="o">=</span> <span class="s2">&quot;outlier&quot;</span>  <span class="c1"># how to reference the outlier issue type in code</span>
@@ -653,6 +868,39 @@ For the most accurate results, provide out-of-sample <code class="xref py py-obj
 For evaluating models or performing other types of data analytics, mislabeled examples may lead you to draw incorrect conclusions.
 To handle mislabeled examples, you can either filter out the data with label issues or try to correct their labels.</p>
 <p>Learn more about the method used to detect label issues in our paper: <a class="reference external" href="https://arxiv.org/abs/1911.00068">Confident Learning: Estimating Uncertainty in Dataset Labels</a></p>
+<p>Some metadata about label issues is stored in the <code class="xref py py-obj docutils literal notranslate"><span class="pre">issues</span></code> attribute of the Datalab object.
+Let’s look at one way to access this information.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">lab</span><span class="o">.</span><span class="n">get_issues</span><span class="p">(</span><span class="s2">&quot;label&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="s2">&quot;label_score&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The output will look something like this:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>    is_label_issue  label_score  given_label  predicted_label
+97            True     0.064045            0                2
+58           False     0.680894            2                2
+41           False     0.746043            0                0
+4            False     0.794894            2                2
+98           False     0.802911            1                1
+</pre></div>
+</div>
+<section id="is-label-issue">
+<h4><code class="docutils literal notranslate"><span class="pre">is_label_issue</span></code><a class="headerlink" href="#is-label-issue" title="Permalink to this heading">#</a></h4>
+<p>A boolean column that flags examples with label issues.
+If <code class="xref py py-obj docutils literal notranslate"><span class="pre">True</span></code>, the example is estimated to have a label issue.
+If <code class="xref py py-obj docutils literal notranslate"><span class="pre">False</span></code>, the example is estimated to not have a label issue.</p>
+</section>
+<section id="label-score">
+<h4><code class="docutils literal notranslate"><span class="pre">label_score</span></code><a class="headerlink" href="#label-score" title="Permalink to this heading">#</a></h4>
+<p>A numeric column that gives the label quality score for each example.
+The score lies between 0 and 1.
+The lower the score, the less likely the given label is to be correct.</p>
+</section>
+<section id="given-label">
+<h4><code class="docutils literal notranslate"><span class="pre">given_label</span></code><a class="headerlink" href="#given-label" title="Permalink to this heading">#</a></h4>
+<p>A column of the actual labels as provided in the original dataset.</p>
+</section>
+<section id="predicted-label">
+<h4><code class="docutils literal notranslate"><span class="pre">predicted_label</span></code><a class="headerlink" href="#predicted-label" title="Permalink to this heading">#</a></h4>
+<p>A column of the predicted labels for each example. This column may contain different labels than the given label, especially when the example is estimated to have a label issue or when a model predicts a different label than the given label.</p>
 <div class="admonition tip">
 <p class="admonition-title">Tip</p>
 <p>This type of issue has the issue name <code class="xref py py-obj docutils literal notranslate"><span class="pre">&quot;label&quot;</span></code>.</p>
@@ -662,6 +910,7 @@ To handle mislabeled examples, you can either filter out the data with label iss
 </pre></div>
 </div>
 </div>
+</section>
 </section>
 <section id="outlier-issue">
 <h3>Outlier Issue<a class="headerlink" href="#outlier-issue" title="Permalink to this heading">#</a></h3>
@@ -674,6 +923,28 @@ This article describes how outlier issues are detected in a dataset: <a class="r
 <p>Modeling data with outliers may have unexpected consequences.
 Closely inspect them and consider removing some outliers that may be negatively affecting your models.</p>
 <p>Learn more about the methods used to detect outliers in our article: <a class="reference external" href="https://cleanlab.ai/blog/outlier-detection/">Out-of-Distribution Detection via Embeddings or Predictions</a></p>
+<p>Some metadata about outlier issues is stored in the <code class="xref py py-obj docutils literal notranslate"><span class="pre">issues</span></code> attribute of the Datalab object.
+Let’s look at one way to access this information.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">lab</span><span class="o">.</span><span class="n">get_issues</span><span class="p">(</span><span class="s2">&quot;outlier&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="s2">&quot;outlier_score&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The output will look something like this:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>    is_outlier_issue  outlier_score
+98              True       0.011562
+62             False       0.019657
+22             False       0.035243
+1              False       0.040907
+42             False       0.056865
+</pre></div>
+</div>
+<section id="is-outlier-issue">
+<h4><code class="docutils literal notranslate"><span class="pre">is_outlier_issue</span></code><a class="headerlink" href="#is-outlier-issue" title="Permalink to this heading">#</a></h4>
+<p>A boolean column, where <code class="xref py py-obj docutils literal notranslate"><span class="pre">True</span></code> indicates that an example is identified as an outlier.</p>
+</section>
+<section id="outlier-score">
+<h4><code class="docutils literal notranslate"><span class="pre">outlier_score</span></code><a class="headerlink" href="#outlier-score" title="Permalink to this heading">#</a></h4>
+<p>A numeric column with scores between 0 and 1.
+A smaller value for an example indicates that it is less common or typical in the dataset, suggesting that it is more likely to be an outlier.</p>
 <div class="admonition tip">
 <p class="admonition-title">Tip</p>
 <p>This type of issue has the issue name <code class="xref py py-obj docutils literal notranslate"><span class="pre">&quot;outlier&quot;</span></code>.</p>
@@ -683,6 +954,7 @@ Closely inspect them and consider removing some outliers that may be negatively 
 </pre></div>
 </div>
 </div>
+</section>
 </section>
 <section id="near-duplicate-issue">
 <h3>(Near) Duplicate Issue<a class="headerlink" href="#near-duplicate-issue" title="Permalink to this heading">#</a></h3>
@@ -701,6 +973,38 @@ Scoring the numeric quality of an example in terms of the near duplicate issue t
 <p>Including near-duplicate examples in a dataset may negatively impact a ML model’s generalization performance and lead to overfitting.
 In particular, it is questionable to include examples in a test dataset which are (nearly) duplicated in the corresponding training dataset.
 More generally, examples which happen to be duplicated can affect the final modeling results much more than other examples — so you should at least be aware of their presence.</p>
+<p>Some metadata about near-duplicate issues is stored in the <code class="xref py py-obj docutils literal notranslate"><span class="pre">issues</span></code> attribute of the Datalab object.
+Let’s look at one way to access this information.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">lab</span><span class="o">.</span><span class="n">get_issues</span><span class="p">(</span><span class="s2">&quot;near_duplicate&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="s2">&quot;near_duplicate_score&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The output will look something like this:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>    is_near_duplicate_issue  near_duplicate_score near_duplicate_sets distance_to_nearest_neighbor
+36                     True              0.066009            [11, 80]                     0.003906
+11                     True              0.066009                [36]                     0.003906
+80                     True              0.093245                [36]                     0.005599
+27                    False              0.156720                  []                     0.009751
+72                    False              0.156720                  []                     0.009751
+</pre></div>
+</div>
+<section id="is-near-duplicate-issue">
+<h4><code class="docutils literal notranslate"><span class="pre">is_near_duplicate_issue</span></code><a class="headerlink" href="#is-near-duplicate-issue" title="Permalink to this heading">#</a></h4>
+<p>A boolean column, where <code class="xref py py-obj docutils literal notranslate"><span class="pre">True</span></code> indicates that an example is identified as either a near- or exact-duplicate of other examples in the dataset.</p>
+</section>
+<section id="near-duplicate-score">
+<h4><code class="docutils literal notranslate"><span class="pre">near_duplicate_score</span></code><a class="headerlink" href="#near-duplicate-score" title="Permalink to this heading">#</a></h4>
+<p>A numeric column with scores between 0 and 1. The lower the score, the more likely the example is to be a near-duplicate of another example in the dataset.</p>
+<p>Exact duplicates are assigned a score of 0, while near-duplicates are assigned a score close to 0.</p>
+</section>
+<section id="near-duplicate-sets">
+<h4><code class="docutils literal notranslate"><span class="pre">near_duplicate_sets</span></code><a class="headerlink" href="#near-duplicate-sets" title="Permalink to this heading">#</a></h4>
+<p>A column of lists of integers. The i-th list contains the indices of examples that are considered near-duplicates of example i (not including example i).</p>
+</section>
+<section id="distance-to-nearest-neighbor">
+<h4><code class="docutils literal notranslate"><span class="pre">distance_to_nearest_neighbor</span></code><a class="headerlink" href="#distance-to-nearest-neighbor" title="Permalink to this heading">#</a></h4>
+<p>A numeric column that represents the distance between each example and its nearest neighbor in the dataset.
+The distance is calculated based on the provided <code class="xref py py-obj docutils literal notranslate"><span class="pre">features</span></code> or <code class="xref py py-obj docutils literal notranslate"><span class="pre">knn_graph</span></code>, and is directly related to the <code class="xref py py-obj docutils literal notranslate"><span class="pre">near_duplicate_score</span></code>.
+A smaller distance indicates that the example is similar to another example in the dataset.</p>
 <div class="admonition tip">
 <p class="admonition-title">Tip</p>
 <p>This type of issue has the issue name <code class="xref py py-obj docutils literal notranslate"><span class="pre">&quot;near_duplicate&quot;</span></code>.</p>
@@ -711,19 +1015,48 @@ More generally, examples which happen to be duplicated can affect the final mod
 </div>
 </div>
 </section>
+</section>
 <section id="non-iid-issue">
 <h3>Non-IID Issue<a class="headerlink" href="#non-iid-issue" title="Permalink to this heading">#</a></h3>
 <p>Whether the overall dataset exhibits statistically significant violations of the IID assumption like:  changepoints or shift, drift, autocorrelation, etc. The specific form of violation considered is whether the examples are ordered within the dataset such that almost adjacent examples tend to have more similar feature values. If you care about this check, do <strong>not</strong> first shuffle your dataset – this check is entirely based on the sequential order of your data. Learn more via our blog: <a class="reference external" href="https://cleanlab.ai/blog/non-iid-detection/">https://cleanlab.ai/blog/non-iid-detection/</a></p>
-<p>The Non-IID issue is detected based on provided <code class="xref py py-obj docutils literal notranslate"><span class="pre">features</span></code> or <code class="xref py py-obj docutils literal notranslate"><span class="pre">knn_graph</span></code>. If you do not provide one of these arguments, this type of issue will not be considered.</p>
+<p>The Non-IID issue is detected based on provided <code class="xref py py-obj docutils literal notranslate"><span class="pre">features</span></code> or <code class="xref py py-obj docutils literal notranslate"><span class="pre">knn_graph</span></code>. If you do not provide one of these arguments, this type of issue will not be considered. While the Non-IID check produces per-example information, it is primarily about assessing the overall dataset rather than assessing individual examples. So pay more attention to the overall dataset Non-IID score obtained via <a class="reference internal" href="../datalab.html#cleanlab.datalab.datalab.Datalab.get_issue_summary" title="cleanlab.datalab.datalab.Datalab.get_issue_summary"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Datalab.get_issue_summary(&quot;non_iid&quot;)</span></code></a> than the per-example scores.</p>
 <p>The Non-IID issue is really a dataset-level check, not a per-datapoint level check (either a dataset violates the IID assumption or it doesn’t). The per-datapoint scores returned for Non-IID issues merely highlight which datapoints you might focus on to better understand this dataset-level issue - there is not necessarily something specifically wrong with these specific datapoints.</p>
 <p>Mathematically, the <strong>overall</strong> Non-IID score for the dataset is defined as the p-value of a statistical test for whether the distribution of <em>index-gap</em> values differs between group A vs. group B defined as follows. For a pair of examples in the dataset <code class="xref py py-obj docutils literal notranslate"><span class="pre">x1,</span> <span class="pre">x2</span></code>, we define their <em>index-gap</em> as the distance between the indices of these examples in the ordering of the data (e.g. if <code class="xref py py-obj docutils literal notranslate"><span class="pre">x1</span></code> is the 10th example and <code class="xref py py-obj docutils literal notranslate"><span class="pre">x2</span></code> is the 100th example in the dataset, their index-gap is 90). We construct group A from pairs of examples which are amongst the K nearest neighbors of each other, where neighbors are defined based on the provided <code class="xref py py-obj docutils literal notranslate"><span class="pre">knn_graph</span></code> or via distances in the space of the provided vector <code class="xref py py-obj docutils literal notranslate"><span class="pre">features</span></code> . Group B is constructed from random pairs of examples in the dataset.</p>
-<p>The Non-IID quality score for each example <code class="xref py py-obj docutils literal notranslate"><span class="pre">x</span></code> is defined via a similarly computed p-value but with Group A constructed from the K nearest neighbors of <code class="xref py py-obj docutils literal notranslate"><span class="pre">x</span></code> and Group B constructed from  random examples from the dataset paired with <code class="xref py py-obj docutils literal notranslate"><span class="pre">x</span></code>. Learn more about the math behind this method in our paper: <a class="reference external" href="https://arxiv.org/abs/2305.15696">Detecting Dataset Drift and Non-IID Sampling via k-Nearest Neighbors</a></p>
-<p>The assumption that examples in a dataset are Independent and Identically Distributed (IID) is  fundamental to most proper modeling.  Detecting all possible violations of the IID assumption is statistically impossible. This issue type only considers specific forms of violation where examples that tend to be closer together in the dataset ordering also tend to have more similar feature values. This includes scenarios where:</p>
+<p>The Non-IID quality score for each example <code class="xref py py-obj docutils literal notranslate"><span class="pre">x</span></code> is defined via a similarly computed p-value but with Group A constructed from the K nearest neighbors of <code class="xref py py-obj docutils literal notranslate"><span class="pre">x</span></code> and Group B constructed from  random examples from the dataset paired with <code class="xref py py-obj docutils literal notranslate"><span class="pre">x</span></code>. Learn more about this method in our paper: <a class="reference external" href="https://arxiv.org/abs/2305.15696">Detecting Dataset Drift and Non-IID Sampling via k-Nearest Neighbors</a> (or the associated <a class="reference external" href="https://cleanlab.ai/blog/non-iid-detection/">blogpost</a>).</p>
+<p>The assumption that examples in a dataset are Independent and Identically Distributed (IID) is fundamental to proper modeling.  Detecting all possible violations of the IID assumption is statistically impossible. This issue type only considers specific forms of violation where examples that tend to be closer together in the dataset ordering also tend to have more similar feature values. This includes scenarios where:</p>
 <ul class="simple">
-<li><p>The underlying distribution from which examples stem is evolving over time (not identically distributed).</p></li>
+<li><p>The underlying distribution from which examples stem is evolving/drifting over time (not identically distributed).</p></li>
 <li><p>An example can influence the values of future examples in the dataset (not independent).</p></li>
 </ul>
 <p>For datasets with low non-IID score, you should consider why your data are not IID and act accordingly. For example, if the data distribution is drifting over time, consider employing a time-based train/test split instead of a random partition.  Note that shuffling the data ahead of time will ensure a good non-IID score, but this is not always a fix to the underlying problem (e.g. future deployment data may stem from a different distribution, or you may overlook the fact that examples influence each other). We thus recommend <strong>not</strong> shuffling your data to be able to diagnose this issue if it exists.</p>
+<p>Some metadata about non-IID issues is stored in the <code class="xref py py-obj docutils literal notranslate"><span class="pre">issues</span></code> attribute of the Datalab object.
+Let’s look at one way to access this information.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">lab</span><span class="o">.</span><span class="n">get_issues</span><span class="p">(</span><span class="s2">&quot;non_iid&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="s2">&quot;non_iid_score&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The output will look something like this:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>    is_non_iid_issue  non_iid_score
+24             False       0.681458
+37             False       0.804582
+64             False       0.810646
+80             False       0.815691
+78             False       0.834293
+</pre></div>
+</div>
+<section id="is-non-iid-issue">
+<h4><code class="docutils literal notranslate"><span class="pre">is_non_iid_issue</span></code><a class="headerlink" href="#is-non-iid-issue" title="Permalink to this heading">#</a></h4>
+<p>A boolean column, where <code class="xref py py-obj docutils literal notranslate"><span class="pre">True</span></code> values indicate that the dataset exhibits statistically significant violations of the IID assumption.
+If the overall dataset does not appear to be Non-IID (p-value &gt; 0.05), then all entries in this column will be <code class="xref py py-obj docutils literal notranslate"><span class="pre">False</span></code>.
+If the dataset appears to be Non-IID (p-value &lt; 0.05), then one entry will be <code class="xref py py-obj docutils literal notranslate"><span class="pre">True</span></code>, specifically the example with the lowest <code class="xref py py-obj docutils literal notranslate"><span class="pre">non_iid_score</span></code>.
+We do not recommend interpreting the per-example boolean values, as the Non-IID check is more about the overall dataset.</p>
+</section>
+<section id="non-iid-score">
+<h4><code class="docutils literal notranslate"><span class="pre">non_iid_score</span></code><a class="headerlink" href="#non-iid-score" title="Permalink to this heading">#</a></h4>
+<p>A numeric column with scores between 0 and 1, containing the Non-IID quality scores for each example.
+Learn more via our <a class="reference external" href="https://cleanlab.ai/blog/non-iid-detection/">blogpost</a>.</p>
+<p>Be cautious when interpreting the non-IID issue score for individual examples.
+The dataset as a whole receives a p-value for our non-IID test (obtained via <a class="reference internal" href="../datalab.html#cleanlab.datalab.datalab.Datalab.get_issue_summary" title="cleanlab.datalab.datalab.Datalab.get_issue_summary"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Datalab.get_issue_summary(&quot;non_iid&quot;)</span></code></a>), which better indicates whether the dataset exhibits non-IID behavior.</p>
+<p>When this p-value is low, you can use the per-example non-IID scores to identify which examples to look at for better understanding this non-IID behavior.</p>
 <div class="admonition tip">
 <p class="admonition-title">Tip</p>
 <p>This type of issue has the issue name <code class="xref py py-obj docutils literal notranslate"><span class="pre">&quot;non_iid&quot;</span></code>.</p>
@@ -734,11 +1067,41 @@ More generally, examples which happen to be duplicated can affect the final mod
 </div>
 </div>
 </section>
+</section>
 <section id="class-imbalance-issue">
 <h3>Class Imbalance Issue<a class="headerlink" href="#class-imbalance-issue" title="Permalink to this heading">#</a></h3>
 <p>Class imbalance is diagnosed just using the <code class="xref py py-obj docutils literal notranslate"><span class="pre">labels</span></code> provided as part of the dataset. The overall class imbalance quality score of a dataset is the proportion of examples belonging to the rarest class <code class="xref py py-obj docutils literal notranslate"><span class="pre">q</span></code>. If this proportion <code class="xref py py-obj docutils literal notranslate"><span class="pre">q</span></code> falls below a threshold, then we say this dataset suffers from the class imbalance issue.</p>
 <p>In a dataset identified as having class imbalance, the class imbalance quality score for each example is set equal to <code class="xref py py-obj docutils literal notranslate"><span class="pre">q</span></code> if it is labeled as the rarest class, and is equal to 1 for all other examples.</p>
 <p>Class imbalance in a dataset can lead to subpar model performance for the under-represented class. Consider collecting more data from the under-represented class, or at least take special care while modeling via techniques like over/under-sampling, SMOTE, asymmetric class weighting, etc.</p>
+<p>This issue-type is more about the overall dataset vs. individual data points. If severe class imbalance is detected, Datalab will flag the individual data points from the minority class.</p>
+<p>Some metadata about class imbalance issues is stored in the <code class="xref py py-obj docutils literal notranslate"><span class="pre">issues</span></code> attribute of the Datalab object.
+Let’s look at one way to access this information.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">lab</span><span class="o">.</span><span class="n">get_issues</span><span class="p">(</span><span class="s2">&quot;class_imbalance&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="s2">&quot;class_imbalance_score&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The output will look something like this:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>    is_class_imbalance_issue  class_imbalance_score  given_label
+27                     False                   0.28            2
+72                     False                   0.28            2
+75                     False                   0.28            2
+33                     False                   0.28            2
+68                     False                   0.28            2
+</pre></div>
+</div>
+<section id="is-class-imbalance-issue">
+<h4><code class="docutils literal notranslate"><span class="pre">is_class_imbalance_issue</span></code><a class="headerlink" href="#is-class-imbalance-issue" title="Permalink to this heading">#</a></h4>
+<p>A boolean column, where <code class="xref py py-obj docutils literal notranslate"><span class="pre">True</span></code> indicates which examples belong to the minority class (rarest class) in a classification dataset that exhibits severe class imbalance.  If the dataset is not considered to have severe class imbalance (i.e. proportion of examples in the rarest class is not to small relative to the number of classes in the dataset), then all values will be <code class="xref py py-obj docutils literal notranslate"><span class="pre">False</span></code>.</p>
+</section>
+<section id="class-imbalance-score">
+<h4><code class="docutils literal notranslate"><span class="pre">class_imbalance_score</span></code><a class="headerlink" href="#class-imbalance-score" title="Permalink to this heading">#</a></h4>
+<p>A numeric column with scores between 0 and 1.
+Any example belonging to the most under-represented class is assigned a score equal to the proportion of examples in the dataset belonging to that class.
+All other examples are assigned a score of 1.
+All examples sharing the same label also share the same score.</p>
+</section>
+<section id="id6">
+<h4><code class="docutils literal notranslate"><span class="pre">given_label</span></code><a class="headerlink" href="#id6" title="Permalink to this heading">#</a></h4>
+<p>A column of the actual labels as provided in the original dataset.</p>
 <div class="admonition tip">
 <p class="admonition-title">Tip</p>
 <p>This type of issue has the issue name <code class="xref py py-obj docutils literal notranslate"><span class="pre">&quot;class_imbalance&quot;</span></code>.</p>
@@ -748,6 +1111,7 @@ More generally, examples which happen to be duplicated can affect the final mod
 </pre></div>
 </div>
 </div>
+</section>
 </section>
 <section id="image-specific-issues">
 <h3>Image-specific Issues<a class="headerlink" href="#image-specific-issues" title="Permalink to this heading">#</a></h3>
@@ -759,6 +1123,7 @@ More information on these image-specific issues is available in the <a class="re
 <section id="underperforming-group-issue">
 <h3>Underperforming Group Issue<a class="headerlink" href="#underperforming-group-issue" title="Permalink to this heading">#</a></h3>
 <p>An underperforming group refers to a cluster of similar examples (i.e. a slice) in the dataset for which the ML model predictions are poor.  The examples in this underperforming group may have noisy labels or feature values, or the trained ML model may not have learned how to properly handle them (consider collecting more data from this subpopulation or up-weighting the existing data from this group).</p>
+<p>This issue-type is more about the overall dataset vs. individual data points. If an underperforming group is detected, Datalab will flag the individual data points from this group.</p>
 <p>Underperforming Group issues are detected based on one of:</p>
 <ul class="simple">
 <li><p>provided <code class="xref py py-obj docutils literal notranslate"><span class="pre">pred_probs</span></code> and <code class="xref py py-obj docutils literal notranslate"><span class="pre">features</span></code>,</p></li>
@@ -769,6 +1134,30 @@ More information on these image-specific issues is available in the <a class="re
 <p>To find the underperforming group, Cleanlab clusters the data using the provided <code class="xref py py-obj docutils literal notranslate"><span class="pre">features</span></code> and determines the cluster <code class="xref py py-obj docutils literal notranslate"><span class="pre">c</span></code> with the lowest average model predictive performance. Model predictive performance is evaluated via the model’s self-confidence of the given labels, calculated using <a class="reference internal" href="../../rank.html#cleanlab.rank.get_self_confidence_for_each_label" title="cleanlab.rank.get_self_confidence_for_each_label"><code class="xref py py-func docutils literal notranslate"><span class="pre">rank.get_self_confidence_for_each_label</span></code></a>. Suppose the average predictive power across the full dataset is <code class="xref py py-obj docutils literal notranslate"><span class="pre">r</span></code> and is <code class="xref py py-obj docutils literal notranslate"><span class="pre">q</span></code> within a cluster of examples. This cluster is considered to be an underperforming group if <code class="xref py py-obj docutils literal notranslate"><span class="pre">q/r</span></code> falls below a threshold. A dataset suffers from the Underperforming Group issue if there exists such a cluster within it.
 The underperforming group quality score is equal to <code class="xref py py-obj docutils literal notranslate"><span class="pre">q/r</span></code> for examples belonging to the underperforming group, and is equal to 1 for all other examples.
 Advanced users:  If you have pre-computed cluster assignments for each example in the dataset, you can pass them explicitly to <a class="reference internal" href="../datalab.html#cleanlab.datalab.datalab.Datalab.find_issues" title="cleanlab.datalab.datalab.Datalab.find_issues"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Datalab.find_issues</span></code></a> using the <code class="xref py py-obj docutils literal notranslate"><span class="pre">cluster_ids</span></code> key in the <code class="xref py py-obj docutils literal notranslate"><span class="pre">issue_types</span></code> dict argument.  This is useful for tabular datasets where you want to group/slice the data based on a categorical column. An integer encoding of the categorical column can be passed as cluster assignments for finding the underperforming group, based on the data slices you define.</p>
+<p>Some metadata about underperforming group issues is stored in the <code class="xref py py-obj docutils literal notranslate"><span class="pre">issues</span></code> attribute of the Datalab object.
+Let’s look at one way to access this information.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">lab</span><span class="o">.</span><span class="n">get_issues</span><span class="p">(</span><span class="s2">&quot;underperforming_group&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="s2">&quot;underperforming_group_score&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The output will look something like this:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>    is_underperforming_group_issue  underperforming_group_score
+0                            False                          1.0
+72                           False                          1.0
+71                           False                          1.0
+70                           False                          1.0
+69                           False                          1.0
+</pre></div>
+</div>
+<section id="is-underperforming-group-issue">
+<h4><code class="docutils literal notranslate"><span class="pre">is_underperforming_group_issue</span></code><a class="headerlink" href="#is-underperforming-group-issue" title="Permalink to this heading">#</a></h4>
+<p>A boolean column, where <code class="xref py py-obj docutils literal notranslate"><span class="pre">True</span></code> indicates which examples belong to the subgroup (i.e. cluster/slice) for which model predictions are significantly worse than for the rest of the dataset.
+If there is no such underperforming subgroup detected, then all values will be <code class="xref py py-obj docutils literal notranslate"><span class="pre">False</span></code>.</p>
+</section>
+<section id="underperforming-group-score">
+<h4><code class="docutils literal notranslate"><span class="pre">underperforming_group_score</span></code><a class="headerlink" href="#underperforming-group-score" title="Permalink to this heading">#</a></h4>
+<p>A numeric column with scores between 0 and 1. Only examples belonging to a detected underperforming group receive a score less than 1.
+Every example in the underperforming group shares the same score, which is the ratio of group’s label quality score vs. the mean label quality score across the dataset.
+The lower the score, the worse the model predictions are for this particular subgroup relative to the rest of the dataset.</p>
 <div class="admonition tip">
 <p class="admonition-title">Tip</p>
 <p>This type of issue has the issue name <code class="xref py py-obj docutils literal notranslate"><span class="pre">&quot;underperforming_group&quot;</span></code>.</p>
@@ -779,6 +1168,7 @@ Advanced users:  If you have pre-computed cluster assignments for each example i
 </div>
 </div>
 </section>
+</section>
 <section id="null-issue">
 <h3>Null Issue<a class="headerlink" href="#null-issue" title="Permalink to this heading">#</a></h3>
 <p>Examples identified with the null issue correspond to rows that have null/missing values across all feature columns (i.e. the entire row is missing values).</p>
@@ -787,6 +1177,29 @@ Advanced users:  If you have pre-computed cluster assignments for each example i
 equals the average of the individual examples’ quality scores.</p>
 <p>Presence of null examples in the dataset can lead to errors when training ML models. It can also
 result in the model learning incorrect patterns due to the null values.</p>
+<p>Some metadata about null issues is stored in the <code class="xref py py-obj docutils literal notranslate"><span class="pre">issues</span></code> attribute of the Datalab object.
+Let’s look at one way to access this information.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">lab</span><span class="o">.</span><span class="n">get_issues</span><span class="p">(</span><span class="s2">&quot;null&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="s2">&quot;null_score&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The output will look something like this:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>    is_null_issue  null_score
+0           False         1.0
+72          False         1.0
+71          False         1.0
+70          False         1.0
+69          False         1.0
+</pre></div>
+</div>
+<section id="is-null-issue">
+<h4><code class="docutils literal notranslate"><span class="pre">is_null_issue</span></code><a class="headerlink" href="#is-null-issue" title="Permalink to this heading">#</a></h4>
+<p>A boolean column, where <code class="xref py py-obj docutils literal notranslate"><span class="pre">True</span></code> indicates that an example is identified as having null/missing values across all feature columns.
+Examples that just have a single non-null value across multiple feature columns are not flagged with this issue.</p>
+</section>
+<section id="null-score">
+<h4><code class="docutils literal notranslate"><span class="pre">null_score</span></code><a class="headerlink" href="#null-score" title="Permalink to this heading">#</a></h4>
+<p>A numeric column with scores between 0 and 1. The score represents the proportion of non-null (i.e. non-missing) values in each example.
+Lower scores indicate examples with more null/missing values.</p>
 <div class="admonition tip">
 <p class="admonition-title">Tip</p>
 <p>This type of issue has the issue name <code class="xref py py-obj docutils literal notranslate"><span class="pre">&quot;null&quot;</span></code>.</p>
@@ -797,11 +1210,34 @@ result in the model learning incorrect patterns due to the null values.</p>
 </div>
 </div>
 </section>
+</section>
 <section id="data-valuation-issue">
 <h3>Data Valuation Issue<a class="headerlink" href="#data-valuation-issue" title="Permalink to this heading">#</a></h3>
 <p>The examples in the dataset with lowest data valuation scores contribute least to a trained ML model’s performance (those whose value falls below a threshold are flagged with this type of issue).</p>
 <p>Data valuation issues can be detected based on provided <code class="xref py py-obj docutils literal notranslate"><span class="pre">features</span></code> or a provided <code class="xref py py-obj docutils literal notranslate"><span class="pre">knn_graph</span></code> (or one pre-computed during the computation of other issue types).  If you do not provide one of these two arguments and there isn’t a <code class="xref py py-obj docutils literal notranslate"><span class="pre">knn_graph</span></code> already stored in the Datalab object, this type of issue will not be considered.</p>
 <p>The data valuation score is an approximate Data Shapley value, calculated based on the labels of the top k nearest neighbors of an example. The details of this KNN-Shapley value could be found in the papers: <a class="reference external" href="https://arxiv.org/abs/1908.08619">Efficient Task-Specific Data Valuation for Nearest Neighbor Algorithms</a> and <a class="reference external" href="https://arxiv.org/abs/1911.07128">Scalability vs. Utility: Do We Have to Sacrifice One for the Other in Data Importance Quantification?</a>.</p>
+<p>Some metadata about data valuation issues is stored in the <code class="xref py py-obj docutils literal notranslate"><span class="pre">issues</span></code> attribute of the Datalab object.
+Let’s look at one way to access this information.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">lab</span><span class="o">.</span><span class="n">get_issues</span><span class="p">(</span><span class="s2">&quot;data_valuation&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="s2">&quot;data_valuation_score&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The output will look something like this:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>    is_data_valuation_issue  data_valuation_score
+39                    False                   0.5
+32                    False                   0.5
+98                    False                   0.5
+6                     False                   0.5
+7                     False                   0.5
+</pre></div>
+</div>
+<section id="is-data-valuation-issue">
+<h4><code class="docutils literal notranslate"><span class="pre">is_data_valuation_issue</span></code><a class="headerlink" href="#is-data-valuation-issue" title="Permalink to this heading">#</a></h4>
+<p>A boolean column, where <code class="xref py py-obj docutils literal notranslate"><span class="pre">True</span></code> indicates that an example does not appear to contribute positively to a model’s training performance.</p>
+</section>
+<section id="data-valuation-score">
+<h4><code class="docutils literal notranslate"><span class="pre">data_valuation_score</span></code><a class="headerlink" href="#data-valuation-score" title="Permalink to this heading">#</a></h4>
+<p>A numeric column with scores between 0 and 1. The score reflects how valuable each individual example is in terms of improving the performance of the ML model trained on this dataset.
+Examples with higher scores more positively influence the resulting model’s predictive performance, contributing to better learning. One would expect the model to get worse if many such examples were removed from its training dataset.</p>
 <div class="admonition tip">
 <p class="admonition-title">Tip</p>
 <p>This type of issue has the issue name <code class="xref py py-obj docutils literal notranslate"><span class="pre">&quot;data_valuation&quot;</span></code>.</p>
@@ -811,6 +1247,7 @@ result in the model learning incorrect patterns due to the null values.</p>
 </pre></div>
 </div>
 </div>
+</section>
 </section>
 </section>
 <section id="optional-issue-parameters">
@@ -1070,15 +1507,52 @@ Appropriate defaults are used for any parameters you do not specify, so no need 
 <li><a class="reference internal" href="#">Datalab Issue Types</a><ul>
 <li><a class="reference internal" href="#types-of-issues-datalab-can-detect">Types of issues Datalab can detect</a><ul>
 <li><a class="reference internal" href="#estimates-for-each-issue-type">Estimates for Each Issue Type</a></li>
-<li><a class="reference internal" href="#label-issue">Label Issue</a></li>
-<li><a class="reference internal" href="#outlier-issue">Outlier Issue</a></li>
-<li><a class="reference internal" href="#near-duplicate-issue">(Near) Duplicate Issue</a></li>
-<li><a class="reference internal" href="#non-iid-issue">Non-IID Issue</a></li>
-<li><a class="reference internal" href="#class-imbalance-issue">Class Imbalance Issue</a></li>
+<li><a class="reference internal" href="#label-issue">Label Issue</a><ul>
+<li><a class="reference internal" href="#is-label-issue"><code class="docutils literal notranslate"><span class="pre">is_label_issue</span></code></a></li>
+<li><a class="reference internal" href="#label-score"><code class="docutils literal notranslate"><span class="pre">label_score</span></code></a></li>
+<li><a class="reference internal" href="#given-label"><code class="docutils literal notranslate"><span class="pre">given_label</span></code></a></li>
+<li><a class="reference internal" href="#predicted-label"><code class="docutils literal notranslate"><span class="pre">predicted_label</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#outlier-issue">Outlier Issue</a><ul>
+<li><a class="reference internal" href="#is-outlier-issue"><code class="docutils literal notranslate"><span class="pre">is_outlier_issue</span></code></a></li>
+<li><a class="reference internal" href="#outlier-score"><code class="docutils literal notranslate"><span class="pre">outlier_score</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#near-duplicate-issue">(Near) Duplicate Issue</a><ul>
+<li><a class="reference internal" href="#is-near-duplicate-issue"><code class="docutils literal notranslate"><span class="pre">is_near_duplicate_issue</span></code></a></li>
+<li><a class="reference internal" href="#near-duplicate-score"><code class="docutils literal notranslate"><span class="pre">near_duplicate_score</span></code></a></li>
+<li><a class="reference internal" href="#near-duplicate-sets"><code class="docutils literal notranslate"><span class="pre">near_duplicate_sets</span></code></a></li>
+<li><a class="reference internal" href="#distance-to-nearest-neighbor"><code class="docutils literal notranslate"><span class="pre">distance_to_nearest_neighbor</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#non-iid-issue">Non-IID Issue</a><ul>
+<li><a class="reference internal" href="#is-non-iid-issue"><code class="docutils literal notranslate"><span class="pre">is_non_iid_issue</span></code></a></li>
+<li><a class="reference internal" href="#non-iid-score"><code class="docutils literal notranslate"><span class="pre">non_iid_score</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#class-imbalance-issue">Class Imbalance Issue</a><ul>
+<li><a class="reference internal" href="#is-class-imbalance-issue"><code class="docutils literal notranslate"><span class="pre">is_class_imbalance_issue</span></code></a></li>
+<li><a class="reference internal" href="#class-imbalance-score"><code class="docutils literal notranslate"><span class="pre">class_imbalance_score</span></code></a></li>
+<li><a class="reference internal" href="#id6"><code class="docutils literal notranslate"><span class="pre">given_label</span></code></a></li>
+</ul>
+</li>
 <li><a class="reference internal" href="#image-specific-issues">Image-specific Issues</a></li>
-<li><a class="reference internal" href="#underperforming-group-issue">Underperforming Group Issue</a></li>
-<li><a class="reference internal" href="#null-issue">Null Issue</a></li>
-<li><a class="reference internal" href="#data-valuation-issue">Data Valuation Issue</a></li>
+<li><a class="reference internal" href="#underperforming-group-issue">Underperforming Group Issue</a><ul>
+<li><a class="reference internal" href="#is-underperforming-group-issue"><code class="docutils literal notranslate"><span class="pre">is_underperforming_group_issue</span></code></a></li>
+<li><a class="reference internal" href="#underperforming-group-score"><code class="docutils literal notranslate"><span class="pre">underperforming_group_score</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#null-issue">Null Issue</a><ul>
+<li><a class="reference internal" href="#is-null-issue"><code class="docutils literal notranslate"><span class="pre">is_null_issue</span></code></a></li>
+<li><a class="reference internal" href="#null-score"><code class="docutils literal notranslate"><span class="pre">null_score</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#data-valuation-issue">Data Valuation Issue</a><ul>
+<li><a class="reference internal" href="#is-data-valuation-issue"><code class="docutils literal notranslate"><span class="pre">is_data_valuation_issue</span></code></a></li>
+<li><a class="reference internal" href="#data-valuation-score"><code class="docutils literal notranslate"><span class="pre">data_valuation_score</span></code></a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li><a class="reference internal" href="#optional-issue-parameters">Optional Issue Parameters</a><ul>
@@ -1111,6 +1585,7 @@ Appropriate defaults are used for any parameters you do not specify, so no need 
     <script src="../../../_static/scripts/furo.js?v=32e29ea5"></script>
     <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
     <script src="../../../_static/copybutton.js?v=30646c52"></script>
+    <script src="../../../_static/tabs.js?v=3030b3cb"></script>
     <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@jupyter-widgets/html-manager@^1.0.1/dist/embed-amd.js"></script>
     
