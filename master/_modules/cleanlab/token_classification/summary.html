@@ -694,20 +694,22 @@
 <span class="sd">    ...     [&quot;An&quot;, &quot;sentence&quot;, &quot;with&quot;, &quot;a&quot;, &quot;typo&quot;],</span>
 <span class="sd">    ... ]</span>
 <span class="sd">    &gt;&gt;&gt; display_issues(issues, tokens)</span>
-<span class="sd">    Sentence 2, token 0:</span>
+<span class="sd">    Sentence index: 2, Token index: 0</span>
+<span class="sd">    Token: An</span>
 <span class="sd">    ----</span>
 <span class="sd">    An sentence with a typo</span>
-<span class="sd">    ...</span>
-<span class="sd">    ...</span>
-<span class="sd">    Sentence 0, token 1:</span>
+<span class="sd">    &lt;BLANKLINE&gt;</span>
+<span class="sd">    &lt;BLANKLINE&gt;</span>
+<span class="sd">    Sentence index: 0, Token index: 1</span>
+<span class="sd">    Token: ?weird</span>
 <span class="sd">    ----</span>
 <span class="sd">    A ?weird sentence</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">if</span> <span class="ow">not</span> <span class="n">class_names</span><span class="p">:</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">class_names</span> <span class="ow">and</span> <span class="p">(</span><span class="n">labels</span> <span class="ow">or</span> <span class="n">pred_probs</span><span class="p">):</span>
         <span class="nb">print</span><span class="p">(</span>
-            <span class="s2">&quot;Classes will be printed in terms of their integer index since `class_names` was not provided. &quot;</span>
+            <span class="s2">&quot;Classes will be printed in terms of their integer index since `class_names` was not provided.</span><span class="se">\n</span><span class="s2">&quot;</span>
+            <span class="s2">&quot;Specify this argument to see the string names of each class.</span><span class="se">\n</span><span class="s2">&quot;</span>
         <span class="p">)</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Specify this argument to see the string names of each class. </span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
 
     <span class="n">top</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">top</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">issues</span><span class="p">))</span>
     <span class="n">shown</span> <span class="o">=</span> <span class="mi">0</span>
@@ -827,6 +829,10 @@
 <span class="sd">    ...     [&quot;An&quot;, &quot;sentence&quot;, &quot;with&quot;, &quot;a&quot;, &quot;typo&quot;],</span>
 <span class="sd">    ... ]</span>
 <span class="sd">    &gt;&gt;&gt; df = common_label_issues(issues, tokens)</span>
+<span class="sd">    Token &#39;?weird&#39; is potentially mislabeled 1 times throughout the dataset</span>
+<span class="sd">    &lt;BLANKLINE&gt;</span>
+<span class="sd">    Token &#39;An&#39; is potentially mislabeled 1 times throughout the dataset</span>
+<span class="sd">    &lt;BLANKLINE&gt;</span>
 <span class="sd">    &gt;&gt;&gt; df</span>
 <span class="sd">        token  num_label_issues</span>
 <span class="sd">    0      An                 1</span>
