@@ -1094,7 +1094,11 @@
             <span class="p">(</span><span class="s2">&quot;pred_probs&quot;</span><span class="p">,</span> <span class="s2">&quot;cluster_ids&quot;</span><span class="p">),</span>
         <span class="p">]</span>
         <span class="n">drop_underperforming_group_check</span> <span class="o">=</span> <span class="s2">&quot;underperforming_group&quot;</span> <span class="ow">in</span> <span class="n">issue_types_copy</span> <span class="ow">and</span> <span class="ow">not</span> <span class="nb">any</span><span class="p">(</span>
-            <span class="nb">all</span><span class="p">(</span><span class="n">key</span> <span class="ow">in</span> <span class="n">kwargs</span> <span class="ow">and</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">key</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">pair</span><span class="p">)</span>
+            <span class="nb">all</span><span class="p">(</span>
+                <span class="n">key</span> <span class="ow">in</span> <span class="n">issue_types_copy</span><span class="p">[</span><span class="s2">&quot;underperforming_group&quot;</span><span class="p">]</span>
+                <span class="ow">and</span> <span class="n">issue_types_copy</span><span class="p">[</span><span class="s2">&quot;underperforming_group&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">key</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+                <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">pair</span>
+            <span class="p">)</span>
             <span class="k">for</span> <span class="n">pair</span> <span class="ow">in</span> <span class="n">required_pairs_for_underperforming_group</span>
         <span class="p">)</span>
         <span class="k">if</span> <span class="n">drop_underperforming_group_check</span><span class="p">:</span>
