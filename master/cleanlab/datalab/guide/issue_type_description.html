@@ -21,7 +21,7 @@
 <meta property="og:image" content="https://raw.githubusercontent.com/cleanlab/assets/master/cleanlab/clos-preview-card.png" />
 <meta property="og:image:alt" content="cleanlab" />
 <meta name="description" content="Types of issues Datalab can detect: This page describes the various types of issues that Datalab can detect in a dataset. For each type of issue, we explain: what it says about your data if detecte..." />
-<link rel="index" title="Index" href="../../../genindex.html" /><link rel="search" title="Search" href="../../../search.html" /><link rel="next" title="CleanLearning Tutorials" href="../../../tutorials/clean_learning/index.html" /><link rel="prev" title="Detecting Issues in an Audio Dataset with Datalab" href="../../../tutorials/datalab/audio.html" />
+<link rel="index" title="Index" href="../../../genindex.html" /><link rel="search" title="Search" href="../../../search.html" /><link rel="next" title="Miscellaneous workflows with Datalab" href="../../../tutorials/datalab/workflows.html" /><link rel="prev" title="Detecting Issues in an Audio Dataset with Datalab" href="../../../tutorials/datalab/audio.html" />
 
     <link rel="shortcut icon" href="https://raw.githubusercontent.com/cleanlab/assets/a4483476d449f2f05a4c7cde329e72358099cc07/cleanlab/cleanlab_favicon.svg"/><!-- Generated with Sphinx 7.1.2 and Furo 2023.09.10 -->
         <title>Datalab Issue Types - cleanlab</title>
@@ -201,6 +201,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../../../tutorials/datalab/image.html">Image Data</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../tutorials/datalab/audio.html">Audio Data</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">Guide to Datalab Issue Types</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../tutorials/datalab/workflows.html">Miscellaneous workflows with Datalab</a></li>
 </ul>
 </li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../../../tutorials/clean_learning/index.html">CleanLearning Tutorials</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><div class="visually-hidden">Toggle navigation of CleanLearning Tutorials</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
@@ -847,6 +848,11 @@ For each type of issue, we explain: what it says about your data if detected, wh
 <span class="n">is_issue</span> <span class="o">=</span> <span class="s2">&quot;is_outlier_issue&quot;</span>  <span class="c1"># name of Boolean column flagging which datapoints are considered outliers in the dataset</span>
 </pre></div>
 </div>
+<p><strong>Dataset vs. data point level issues</strong></p>
+<p>Some issues are primarily about the overall dataset (e.g. non-IID, class imbalance, underperforming group), whereas others are primarily about individual examples (e.g. label issue, outlier, near duplicate, null, etc). The former issue types should be first investigated via the global score from <a class="reference internal" href="../datalab.html#cleanlab.datalab.datalab.Datalab.get_issue_summary" title="cleanlab.datalab.datalab.Datalab.get_issue_summary"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Datalab.get_issue_summary</span></code></a>, as the per-example results for such issues from <a class="reference internal" href="../datalab.html#cleanlab.datalab.datalab.Datalab.get_issues" title="cleanlab.datalab.datalab.Datalab.get_issues"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Datalab.get_issues</span></code></a> require more expertise to interpret.</p>
+</section>
+<section id="inputs-to-datalab">
+<h3>Inputs to Datalab<a class="headerlink" href="#inputs-to-datalab" title="Permalink to this heading">#</a></h3>
 <p>Datalab estimates various issues based on the four inputs below.
 Each input is optional, if you do not provide it, Datalab will skip checks for those types of issues that require this input.</p>
 <ol class="arabic simple">
@@ -1434,12 +1440,12 @@ Appropriate defaults are used for any parameters you do not specify, so no need 
       <footer>
          
         <div class="related-pages">
-          <a class="next-page" href="../../../tutorials/clean_learning/index.html">
+          <a class="next-page" href="../../../tutorials/datalab/workflows.html">
               <div class="page-info">
                 <div class="context">
                   <span>Next</span>
                 </div>
-                <div class="title">CleanLearning Tutorials</div>
+                <div class="title">Miscellaneous workflows with Datalab</div>
               </div>
               <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
             </a>
@@ -1507,6 +1513,7 @@ Appropriate defaults are used for any parameters you do not specify, so no need 
 <li><a class="reference internal" href="#">Datalab Issue Types</a><ul>
 <li><a class="reference internal" href="#types-of-issues-datalab-can-detect">Types of issues Datalab can detect</a><ul>
 <li><a class="reference internal" href="#estimates-for-each-issue-type">Estimates for Each Issue Type</a></li>
+<li><a class="reference internal" href="#inputs-to-datalab">Inputs to Datalab</a></li>
 <li><a class="reference internal" href="#label-issue">Label Issue</a><ul>
 <li><a class="reference internal" href="#is-label-issue"><code class="docutils literal notranslate"><span class="pre">is_label_issue</span></code></a></li>
 <li><a class="reference internal" href="#label-score"><code class="docutils literal notranslate"><span class="pre">label_score</span></code></a></li>
