@@ -643,7 +643,7 @@
 <span class="kn">from</span> <span class="nn">cleanlab.typing</span> <span class="kn">import</span> <span class="n">DatasetLike</span><span class="p">,</span> <span class="n">LabelLike</span>
 
 
-<div class="viewcode-block" id="remove_noise_from_class"><a class="viewcode-back" href="../../../cleanlab/internal/util.html#cleanlab.internal.util.remove_noise_from_class">[docs]</a><span class="k">def</span> <span class="nf">remove_noise_from_class</span><span class="p">(</span><span class="n">noise_matrix</span><span class="p">,</span> <span class="n">class_without_noise</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<div class="viewcode-block" id="remove_noise_from_class"><a class="viewcode-back" href="../../../cleanlab/internal/util.html#cleanlab.internal.util.remove_noise_from_class">[docs]</a><span class="k">def</span> <span class="nf">remove_noise_from_class</span><span class="p">(</span><span class="n">noise_matrix</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">class_without_noise</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;A helper function in the setting of PU learning.</span>
 <span class="sd">    Sets all P(label=class_without_noise|true_label=any_other_class) = 0</span>
 <span class="sd">    in noise_matrix for pulearning setting, where we have</span>
@@ -668,17 +668,16 @@
     <span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">noise_matrix</span><span class="p">)</span>
 
     <span class="c1"># Set P( labels = cwn | y != cwn) = 0 (no noise)</span>
-    <span class="n">x</span><span class="p">[</span><span class="n">cwn</span><span class="p">,</span> <span class="p">[</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">K</span><span class="p">)</span> <span class="k">if</span> <span class="n">i</span> <span class="o">!=</span> <span class="n">cwn</span><span class="p">]]</span> <span class="o">=</span> <span class="mf">0.0</span>
+    <span class="n">class_arange</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">K</span><span class="p">)</span>
+    <span class="n">x</span><span class="p">[</span><span class="n">cwn</span><span class="p">,</span> <span class="n">class_arange</span><span class="p">[</span><span class="n">class_arange</span> <span class="o">!=</span> <span class="n">cwn</span><span class="p">]]</span> <span class="o">=</span> <span class="mf">0.0</span>
 
     <span class="c1"># Normalize columns by increasing diagonal terms</span>
     <span class="c1"># Ensures noise_matrix is a valid probability matrix</span>
-    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">K</span><span class="p">):</span>
-        <span class="n">x</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">-</span> <span class="nb">float</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">x</span><span class="p">[:,</span> <span class="n">i</span><span class="p">])</span> <span class="o">-</span> <span class="n">x</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">i</span><span class="p">])</span>
-
+    <span class="n">np</span><span class="o">.</span><span class="n">fill_diagonal</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="mi">1</span> <span class="o">-</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">diag</span><span class="p">(</span><span class="n">x</span><span class="p">)))</span>
     <span class="k">return</span> <span class="n">x</span></div>
 
 
-<div class="viewcode-block" id="clip_noise_rates"><a class="viewcode-back" href="../../../cleanlab/internal/util.html#cleanlab.internal.util.clip_noise_rates">[docs]</a><span class="k">def</span> <span class="nf">clip_noise_rates</span><span class="p">(</span><span class="n">noise_matrix</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<div class="viewcode-block" id="clip_noise_rates"><a class="viewcode-back" href="../../../cleanlab/internal/util.html#cleanlab.internal.util.clip_noise_rates">[docs]</a><span class="k">def</span> <span class="nf">clip_noise_rates</span><span class="p">(</span><span class="n">noise_matrix</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Clip all noise rates to proper range [0,1), but</span>
 <span class="sd">    do not modify the diagonal terms because they are not</span>
 <span class="sd">    noise rates.</span>
@@ -693,19 +692,11 @@
 <span class="sd">        Diagonal terms are not noise rates, but are consistency P(label=k|true_label=k)</span>
 <span class="sd">        Assumes columns of noise_matrix sum to 1&quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="nf">clip_noise_rate_range</span><span class="p">(</span><span class="n">noise_rate</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Clip noise rate P(label=k&#39;|true_label=k) or P(true_label=k|label=k&#39;)</span>
-<span class="sd">        into proper range [0,1)&quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="nb">min</span><span class="p">(</span><span class="nb">max</span><span class="p">(</span><span class="n">noise_rate</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">),</span> <span class="mf">0.9999</span><span class="p">)</span>
-
-    <span class="c1"># Vectorize clip_noise_rate_range for efficiency with np.ndarrays.</span>
-    <span class="n">vectorized_clip</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">vectorize</span><span class="p">(</span><span class="n">clip_noise_rate_range</span><span class="p">)</span>
-
     <span class="c1"># Preserve because diagonal entries are not noise rates.</span>
     <span class="n">diagonal</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">diagonal</span><span class="p">(</span><span class="n">noise_matrix</span><span class="p">)</span>
 
     <span class="c1"># Clip all noise rates (efficiently).</span>
-    <span class="n">noise_matrix</span> <span class="o">=</span> <span class="n">vectorized_clip</span><span class="p">(</span><span class="n">noise_matrix</span><span class="p">)</span>
+    <span class="n">noise_matrix</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">clip</span><span class="p">(</span><span class="n">noise_matrix</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mf">0.9999</span><span class="p">)</span>
 
     <span class="c1"># Put unmodified diagonal back.</span>
     <span class="n">np</span><span class="o">.</span><span class="n">fill_diagonal</span><span class="p">(</span><span class="n">noise_matrix</span><span class="p">,</span> <span class="n">diagonal</span><span class="p">)</span>
