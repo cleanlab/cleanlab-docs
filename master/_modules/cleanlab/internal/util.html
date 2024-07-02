@@ -706,7 +706,7 @@
     <span class="k">return</span> <span class="n">noise_matrix</span></div>
 
 
-<div class="viewcode-block" id="clip_values"><a class="viewcode-back" href="../../../cleanlab/internal/util.html#cleanlab.internal.util.clip_values">[docs]</a><span class="k">def</span> <span class="nf">clip_values</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">low</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">high</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">new_sum</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<div class="viewcode-block" id="clip_values"><a class="viewcode-back" href="../../../cleanlab/internal/util.html#cleanlab.internal.util.clip_values">[docs]</a><span class="k">def</span> <span class="nf">clip_values</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">low</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">high</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">new_sum</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Clip all values in p to range [low,high].</span>
 <span class="sd">    Preserves sum of x.</span>
 
@@ -729,17 +729,14 @@
 <span class="sd">    x : np.ndarray</span>
 <span class="sd">        A list of clipped values, summing to the same sum as x.&quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="nf">clip_range</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">low</span><span class="o">=</span><span class="n">low</span><span class="p">,</span> <span class="n">high</span><span class="o">=</span><span class="n">high</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Clip a into range [low,high]&quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="nb">min</span><span class="p">(</span><span class="nb">max</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">low</span><span class="p">),</span> <span class="n">high</span><span class="p">)</span>
-
-    <span class="n">vectorized_clip</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">vectorize</span><span class="p">(</span>
-        <span class="n">clip_range</span>
-    <span class="p">)</span>  <span class="c1"># Vectorize clip_range for efficiency with np.ndarrays</span>
-    <span class="n">prev_sum</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">if</span> <span class="n">new_sum</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">new_sum</span>  <span class="c1"># Store previous sum</span>
-    <span class="n">x</span> <span class="o">=</span> <span class="n">vectorized_clip</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>  <span class="c1"># Clip all values (efficiently)</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;only size-1 arrays can be converted to Python scalars but &#39;x&#39; had shape </span><span class="si">{</span><span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="p">)</span>
+    <span class="n">prev_sum</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">if</span> <span class="n">new_sum</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">new_sum</span>  <span class="c1"># Store previous sum</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">clip</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">low</span><span class="p">,</span> <span class="n">high</span><span class="p">)</span>  <span class="c1"># Clip all values (efficiently)</span>
     <span class="n">x</span> <span class="o">=</span> <span class="p">(</span>
-        <span class="n">x</span> <span class="o">*</span> <span class="n">prev_sum</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">clip</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="nb">sum</span><span class="p">(</span><span class="n">x</span><span class="p">)),</span> <span class="n">a_min</span><span class="o">=</span><span class="n">TINY_VALUE</span><span class="p">,</span> <span class="n">a_max</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+        <span class="n">x</span> <span class="o">*</span> <span class="n">prev_sum</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">clip</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="n">a_min</span><span class="o">=</span><span class="n">TINY_VALUE</span><span class="p">,</span> <span class="n">a_max</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
     <span class="p">)</span>  <span class="c1"># Re-normalized values to sum to previous sum</span>
     <span class="k">return</span> <span class="n">x</span></div>
 
