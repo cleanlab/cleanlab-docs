@@ -1211,6 +1211,7 @@
     <span class="c1"># size num_classes, with True if the example confidently belongs to that class and False if not.</span>
     <span class="n">pred_probs_bool</span> <span class="o">=</span> <span class="n">pred_probs</span> <span class="o">&gt;=</span> <span class="n">thresholds</span> <span class="o">-</span> <span class="mf">1e-6</span>
     <span class="n">num_confident_bins</span> <span class="o">=</span> <span class="n">pred_probs_bool</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="c1"># The indices where this is false, are often outliers (not confident of any label)</span>
     <span class="n">at_least_one_confident</span> <span class="o">=</span> <span class="n">num_confident_bins</span> <span class="o">&gt;</span> <span class="mi">0</span>
     <span class="n">more_than_one_confident</span> <span class="o">=</span> <span class="n">num_confident_bins</span> <span class="o">&gt;</span> <span class="mi">1</span>
     <span class="n">pred_probs_argmax</span> <span class="o">=</span> <span class="n">pred_probs</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
