@@ -1230,7 +1230,8 @@
         <span class="n">y_true</span><span class="o">=</span><span class="n">true_labels_confident</span><span class="p">,</span>
         <span class="n">y_pred</span><span class="o">=</span><span class="n">labels_confident</span><span class="p">,</span>
         <span class="n">labels</span><span class="o">=</span><span class="nb">range</span><span class="p">(</span><span class="n">pred_probs</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]),</span>
-    <span class="p">)</span><span class="o">.</span><span class="n">T</span>  <span class="c1"># Guarantee at least one correctly labeled example is represented in every class</span>
+    <span class="p">)</span><span class="o">.</span><span class="n">T</span>
+    <span class="c1"># Guarantee at least one correctly labeled example is represented in every class</span>
     <span class="n">np</span><span class="o">.</span><span class="n">fill_diagonal</span><span class="p">(</span><span class="n">confident_joint</span><span class="p">,</span> <span class="n">confident_joint</span><span class="o">.</span><span class="n">diagonal</span><span class="p">()</span><span class="o">.</span><span class="n">clip</span><span class="p">(</span><span class="nb">min</span><span class="o">=</span><span class="mi">1</span><span class="p">))</span>
     <span class="k">if</span> <span class="n">calibrate</span><span class="p">:</span>
         <span class="n">confident_joint</span> <span class="o">=</span> <span class="n">calibrate_confident_joint</span><span class="p">(</span><span class="n">confident_joint</span><span class="p">,</span> <span class="n">labels</span><span class="p">)</span>
