@@ -3123,78 +3123,77 @@ efficiently do via the data correction interface in <a class="reference external
 </div>
 <p>We introduce a <code class="docutils literal notranslate"><span class="pre">edit_data</span></code> function to implement candidate training data edits, fit a model to the edited training set, and evaluate it on our cleaned test data (can skip these details).</p>
 <details><summary><p>See the implementation of <code class="docutils literal notranslate"><span class="pre">edit_data</span></code> <strong>(click to expand)</strong></p>
-</summary><div class="highlight-none notranslate"><div class="highlight"><pre><span></span>```python
-# Note: This pulldown content is for docs.cleanlab.ai, if running on local Jupyter or Colab, please ignore it.
+</summary><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Note: This pulldown content is for docs.cleanlab.ai, if running on local Jupyter or Colab, please ignore it.</span>
 
-def edit_data(train_features, train_labels, label_issues, near_duplicates, outliers, drop_label_issue, drop_near_duplicate, drop_outlier):
-    &quot;&quot;&quot;
-    Edits the training data by dropping a specified percentage of data points identified as label issues,
-    near duplicates, and outliers based on the full datasets provided for each issue type.
+<span class="k">def</span> <span class="nf">edit_data</span><span class="p">(</span><span class="n">train_features</span><span class="p">,</span> <span class="n">train_labels</span><span class="p">,</span> <span class="n">label_issues</span><span class="p">,</span> <span class="n">near_duplicates</span><span class="p">,</span> <span class="n">outliers</span><span class="p">,</span>
+              <span class="n">drop_label_issue</span><span class="p">,</span> <span class="n">drop_near_duplicate</span><span class="p">,</span> <span class="n">drop_outlier</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Edits the training data by dropping a specified percentage of data points identified as label issues,</span>
+<span class="sd">    near duplicates, and outliers based on the full datasets provided for each issue type.</span>
 
-    Args:
-        train_features (pd.DataFrame): DataFrame containing the training features.
-        train_labels (pd.Series): Series containing the training labels.
-        label_issues (pd.DataFrame): DataFrame containing data points with label issues.
-        near_duplicates (pd.DataFrame): DataFrame containing data points identified as near duplicates.
-        outliers (pd.DataFrame): DataFrame containing data points identified as outliers.
-        drop_label_issue (float): Percentage of label issue data points to drop.
-        drop_near_duplicate (float): Percentage of near duplicate data points to drop.
-        drop_outlier (float): Percentage of outlier data points to drop.
+<span class="sd">    Args:</span>
+<span class="sd">        train_features (pd.DataFrame): DataFrame containing the training features.</span>
+<span class="sd">        train_labels (pd.Series): Series containing the training labels.</span>
+<span class="sd">        label_issues (pd.DataFrame): DataFrame containing data points with label issues.</span>
+<span class="sd">        near_duplicates (pd.DataFrame): DataFrame containing data points identified as near duplicates.</span>
+<span class="sd">        outliers (pd.DataFrame): DataFrame containing data points identified as outliers.</span>
+<span class="sd">        drop_label_issue (float): Percentage of label issue data points to drop.</span>
+<span class="sd">        drop_near_duplicate (float): Percentage of near duplicate data points to drop.</span>
+<span class="sd">        drop_outlier (float): Percentage of outlier data points to drop.</span>
 
-    Returns:
-        pd.DataFrame: The cleaned training features.
-        pd.Series: The cleaned training labels.
-    &quot;&quot;&quot;
-    # Extract indices for each type of issue
-    label_issues_idx = label_issues.index.tolist()
-    near_duplicates_idx = near_duplicates.index.tolist()
-    outliers_idx = outliers.index.tolist()
+<span class="sd">    Returns:</span>
+<span class="sd">        pd.DataFrame: The cleaned training features.</span>
+<span class="sd">        pd.Series: The cleaned training labels.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Extract indices for each type of issue</span>
+    <span class="n">label_issues_idx</span> <span class="o">=</span> <span class="n">label_issues</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+    <span class="n">near_duplicates_idx</span> <span class="o">=</span> <span class="n">near_duplicates</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+    <span class="n">outliers_idx</span> <span class="o">=</span> <span class="n">outliers</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
 
-    # Calculate the number of each type of data point to drop except near duplicates, which requires separate logic
-    num_label_issues_to_drop = int(len(label_issues_idx) * drop_label_issue)
-    num_outliers_to_drop = int(len(outliers_idx) * drop_outlier)
+    <span class="c1"># Calculate the number of each type of data point to drop except near duplicates, which requires separate logic</span>
+    <span class="n">num_label_issues_to_drop</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">label_issues_idx</span><span class="p">)</span> <span class="o">*</span> <span class="n">drop_label_issue</span><span class="p">)</span>
+    <span class="n">num_outliers_to_drop</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">outliers_idx</span><span class="p">)</span> <span class="o">*</span> <span class="n">drop_outlier</span><span class="p">)</span>
 
-    # Calculate number of near duplicates to drop
-    # Assuming the &#39;near_duplicate_sets&#39; are lists of indices (integers) of near duplicates
-    clusters = []
-    for i in near_duplicates_idx:
-        # Create a set for each cluster, add the current index to its near duplicate set
-        cluster = set(near_duplicates.at[i, &#39;near_duplicate_sets&#39;])
-        cluster.add(i)
-        clusters.append(cluster)
+    <span class="c1"># Calculate number of near duplicates to drop</span>
+    <span class="c1"># Assuming the &#39;near_duplicate_sets&#39; are lists of indices (integers) of near duplicates</span>
+    <span class="n">clusters</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">near_duplicates_idx</span><span class="p">:</span>
+        <span class="c1"># Create a set for each cluster, add the current index to its near duplicate set</span>
+        <span class="n">cluster</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">near_duplicates</span><span class="o">.</span><span class="n">at</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="s1">&#39;near_duplicate_sets&#39;</span><span class="p">])</span>
+        <span class="n">cluster</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+        <span class="n">clusters</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">cluster</span><span class="p">)</span>
 
-    # Deduplicate clusters by converting the list of sets to a set of frozensets
-    unique_clusters = set(frozenset(cluster) for cluster in clusters)
+    <span class="c1"># Deduplicate clusters by converting the list of sets to a set of frozensets</span>
+    <span class="n">unique_clusters</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="nb">frozenset</span><span class="p">(</span><span class="n">cluster</span><span class="p">)</span> <span class="k">for</span> <span class="n">cluster</span> <span class="ow">in</span> <span class="n">clusters</span><span class="p">)</span>
 
-    # If you need the unique clusters back in list of lists format:
-    unique_clusters_list = [list(cluster) for cluster in unique_clusters]
+    <span class="c1"># If you need the unique clusters back in list of lists format:</span>
+    <span class="n">unique_clusters_list</span> <span class="o">=</span> <span class="p">[</span><span class="nb">list</span><span class="p">(</span><span class="n">cluster</span><span class="p">)</span> <span class="k">for</span> <span class="n">cluster</span> <span class="ow">in</span> <span class="n">unique_clusters</span><span class="p">]</span>
 
-    near_duplicates_idx_to_drop = []
+    <span class="n">near_duplicates_idx_to_drop</span> <span class="o">=</span> <span class="p">[]</span>
 
-    for cluster in unique_clusters_list:
-        # Calculate the number of rows to drop, ensuring at least one datapoint remains
-        n_drop = max(math.ceil(len(cluster) * drop_near_duplicate), 1)  # Drop at least k% or 1 row
-        if len(cluster) &gt; n_drop:  # Ensure we keep at least one datapoint
-            # Randomly select datapoints to drop
-            drops = random.sample(cluster, n_drop)
-        else:
-            # If the cluster is too small, adjust the number to keep at least one datapoint
-            drops = random.sample(cluster, len(cluster) - 1)  # Keep at least one
-        near_duplicates_idx_to_drop.extend(drops)
+    <span class="k">for</span> <span class="n">cluster</span> <span class="ow">in</span> <span class="n">unique_clusters_list</span><span class="p">:</span>
+        <span class="c1"># Calculate the number of rows to drop, ensuring at least one datapoint remains</span>
+        <span class="n">n_drop</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">math</span><span class="o">.</span><span class="n">ceil</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">cluster</span><span class="p">)</span> <span class="o">*</span> <span class="n">drop_near_duplicate</span><span class="p">),</span> <span class="mi">1</span><span class="p">)</span>  <span class="c1"># Drop at least k% or 1 row</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">cluster</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">n_drop</span><span class="p">:</span>  <span class="c1"># Ensure we keep at least one datapoint</span>
+            <span class="c1"># Randomly select datapoints to drop</span>
+            <span class="n">drops</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="n">cluster</span><span class="p">,</span> <span class="n">n_drop</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># If the cluster is too small, adjust the number to keep at least one datapoint</span>
+            <span class="n">drops</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="n">cluster</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">cluster</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>  <span class="c1"># Keep at least one</span>
+        <span class="n">near_duplicates_idx_to_drop</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">drops</span><span class="p">)</span>
 
-    # Determine the specific indices to drop
-    label_issues_idx_to_drop = label_issues_idx[:num_label_issues_to_drop]
-    outliers_idx_to_drop = outliers_idx[:num_outliers_to_drop]
+    <span class="c1"># Determine the specific indices to drop</span>
+    <span class="n">label_issues_idx_to_drop</span> <span class="o">=</span> <span class="n">label_issues_idx</span><span class="p">[:</span><span class="n">num_label_issues_to_drop</span><span class="p">]</span>
+    <span class="n">outliers_idx_to_drop</span> <span class="o">=</span> <span class="n">outliers_idx</span><span class="p">[:</span><span class="n">num_outliers_to_drop</span><span class="p">]</span>
 
-    # Combine the indices to drop
-    idx_to_drop = list(set(label_issues_idx_to_drop + near_duplicates_idx_to_drop + outliers_idx_to_drop))
+    <span class="c1"># Combine the indices to drop</span>
+    <span class="n">idx_to_drop</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">label_issues_idx_to_drop</span> <span class="o">+</span> <span class="n">near_duplicates_idx_to_drop</span> <span class="o">+</span> <span class="n">outliers_idx_to_drop</span><span class="p">))</span>
 
-    # Drop the rows from the training data
-    train_features_cleaned = train_features.drop(idx_to_drop).reset_index(drop=True)
-    train_labels_cleaned = train_labels.drop(idx_to_drop).reset_index(drop=True)
+    <span class="c1"># Drop the rows from the training data</span>
+    <span class="n">train_features_cleaned</span> <span class="o">=</span> <span class="n">train_features</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">idx_to_drop</span><span class="p">)</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">train_labels_cleaned</span> <span class="o">=</span> <span class="n">train_labels</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">idx_to_drop</span><span class="p">)</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
-    return train_features_cleaned, train_labels_cleaned
-```
+    <span class="k">return</span> <span class="n">train_features_cleaned</span><span class="p">,</span> <span class="n">train_labels_cleaned</span>
 </pre></div>
 </div>
 </details><div class="nbinput nblast docutils container">
