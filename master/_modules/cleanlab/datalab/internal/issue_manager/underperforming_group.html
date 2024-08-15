@@ -739,11 +739,13 @@
                 <span class="s2">&quot;No meaningful clusters were generated for determining underperforming group.&quot;</span>
             <span class="p">)</span>
         <span class="n">n_clusters</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">unique_cluster_ids</span><span class="p">)</span>
-        <span class="n">worst_cluster_id</span><span class="p">,</span> <span class="n">worst_cluster_ratio</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_worst_cluster</span><span class="p">(</span>
-            <span class="n">cluster_ids</span><span class="p">,</span> <span class="n">unique_cluster_ids</span><span class="p">,</span> <span class="n">labels</span><span class="p">,</span> <span class="n">pred_probs</span>
+        <span class="n">cluster_id_to_score</span><span class="p">,</span> <span class="n">worst_cluster_id</span><span class="p">,</span> <span class="n">worst_cluster_ratio</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">get_underperforming_clusters</span><span class="p">(</span><span class="n">cluster_ids</span><span class="p">,</span> <span class="n">unique_cluster_ids</span><span class="p">,</span> <span class="n">labels</span><span class="p">,</span> <span class="n">pred_probs</span><span class="p">)</span>
         <span class="p">)</span>
         <span class="n">is_issue_column</span> <span class="o">=</span> <span class="n">cluster_ids</span> <span class="o">==</span> <span class="n">worst_cluster_id</span>
-        <span class="n">scores</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">is_issue_column</span><span class="p">,</span> <span class="n">worst_cluster_ratio</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="n">scores</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">is_issue_column</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+        <span class="k">for</span> <span class="n">cluster_id</span><span class="p">,</span> <span class="n">cluster_score</span> <span class="ow">in</span> <span class="n">cluster_id_to_score</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="n">scores</span><span class="p">[</span><span class="n">cluster_ids</span> <span class="o">==</span> <span class="n">cluster_id</span><span class="p">]</span> <span class="o">=</span> <span class="n">cluster_score</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">issues</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
             <span class="p">{</span>
                 <span class="sa">f</span><span class="s2">&quot;is_</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">issue_name</span><span class="si">}</span><span class="s2">_issue&quot;</span><span class="p">:</span> <span class="n">is_issue_column</span><span class="p">,</span>
@@ -806,26 +808,34 @@
         <span class="p">)</span>
         <span class="k">return</span> <span class="n">unique_cluster_ids</span></div>
 
-<div class="viewcode-block" id="UnderperformingGroupIssueManager.get_worst_cluster"><a class="viewcode-back" href="../../../../../cleanlab/datalab/internal/issue_manager/underperforming_group.html#cleanlab.datalab.internal.issue_manager.underperforming_group.UnderperformingGroupIssueManager.get_worst_cluster">[docs]</a>    <span class="k">def</span> <span class="nf">get_worst_cluster</span><span class="p">(</span>
+<div class="viewcode-block" id="UnderperformingGroupIssueManager.get_underperforming_clusters"><a class="viewcode-back" href="../../../../../cleanlab/datalab/internal/issue_manager/underperforming_group.html#cleanlab.datalab.internal.issue_manager.underperforming_group.UnderperformingGroupIssueManager.get_underperforming_clusters">[docs]</a>    <span class="k">def</span> <span class="nf">get_underperforming_clusters</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">cluster_ids</span><span class="p">:</span> <span class="n">npt</span><span class="o">.</span><span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">int_</span><span class="p">],</span>
         <span class="n">unique_cluster_ids</span><span class="p">:</span> <span class="n">npt</span><span class="o">.</span><span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">int_</span><span class="p">],</span>
         <span class="n">labels</span><span class="p">:</span> <span class="n">npt</span><span class="o">.</span><span class="n">NDArray</span><span class="p">,</span>
         <span class="n">pred_probs</span><span class="p">:</span> <span class="n">npt</span><span class="o">.</span><span class="n">NDArray</span><span class="p">,</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get ID and quality score of underperforming cluster.</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">],</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get ID and quality score of each underperforming cluster.</span>
 
 <span class="sd">        Args:</span>
-<span class="sd">            cluster_ids (npt.NDArray[np.int_]): _description_</span>
-<span class="sd">            unique_cluster_ids (npt.NDArray[np.int_]): _description_</span>
-<span class="sd">            labels (npt.NDArray): _description_</span>
-<span class="sd">            pred_probs (npt.NDArray): _description_</span>
+<span class="sd">            cluster_ids (npt.NDArray[np.int_]): Cluster IDs corresponding to each sample</span>
+<span class="sd">            unique_cluster_ids (npt.NDArray[np.int_]): Unique cluster IDs excluding noisy clusters</span>
+<span class="sd">            labels (npt.NDArray): Label of each sample</span>
+<span class="sd">            pred_probs (npt.NDArray): Prediction probability</span>
 
 <span class="sd">        Returns:</span>
-<span class="sd">            Tuple[int, float]: (Underperforming Cluster ID, Cluster Quality Score)</span>
+<span class="sd">            Tuple[Dict[int, float], int, float]: (Cluster IDs and their scores, Worst Cluster ID, Worst Cluster Quality Score)</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">worst_cluster_performance</span> <span class="o">=</span> <span class="mi">1</span>  <span class="c1"># Largest possible probability value</span>
+        <span class="n">worst_cluster_ratio</span> <span class="o">=</span> <span class="mf">1.0</span>  <span class="c1"># Largest possible probability value</span>
         <span class="n">worst_cluster_id</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">unique_cluster_ids</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span>
+        <span class="c1"># For calculating mean_performance of the dataset, choose labels and pred-probs of samples belonging to non-noisy clusters</span>
+        <span class="n">filtered_cluster_id_mask</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">cluster_ids</span><span class="p">,</span> <span class="n">unique_cluster_ids</span><span class="p">)</span>
+        <span class="n">filtered_labels</span> <span class="o">=</span> <span class="n">labels</span><span class="p">[</span><span class="n">filtered_cluster_id_mask</span><span class="p">]</span>
+        <span class="n">filtered_pred_probs</span> <span class="o">=</span> <span class="n">pred_probs</span><span class="p">[</span><span class="n">filtered_cluster_id_mask</span><span class="p">]</span>
+        <span class="n">mean_performance</span> <span class="o">=</span> <span class="n">get_self_confidence_for_each_label</span><span class="p">(</span>
+            <span class="n">filtered_labels</span><span class="p">,</span> <span class="n">filtered_pred_probs</span>
+        <span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+        <span class="n">cluster_ids_to_score</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="k">for</span> <span class="n">cluster_id</span> <span class="ow">in</span> <span class="n">unique_cluster_ids</span><span class="p">:</span>
             <span class="n">cluster_mask</span> <span class="o">=</span> <span class="n">cluster_ids</span> <span class="o">==</span> <span class="n">cluster_id</span>
             <span class="n">cur_cluster_ids</span> <span class="o">=</span> <span class="n">labels</span><span class="p">[</span><span class="n">cluster_mask</span><span class="p">]</span>
@@ -833,17 +843,17 @@
             <span class="n">cluster_performance</span> <span class="o">=</span> <span class="n">get_self_confidence_for_each_label</span><span class="p">(</span>
                 <span class="n">cur_cluster_ids</span><span class="p">,</span> <span class="n">cur_cluster_pred_probs</span>
             <span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
-            <span class="k">if</span> <span class="n">cluster_performance</span> <span class="o">&lt;</span> <span class="n">worst_cluster_performance</span><span class="p">:</span>
-                <span class="n">worst_cluster_performance</span> <span class="o">=</span> <span class="n">cluster_performance</span>
-                <span class="n">worst_cluster_id</span> <span class="o">=</span> <span class="n">cluster_id</span>
-        <span class="n">mean_performance</span> <span class="o">=</span> <span class="n">get_self_confidence_for_each_label</span><span class="p">(</span><span class="n">labels</span><span class="p">,</span> <span class="n">pred_probs</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
-        <span class="n">worst_cluster_ratio</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">worst_cluster_performance</span> <span class="o">/</span> <span class="n">mean_performance</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">cluster_performance</span> <span class="o">&lt;</span> <span class="n">mean_performance</span><span class="p">:</span>
+                <span class="n">cluster_ids_to_score</span><span class="p">[</span><span class="n">cluster_id</span><span class="p">]</span> <span class="o">=</span> <span class="n">cluster_performance</span> <span class="o">/</span> <span class="n">mean_performance</span>
+                <span class="k">if</span> <span class="n">cluster_performance</span> <span class="o">&lt;</span> <span class="n">worst_cluster_ratio</span><span class="p">:</span>
+                    <span class="n">worst_cluster_ratio</span> <span class="o">=</span> <span class="n">cluster_ids_to_score</span><span class="p">[</span><span class="n">cluster_id</span><span class="p">]</span>
+                    <span class="n">worst_cluster_id</span> <span class="o">=</span> <span class="n">cluster_id</span>
         <span class="n">worst_cluster_id</span> <span class="o">=</span> <span class="p">(</span>
             <span class="n">worst_cluster_id</span>
             <span class="k">if</span> <span class="n">worst_cluster_ratio</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">threshold</span>
             <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">NO_UNDERPERFORMING_CLUSTER_ID</span>
         <span class="p">)</span>
-        <span class="k">return</span> <span class="n">worst_cluster_id</span><span class="p">,</span> <span class="n">worst_cluster_ratio</span></div>
+        <span class="k">return</span> <span class="n">cluster_ids_to_score</span><span class="p">,</span> <span class="n">worst_cluster_id</span><span class="p">,</span> <span class="n">worst_cluster_ratio</span></div>
 
 <div class="viewcode-block" id="UnderperformingGroupIssueManager.collect_info"><a class="viewcode-back" href="../../../../../cleanlab/datalab/internal/issue_manager/underperforming_group.html#cleanlab.datalab.internal.issue_manager.underperforming_group.UnderperformingGroupIssueManager.collect_info">[docs]</a>    <span class="k">def</span> <span class="nf">collect_info</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>

@@ -699,8 +699,8 @@
 <tr class="row-odd"><td><p><a class="reference internal" href="#cleanlab.datalab.internal.issue_manager.underperforming_group.UnderperformingGroupIssueManager.filter_cluster_ids" title="cleanlab.datalab.internal.issue_manager.underperforming_group.UnderperformingGroupIssueManager.filter_cluster_ids"><code class="xref py py-obj docutils literal notranslate"><span class="pre">filter_cluster_ids</span></code></a>(cluster_ids)</p></td>
 <td><p>Remove outlier clusters and return IDs of clusters with at least <cite>self.min_cluster_samples</cite> number of datapoints.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#cleanlab.datalab.internal.issue_manager.underperforming_group.UnderperformingGroupIssueManager.get_worst_cluster" title="cleanlab.datalab.internal.issue_manager.underperforming_group.UnderperformingGroupIssueManager.get_worst_cluster"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_worst_cluster</span></code></a>(cluster_ids, ...)</p></td>
-<td><p>Get ID and quality score of underperforming cluster.</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#cleanlab.datalab.internal.issue_manager.underperforming_group.UnderperformingGroupIssueManager.get_underperforming_clusters" title="cleanlab.datalab.internal.issue_manager.underperforming_group.UnderperformingGroupIssueManager.get_underperforming_clusters"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_underperforming_clusters</span></code></a>(cluster_ids, ...)</p></td>
+<td><p>Get ID and quality score of each underperforming cluster.</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="#cleanlab.datalab.internal.issue_manager.underperforming_group.UnderperformingGroupIssueManager.collect_info" title="cleanlab.datalab.internal.issue_manager.underperforming_group.UnderperformingGroupIssueManager.collect_info"><code class="xref py py-obj docutils literal notranslate"><span class="pre">collect_info</span></code></a>(knn_graph, n_clusters, ...)</p></td>
 <td><p>Collects data for the info attribute of the Datalab.</p></td>
@@ -806,21 +806,21 @@ number of datapoints.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="cleanlab.datalab.internal.issue_manager.underperforming_group.UnderperformingGroupIssueManager.get_worst_cluster">
-<span class="sig-name descname"><span class="pre">get_worst_cluster</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cluster_ids</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">unique_cluster_ids</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">labels</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pred_probs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/cleanlab/datalab/internal/issue_manager/underperforming_group.html#UnderperformingGroupIssueManager.get_worst_cluster"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cleanlab.datalab.internal.issue_manager.underperforming_group.UnderperformingGroupIssueManager.get_worst_cluster" title="Permalink to this definition">#</a></dt>
-<dd><p>Get ID and quality score of underperforming cluster.</p>
+<dt class="sig sig-object py" id="cleanlab.datalab.internal.issue_manager.underperforming_group.UnderperformingGroupIssueManager.get_underperforming_clusters">
+<span class="sig-name descname"><span class="pre">get_underperforming_clusters</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cluster_ids</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">unique_cluster_ids</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">labels</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pred_probs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/cleanlab/datalab/internal/issue_manager/underperforming_group.html#UnderperformingGroupIssueManager.get_underperforming_clusters"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cleanlab.datalab.internal.issue_manager.underperforming_group.UnderperformingGroupIssueManager.get_underperforming_clusters" title="Permalink to this definition">#</a></dt>
+<dd><p>Get ID and quality score of each underperforming cluster.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Tuple</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>]</span></p>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Tuple</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>], <code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>]</span></p>
 </dd>
 </dl>
 <dl class="simple">
-<dt>Args:</dt><dd><p>cluster_ids (npt.NDArray[<a href="#id7"><span class="problematic" id="id8">np.int_</span></a>]): _description_
-unique_cluster_ids (npt.NDArray[<a href="#id9"><span class="problematic" id="id10">np.int_</span></a>]): _description_
-labels (npt.NDArray): _description_
-pred_probs (npt.NDArray): _description_</p>
+<dt>Args:</dt><dd><p>cluster_ids (npt.NDArray[<a href="#id7"><span class="problematic" id="id8">np.int_</span></a>]): Cluster IDs corresponding to each sample
+unique_cluster_ids (npt.NDArray[<a href="#id9"><span class="problematic" id="id10">np.int_</span></a>]): Unique cluster IDs excluding noisy clusters
+labels (npt.NDArray): Label of each sample
+pred_probs (npt.NDArray): Prediction probability</p>
 </dd>
-<dt>Returns:</dt><dd><p>Tuple[int, float]: (Underperforming Cluster ID, Cluster Quality Score)</p>
+<dt>Returns:</dt><dd><p>Tuple[Dict[int, float], int, float]: (Cluster IDs and their scores, Worst Cluster ID, Worst Cluster Quality Score)</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1017,7 +1017,7 @@ as instance attributes.</p>
 <li><a class="reference internal" href="#cleanlab.datalab.internal.issue_manager.underperforming_group.UnderperformingGroupIssueManager.find_issues"><code class="docutils literal notranslate"><span class="pre">UnderperformingGroupIssueManager.find_issues()</span></code></a></li>
 <li><a class="reference internal" href="#cleanlab.datalab.internal.issue_manager.underperforming_group.UnderperformingGroupIssueManager.perform_clustering"><code class="docutils literal notranslate"><span class="pre">UnderperformingGroupIssueManager.perform_clustering()</span></code></a></li>
 <li><a class="reference internal" href="#cleanlab.datalab.internal.issue_manager.underperforming_group.UnderperformingGroupIssueManager.filter_cluster_ids"><code class="docutils literal notranslate"><span class="pre">UnderperformingGroupIssueManager.filter_cluster_ids()</span></code></a></li>
-<li><a class="reference internal" href="#cleanlab.datalab.internal.issue_manager.underperforming_group.UnderperformingGroupIssueManager.get_worst_cluster"><code class="docutils literal notranslate"><span class="pre">UnderperformingGroupIssueManager.get_worst_cluster()</span></code></a></li>
+<li><a class="reference internal" href="#cleanlab.datalab.internal.issue_manager.underperforming_group.UnderperformingGroupIssueManager.get_underperforming_clusters"><code class="docutils literal notranslate"><span class="pre">UnderperformingGroupIssueManager.get_underperforming_clusters()</span></code></a></li>
 <li><a class="reference internal" href="#cleanlab.datalab.internal.issue_manager.underperforming_group.UnderperformingGroupIssueManager.collect_info"><code class="docutils literal notranslate"><span class="pre">UnderperformingGroupIssueManager.collect_info()</span></code></a></li>
 <li><a class="reference internal" href="#cleanlab.datalab.internal.issue_manager.underperforming_group.UnderperformingGroupIssueManager.issue_score_key"><code class="docutils literal notranslate"><span class="pre">UnderperformingGroupIssueManager.issue_score_key</span></code></a></li>
 <li><a class="reference internal" href="#cleanlab.datalab.internal.issue_manager.underperforming_group.UnderperformingGroupIssueManager.make_summary"><code class="docutils literal notranslate"><span class="pre">UnderperformingGroupIssueManager.make_summary()</span></code></a></li>
