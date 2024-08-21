@@ -1135,6 +1135,60 @@ To detect these issues, simply specify the <code class="xref py py-obj docutils 
 This functionality currently works only with Hugging Face datasets. You can convert other local dataset formats into a Hugging Face dataset by following <a class="reference external" href="https://huggingface.co/docs/datasets/en/loading">this guide</a>.
 More information on these image-specific issues is available in the <a class="reference external" href="https://github.com/cleanlab/cleanvision?tab=readme-ov-file#clean-your-data-for-better-computer-vision">CleanVision package</a> .</p>
 </section>
+<section id="spurious-correlations-between-image-specific-properties-and-labels">
+<h3>Spurious Correlations between image-specific properties and labels<a class="headerlink" href="#spurious-correlations-between-image-specific-properties-and-labels" title="Permalink to this heading">#</a></h3>
+<p>Based on the <a class="reference internal" href="#image-specific-issues"><span class="std std-ref">image properties discussed earlier</span></a>, Datalab can also look for spurious correlations between image properties and the labels in the dataset.
+These are unintended relationships between irrelevant features in images and the given labels, which ML models may easily exploit during training without learning the relevant features.
+Once deployed, such models would consistently fail to generalize on unseen data where these spurious correlations most likely don’t hold.</p>
+<p>Spurious correlations may arise in the dataset due to various reasons, such as:</p>
+<ul class="simple">
+<li><p>Images for certain classes might be consistently captured under specific environmental conditions.</p></li>
+<li><p>Preprocessing techniques applied to the data might introduce systematic differences across classes.</p></li>
+<li><p>Objects of different classes may be systematically photographed in particular ways.</p></li>
+</ul>
+<p>Spurious Correlations are checked for when Datalab is initialized for an image dataset with the <code class="xref py py-obj docutils literal notranslate"><span class="pre">image_key</span></code> keyword argument,
+after checking for <a class="reference internal" href="#image-specific-issues"><span class="std std-ref">Image-specific Issues</span></a> where the image properties are computed.</p>
+<p>Each image property is assigned a label uncorrelatedness score for the entire dataset. The lower the score, the more likely the property is to be spuriously correlated with the labels.
+Consider reviewing the relationship between the image property and the labels if the corresponding label uncorrelatedness score is low.</p>
+<p>This issue type is more about the overall dataset vs. individual data points and will only be highlighted by Datalab in its report, if any such troublesome image properties are found.</p>
+<p>Metadata about spurious correlations is stored in the <code class="xref py py-obj docutils literal notranslate"><span class="pre">info</span></code> attribute of the Datalab object.
+It can be accessed like so:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">lab</span><span class="o">.</span><span class="n">get_info</span><span class="p">(</span><span class="s2">&quot;spurious_correlations&quot;</span><span class="p">)[</span><span class="s2">&quot;correlations_df&quot;</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>The output will look something like this:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>                     property         score
+0                blurry_score          0.559
+1                  dark_score          0.808
+2                 light_score          0.723
+3              odd_size_score          0.957
+4      odd_aspect_ratio_score          0.835
+5             grayscale_score          0.003  # Likely to be spuriously correlated with the labels
+6       low_information_score          0.688
+</pre></div>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>Note that the label uncorrelatedness scores are <em>not</em> stored in the <code class="xref py py-obj docutils literal notranslate"><span class="pre">issues</span></code> attribute of Datalab.</p>
+</div>
+<section id="property">
+<h4><code class="docutils literal notranslate"><span class="pre">property</span></code><a class="headerlink" href="#property" title="Permalink to this heading">#</a></h4>
+<p>A categorical column that identifies specific image-related characteristics assessed for potential spurious correlations with the class labels. Each entry in this column represents a distinct property of the images, such as blurriness, darkness, or grayscale, which may or may not be correlated with the labels.</p>
+</section>
+<section id="score">
+<h4><code class="docutils literal notranslate"><span class="pre">score</span></code><a class="headerlink" href="#score" title="Permalink to this heading">#</a></h4>
+<p>A numeric column that gives the level of label uncorrelatedness for each image-specific property computed while calling <code class="xref py py-obj docutils literal notranslate"><span class="pre">lab.find_issues()</span></code>. The score lies between 0 and 1. The lower the score for an image-property, the more correlated the image-property is with the given labels.</p>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>This type of issue has the issue name <code class="xref py py-obj docutils literal notranslate"><span class="pre">&quot;spurious_correlations&quot;</span></code>.</p>
+<p>Run a check for this particular kind of issue by calling <a class="reference internal" href="../datalab.html#cleanlab.datalab.datalab.Datalab.find_issues" title="cleanlab.datalab.datalab.Datalab.find_issues"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Datalab.find_issues()</span></code></a> like so:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># `lab` is a Datalab instance</span>
+<span class="n">lab</span><span class="o">.</span><span class="n">find_issues</span><span class="p">(</span><span class="o">...</span><span class="p">,</span> <span class="n">issue_types</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;spurious_correlations&quot;</span><span class="p">:</span> <span class="p">{}})</span>
+</pre></div>
+</div>
+</div>
+</section>
+</section>
 <section id="underperforming-group-issue">
 <h3>Underperforming Group Issue<a class="headerlink" href="#underperforming-group-issue" title="Permalink to this heading">#</a></h3>
 <p>An underperforming group refers to a cluster of similar examples (i.e. a slice) in the dataset for which the ML model predictions are poor.  The examples in this underperforming group may have noisy labels or feature values, or the trained ML model may not have learned how to properly handle them (consider collecting more data from this subpopulation or up-weighting the existing data from this group).</p>
@@ -1554,6 +1608,11 @@ Appropriate defaults are used for any parameters you do not specify, so no need 
 </ul>
 </li>
 <li><a class="reference internal" href="#image-specific-issues">Image-specific Issues</a></li>
+<li><a class="reference internal" href="#spurious-correlations-between-image-specific-properties-and-labels">Spurious Correlations between image-specific properties and labels</a><ul>
+<li><a class="reference internal" href="#property"><code class="docutils literal notranslate"><span class="pre">property</span></code></a></li>
+<li><a class="reference internal" href="#score"><code class="docutils literal notranslate"><span class="pre">score</span></code></a></li>
+</ul>
+</li>
 <li><a class="reference internal" href="#underperforming-group-issue">Underperforming Group Issue</a><ul>
 <li><a class="reference internal" href="#is-underperforming-group-issue"><code class="docutils literal notranslate"><span class="pre">is_underperforming_group_issue</span></code></a></li>
 <li><a class="reference internal" href="#underperforming-group-score"><code class="docutils literal notranslate"><span class="pre">underperforming_group_score</span></code></a></li>
