@@ -1148,8 +1148,8 @@ Once deployed, such models would consistently fail to generalize on unseen data 
 </ul>
 <p>Spurious Correlations are checked for when Datalab is initialized for an image dataset with the <code class="xref py py-obj docutils literal notranslate"><span class="pre">image_key</span></code> keyword argument,
 after checking for <a class="reference internal" href="#image-specific-issues"><span class="std std-ref">Image-specific Issues</span></a> where the image properties are computed.</p>
-<p>Each image property is assigned a label uncorrelatedness score for the entire dataset. The lower the score, the more likely the property is to be spuriously correlated with the labels.
-Consider reviewing the relationship between the image property and the labels if the corresponding label uncorrelatedness score is low.</p>
+<p>Each image property (e.g. darkness/brightness) is assigned a label uncorrelatedness score for the entire dataset. The lower the score, the more strongly the property is correlated with the class labels, across images of the dataset. This score is mathematically defined as: 1 minus the relative accuracy improvement in predicting the labels based solely on this image property value (relative to always predicting the most common overall class).</p>
+<p>Consider reviewing the relationship between images with high and low values of this property and the labels if the corresponding label uncorrelatedness score is low, because ML models trained on this dataset may latch onto the spurious correlation and fail to generalize.</p>
 <p>This issue type is more about the overall dataset vs. individual data points and will only be highlighted by Datalab in its report, if any such troublesome image properties are found.</p>
 <p>Metadata about spurious correlations is stored in the <code class="xref py py-obj docutils literal notranslate"><span class="pre">info</span></code> attribute of the Datalab object.
 It can be accessed like so:</p>
