@@ -1,0 +1,1834 @@
+<!doctype html>
+<html class="no-js" lang="en" data-content_root="">
+  <head><meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width,initial-scale=1"/>
+    <meta name="color-scheme" content="light dark"><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+        <script async src="https://www.googletagmanager.com/gtag/js?id=G-EV8RVEFX82"></script>
+        <script>
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            
+            gtag('config', 'G-EV8RVEFX82');
+            
+        </script>
+    <meta property="og:title" content="FAQ" />
+<meta property="og:type" content="website" />
+<meta property="og:url" content="https://docs.cleanlab.ai/stable/tutorials/faq.html" />
+<meta property="og:site_name" content="cleanlab" />
+<meta property="og:description" content="Answers to frequently asked questions about the cleanlab open-source package. The code snippets in this FAQ come from a fully executable notebook you can run via Colab or locally by downloading it ..." />
+<meta property="og:image" content="https://raw.githubusercontent.com/cleanlab/assets/master/cleanlab/clos-preview-card.png" />
+<meta property="og:image:alt" content="cleanlab" />
+<meta name="description" content="Answers to frequently asked questions about the cleanlab open-source package. The code snippets in this FAQ come from a fully executable notebook you can run via Colab or locally by downloading it ..." />
+<link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="datalab" href="../cleanlab/datalab/index.html" /><link rel="prev" title="Computing Out-of-Sample Predicted Probabilities with Cross-Validation" href="pred_probs_cross_val.html" />
+
+    <link rel="shortcut icon" href="https://raw.githubusercontent.com/cleanlab/assets/a4483476d449f2f05a4c7cde329e72358099cc07/cleanlab/cleanlab_favicon.svg"/><!-- Generated with Sphinx 7.1.2 and Furo 2023.09.10 -->
+        <title>FAQ - cleanlab</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=a746c00c" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?v=135e06be" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/tabs.css?v=a5c4661c" />
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/katex-math.css?v=91adb8b6" />
+    <link rel="stylesheet" type="text/css" href="../_static/nbsphinx-code-cells.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?v=36a5483c" />
+    <link rel="stylesheet" type="text/css" href="../_static/css/custom.css?v=96bccb3e" />
+    
+    
+
+
+<style>
+  body {
+    --color-code-background: #f8f8f8;
+  --color-code-foreground: black;
+  
+  }
+  @media not print {
+    body[data-theme="dark"] {
+      --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+    }
+    @media (prefers-color-scheme: dark) {
+      body:not([data-theme="light"]) {
+        --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+      }
+    }
+  }
+</style></head>
+  <body>
+    
+    <script>
+      document.body.dataset.theme = localStorage.getItem("theme") || "auto";
+    </script>
+    
+
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+  <symbol id="svg-toc" viewBox="0 0 24 24">
+    <title>Contents</title>
+    <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 1024 1024">
+      <path d="M408 442h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8zm-8 204c0 4.4 3.6 8 8 8h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56zm504-486H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zm0 632H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zM115.4 518.9L271.7 642c5.8 4.6 14.4.5 14.4-6.9V388.9c0-7.4-8.5-11.5-14.4-6.9L115.4 505.1a8.74 8.74 0 0 0 0 13.8z"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-menu" viewBox="0 0 24 24">
+    <title>Menu</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-menu">
+      <line x1="3" y1="12" x2="21" y2="12"></line>
+      <line x1="3" y1="6" x2="21" y2="6"></line>
+      <line x1="3" y1="18" x2="21" y2="18"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-arrow-right" viewBox="0 0 24 24">
+    <title>Expand</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-chevron-right">
+      <polyline points="9 18 15 12 9 6"></polyline>
+    </svg>
+  </symbol>
+  <symbol id="svg-sun" viewBox="0 0 24 24">
+    <title>Light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="feather-sun">
+      <circle cx="12" cy="12" r="5"></circle>
+      <line x1="12" y1="1" x2="12" y2="3"></line>
+      <line x1="12" y1="21" x2="12" y2="23"></line>
+      <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+      <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+      <line x1="1" y1="12" x2="3" y2="12"></line>
+      <line x1="21" y1="12" x2="23" y2="12"></line>
+      <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+      <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon" viewBox="0 0 24 24">
+    <title>Dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-moon">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454z" />
+    </svg>
+  </symbol>
+  <symbol id="svg-sun-half" viewBox="0 0 24 24">
+    <title>Auto light/dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-shadow">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+      <circle cx="12" cy="12" r="9" />
+      <path d="M13 12h5" />
+      <path d="M13 15h4" />
+      <path d="M13 18h1" />
+      <path d="M13 9h4" />
+      <path d="M13 6h1" />
+    </svg>
+  </symbol>
+</svg>
+
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation">
+<input type="checkbox" class="sidebar-toggle" name="__toc" id="__toc">
+<label class="overlay sidebar-overlay" for="__navigation">
+  <div class="visually-hidden">Hide navigation sidebar</div>
+</label>
+<label class="overlay toc-overlay" for="__toc">
+  <div class="visually-hidden">Hide table of contents sidebar</div>
+</label>
+
+
+
+<div class="page">
+  <header class="mobile-header">
+    <div class="header-left">
+      <label class="nav-overlay-icon" for="__navigation">
+        <div class="visually-hidden">Toggle site navigation sidebar</div>
+        <i class="icon"><svg><use href="#svg-menu"></use></svg></i>
+      </label>
+    </div>
+    <div class="header-center">
+      <a href="../index.html"><div class="brand">cleanlab</div></a>
+    </div>
+    <div class="header-right">
+      <div class="theme-toggle-container theme-toggle-header">
+        <button class="theme-toggle">
+          <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+          <svg class="theme-icon-when-auto"><use href="#svg-sun-half"></use></svg>
+          <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+          <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+        </button>
+      </div>
+      <label class="toc-overlay-icon toc-header-icon" for="__toc">
+        <div class="visually-hidden">Toggle table of contents sidebar</div>
+        <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+      </label>
+    </div>
+  </header>
+  <aside class="sidebar-drawer">
+    <div class="sidebar-container">
+      
+      <div class="sidebar-sticky"><a style="padding-bottom: 0px;" class="sidebar-brand" href="../index.html">
+    
+    <div class="sidebar-logo-container">
+        <img class="sidebar-logo" src="https://raw.githubusercontent.com/cleanlab/assets/master/cleanlab/cleanlab_logo_only.png" alt="Logo" />
+    </div>
+    
+    <span style="margin-bottom:0px" class="sidebar-brand-text">
+        cleanlab
+    </span>
+    
+</a>
+
+<div class="centered">
+    <a style="margin-top: 6px;" class="github-button" href="https://github.com/cleanlab/cleanlab" data-size="large" data-show-count="true"
+    aria-label="Star cleanlab/cleanlab on GitHub">Star</a>
+</div>
+<form class="sidebar-search-container" method="get" action="../search.html" role="search">
+  <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
+  <input type="hidden" name="check_keywords" value="yes">
+  <input type="hidden" name="area" value="default">
+</form>
+<div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
+  <ul>
+<li class="toctree-l1"><a class="reference internal" href="../index.html">Quickstart</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Tutorials</span></p>
+<ul class="current">
+<li class="toctree-l1 has-children"><a class="reference internal" href="datalab/index.html">Datalab Tutorials</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle navigation of Datalab Tutorials</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="datalab/datalab_quickstart.html">Detecting Common Data Issues with Datalab</a></li>
+<li class="toctree-l2"><a class="reference internal" href="datalab/datalab_advanced.html">Advanced Data Auditing with Datalab</a></li>
+<li class="toctree-l2"><a class="reference internal" href="datalab/text.html">Text Data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="datalab/tabular.html">Tabular Data (Numeric/Categorical)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="datalab/image.html">Image Data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="datalab/audio.html">Audio Data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../cleanlab/datalab/guide/issue_type_description.html">Guide to Datalab Issue Types</a></li>
+<li class="toctree-l2"><a class="reference internal" href="datalab/workflows.html">Miscellaneous workflows with Datalab</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="improving_ml_performance.html">Improving ML Performance</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="clean_learning/index.html">CleanLearning Tutorials</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><div class="visually-hidden">Toggle navigation of CleanLearning Tutorials</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="clean_learning/text.html">Text Classification</a></li>
+<li class="toctree-l2"><a class="reference internal" href="clean_learning/tabular.html">Tabular Classification (Numeric/Categorical)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="indepth_overview.html">Workflows of Data-Centric AI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="dataset_health.html">Analyze Dataset-level Issues</a></li>
+<li class="toctree-l1"><a class="reference internal" href="outliers.html">Outlier Detection</a></li>
+<li class="toctree-l1"><a class="reference internal" href="multiannotator.html">Improving Consensus Labels for Multiannotator Data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="multilabel_classification.html">Multi-Label Classification</a></li>
+<li class="toctree-l1"><a class="reference internal" href="regression.html">Noisy Labels in Regression</a></li>
+<li class="toctree-l1"><a class="reference internal" href="token_classification.html">Token Classification (text)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="segmentation.html">Image Segmentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="object_detection.html">Object Detection</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pred_probs_cross_val.html">Predicted Probabilities via Cross Validation</a></li>
+<li class="toctree-l1 current current-page"><a class="current reference internal" href="#">FAQ</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API Reference</span></p>
+<ul>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../cleanlab/datalab/index.html">datalab</a><input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" role="switch" type="checkbox"/><label for="toctree-checkbox-3"><div class="visually-hidden">Toggle navigation of datalab</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../cleanlab/datalab/guide/index.html">Datalab guides</a><input class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" role="switch" type="checkbox"/><label for="toctree-checkbox-4"><div class="visually-hidden">Toggle navigation of Datalab guides</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../cleanlab/datalab/guide/issue_type_description.html">Datalab Issue Types</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../cleanlab/datalab/guide/custom_issue_manager.html">Creating Your Own Issues Manager</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../cleanlab/datalab/datalab.html">datalab</a></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../cleanlab/datalab/internal/index.html">internal</a><input class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" role="switch" type="checkbox"/><label for="toctree-checkbox-5"><div class="visually-hidden">Toggle navigation of internal</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../cleanlab/datalab/internal/adapter/index.html">adapter</a><input class="toctree-checkbox" id="toctree-checkbox-6" name="toctree-checkbox-6" role="switch" type="checkbox"/><label for="toctree-checkbox-6"><div class="visually-hidden">Toggle navigation of adapter</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="../cleanlab/datalab/internal/adapter/imagelab.html">imagelab</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../cleanlab/datalab/internal/data.html">data</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../cleanlab/datalab/internal/data_issues.html">data_issues</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../cleanlab/datalab/internal/issue_finder.html">issue_finder</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../cleanlab/datalab/internal/factory.html">factory</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../cleanlab/datalab/internal/model_outputs.html">model_outputs</a></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../cleanlab/datalab/internal/issue_manager/index.html">issue_manager</a><input class="toctree-checkbox" id="toctree-checkbox-7" name="toctree-checkbox-7" role="switch" type="checkbox"/><label for="toctree-checkbox-7"><div class="visually-hidden">Toggle navigation of issue_manager</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="../cleanlab/datalab/internal/issue_manager/issue_manager.html">Base issue_manager module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../cleanlab/datalab/internal/issue_manager/label.html">label</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../cleanlab/datalab/internal/issue_manager/outlier.html">outlier</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../cleanlab/datalab/internal/issue_manager/duplicate.html">duplicate</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../cleanlab/datalab/internal/issue_manager/noniid.html">noniid</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../cleanlab/datalab/internal/issue_manager/imbalance.html">imbalance</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../cleanlab/datalab/internal/issue_manager/underperforming_group.html">underperforming_group</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../cleanlab/datalab/internal/issue_manager/null.html">null</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../cleanlab/datalab/internal/issue_manager/data_valuation.html">data_valuation</a></li>
+<li class="toctree-l4 has-children"><a class="reference internal" href="../cleanlab/datalab/internal/issue_manager/regression/index.html">regression</a><input class="toctree-checkbox" id="toctree-checkbox-8" name="toctree-checkbox-8" role="switch" type="checkbox"/><label for="toctree-checkbox-8"><div class="visually-hidden">Toggle navigation of regression</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l5"><a class="reference internal" href="../cleanlab/datalab/internal/issue_manager/regression/label.html">label</a></li>
+</ul>
+</li>
+<li class="toctree-l4 has-children"><a class="reference internal" href="../cleanlab/datalab/internal/issue_manager/multilabel/index.html">multilabel</a><input class="toctree-checkbox" id="toctree-checkbox-9" name="toctree-checkbox-9" role="switch" type="checkbox"/><label for="toctree-checkbox-9"><div class="visually-hidden">Toggle navigation of multilabel</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l5"><a class="reference internal" href="../cleanlab/datalab/internal/issue_manager/multilabel/label.html">label</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../cleanlab/datalab/internal/report.html">report</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../cleanlab/datalab/internal/task.html">task</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../cleanlab/classification.html">classification</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cleanlab/filter.html">filter</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cleanlab/rank.html">rank</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cleanlab/count.html">count</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cleanlab/dataset.html">dataset</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cleanlab/outlier.html">outlier</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cleanlab/multiannotator.html">multiannotator</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cleanlab/data_valuation.html">data_valuation</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../cleanlab/multilabel_classification/index.html">multilabel_classification</a><input class="toctree-checkbox" id="toctree-checkbox-10" name="toctree-checkbox-10" role="switch" type="checkbox"/><label for="toctree-checkbox-10"><div class="visually-hidden">Toggle navigation of multilabel_classification</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../cleanlab/multilabel_classification/filter.html">filter</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../cleanlab/multilabel_classification/rank.html">rank</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../cleanlab/multilabel_classification/dataset.html">dataset</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../cleanlab/regression/index.html">regression</a><input class="toctree-checkbox" id="toctree-checkbox-11" name="toctree-checkbox-11" role="switch" type="checkbox"/><label for="toctree-checkbox-11"><div class="visually-hidden">Toggle navigation of regression</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../cleanlab/regression/rank.html">regression.rank</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../cleanlab/regression/learn.html">regression.learn</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../cleanlab/token_classification/index.html">token_classification</a><input class="toctree-checkbox" id="toctree-checkbox-12" name="toctree-checkbox-12" role="switch" type="checkbox"/><label for="toctree-checkbox-12"><div class="visually-hidden">Toggle navigation of token_classification</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../cleanlab/token_classification/filter.html">filter</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../cleanlab/token_classification/rank.html">rank</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../cleanlab/token_classification/summary.html">summary</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../cleanlab/segmentation/index.html">segmentation</a><input class="toctree-checkbox" id="toctree-checkbox-13" name="toctree-checkbox-13" role="switch" type="checkbox"/><label for="toctree-checkbox-13"><div class="visually-hidden">Toggle navigation of segmentation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../cleanlab/segmentation/rank.html">rank</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../cleanlab/segmentation/filter.html">filter</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../cleanlab/segmentation/summary.html">summary</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../cleanlab/object_detection/index.html">object_detection</a><input class="toctree-checkbox" id="toctree-checkbox-14" name="toctree-checkbox-14" role="switch" type="checkbox"/><label for="toctree-checkbox-14"><div class="visually-hidden">Toggle navigation of object_detection</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../cleanlab/object_detection/rank.html">rank</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../cleanlab/object_detection/filter.html">filter</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../cleanlab/object_detection/summary.html">summary</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../cleanlab/benchmarking/index.html">benchmarking</a><input class="toctree-checkbox" id="toctree-checkbox-15" name="toctree-checkbox-15" role="switch" type="checkbox"/><label for="toctree-checkbox-15"><div class="visually-hidden">Toggle navigation of benchmarking</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../cleanlab/benchmarking/noise_generation.html">noise_generation</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../cleanlab/models/index.html">models</a><input class="toctree-checkbox" id="toctree-checkbox-16" name="toctree-checkbox-16" role="switch" type="checkbox"/><label for="toctree-checkbox-16"><div class="visually-hidden">Toggle navigation of models</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../cleanlab/models/keras.html">keras</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../cleanlab/experimental/index.html">experimental</a><input class="toctree-checkbox" id="toctree-checkbox-17" name="toctree-checkbox-17" role="switch" type="checkbox"/><label for="toctree-checkbox-17"><div class="visually-hidden">Toggle navigation of experimental</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../cleanlab/experimental/label_issues_batched.html">label_issues_batched</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../cleanlab/experimental/span_classification.html">span_classification</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../cleanlab/experimental/mnist_pytorch.html">mnist_pytorch</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../cleanlab/experimental/coteaching.html">coteaching</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../cleanlab/experimental/cifar_cnn.html">cifar_cnn</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../cleanlab/internal/index.html">internal</a><input class="toctree-checkbox" id="toctree-checkbox-18" name="toctree-checkbox-18" role="switch" type="checkbox"/><label for="toctree-checkbox-18"><div class="visually-hidden">Toggle navigation of internal</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../cleanlab/internal/util.html">util</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../cleanlab/internal/latent_algebra.html">latent_algebra</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../cleanlab/internal/label_quality_utils.html">label_quality_utils</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../cleanlab/internal/multilabel_utils.html">multilabel_utils</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../cleanlab/internal/multilabel_scorer.html">multilabel_scorer</a></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../cleanlab/internal/neighbor/index.html">neighbor</a><input class="toctree-checkbox" id="toctree-checkbox-19" name="toctree-checkbox-19" role="switch" type="checkbox"/><label for="toctree-checkbox-19"><div class="visually-hidden">Toggle navigation of neighbor</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../cleanlab/internal/neighbor/knn_graph.html">knn_graph</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../cleanlab/internal/neighbor/metric.html">metric</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../cleanlab/internal/neighbor/search.html">search</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../cleanlab/internal/outlier.html">outlier</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../cleanlab/internal/token_classification_utils.html">token_classification_utils</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../cleanlab/internal/validation.html">validation</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Guides</span></p>
+<ul>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../cleanlab/datalab/guide/index.html">Datalab issue types</a><input class="toctree-checkbox" id="toctree-checkbox-20" name="toctree-checkbox-20" role="switch" type="checkbox"/><label for="toctree-checkbox-20"><div class="visually-hidden">Toggle navigation of Datalab issue types</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../cleanlab/datalab/guide/issue_type_description.html">Datalab Issue Types</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../cleanlab/datalab/guide/custom_issue_manager.html">Creating Your Own Issues Manager</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/cleanlab/cleanlab/blob/master/CONTRIBUTING.md">How to contribute</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Links</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference external" href="https://cleanlab.ai">Website</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/cleanlab/cleanlab">GitHub</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://pypi.org/project/cleanlab/">PyPI</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://anaconda.org/conda-forge/cleanlab">Conda</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://cleanlab.ai/slack">Community Discussions</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://cleanlab.ai/blog/">Blog</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://www.youtube.com/@CleanlabAI/playlists">Videos</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://cleanlab.ai/blog/data-centric-ai/">Cleanlab Studio (Easy Mode)</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://help.cleanlab.ai">Cleanlab Studio Docs</a></li>
+</ul>
+
+</div>
+
+
+<!-- Start of versioning -->
+
+<div class="sidebar-tree">
+    <p class="caption" role="heading">
+        <span class="caption-text">Versions</span>
+    </p>
+    <ul>
+        <li class="toctree-l1">
+            <a
+                id="version_number"
+                class="reference internal"
+                href="/"
+                >stable</a
+            >
+        </li>
+        <li class="toctree-l1">
+            <a
+                id="commit_hash"
+                class="reference internal"
+                href="/master/"
+                >developer</a
+            >
+        </li>
+        
+        <li class="toctree-l1">
+            <a
+                id="v2.7.0"
+                class="reference internal"
+                href="/v2.7.0/"
+                >v2.7.0</a
+            >
+        </li>
+        
+        <li class="toctree-l1">
+            <a
+                id="v2.6.6"
+                class="reference internal"
+                href="/v2.6.6/"
+                >v2.6.6</a
+            >
+        </li>
+        
+        <li class="toctree-l1">
+            <a
+                id="v2.6.5"
+                class="reference internal"
+                href="/v2.6.5/"
+                >v2.6.5</a
+            >
+        </li>
+        
+        <li class="toctree-l1">
+            <a
+                id="v2.6.4"
+                class="reference internal"
+                href="/v2.6.4/"
+                >v2.6.4</a
+            >
+        </li>
+        
+        <li class="toctree-l1">
+            <a
+                id="v2.6.3"
+                class="reference internal"
+                href="/v2.6.3/"
+                >v2.6.3</a
+            >
+        </li>
+        
+        <li class="toctree-l1">
+            <a
+                id="v2.6.2"
+                class="reference internal"
+                href="/v2.6.2/"
+                >v2.6.2</a
+            >
+        </li>
+        
+        <li class="toctree-l1">
+            <a
+                id="v2.6.1"
+                class="reference internal"
+                href="/v2.6.1/"
+                >v2.6.1</a
+            >
+        </li>
+        
+        <li class="toctree-l1">
+            <a
+                id="v2.6.0"
+                class="reference internal"
+                href="/v2.6.0/"
+                >v2.6.0</a
+            >
+        </li>
+        
+        <li class="toctree-l1">
+            <a
+                id="v2.5.0"
+                class="reference internal"
+                href="/v2.5.0/"
+                >v2.5.0</a
+            >
+        </li>
+        
+        <li class="toctree-l1">
+            <a
+                id="v2.4.0"
+                class="reference internal"
+                href="/v2.4.0/"
+                >v2.4.0</a
+            >
+        </li>
+        
+        <li class="toctree-l1">
+            <a
+                id="v2.3.1"
+                class="reference internal"
+                href="/v2.3.1/"
+                >v2.3.1</a
+            >
+        </li>
+        
+        <li class="toctree-l1">
+            <a
+                id="v2.3.0"
+                class="reference internal"
+                href="/v2.3.0/"
+                >v2.3.0</a
+            >
+        </li>
+        
+        <li class="toctree-l1">
+            <a
+                id="v2.2.0"
+                class="reference internal"
+                href="/v2.2.0/"
+                >v2.2.0</a
+            >
+        </li>
+        
+        <li class="toctree-l1">
+            <a
+                id="v2.1.0"
+                class="reference internal"
+                href="/v2.1.0/"
+                >v2.1.0</a
+            >
+        </li>
+        
+        <li class="toctree-l1">
+            <a
+                id="v2.0.0"
+                class="reference internal"
+                href="/v2.0.0/"
+                >v2.0.0</a
+            >
+        </li>
+        
+        <li class="toctree-l1">
+            <a
+                id="v1.0.1"
+                class="reference internal"
+                href="/v1.0.1/"
+                >v1.0.1</a
+            >
+        </li>
+        
+    </ul>
+</div>
+
+<br>
+<br>
+
+<script
+    type="text/javascript"
+    src="/versioning.js"
+></script>
+
+<script type="text/javascript">
+    window.addEventListener("load", () => {
+        const version_number = Version.version_number;
+        const commit_hash = Version.commit_hash;
+
+        document.getElementById("version_number").innerHTML =
+            "stable <code class='docutils literal notranslate'><span class='pre'> (" +
+            version_number +
+            ")</span></code>";
+        document.getElementById("commit_hash").innerHTML =
+            "master <code class='docutils literal notranslate'><span class='pre'> (" +
+            commit_hash.slice(0, 7) +
+            "&hellip;)</span></code>";
+    });
+</script>
+
+<!-- End of versioning -->
+
+</div>
+      </div>
+      
+    </div>
+  </aside>
+  <div class="main">
+    <div class="content">
+      <div class="article-container">
+        <a href="#" class="back-to-top muted-link">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12z"></path>
+          </svg>
+          <span>Back to top</span>
+        </a>
+        <div class="content-icon-container">
+          
+<div class="theme-toggle-container theme-toggle-content">
+            <button class="theme-toggle">
+              <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+              <svg class="theme-icon-when-auto"><use href="#svg-sun-half"></use></svg>
+              <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+              <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+            </button>
+          </div>
+          <label class="toc-overlay-icon toc-content-icon" for="__toc">
+            <div class="visually-hidden">Toggle table of contents sidebar</div>
+            <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+          </label>
+        </div>
+        <article role="main">
+          
+
+<noscript>
+  <div class="admonition warning">
+    <p class="admonition-title">Warning</p>
+    <p>Parts of this site uses JavaScript, but your browser does not support it.</p>
+  </div>
+</noscript>
+
+
+
+<!-- Start of Version Warning Banner -->
+
+<p id="doc_ver_warning"></p>
+
+<script
+    type="text/javascript"
+    src="/versioning.js"
+></script>
+<script type="text/javascript">
+    window.addEventListener("load", () => {
+        const version_number = Version.version_number;
+        const path_arr = window.location.pathname.split("/");
+
+        if (path_arr.includes("master")) {
+            document.getElementById("doc_ver_warning").innerHTML =
+            `<div class="admonition warning">
+            <p class="admonition-title">Warning</p>
+            <p>This version of the documentation corresponds to the master branch of <code class="docutils literal notranslate"><span class="pre">cleanlab</span></code> source code from <a href="https://github.com/cleanlab/cleanlab/">GitHub</a>. To see the documentation for the latest <code class="docutils literal notranslate"><span class="pre">pip</span></code>-installed version, click <a href="/">here</a>.</p>
+            </div>`;
+        } else if (!path_arr.includes(version_number) && !path_arr.includes("stable")) {
+            document.getElementById("doc_ver_warning").innerHTML =
+            `<div class="admonition warning">
+            <p class="admonition-title">Warning</p>
+            <p>This documentation is for an old version (<code class="docutils literal notranslate"><span class="pre">v2.7.0</span></code>) of <code class="docutils literal notranslate"><span class="pre">cleanlab</span></code>. To see the documentation for the latest stable version (<code class="docutils literal notranslate"><span class="pre">` + version_number + `</span></code>), click <a href="/">here</a>.</p>
+            </div>`;
+        } else {
+            document.getElementById("doc_ver_warning").remove();
+        }
+    });
+</script>
+
+<!-- End of Version Warning Banner -->
+
+ <style>
+    .nbinput .prompt,
+    .nboutput .prompt {
+        display: none;
+    }
+
+    .output_area {
+        max-height: 300px;
+        overflow: auto;
+    }
+
+    .dataframe {
+        background: #D7D7D7;
+    }
+
+    th {
+        color:black;
+    }
+</style>
+
+<script type="text/javascript">
+    window.addEventListener('load', () => {
+        const h1_element = document.getElementsByTagName("h1");
+        h1_element[0].insertAdjacentHTML("afterend", `
+        <p>
+            <a style="background-color:white;color:black;padding:4px 12px;text-decoration:none;display:inline-block;border-radius:8px;box-shadow:0 2px 4px 0 rgba(0, 0, 0, 0.2), 0 3px 10px 0 rgba(0, 0, 0, 0.19)" href="https://colab.research.google.com/github/cleanlab/cleanlab-docs/blob/master/v2.7.0/tutorials/faq.ipynb" target="_blank">
+            <img src="https://colab.research.google.com/img/colab_favicon_256px.png" alt="" style="width:40px;height:40px;vertical-align:middle">
+            <span style="vertical-align:middle">Run in Google Colab</span>
+            </a>
+        </p>
+        `);
+    })
+
+</script><section id="FAQ">
+<h1>FAQ<a class="headerlink" href="#FAQ" title="Permalink to this heading">#</a></h1>
+<p>Answers to frequently asked questions about the <a class="reference external" href="https://github.com/cleanlab/cleanlab">cleanlab</a> open-source package.</p>
+<p>The code snippets in this FAQ come from a fully executable notebook you can run via Colab or locally by downloading it <a class="reference external" href="https://github.com/cleanlab/cleanlab/blob/master/docs/source/tutorials/faq.ipynb">here</a>.</p>
+<section id="What-data-can-cleanlab-detect-issues-in?">
+<h2>What data can cleanlab detect issues in?<a class="headerlink" href="#What-data-can-cleanlab-detect-issues-in?" title="Permalink to this heading">#</a></h2>
+<p>Currently, cleanlab can be used to detect label issues in any classification dataset, including those involving: multiple annotators per example (multi-annotator), or multiple labels per example (multi-label). This includes data from any modality such as: image, text, tabular, audio, etc. For text data, cleanlab also supports NLP tasks like entity recognition in which each word is individually labeled (token classification). We’re <a class="reference external" href="https://github.com/orgs/cleanlab/projects/2">working to add
+support</a> for all other common supervised learning tasks. If you have a particular task in mind, <a class="reference external" href="https://github.com/cleanlab/cleanlab/issues?q=is%3Aissue">let us know</a>!</p>
+</section>
+<section id="How-do-I-format-classification-labels-for-cleanlab?">
+<h2>How do I format classification labels for cleanlab?<a class="headerlink" href="#How-do-I-format-classification-labels-for-cleanlab?" title="Permalink to this heading">#</a></h2>
+<p><strong>With Datalab</strong>:</p>
+<p>Datalab simplifies label management by accepting both string and integer labels directly. Internally, unique labels are sorted alphanumerically and mapped to integers, facilitating seamless integration with lower-level cleanlab methods. Below are the supported label formats:</p>
+<ul class="simple">
+<li><p><strong>List of strings or integers</strong>: Directly pass labels as a list of strings or integers without manual encoding.</p></li>
+<li><p><strong>Using</strong> <code class="docutils literal notranslate"><span class="pre">datasets.Dataset</span></code> <strong>with</strong> <code class="docutils literal notranslate"><span class="pre">ClassLabel</span></code>: For advanced use cases, you can structure your dataset using HuggingFace’s <code class="docutils literal notranslate"><span class="pre">datasets.Dataset</span></code> object, specifying label columns as <code class="docutils literal notranslate"><span class="pre">ClassLabel</span></code> feature objects for formatting the labels. Refer to the <a class="reference external" href="https://huggingface.co/docs/datasets/main/en/package_reference/main_classes#datasets.ClassLabel">datasets documentation</a> for detailed guidance.</p></li>
+</ul>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">cleanlab</span> <span class="kn">import</span> <span class="n">Datalab</span>
+<span class="kn">from</span> <span class="nn">datasets</span> <span class="kn">import</span> <span class="n">Dataset</span><span class="p">,</span> <span class="n">Features</span><span class="p">,</span> <span class="n">Value</span><span class="p">,</span> <span class="n">ClassLabel</span>
+
+<span class="c1"># Example 1: Labels as a list of strings</span>
+<span class="n">labels_str</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;cat&#39;</span><span class="p">,</span> <span class="s1">&#39;dog&#39;</span><span class="p">,</span> <span class="s1">&#39;cat&#39;</span><span class="p">,</span> <span class="s1">&#39;dog&#39;</span><span class="p">]</span>
+<span class="n">datalab_str</span> <span class="o">=</span> <span class="n">Datalab</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;a&quot;</span><span class="p">,</span> <span class="s2">&quot;b&quot;</span><span class="p">,</span> <span class="s2">&quot;c&quot;</span><span class="p">,</span> <span class="s2">&quot;d&quot;</span><span class="p">],</span> <span class="s2">&quot;label&quot;</span><span class="p">:</span> <span class="n">labels_str</span><span class="p">},</span> <span class="n">label_name</span><span class="o">=</span><span class="s2">&quot;label&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;String labels:&quot;</span><span class="p">,</span> <span class="n">datalab_str</span><span class="o">.</span><span class="n">labels</span><span class="p">)</span>
+
+<span class="c1"># Example 2: Labels as a list of integers</span>
+<span class="n">labels_int</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span>  <span class="c1"># These will be remapped to [0, 1] internally</span>
+<span class="n">datalab_int</span> <span class="o">=</span> <span class="n">Datalab</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;a&quot;</span><span class="p">,</span> <span class="s2">&quot;b&quot;</span><span class="p">,</span> <span class="s2">&quot;c&quot;</span><span class="p">,</span> <span class="s2">&quot;d&quot;</span><span class="p">],</span> <span class="s2">&quot;label&quot;</span><span class="p">:</span> <span class="n">labels_int</span><span class="p">},</span> <span class="n">label_name</span><span class="o">=</span><span class="s2">&quot;label&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Integer labels:&quot;</span><span class="p">,</span> <span class="n">datalab_int</span><span class="o">.</span><span class="n">labels</span><span class="p">)</span>
+
+<span class="c1"># Example 3: Advanced - Dataset with ClassLabel feature</span>
+<span class="n">my_dict</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;pet_name&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;Spot&quot;</span><span class="p">,</span> <span class="s2">&quot;Mittens&quot;</span><span class="p">,</span> <span class="s2">&quot;Rover&quot;</span><span class="p">,</span> <span class="s2">&quot;Rocky&quot;</span><span class="p">,</span> <span class="s2">&quot;Pepper&quot;</span><span class="p">,</span> <span class="s2">&quot;Socks&quot;</span><span class="p">],</span> <span class="s2">&quot;species&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;dog&quot;</span><span class="p">,</span> <span class="s2">&quot;cat&quot;</span><span class="p">,</span> <span class="s2">&quot;dog&quot;</span><span class="p">,</span> <span class="s2">&quot;dog&quot;</span><span class="p">,</span> <span class="s2">&quot;cat&quot;</span><span class="p">,</span> <span class="s2">&quot;cat&quot;</span><span class="p">]}</span>
+<span class="n">features</span> <span class="o">=</span> <span class="n">Features</span><span class="p">({</span><span class="s2">&quot;pet_name&quot;</span><span class="p">:</span> <span class="n">Value</span><span class="p">(</span><span class="s2">&quot;string&quot;</span><span class="p">),</span> <span class="s2">&quot;species&quot;</span><span class="p">:</span> <span class="n">ClassLabel</span><span class="p">(</span><span class="n">names</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;dog&quot;</span><span class="p">,</span> <span class="s2">&quot;cat&quot;</span><span class="p">])})</span>
+<span class="n">dataset</span> <span class="o">=</span> <span class="n">Dataset</span><span class="o">.</span><span class="n">from_dict</span><span class="p">(</span><span class="n">my_dict</span><span class="p">,</span> <span class="n">features</span><span class="o">=</span><span class="n">features</span><span class="p">)</span>
+<span class="n">datalab_dataset</span> <span class="o">=</span> <span class="n">Datalab</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">dataset</span><span class="p">,</span> <span class="n">label_name</span><span class="o">=</span><span class="s2">&quot;species&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;ClassLabel feature:&quot;</span><span class="p">,</span> <span class="n">datalab_dataset</span><span class="o">.</span><span class="n">labels</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Using Datalab allows you to directly handle raw class name labels in your dataset while ensuring compatibility with label encoding requirements of lower-level cleanlab methods, which we’ll cover in the next section.</p>
+<p><strong>Without Datalab</strong>:</p>
+<p>Outside of Datalab, cleanlab offers various lower-level methods to directly operate on labels and diagnose issues. For instance: <code class="docutils literal notranslate"><span class="pre">get_label_quality_scores()</span></code> and <code class="docutils literal notranslate"><span class="pre">find_label_issues()</span></code>. These lower-level methods only work with integer-encoded labels in the range <code class="docutils literal notranslate"><span class="pre">{0,1,</span> <span class="pre">...</span> <span class="pre">K-1}</span></code> where <code class="docutils literal notranslate"><span class="pre">K</span> <span class="pre">=</span> <span class="pre">number_of_classes</span></code>. The <code class="docutils literal notranslate"><span class="pre">labels</span></code> array should only contain integer values in the range <code class="docutils literal notranslate"><span class="pre">{0,</span> <span class="pre">K-1}</span></code> and be of shape <code class="docutils literal notranslate"><span class="pre">(N,)</span></code> where <code class="docutils literal notranslate"><span class="pre">N</span> <span class="pre">=</span> <span class="pre">total_number_of_data_points</span></code>. Do not pass in <code class="docutils literal notranslate"><span class="pre">labels</span></code> where
+some classes are entirely missing or are extremely rare, as cleanlab may not perform as expected. It is better to remove such classes entirely from the dataset first (also dropping the corresponding dimensions from <code class="docutils literal notranslate"><span class="pre">pred_probs</span></code> and then renormalizing it).</p>
+<p><strong>Text or string labels</strong> should to be mapped to integers for each possible value. For example if your original data labels look like this: <code class="docutils literal notranslate"><span class="pre">[&quot;dog&quot;,</span> <span class="pre">&quot;dog&quot;,</span> <span class="pre">&quot;cat&quot;,</span> <span class="pre">&quot;mouse&quot;,</span> <span class="pre">&quot;cat&quot;]</span></code>, you should feed them to cleanlab like this: <code class="docutils literal notranslate"><span class="pre">labels</span> <span class="pre">=</span> <span class="pre">[1,1,0,2,0]</span></code> and keep track of which integer uniquely represents which class (classes were ordered alphabetically in this example).</p>
+<p><strong>One-hot encoded labels</strong> should be integer-encoded by finding the argmax along the one-hot encoded axis. An example of what this might look like is shown below.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+<span class="c1"># This example arr has 4 labels (one per data point) where</span>
+<span class="c1"># each label can be one of 3 possible classes</span>
+
+<span class="n">arr</span>  <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">],[</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">],[</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]])</span>
+<span class="n">labels_proper_format</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">arr</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>  <span class="c1"># How labels should be formatted when passed into the model</span>
+</pre></div>
+</div>
+</div>
+</section>
+<section id="How-do-I-infer-the-correct-labels-for-examples-cleanlab-has-flagged?">
+<h2>How do I infer the correct labels for examples cleanlab has flagged?<a class="headerlink" href="#How-do-I-infer-the-correct-labels-for-examples-cleanlab-has-flagged?" title="Permalink to this heading">#</a></h2>
+<p>If you have a classifier that is compatible with <a class="reference external" href="../cleanlab/classification.html">CleanLearning</a> (i.e. follows the sklearn API), here’s an easy way to see predicted labels alongside the label issues:</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">cl</span> <span class="o">=</span> <span class="n">cleanlab</span><span class="o">.</span><span class="n">classification</span><span class="o">.</span><span class="n">CleanLearning</span><span class="p">(</span><span class="n">your_classifier</span><span class="p">)</span>
+<span class="n">issues_dataframe</span> <span class="o">=</span> <span class="n">cl</span><span class="o">.</span><span class="n">find_label_issues</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">labels</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<p>Alternatively if you have already computed out-of-sample predicted probabilities (<code class="docutils literal notranslate"><span class="pre">pred_probs</span></code>) from a classifier:</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">cl</span> <span class="o">=</span> <span class="n">cleanlab</span><span class="o">.</span><span class="n">classification</span><span class="o">.</span><span class="n">CleanLearning</span><span class="p">()</span>
+<span class="n">issues_dataframe</span> <span class="o">=</span> <span class="n">cl</span><span class="o">.</span><span class="n">find_label_issues</span><span class="p">(</span><span class="n">X</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">labels</span><span class="o">=</span><span class="n">labels</span><span class="p">,</span> <span class="n">pred_probs</span><span class="o">=</span><span class="n">pred_probs</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<p>Otherwise if you have already found issues via:</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">issues</span> <span class="o">=</span> <span class="n">cleanlab</span><span class="o">.</span><span class="n">filter</span><span class="o">.</span><span class="n">find_label_issues</span><span class="p">(</span><span class="n">labels</span><span class="p">,</span> <span class="n">pred_probs</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<p>then you can see your trained classifier’s class prediction for each flagged example like this:</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">class_predicted_for_flagged_examples</span> <span class="o">=</span> <span class="n">pred_probs</span><span class="p">[</span><span class="n">issues</span><span class="p">]</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<p>Here you can see the classifier’s class prediction for every example via:</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">class_predicted_for_all_examples</span> <span class="o">=</span> <span class="n">pred_probs</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<p>We caution against just blindly taking the predicted label for granted, many of these suggestions may be wrong! You will be able to produce a much better version of your dataset interactively using <a class="reference external" href="https://cleanlab.ai/studio/?utm_source=github&amp;utm_medium=docs&amp;utm_campaign=clostostudio">Cleanlab Studio</a>, which helps you efficiently fix issues like this in large datasets.</p>
+</section>
+<section id="How-should-I-handle-label-errors-in-train-vs.-test-data?">
+<h2>How should I handle label errors in train vs. test data?<a class="headerlink" href="#How-should-I-handle-label-errors-in-train-vs.-test-data?" title="Permalink to this heading">#</a></h2>
+<p>If you do not address label errors in your test data, you may not even know when you have produced a better ML model because the evaluation is too noisy. For the best-trained models and most reliable evaluation of them, you should fix label errors in both training and testing data.</p>
+<p>To do this efficiently, first use cleanlab to automatically find label issues in both sets. You can simply merge these two sets into one larger dataset and run cross-validation training. On the merged dataset, you can do either of the following to detect label issues:</p>
+<p><strong>With Datalab</strong>: Run <code class="docutils literal notranslate"><span class="pre">Datalab.find_issues()</span></code> on the merged dataset, then call <code class="docutils literal notranslate"><span class="pre">Datalab.report()</span></code> to see the label issues (and other types of data issues).</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">cleanlab</span> <span class="kn">import</span> <span class="n">Datalab</span>
+
+<span class="n">lab</span> <span class="o">=</span> <span class="n">Datalab</span><span class="p">(</span><span class="n">data</span> <span class="o">=</span> <span class="n">merged_dataset</span><span class="p">,</span> <span class="n">label_name</span> <span class="o">=</span> <span class="s2">&quot;label_column_name&quot;</span><span class="p">)</span>
+
+<span class="c1"># Run proper cross-validation when computing predicted probabilities</span>
+<span class="n">lab</span><span class="o">.</span><span class="n">find_issues</span><span class="p">(</span><span class="n">pred_probs</span> <span class="o">=</span> <span class="n">pred_probs</span><span class="p">,</span> <span class="n">issue_types</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;label&quot;</span><span class="p">:</span> <span class="p">{}})</span>
+
+<span class="n">lab</span><span class="o">.</span><span class="n">report</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>You can fetch the label issues DataFrame from the <code class="docutils literal notranslate"><span class="pre">Datalab</span></code> object by calling:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">label_issues</span> <span class="o">=</span> <span class="n">lab</span><span class="o">.</span><span class="n">get_issues</span><span class="p">(</span><span class="s2">&quot;label&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><strong>Without Datalab</strong>: Run cleanlab’s lower-level <code class="docutils literal notranslate"><span class="pre">find_label_issues()</span></code> method on the merged datataset. Calling the <a class="reference external" href="../cleanlab/classification.html">CleanLearning.find_label_issues()</a> method on your merged dataset both runs cross-validation training and finds label issues for you with any scikit-learn compatible classifier you choose.</p>
+<hr class="docutils" />
+<p>After finding label issues, be <strong>wary</strong> about auto-correcting the labels for test examples. Instead manually fix the labels for your test data via careful review of the flagged issues. You can use <a class="reference external" href="https://cleanlab.ai/studio/">Cleanlab Studio</a> to fix labels efficiently.</p>
+<p>Auto-correcting labels for your training data is fair game, which should improve ML performance (if properly evaluated with clean test labels). You can boost ML performance further by manually fixing the training examples flagged with label issues, as demonstrated in this article:</p>
+<p><a class="reference external" href="https://cleanlab.ai/blog/label-errors-tabular-datasets/">Handling Mislabeled Tabular Data to Improve Your XGBoost Model</a></p>
+</section>
+<section id="How-can-I-find-label-issues-in-big-datasets-with-limited-memory?">
+<h2>How can I find label issues in big datasets with limited memory?<a class="headerlink" href="#How-can-I-find-label-issues-in-big-datasets-with-limited-memory?" title="Permalink to this heading">#</a></h2>
+<p>For a dataset with many rows and/or classes, there are more efficient methods in the <code class="docutils literal notranslate"><span class="pre">label_issues_batched</span></code> module. These methods read data in mini-batches and you can reduce the <code class="docutils literal notranslate"><span class="pre">batch_size</span></code> to control how much memory they require. Below is an example of how to use the <code class="docutils literal notranslate"><span class="pre">find_label_issues_batched()</span></code> method from this module, which can load mini-batches of data from <code class="docutils literal notranslate"><span class="pre">labels</span></code>, <code class="docutils literal notranslate"><span class="pre">pred_probs</span></code> saved as .npy files on disk. You can also run this method on Zarr arrays loaded from .zarr files.
+Try playing with the <code class="docutils literal notranslate"><span class="pre">n_jobs</span></code> argument for further multiprocessing speedups. If you need greater flexibility, check out the <code class="docutils literal notranslate"><span class="pre">LabelInspector</span></code> class from this module.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># We&#39;ll assume your big arrays of labels, pred_probs have been saved to file like this:</span>
+<span class="kn">from</span> <span class="nn">tempfile</span> <span class="kn">import</span> <span class="n">mkdtemp</span>
+<span class="kn">import</span> <span class="nn">os.path</span> <span class="k">as</span> <span class="nn">path</span>
+
+<span class="n">labels_file</span> <span class="o">=</span> <span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">mkdtemp</span><span class="p">(),</span> <span class="s2">&quot;labels.npy&quot;</span><span class="p">)</span>
+<span class="n">pred_probs_file</span> <span class="o">=</span> <span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">mkdtemp</span><span class="p">(),</span> <span class="s2">&quot;pred_probs.npy&quot;</span><span class="p">)</span>
+<span class="n">np</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">labels_file</span><span class="p">,</span> <span class="n">labels</span><span class="p">)</span>
+<span class="n">np</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">pred_probs_file</span><span class="p">,</span> <span class="n">pred_probs</span><span class="p">)</span>
+
+<span class="c1"># Code to find label issues by loading data from file in batches:</span>
+<span class="kn">from</span> <span class="nn">cleanlab.experimental.label_issues_batched</span> <span class="kn">import</span> <span class="n">find_label_issues_batched</span>
+
+<span class="n">batch_size</span> <span class="o">=</span> <span class="mi">10000</span>  <span class="c1"># for efficiency, set this to as large of a value as your memory can handle</span>
+
+<span class="c1"># Indices of examples with label issues, sorted by label quality score (most severe to least severe):</span>
+<span class="n">indices_of_examples_with_issues</span> <span class="o">=</span> <span class="n">find_label_issues_batched</span><span class="p">(</span>
+    <span class="n">labels_file</span><span class="o">=</span><span class="n">labels_file</span><span class="p">,</span> <span class="n">pred_probs_file</span><span class="o">=</span><span class="n">pred_probs_file</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="n">batch_size</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+mmap-loaded numpy arrays have: 50 examples, 3 classes
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<script type="application/vnd.jupyter.widget-view+json">{"version_major": 2, "version_minor": 0, "model_id": "8a84ac36a5a7432190b2ee3fd40edcf1"}</script></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<script type="application/vnd.jupyter.widget-view+json">{"version_major": 2, "version_minor": 0, "model_id": "f6e759c789b6417287b7d60c3bce976f"}</script></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Total number of examples whose labels have been evaluated: 50
+</pre></div></div>
+</div>
+<p>Methods that internally call <code class="docutils literal notranslate"><span class="pre">filter.find_label_issues()</span></code> can be sped up by specifying the argument <code class="docutils literal notranslate"><span class="pre">low_memory=True</span></code>, which will instead use <code class="docutils literal notranslate"><span class="pre">find_label_issues_batched()</span></code> internally. The following methods provide this option:</p>
+<ol class="arabic simple">
+<li><p><a class="reference external" href="../cleanlab/classification.html#cleanlab.classification.CleanLearning">classification.CleanLearning</a></p></li>
+<li><p><a class="reference external" href="../cleanlab/multilabel_classification/filter.html#cleanlab.multilabel_classification.filter.find_label_issues">multilabel_classification.filter.find_label_issues</a></p></li>
+<li><p><a class="reference external" href="../cleanlab/token_classification/filter.html?highlight=token#cleanlab.token_classification.filter.find_label_issues">token_classification.filter.find_label_issues</a></p></li>
+</ol>
+<p><strong>To use less memory and get results faster if your dataset has many classes:</strong> Try merging the rare classes into a single “Other” class before you find label issues. The resulting issues won’t be affected much since cleanlab anyway does not have enough data to accurately diagnose label errors in classes that are rarely seen. To do this, you should aggregate all the probability assigned to the rare classes in <code class="docutils literal notranslate"><span class="pre">pred_probs</span></code> into a single new dimension of <code class="docutils literal notranslate"><span class="pre">pred_probs_merged</span></code> (where this new
+array no longer has columns for the rare classes). Here is a function that does this for you, which you can also modify as needed:</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">cleanlab.internal.util</span> <span class="kn">import</span> <span class="n">value_counts</span>  <span class="c1"># use this to count how often each class occurs in labels</span>
+
+<span class="k">def</span> <span class="nf">merge_rare_classes</span><span class="p">(</span><span class="n">labels</span><span class="p">,</span> <span class="n">pred_probs</span><span class="p">,</span> <span class="n">count_threshold</span> <span class="o">=</span> <span class="mi">10</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Returns: labels, pred_probs after we merge all rare classes into a single &#39;Other&#39; class.</span>
+<span class="sd">    Merged pred_probs has less columns. Rare classes are any occuring less than `count_threshold` times.</span>
+<span class="sd">    Also returns: `class_mapping_orig2new`, a dict to map new classes in merged labels back to classes</span>
+<span class="sd">    in original labels, useful for interpreting outputs from `dataset.heath_summary()` or `count.confident_joint()`.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">num_classes</span> <span class="o">=</span> <span class="n">pred_probs</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">num_examples_per_class</span> <span class="o">=</span> <span class="n">value_counts</span><span class="p">(</span><span class="n">labels</span><span class="p">,</span> <span class="n">num_classes</span><span class="o">=</span><span class="n">num_classes</span><span class="p">)</span>
+    <span class="n">rare_classes</span> <span class="o">=</span> <span class="p">[</span><span class="n">c</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_classes</span><span class="p">)</span> <span class="k">if</span> <span class="n">num_examples_per_class</span><span class="p">[</span><span class="n">c</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">count_threshold</span><span class="p">]</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">rare_classes</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;No rare classes found at the given `count_threshold`, merging is unnecessary unless you increase it.&quot;</span><span class="p">)</span>
+
+    <span class="n">num_classes_merged</span> <span class="o">=</span> <span class="n">num_classes</span> <span class="o">-</span> <span class="nb">len</span><span class="p">(</span><span class="n">rare_classes</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span>  <span class="c1"># one extra class for all the merged ones</span>
+    <span class="n">other_class</span> <span class="o">=</span> <span class="n">num_classes_merged</span> <span class="o">-</span> <span class="mi">1</span>
+    <span class="n">labels_merged</span> <span class="o">=</span> <span class="n">labels</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+    <span class="n">class_mapping_orig2new</span> <span class="o">=</span> <span class="p">{}</span>  <span class="c1"># key = original class in `labels`, value = new class in `labels_merged`</span>
+    <span class="n">new_c</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_classes</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">rare_classes</span><span class="p">:</span>
+            <span class="n">class_mapping_orig2new</span><span class="p">[</span><span class="n">c</span><span class="p">]</span> <span class="o">=</span> <span class="n">other_class</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">class_mapping_orig2new</span><span class="p">[</span><span class="n">c</span><span class="p">]</span> <span class="o">=</span> <span class="n">new_c</span>
+            <span class="n">new_c</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="n">labels_merged</span><span class="p">[</span><span class="n">labels</span> <span class="o">==</span> <span class="n">c</span><span class="p">]</span> <span class="o">=</span> <span class="n">class_mapping_orig2new</span><span class="p">[</span><span class="n">c</span><span class="p">]</span>
+
+    <span class="n">merged_prob</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">pred_probs</span><span class="p">[:,</span> <span class="n">rare_classes</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">keepdims</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>  <span class="c1"># total probability over all merged classes for each example</span>
+    <span class="n">pred_probs_merged</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">hstack</span><span class="p">((</span><span class="n">np</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="n">pred_probs</span><span class="p">,</span> <span class="n">rare_classes</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span> <span class="n">merged_prob</span><span class="p">))</span>  <span class="c1"># assumes new_class is as close to original_class in sorted order as is possible after removing the merged original classes</span>
+    <span class="c1"># check a few rows of probabilities after merging to verify they still sum to 1:</span>
+    <span class="n">num_check</span> <span class="o">=</span> <span class="mi">1000</span>  <span class="c1"># only check a few rows for efficiency</span>
+    <span class="n">ones_array_ref</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="nb">min</span><span class="p">(</span><span class="n">num_check</span><span class="p">,</span><span class="nb">len</span><span class="p">(</span><span class="n">pred_probs</span><span class="p">)))</span>
+    <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">isclose</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">pred_probs</span><span class="p">[:</span><span class="n">num_check</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span> <span class="n">ones_array_ref</span><span class="p">)</span><span class="o">.</span><span class="n">all</span><span class="p">()</span> <span class="ow">and</span> <span class="p">(</span><span class="ow">not</span> <span class="n">np</span><span class="o">.</span><span class="n">isclose</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">pred_probs_merged</span><span class="p">[:</span><span class="n">num_check</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span> <span class="n">ones_array_ref</span><span class="p">)</span><span class="o">.</span><span class="n">all</span><span class="p">()):</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;merged pred_probs do not sum to 1 in each row, check that merging was correctly done.&quot;</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="p">(</span><span class="n">labels_merged</span><span class="p">,</span> <span class="n">pred_probs_merged</span><span class="p">,</span> <span class="n">class_mapping_orig2new</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[12]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">cleanlab.filter</span> <span class="kn">import</span> <span class="n">find_label_issues</span>  <span class="c1"># can alternatively use find_label_issues_batched() shown above</span>
+
+<span class="n">labels_merged</span><span class="p">,</span> <span class="n">pred_probs_merged</span><span class="p">,</span> <span class="n">class_mapping_orig2new</span> <span class="o">=</span> <span class="n">merge_rare_classes</span><span class="p">(</span><span class="n">labels</span><span class="p">,</span> <span class="n">pred_probs</span><span class="p">,</span> <span class="n">count_threshold</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+<span class="n">examples_w_issues</span> <span class="o">=</span> <span class="n">find_label_issues</span><span class="p">(</span><span class="n">labels_merged</span><span class="p">,</span> <span class="n">pred_probs_merged</span><span class="p">,</span> <span class="n">return_indices_ranked_by</span><span class="o">=</span><span class="s2">&quot;self_confidence&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</section>
+<section id="Why-isn’t-CleanLearning-working-for-me?">
+<h2>Why isn’t CleanLearning working for me?<a class="headerlink" href="#Why-isn’t-CleanLearning-working-for-me?" title="Permalink to this heading">#</a></h2>
+<p>At this time, CleanLearning only works with data formatted as numpy matrices or pd.DataFrames, and with models that are compatible with the <code class="docutils literal notranslate"><span class="pre">sklearn</span></code> API (check out <a class="reference external" href="https://github.com/skorch-dev/skorch">skorch</a> for Pytorch compatibility and <a class="reference external" href="https://github.com/adriangb/scikeras">scikeras</a> for Tensorflow/Keras compatibility). You can still use cleanlab with other data formats though! Just separately obtain predicted probabilities (<code class="docutils literal notranslate"><span class="pre">pred_probs</span></code>) from your model via cross-validation and
+pass them as inputs.</p>
+<p>If CleanLearning is running successfully but not improving predictive accuracy of your model, here are some tips:</p>
+<ol class="arabic simple">
+<li><p>Use cleanlab to find label issues in your test data as well (we recommend pooling <code class="docutils literal notranslate"><span class="pre">labels</span></code> across both training and test data into one input for <code class="docutils literal notranslate"><span class="pre">find_label_issues()</span></code>). Then manually review and fix label issues identified in the test data to verify accuracy measurements are actually meaningful.</p></li>
+<li><p>Try different values for <code class="docutils literal notranslate"><span class="pre">filter_by</span></code>, <code class="docutils literal notranslate"><span class="pre">frac_noise</span></code>, and <code class="docutils literal notranslate"><span class="pre">min_examples_per_class</span></code> which can be set via the <code class="docutils literal notranslate"><span class="pre">find_label_issues_kwargs</span></code> argument in the initialization of <code class="docutils literal notranslate"><span class="pre">CleanLearning()</span></code>.</p></li>
+<li><p>Try to find a better model (eg. via hyperparameter tuning or changing to another classifier). <code class="docutils literal notranslate"><span class="pre">CleanLearning</span></code> can find better label issues by leveraging a better model, which allows it to produce better quality training data. This can form a virtuous cycle in which better models -&gt; better issue detection -&gt; better data -&gt; even better models!</p></li>
+<li><p>Try jointly tuning both model hyperparameters and <code class="docutils literal notranslate"><span class="pre">find_label_issues_kwargs</span></code> values.</p></li>
+<li><p>Does your dataset have a <em>junk</em> (or <em>clutter</em>, <em>unknown</em>, <em>other</em>) class? If you have bad data, consider creating one (c.f. Caltech-256).</p></li>
+<li><p>Consider merging similar/overlapping classes found via <code class="docutils literal notranslate"><span class="pre">cleanlab.dataset.find_overlapping_classes</span></code>.</p></li>
+</ol>
+<p>Other general tips to improve label error detection performance:</p>
+<ol class="arabic simple">
+<li><p>Try creating more restrictive new filters by combining their intersections (e.g. <code class="docutils literal notranslate"><span class="pre">combined_boolean_mask</span> <span class="pre">=</span> <span class="pre">mask1</span> <span class="pre">&amp;</span> <span class="pre">mask2</span></code> where <code class="docutils literal notranslate"><span class="pre">mask1</span></code> and <code class="docutils literal notranslate"><span class="pre">mask2</span></code> are the boolean masks created by running <code class="docutils literal notranslate"><span class="pre">find_label_issues</span></code> with different values of the <code class="docutils literal notranslate"><span class="pre">filter_by</span></code> argument).</p></li>
+<li><p>If your <code class="docutils literal notranslate"><span class="pre">pred_probs</span></code> are obtained via a neural network, try averaging the <code class="docutils literal notranslate"><span class="pre">pred_probs</span></code> over the last K epochs of training instead of just using the final <code class="docutils literal notranslate"><span class="pre">pred_probs</span></code>. Similarly, you can try averaging <code class="docutils literal notranslate"><span class="pre">pred_probs</span></code> from several models (remember to re-normalize) or using <code class="docutils literal notranslate"><span class="pre">cleanlab.rank.get_label_quality_ensemble_scores</span></code>.</p></li>
+</ol>
+</section>
+<section id="How-can-I-use-different-models-for-data-cleaning-vs.-final-training-in-CleanLearning?">
+<h2>How can I use different models for data cleaning vs. final training in CleanLearning?<a class="headerlink" href="#How-can-I-use-different-models-for-data-cleaning-vs.-final-training-in-CleanLearning?" title="Permalink to this heading">#</a></h2>
+<p>The code below demonstrates CleanLearning with 2 different classifiers: <code class="docutils literal notranslate"><span class="pre">LogisticRegression()</span></code> and <code class="docutils literal notranslate"><span class="pre">GradientBoostingClassifier()</span></code>. A <code class="docutils literal notranslate"><span class="pre">LogisticRegression</span></code> model is used to detect label issues (via cross-validation run inside CleanLearning) and a <code class="docutils literal notranslate"><span class="pre">GradientBoostingClassifier</span></code> model is finally trained on a clean subset of the data with issues removed. This can be done with any two classifiers.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[14]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">cleanlab.classification</span> <span class="kn">import</span> <span class="n">CleanLearning</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">sklearn.linear_model</span> <span class="kn">import</span> <span class="n">LogisticRegression</span>
+<span class="kn">from</span> <span class="nn">sklearn.ensemble</span> <span class="kn">import</span> <span class="n">GradientBoostingClassifier</span>
+
+<span class="c1"># Make example data</span>
+<span class="n">data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">([</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">random</span><span class="p">((</span><span class="mi">100</span><span class="p">,</span> <span class="mi">2</span><span class="p">)),</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">random</span><span class="p">((</span><span class="mi">100</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span> <span class="o">+</span> <span class="mi">10</span><span class="p">])</span>
+<span class="n">labels</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="mi">100</span> <span class="o">+</span> <span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="mi">100</span><span class="p">)</span>
+
+<span class="c1"># Introduce label errors</span>
+<span class="n">true_errors</span> <span class="o">=</span> <span class="p">[</span><span class="mi">97</span><span class="p">,</span> <span class="mi">98</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">101</span><span class="p">,</span> <span class="mi">102</span><span class="p">,</span> <span class="mi">104</span><span class="p">]</span>
+<span class="k">for</span> <span class="n">idx</span> <span class="ow">in</span> <span class="n">true_errors</span><span class="p">:</span>
+    <span class="n">labels</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">labels</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span>
+
+<span class="c1"># CleanLearning with 2 different classifiers: one classifier is used to detect label issues</span>
+<span class="c1"># and a different classifier is subsequently trained on the clean subset of the data.</span>
+
+<span class="n">model_to_find_errors</span> <span class="o">=</span> <span class="n">LogisticRegression</span><span class="p">()</span>  <span class="c1"># this model will be trained many times via cross-validation</span>
+<span class="n">model_to_return</span> <span class="o">=</span> <span class="n">GradientBoostingClassifier</span><span class="p">()</span>  <span class="c1"># this model will be trained once on clean subset of data</span>
+
+<span class="n">cl0</span> <span class="o">=</span> <span class="n">CleanLearning</span><span class="p">(</span><span class="n">model_to_find_errors</span><span class="p">)</span>
+<span class="n">issues</span> <span class="o">=</span> <span class="n">cl0</span><span class="o">.</span><span class="n">find_label_issues</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">labels</span><span class="p">)</span>
+
+<span class="n">cl</span> <span class="o">=</span> <span class="n">CleanLearning</span><span class="p">(</span><span class="n">model_to_return</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">labels</span><span class="p">,</span> <span class="n">label_issues</span><span class="o">=</span><span class="n">issues</span><span class="p">)</span>
+<span class="n">pred_probs</span> <span class="o">=</span> <span class="n">cl</span><span class="o">.</span><span class="n">predict_proba</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>  <span class="c1"># predictions from GradientBoostingClassifier</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">cl0</span><span class="o">.</span><span class="n">clf</span><span class="p">)</span>  <span class="c1"># will be LogisticRegression()</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">cl</span><span class="o">.</span><span class="n">clf</span><span class="p">)</span>  <span class="c1"># will be GradientBoostingClassifier()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+LogisticRegression()
+GradientBoostingClassifier()
+</pre></div></div>
+</div>
+</section>
+<section id="How-do-I-hyperparameter-tune-only-the-final-model-trained-(and-not-the-one-finding-label-issues)-in-CleanLearning?">
+<h2>How do I hyperparameter tune only the final model trained (and not the one finding label issues) in CleanLearning?<a class="headerlink" href="#How-do-I-hyperparameter-tune-only-the-final-model-trained-(and-not-the-one-finding-label-issues)-in-CleanLearning?" title="Permalink to this heading">#</a></h2>
+<p>The code below demonstrates CleanLearning using a <code class="docutils literal notranslate"><span class="pre">GradientBoostingClassifier()</span></code> with no hyperparameter-tuning to find label issues but with hyperparameter-tuning via <code class="docutils literal notranslate"><span class="pre">RandomizedSearchCV(...)</span></code> for the final training of this model on the clean subset of the data. This is a useful trick to avoid expensive hyperparameter-tuning for every fold of cross-validation (which is needed to find label issues).</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[15]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">cleanlab.classification</span> <span class="kn">import</span> <span class="n">CleanLearning</span>
+<span class="kn">from</span> <span class="nn">sklearn.ensemble</span> <span class="kn">import</span> <span class="n">GradientBoostingClassifier</span>
+<span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="kn">import</span> <span class="n">RandomizedSearchCV</span>
+
+<span class="c1"># Make example data</span>
+<span class="n">data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">([</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">random</span><span class="p">((</span><span class="mi">100</span><span class="p">,</span> <span class="mi">2</span><span class="p">)),</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">random</span><span class="p">((</span><span class="mi">100</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span> <span class="o">+</span> <span class="mi">10</span><span class="p">])</span>
+<span class="n">labels</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="mi">100</span> <span class="o">+</span> <span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="mi">100</span><span class="p">)</span>
+
+<span class="c1"># Introduce label errors</span>
+<span class="n">true_errors</span> <span class="o">=</span> <span class="p">[</span><span class="mi">97</span><span class="p">,</span> <span class="mi">98</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">101</span><span class="p">,</span> <span class="mi">102</span><span class="p">,</span> <span class="mi">104</span><span class="p">]</span>
+<span class="k">for</span> <span class="n">idx</span> <span class="ow">in</span> <span class="n">true_errors</span><span class="p">:</span>
+    <span class="n">labels</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">labels</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span>
+
+<span class="c1"># CleanLearning with no hyperparameter-tuning during expensive cross-validation to find label issues</span>
+<span class="c1"># but hyperparameter-tuning for the final training of model on clean subset of the data:</span>
+
+<span class="n">model_to_find_errors</span> <span class="o">=</span> <span class="n">GradientBoostingClassifier</span><span class="p">()</span>  <span class="c1"># this model will be trained many times via cross-validation</span>
+<span class="n">model_to_return</span> <span class="o">=</span> <span class="n">RandomizedSearchCV</span><span class="p">(</span><span class="n">GradientBoostingClassifier</span><span class="p">(),</span>
+                    <span class="n">param_distributions</span> <span class="o">=</span> <span class="p">{</span>
+                        <span class="s2">&quot;learning_rate&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mf">0.001</span><span class="p">,</span> <span class="mf">0.05</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.2</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">],</span>
+                        <span class="s2">&quot;max_depth&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">3</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">10</span><span class="p">],</span>
+                    <span class="p">}</span>
+                <span class="p">)</span>   <span class="c1"># this model will be trained once on clean subset of data</span>
+
+<span class="n">cl0</span> <span class="o">=</span> <span class="n">CleanLearning</span><span class="p">(</span><span class="n">model_to_find_errors</span><span class="p">)</span>
+<span class="n">issues</span> <span class="o">=</span> <span class="n">cl0</span><span class="o">.</span><span class="n">find_label_issues</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">labels</span><span class="p">)</span>
+
+<span class="n">cl</span> <span class="o">=</span> <span class="n">CleanLearning</span><span class="p">(</span><span class="n">model_to_return</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">labels</span><span class="p">,</span> <span class="n">label_issues</span><span class="o">=</span><span class="n">issues</span><span class="p">)</span>  <span class="c1"># CleanLearning for hyperparameter final training</span>
+<span class="n">pred_probs</span> <span class="o">=</span> <span class="n">cl</span><span class="o">.</span><span class="n">predict_proba</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>  <span class="c1"># predictions from hyperparameter-tuned GradientBoostingClassifier</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">cl0</span><span class="o">.</span><span class="n">clf</span><span class="p">)</span>  <span class="c1"># will be GradientBoostingClassifier()</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">cl</span><span class="o">.</span><span class="n">clf</span><span class="p">)</span>  <span class="c1"># will be RandomizedSearchCV(estimator=GradientBoostingClassifier(),...)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+GradientBoostingClassifier()
+RandomizedSearchCV(estimator=GradientBoostingClassifier(),
+                   param_distributions={&#39;learning_rate&#39;: [0.001, 0.05, 0.1, 0.2,
+                                                          0.5],
+                                        &#39;max_depth&#39;: [3, 5, 10]})
+</pre></div></div>
+</div>
+</section>
+<section id="Why-does-regression.learn.CleanLearning-take-so-long?">
+<h2>Why does regression.learn.CleanLearning take so long?<a class="headerlink" href="#Why-does-regression.learn.CleanLearning-take-so-long?" title="Permalink to this heading">#</a></h2>
+<p>To effectively identify errors in a regression dataset, the methods in <a class="reference external" href="../../cleanlab/regression/learn.html#cleanlab.regression.learn.CleanLearning">regression.learn.CleanLearning</a> estimate each datapoint’s aleatoric uncertainty (by fitting a second copy of the regression model to predict the residuals’ magnitudes), as well as its epistemic uncertainty (by fitting multiple copies of the regression model with bootstrap resampling). These uncertainty estimates help provide a robust quality
+score that accounts for the model’s imperfect predictions.</p>
+<p>These uncertainty estimates help produce better results but require longer runtimes. Here are a few options to speed up the runtime of these methods:</p>
+<ul class="simple">
+<li><p>Reduce the number of bootstrap resampling rounds by decreasing the <code class="docutils literal notranslate"><span class="pre">n_boot</span></code> argument (default value is 5, set it to 0 to skip the epistemic uncertainty estimation entirely).</p></li>
+<li><p>Set <code class="docutils literal notranslate"><span class="pre">include_aleatoric_uncertainty=False</span></code> to skip the aleatoric uncertainty estimation.</p></li>
+<li><p>Include less elements in the <code class="docutils literal notranslate"><span class="pre">coarse_search_range</span></code> argument of <a class="reference external" href="../cleanlab/regression/learn.html#cleanlab.regression.learn.CleanLearning.find_label_issues">regression.learn.CleanLearning.find_label_issues</a>. This is overall set of values initially considered for estimating the fraction of data that have label issues.</p></li>
+<li><p>Reduce the <code class="docutils literal notranslate"><span class="pre">fine_search_size</span></code> argument of <a class="reference external" href="../cleanlab/regression/learn.html#cleanlab.regression.learn.CleanLearning.find_label_issues">regression.learn.CleanLearning.find_label_issues</a>. A higher number represents a more thorough search to precisely estimate the fraction of data that have label issues.</p></li>
+</ul>
+<p>Below is sample code on how to pass in these arguments.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[16]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">cleanlab.regression.learn</span> <span class="kn">import</span> <span class="n">CleanLearning</span>
+
+<span class="n">X</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">random</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="p">(</span><span class="mi">30</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>
+<span class="n">coefficients</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">coefficients</span><span class="p">)</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="n">scale</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">30</span><span class="p">)</span>
+
+<span class="c1"># passing optinal arguments to reduce runtime</span>
+<span class="n">cl</span> <span class="o">=</span> <span class="n">CleanLearning</span><span class="p">(</span><span class="n">n_boot</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">include_aleatoric_uncertainty</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="n">cl</span><span class="o">.</span><span class="n">find_label_issues</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">coarse_search_range</span><span class="o">=</span><span class="p">[</span><span class="mf">0.05</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">],</span> <span class="n">fine_search_size</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+
+<span class="c1"># you can also pass coarse_search_range and fine_search_size as kwargs to CleanLearning.fit</span>
+<span class="n">cl</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">find_label_issues_kwargs</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;coarse_search_range&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mf">0.05</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">],</span> <span class="s2">&quot;fine_search_size&quot;</span><span class="p">:</span> <span class="mi">2</span><span class="p">})</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[16]:
+</pre></div>
+</div>
+<div class="output_area rendered_html docutils container">
+<style>#sk-container-id-1 {
+  /* Definition of color scheme common for light and dark mode */
+  --sklearn-color-text: black;
+  --sklearn-color-line: gray;
+  /* Definition of color scheme for unfitted estimators */
+  --sklearn-color-unfitted-level-0: #fff5e6;
+  --sklearn-color-unfitted-level-1: #f6e4d2;
+  --sklearn-color-unfitted-level-2: #ffe0b3;
+  --sklearn-color-unfitted-level-3: chocolate;
+  /* Definition of color scheme for fitted estimators */
+  --sklearn-color-fitted-level-0: #f0f8ff;
+  --sklearn-color-fitted-level-1: #d4ebff;
+  --sklearn-color-fitted-level-2: #b3dbfd;
+  --sklearn-color-fitted-level-3: cornflowerblue;
+
+  /* Specific color for light theme */
+  --sklearn-color-text-on-default-background: var(--sg-text-color, var(--theme-code-foreground, var(--jp-content-font-color1, black)));
+  --sklearn-color-background: var(--sg-background-color, var(--theme-background, var(--jp-layout-color0, white)));
+  --sklearn-color-border-box: var(--sg-text-color, var(--theme-code-foreground, var(--jp-content-font-color1, black)));
+  --sklearn-color-icon: #696969;
+
+  @media (prefers-color-scheme: dark) {
+    /* Redefinition of color scheme for dark theme */
+    --sklearn-color-text-on-default-background: var(--sg-text-color, var(--theme-code-foreground, var(--jp-content-font-color1, white)));
+    --sklearn-color-background: var(--sg-background-color, var(--theme-background, var(--jp-layout-color0, #111)));
+    --sklearn-color-border-box: var(--sg-text-color, var(--theme-code-foreground, var(--jp-content-font-color1, white)));
+    --sklearn-color-icon: #878787;
+  }
+}
+
+#sk-container-id-1 {
+  color: var(--sklearn-color-text);
+}
+
+#sk-container-id-1 pre {
+  padding: 0;
+}
+
+#sk-container-id-1 input.sk-hidden--visually {
+  border: 0;
+  clip: rect(1px 1px 1px 1px);
+  clip: rect(1px, 1px, 1px, 1px);
+  height: 1px;
+  margin: -1px;
+  overflow: hidden;
+  padding: 0;
+  position: absolute;
+  width: 1px;
+}
+
+#sk-container-id-1 div.sk-dashed-wrapped {
+  border: 1px dashed var(--sklearn-color-line);
+  margin: 0 0.4em 0.5em 0.4em;
+  box-sizing: border-box;
+  padding-bottom: 0.4em;
+  background-color: var(--sklearn-color-background);
+}
+
+#sk-container-id-1 div.sk-container {
+  /* jupyter's `normalize.less` sets `[hidden] { display: none; }`
+     but bootstrap.min.css set `[hidden] { display: none !important; }`
+     so we also need the `!important` here to be able to override the
+     default hidden behavior on the sphinx rendered scikit-learn.org.
+     See: https://github.com/scikit-learn/scikit-learn/issues/21755 */
+  display: inline-block !important;
+  position: relative;
+}
+
+#sk-container-id-1 div.sk-text-repr-fallback {
+  display: none;
+}
+
+div.sk-parallel-item,
+div.sk-serial,
+div.sk-item {
+  /* draw centered vertical line to link estimators */
+  background-image: linear-gradient(var(--sklearn-color-text-on-default-background), var(--sklearn-color-text-on-default-background));
+  background-size: 2px 100%;
+  background-repeat: no-repeat;
+  background-position: center center;
+}
+
+/* Parallel-specific style estimator block */
+
+#sk-container-id-1 div.sk-parallel-item::after {
+  content: "";
+  width: 100%;
+  border-bottom: 2px solid var(--sklearn-color-text-on-default-background);
+  flex-grow: 1;
+}
+
+#sk-container-id-1 div.sk-parallel {
+  display: flex;
+  align-items: stretch;
+  justify-content: center;
+  background-color: var(--sklearn-color-background);
+  position: relative;
+}
+
+#sk-container-id-1 div.sk-parallel-item {
+  display: flex;
+  flex-direction: column;
+}
+
+#sk-container-id-1 div.sk-parallel-item:first-child::after {
+  align-self: flex-end;
+  width: 50%;
+}
+
+#sk-container-id-1 div.sk-parallel-item:last-child::after {
+  align-self: flex-start;
+  width: 50%;
+}
+
+#sk-container-id-1 div.sk-parallel-item:only-child::after {
+  width: 0;
+}
+
+/* Serial-specific style estimator block */
+
+#sk-container-id-1 div.sk-serial {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: var(--sklearn-color-background);
+  padding-right: 1em;
+  padding-left: 1em;
+}
+
+
+/* Toggleable style: style used for estimator/Pipeline/ColumnTransformer box that is
+clickable and can be expanded/collapsed.
+- Pipeline and ColumnTransformer use this feature and define the default style
+- Estimators will overwrite some part of the style using the `sk-estimator` class
+*/
+
+/* Pipeline and ColumnTransformer style (default) */
+
+#sk-container-id-1 div.sk-toggleable {
+  /* Default theme specific background. It is overwritten whether we have a
+  specific estimator or a Pipeline/ColumnTransformer */
+  background-color: var(--sklearn-color-background);
+}
+
+/* Toggleable label */
+#sk-container-id-1 label.sk-toggleable__label {
+  cursor: pointer;
+  display: block;
+  width: 100%;
+  margin-bottom: 0;
+  padding: 0.5em;
+  box-sizing: border-box;
+  text-align: center;
+}
+
+#sk-container-id-1 label.sk-toggleable__label-arrow:before {
+  /* Arrow on the left of the label */
+  content: "▸";
+  float: left;
+  margin-right: 0.25em;
+  color: var(--sklearn-color-icon);
+}
+
+#sk-container-id-1 label.sk-toggleable__label-arrow:hover:before {
+  color: var(--sklearn-color-text);
+}
+
+/* Toggleable content - dropdown */
+
+#sk-container-id-1 div.sk-toggleable__content {
+  max-height: 0;
+  max-width: 0;
+  overflow: hidden;
+  text-align: left;
+  /* unfitted */
+  background-color: var(--sklearn-color-unfitted-level-0);
+}
+
+#sk-container-id-1 div.sk-toggleable__content.fitted {
+  /* fitted */
+  background-color: var(--sklearn-color-fitted-level-0);
+}
+
+#sk-container-id-1 div.sk-toggleable__content pre {
+  margin: 0.2em;
+  border-radius: 0.25em;
+  color: var(--sklearn-color-text);
+  /* unfitted */
+  background-color: var(--sklearn-color-unfitted-level-0);
+}
+
+#sk-container-id-1 div.sk-toggleable__content.fitted pre {
+  /* unfitted */
+  background-color: var(--sklearn-color-fitted-level-0);
+}
+
+#sk-container-id-1 input.sk-toggleable__control:checked~div.sk-toggleable__content {
+  /* Expand drop-down */
+  max-height: 200px;
+  max-width: 100%;
+  overflow: auto;
+}
+
+#sk-container-id-1 input.sk-toggleable__control:checked~label.sk-toggleable__label-arrow:before {
+  content: "▾";
+}
+
+/* Pipeline/ColumnTransformer-specific style */
+
+#sk-container-id-1 div.sk-label input.sk-toggleable__control:checked~label.sk-toggleable__label {
+  color: var(--sklearn-color-text);
+  background-color: var(--sklearn-color-unfitted-level-2);
+}
+
+#sk-container-id-1 div.sk-label.fitted input.sk-toggleable__control:checked~label.sk-toggleable__label {
+  background-color: var(--sklearn-color-fitted-level-2);
+}
+
+/* Estimator-specific style */
+
+/* Colorize estimator box */
+#sk-container-id-1 div.sk-estimator input.sk-toggleable__control:checked~label.sk-toggleable__label {
+  /* unfitted */
+  background-color: var(--sklearn-color-unfitted-level-2);
+}
+
+#sk-container-id-1 div.sk-estimator.fitted input.sk-toggleable__control:checked~label.sk-toggleable__label {
+  /* fitted */
+  background-color: var(--sklearn-color-fitted-level-2);
+}
+
+#sk-container-id-1 div.sk-label label.sk-toggleable__label,
+#sk-container-id-1 div.sk-label label {
+  /* The background is the default theme color */
+  color: var(--sklearn-color-text-on-default-background);
+}
+
+/* On hover, darken the color of the background */
+#sk-container-id-1 div.sk-label:hover label.sk-toggleable__label {
+  color: var(--sklearn-color-text);
+  background-color: var(--sklearn-color-unfitted-level-2);
+}
+
+/* Label box, darken color on hover, fitted */
+#sk-container-id-1 div.sk-label.fitted:hover label.sk-toggleable__label.fitted {
+  color: var(--sklearn-color-text);
+  background-color: var(--sklearn-color-fitted-level-2);
+}
+
+/* Estimator label */
+
+#sk-container-id-1 div.sk-label label {
+  font-family: monospace;
+  font-weight: bold;
+  display: inline-block;
+  line-height: 1.2em;
+}
+
+#sk-container-id-1 div.sk-label-container {
+  text-align: center;
+}
+
+/* Estimator-specific */
+#sk-container-id-1 div.sk-estimator {
+  font-family: monospace;
+  border: 1px dotted var(--sklearn-color-border-box);
+  border-radius: 0.25em;
+  box-sizing: border-box;
+  margin-bottom: 0.5em;
+  /* unfitted */
+  background-color: var(--sklearn-color-unfitted-level-0);
+}
+
+#sk-container-id-1 div.sk-estimator.fitted {
+  /* fitted */
+  background-color: var(--sklearn-color-fitted-level-0);
+}
+
+/* on hover */
+#sk-container-id-1 div.sk-estimator:hover {
+  /* unfitted */
+  background-color: var(--sklearn-color-unfitted-level-2);
+}
+
+#sk-container-id-1 div.sk-estimator.fitted:hover {
+  /* fitted */
+  background-color: var(--sklearn-color-fitted-level-2);
+}
+
+/* Specification for estimator info (e.g. "i" and "?") */
+
+/* Common style for "i" and "?" */
+
+.sk-estimator-doc-link,
+a:link.sk-estimator-doc-link,
+a:visited.sk-estimator-doc-link {
+  float: right;
+  font-size: smaller;
+  line-height: 1em;
+  font-family: monospace;
+  background-color: var(--sklearn-color-background);
+  border-radius: 1em;
+  height: 1em;
+  width: 1em;
+  text-decoration: none !important;
+  margin-left: 1ex;
+  /* unfitted */
+  border: var(--sklearn-color-unfitted-level-1) 1pt solid;
+  color: var(--sklearn-color-unfitted-level-1);
+}
+
+.sk-estimator-doc-link.fitted,
+a:link.sk-estimator-doc-link.fitted,
+a:visited.sk-estimator-doc-link.fitted {
+  /* fitted */
+  border: var(--sklearn-color-fitted-level-1) 1pt solid;
+  color: var(--sklearn-color-fitted-level-1);
+}
+
+/* On hover */
+div.sk-estimator:hover .sk-estimator-doc-link:hover,
+.sk-estimator-doc-link:hover,
+div.sk-label-container:hover .sk-estimator-doc-link:hover,
+.sk-estimator-doc-link:hover {
+  /* unfitted */
+  background-color: var(--sklearn-color-unfitted-level-3);
+  color: var(--sklearn-color-background);
+  text-decoration: none;
+}
+
+div.sk-estimator.fitted:hover .sk-estimator-doc-link.fitted:hover,
+.sk-estimator-doc-link.fitted:hover,
+div.sk-label-container:hover .sk-estimator-doc-link.fitted:hover,
+.sk-estimator-doc-link.fitted:hover {
+  /* fitted */
+  background-color: var(--sklearn-color-fitted-level-3);
+  color: var(--sklearn-color-background);
+  text-decoration: none;
+}
+
+/* Span, style for the box shown on hovering the info icon */
+.sk-estimator-doc-link span {
+  display: none;
+  z-index: 9999;
+  position: relative;
+  font-weight: normal;
+  right: .2ex;
+  padding: .5ex;
+  margin: .5ex;
+  width: min-content;
+  min-width: 20ex;
+  max-width: 50ex;
+  color: var(--sklearn-color-text);
+  box-shadow: 2pt 2pt 4pt #999;
+  /* unfitted */
+  background: var(--sklearn-color-unfitted-level-0);
+  border: .5pt solid var(--sklearn-color-unfitted-level-3);
+}
+
+.sk-estimator-doc-link.fitted span {
+  /* fitted */
+  background: var(--sklearn-color-fitted-level-0);
+  border: var(--sklearn-color-fitted-level-3);
+}
+
+.sk-estimator-doc-link:hover span {
+  display: block;
+}
+
+/* "?"-specific style due to the `<a>` HTML tag */
+
+#sk-container-id-1 a.estimator_doc_link {
+  float: right;
+  font-size: 1rem;
+  line-height: 1em;
+  font-family: monospace;
+  background-color: var(--sklearn-color-background);
+  border-radius: 1rem;
+  height: 1rem;
+  width: 1rem;
+  text-decoration: none;
+  /* unfitted */
+  color: var(--sklearn-color-unfitted-level-1);
+  border: var(--sklearn-color-unfitted-level-1) 1pt solid;
+}
+
+#sk-container-id-1 a.estimator_doc_link.fitted {
+  /* fitted */
+  border: var(--sklearn-color-fitted-level-1) 1pt solid;
+  color: var(--sklearn-color-fitted-level-1);
+}
+
+/* On hover */
+#sk-container-id-1 a.estimator_doc_link:hover {
+  /* unfitted */
+  background-color: var(--sklearn-color-unfitted-level-3);
+  color: var(--sklearn-color-background);
+  text-decoration: none;
+}
+
+#sk-container-id-1 a.estimator_doc_link.fitted:hover {
+  /* fitted */
+  background-color: var(--sklearn-color-fitted-level-3);
+}
+</style><div id="sk-container-id-1" class="sk-top-container"><div class="sk-text-repr-fallback"><pre>CleanLearning(include_aleatoric_uncertainty=False, model=LinearRegression(),
+              n_boot=1)</pre><b>In a Jupyter environment, please rerun this cell to show the HTML representation or trust the notebook. <br />On GitHub, the HTML representation is unable to render, please try loading this page with nbviewer.org.</b></div><div class="sk-container" hidden><div class="sk-item sk-dashed-wrapped"><div class="sk-label-container"><div class="sk-label  sk-toggleable"><input class="sk-toggleable__control sk-hidden--visually" id="sk-estimator-id-1" type="checkbox" ><label for="sk-estimator-id-1" class="sk-toggleable__label  sk-toggleable__label-arrow ">&nbsp;CleanLearning<span class="sk-estimator-doc-link ">i<span>Not fitted</span></span></label><div class="sk-toggleable__content "><pre>CleanLearning(include_aleatoric_uncertainty=False, model=LinearRegression(),
+              n_boot=1)</pre></div> </div></div><div class="sk-parallel"><div class="sk-parallel-item"><div class="sk-item"><div class="sk-label-container"><div class="sk-label  sk-toggleable"><input class="sk-toggleable__control sk-hidden--visually" id="sk-estimator-id-2" type="checkbox" ><label for="sk-estimator-id-2" class="sk-toggleable__label  sk-toggleable__label-arrow ">model: LinearRegression</label><div class="sk-toggleable__content "><pre>LinearRegression()</pre></div> </div></div><div class="sk-serial"><div class="sk-item"><div class="sk-estimator  sk-toggleable"><input class="sk-toggleable__control sk-hidden--visually" id="sk-estimator-id-3" type="checkbox" ><label for="sk-estimator-id-3" class="sk-toggleable__label  sk-toggleable__label-arrow ">&nbsp;LinearRegression<a class="sk-estimator-doc-link " rel="noreferrer" target="_blank" href="https://scikit-learn.org/1.5/modules/generated/sklearn.linear_model.LinearRegression.html">?<span>Documentation for LinearRegression</span></a></label><div class="sk-toggleable__content "><pre>LinearRegression()</pre></div> </div></div></div></div></div></div></div></div></div></div>
+</div>
+<p><strong>With Datalab</strong>:</p>
+<p>Datalab runs CleanLearning under the hood when looking for label issues in regression datasets. Here’s how you can achieve the same behavior as calling <code class="docutils literal notranslate"><span class="pre">CleanLearning.find_label_issues()</span></code> in the code above using Datalab:</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[17]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">cleanlab</span> <span class="kn">import</span> <span class="n">Datalab</span>
+
+<span class="n">lab</span> <span class="o">=</span> <span class="n">Datalab</span><span class="p">(</span><span class="n">data</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;X&quot;</span><span class="p">:</span> <span class="n">X</span><span class="p">,</span> <span class="s2">&quot;y&quot;</span><span class="p">:</span> <span class="n">y</span><span class="p">},</span> <span class="n">label_name</span> <span class="o">=</span> <span class="s2">&quot;y&quot;</span><span class="p">,</span> <span class="n">task</span><span class="o">=</span><span class="s2">&quot;regression&quot;</span><span class="p">)</span>
+
+<span class="n">issue_types</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;label&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">&quot;clean_learning_kwargs&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;n_boot&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;include_aleatoric_uncertainty&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">},</span>
+        <span class="s2">&quot;coarse_search_range&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mf">0.05</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">],</span>
+        <span class="s2">&quot;fine_search_size&quot;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
+    <span class="p">},</span>
+<span class="p">}</span>
+<span class="n">lab</span><span class="o">.</span><span class="n">find_issues</span><span class="p">(</span><span class="n">features</span><span class="o">=</span><span class="n">X</span><span class="p">,</span> <span class="n">issue_types</span> <span class="o">=</span> <span class="n">issue_types</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Finding label issues ...
+
+Audit complete. 3 issues found in the dataset.
+</pre></div></div>
+</div>
+</section>
+<section id="How-do-I-specify-pre-computed-data-slices/clusters-when-detecting-the-Underperforming-Group-Issue?">
+<h2>How do I specify pre-computed data slices/clusters when detecting the Underperforming Group Issue?<a class="headerlink" href="#How-do-I-specify-pre-computed-data-slices/clusters-when-detecting-the-Underperforming-Group-Issue?" title="Permalink to this heading">#</a></h2>
+<p>The instructions for specifying pre-computed data slices/clusters when detecting underperforming groups in a dataset are now covered in detail in the Datalab workflows tutorial.</p>
+<ul class="simple">
+<li><p><a class="reference external" href="./datalab/workflows.html#Find-Underperforming-Groups-in-a-Dataset">Using clustering algorithms</a>.</p></li>
+<li><p><a class="reference external" href="./datalab/workflows.html#Predefining-Data-Slices-for-Detecting-Underperforming-Groups">Using categorical columns in a tabular dataset</a>.</p></li>
+</ul>
+</section>
+<section id="How-to-handle-near-duplicate-data-identified-by-Datalab?">
+<h2>How to handle near-duplicate data identified by Datalab?<a class="headerlink" href="#How-to-handle-near-duplicate-data-identified-by-Datalab?" title="Permalink to this heading">#</a></h2>
+<p>cleanlab may identify near-duplicate examples in your dataset, these are examples that are very similar to each other and can potentially cause issues in model training and analytics. When near-duplicates are present, models may unexpectedly emphasize these examples, especially if they were accidentally duplicated. In such cases, it is crucial to remove the (near) duplicate copies from your dataset to ensure accurate and reliable results. A common strategy is to remove all but one of the
+duplicates from your dataset. Here’s how you can achieve this with results from cleanlab’s <code class="docutils literal notranslate"><span class="pre">Datalab</span></code> class:</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[18]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Callable</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+
+
+<span class="k">def</span> <span class="nf">merge_duplicate_sets</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">merge_key</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Generate group keys for each row, then merge intersecting sets.</span>
+
+<span class="sd">    :param df: DataFrame with columns &#39;is_near_duplicate_issue&#39; and &#39;near_duplicate_sets&#39;</span>
+<span class="sd">    :param merge_key: Name of the column to store the merged sets</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">df</span><span class="p">[</span><span class="n">merge_key</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">construct_group_key</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">merged_sets</span> <span class="o">=</span> <span class="n">consolidate_sets</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="n">merge_key</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">())</span>
+    <span class="n">df</span><span class="p">[</span><span class="n">merge_key</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">merge_key</span><span class="p">]</span><span class="o">.</span><span class="n">map</span><span class="p">(</span>
+        <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="nb">next</span><span class="p">(</span><span class="n">s</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">merged_sets</span> <span class="k">if</span> <span class="n">x</span><span class="o">.</span><span class="n">issubset</span><span class="p">(</span><span class="n">s</span><span class="p">))</span>
+    <span class="p">)</span>
+    <span class="k">return</span> <span class="n">df</span>
+
+<span class="k">def</span> <span class="nf">construct_group_key</span><span class="p">(</span><span class="n">row</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Convert near_duplicate_sets into a frozenset and include the row&#39;s own index.&quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="nb">frozenset</span><span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="s1">&#39;near_duplicate_sets&#39;</span><span class="p">])</span><span class="o">.</span><span class="n">union</span><span class="p">({</span><span class="n">row</span><span class="o">.</span><span class="n">name</span><span class="p">})</span>
+
+<span class="k">def</span> <span class="nf">consolidate_sets</span><span class="p">(</span><span class="n">sets_list</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Merge sets if they intersect.&quot;&quot;&quot;</span>
+
+    <span class="c1"># Convert the input list of frozensets to a list of mutable sets</span>
+    <span class="n">sets_list</span> <span class="o">=</span> <span class="p">[</span><span class="nb">set</span><span class="p">(</span><span class="n">item</span><span class="p">)</span> <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">sets_list</span><span class="p">]</span>
+
+    <span class="c1"># A flag to keep track of whether any sets were merged in the current iteration</span>
+    <span class="n">merged</span> <span class="o">=</span> <span class="kc">True</span>
+
+    <span class="c1"># Continue the merging process as long as we have merged some sets in the previous iteration</span>
+    <span class="k">while</span> <span class="n">merged</span><span class="p">:</span>
+        <span class="n">merged</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="n">new_sets</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="c1"># Iterate through each set in our list</span>
+        <span class="k">for</span> <span class="n">current_set</span> <span class="ow">in</span> <span class="n">sets_list</span><span class="p">:</span>
+            <span class="c1"># Skip empty sets</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">current_set</span><span class="p">:</span>
+                <span class="k">continue</span>
+
+            <span class="c1"># Find all sets that have an intersection with the current set</span>
+            <span class="n">intersecting_sets</span> <span class="o">=</span> <span class="p">[</span><span class="n">s</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">sets_list</span> <span class="k">if</span> <span class="n">s</span> <span class="o">&amp;</span> <span class="n">current_set</span><span class="p">]</span>
+
+            <span class="c1"># If more than one set intersects, set the merged flag to True</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">intersecting_sets</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="n">merged</span> <span class="o">=</span> <span class="kc">True</span>
+
+            <span class="c1"># Merge all intersecting sets into one set</span>
+            <span class="n">merged_set</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span><span class="o">.</span><span class="n">union</span><span class="p">(</span><span class="o">*</span><span class="n">intersecting_sets</span><span class="p">)</span>
+            <span class="n">new_sets</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">merged_set</span><span class="p">)</span>
+
+            <span class="c1"># Empty the sets we&#39;ve merged to prevent them from being processed again</span>
+            <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">intersecting_sets</span><span class="p">:</span>
+                <span class="n">sets_list</span><span class="p">[</span><span class="n">sets_list</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">s</span><span class="p">)]</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+
+        <span class="c1"># Replace the original sets list with the new list of merged sets</span>
+        <span class="n">sets_list</span> <span class="o">=</span> <span class="n">new_sets</span>
+
+    <span class="c1"># Convert the merged sets back to frozensets for the output</span>
+    <span class="k">return</span> <span class="p">[</span><span class="nb">frozenset</span><span class="p">(</span><span class="n">item</span><span class="p">)</span> <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">sets_list</span><span class="p">]</span>
+
+<span class="k">def</span> <span class="nf">lowest_score_strategy</span><span class="p">(</span><span class="n">sub_df</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Keep the row with the lowest near_duplicate_score.&quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">sub_df</span><span class="p">[</span><span class="s1">&#39;near_duplicate_score&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">idxmin</span><span class="p">()</span>
+
+
+<span class="k">def</span> <span class="nf">filter_near_duplicates</span><span class="p">(</span><span class="n">data</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">strategy_fn</span><span class="p">:</span> <span class="n">Callable</span> <span class="o">=</span> <span class="n">lowest_score_strategy</span><span class="p">,</span> <span class="o">**</span><span class="n">strategy_kwargs</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Given a dataframe with columns &#39;is_near_duplicate_issue&#39; and &#39;near_duplicate_sets&#39;,</span>
+<span class="sd">    return a series of boolean values where True indicates the rows to be removed.</span>
+<span class="sd">    The strategy_fn determines which rows to keep within each near_duplicate_set.</span>
+
+<span class="sd">    :param data: DataFrame with is_near_duplicate_issue and near_duplicate_sets columns</span>
+<span class="sd">    :param strategy_fn: Function to determine which rows to keep within each near_duplicate_set</span>
+<span class="sd">    :return: Series of boolean values where True indicates rows to be removed.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># Filter out rows where &#39;is_near_duplicate_issue&#39; is True to get potential duplicates</span>
+    <span class="n">duplicate_rows</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s2">&quot;is_near_duplicate_issue&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+
+    <span class="c1"># Generate group keys for each row and merge intersecting sets</span>
+    <span class="n">group_key</span> <span class="o">=</span> <span class="s2">&quot;sets&quot;</span>
+    <span class="n">duplicate_rows</span> <span class="o">=</span> <span class="n">merge_duplicate_sets</span><span class="p">(</span><span class="n">duplicate_rows</span><span class="p">,</span> <span class="n">merge_key</span><span class="o">=</span><span class="n">group_key</span><span class="p">)</span>
+
+    <span class="c1"># Use the strategy function to determine the indices of the rows to keep for each group</span>
+    <span class="n">to_keep_indices</span> <span class="o">=</span> <span class="n">duplicate_rows</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="n">group_key</span><span class="p">)</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">strategy_fn</span><span class="p">,</span> <span class="o">**</span><span class="n">strategy_kwargs</span><span class="p">)</span><span class="o">.</span><span class="n">explode</span><span class="p">()</span><span class="o">.</span><span class="n">values</span>
+
+    <span class="c1"># Produce a boolean series indicating which rows should be removed</span>
+    <span class="n">to_remove</span> <span class="o">=</span> <span class="o">~</span><span class="n">data</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">to_keep_indices</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">to_remove</span>
+</pre></div>
+</div>
+</div>
+<p>The functions above collect sets of near-duplicate examples. Within each collection, a single example is chosen to be kept in the dataset. The rest of the examples in the collection are removed. Examples that are not near-duplicates of any other examples are kept in the dataset as well.</p>
+<p>The choice of which example to keep in each set of near-duplicate examples can be made in a variety of ways. Here, the example with the lowest near-duplicate score is chosen. You can use any strategy that best suits your application by defining the strategy as a function and passing it as the <code class="docutils literal notranslate"><span class="pre">strategy_fn</span></code> argument to <code class="docutils literal notranslate"><span class="pre">filter_near_duplicates()</span></code>. Below is an example of how this is applied to a dataset.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[19]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">cleanlab</span> <span class="kn">import</span> <span class="n">Datalab</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+<span class="c1"># Assume you have a dataset with a set of 3 near-duplicate examples</span>
+<span class="n">features</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">random</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="p">(</span><span class="mi">15</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>
+<span class="k">for</span> <span class="n">neighbor</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">):</span>
+    <span class="c1"># Make examples 0, 1, and 2 near-duplicates of each other</span>
+    <span class="n">features</span><span class="p">[</span><span class="n">neighbor</span><span class="p">]</span> <span class="o">=</span> <span class="n">features</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="n">scale</span><span class="o">=</span><span class="mf">0.001</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+
+<span class="c1"># Identify near-duplicate examples with Datalab</span>
+<span class="n">your_dataset</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;features&quot;</span><span class="p">:</span> <span class="n">features</span><span class="p">,</span>
+<span class="p">}</span>
+<span class="n">lab</span> <span class="o">=</span> <span class="n">Datalab</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">your_dataset</span><span class="p">)</span>
+<span class="n">lab</span><span class="o">.</span><span class="n">find_issues</span><span class="p">(</span><span class="n">features</span> <span class="o">=</span> <span class="n">features</span><span class="p">,</span> <span class="n">issue_types</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;near_duplicate&quot;</span><span class="p">:</span> <span class="p">{}})</span>
+
+<span class="c1"># Pick out ids of near-duplicate examples to remove</span>
+<span class="n">near_duplicate_issues</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="n">lab</span><span class="o">.</span><span class="n">get_issues</span><span class="p">(</span><span class="s2">&quot;near_duplicate&quot;</span><span class="p">)</span>
+    <span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s2">&quot;is_near_duplicate_issue&quot;</span><span class="p">)</span>
+    <span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="s2">&quot;near_duplicate_score&quot;</span><span class="p">)</span>
+<span class="p">)</span>
+<span class="n">ids_to_remove_series</span> <span class="o">=</span> <span class="n">filter_near_duplicates</span><span class="p">(</span><span class="n">near_duplicate_issues</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Finding near_duplicate issues ...
+
+Audit complete. 3 issues found in the dataset.
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[20]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Near-duplicate examples to keep:&quot;</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="o">~</span><span class="n">ids_to_remove_series</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">())</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Near-duplicate examples to remove:&quot;</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">ids_to_remove_series</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">())</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Near-duplicate examples to keep: [0]
+Near-duplicate examples to remove: [1, 2]
+</pre></div></div>
+</div>
+</section>
+<section id="What-ML-models-should-I-run-cleanlab-with?-How-do-I-fix-the-issues-cleanlab-has-identified?">
+<h2>What ML models should I run cleanlab with? How do I fix the issues cleanlab has identified?<a class="headerlink" href="#What-ML-models-should-I-run-cleanlab-with?-How-do-I-fix-the-issues-cleanlab-has-identified?" title="Permalink to this heading">#</a></h2>
+<p>These questions are automatically handled for you in <a class="reference external" href="https://cleanlab.ai/blog/data-centric-ai/">Cleanlab Studio</a> – our platform for no-code data improvement. While this open-source library <strong>finds</strong> data issues, an interface is needed to efficiently <strong>fix</strong> these issues in your dataset. <a class="reference external" href="https://cleanlab.ai/blog/data-centric-ai/">Cleanlab Studio</a> is a no-code platform to <strong>find and fix</strong> problems in real-world ML datasets. Cleanlab Studio automatically runs the data quality algorithms
+from this library on top of AutoML models fit to your data, and presents detected issues in a smart data editing interface. Think of it like a data cleaning assistant that helps you quickly improve the quality of your data (via AI/automation + streamlined UX). <a class="reference external" href="https://cleanlab.ai/signup/">Try it for free!</a></p>
+<img alt="Stages of modern AI pipeline that can now be automated with Cleanlab Studio" src="https://raw.githubusercontent.com/cleanlab/assets/master/cleanlab/ml-pipeline.png" />
+</section>
+<section id="What-license-is-cleanlab-open-sourced-under?">
+<h2>What license is cleanlab open-sourced under?<a class="headerlink" href="#What-license-is-cleanlab-open-sourced-under?" title="Permalink to this heading">#</a></h2>
+<p><a class="reference external" href="https://github.com/cleanlab/cleanlab/blob/master/LICENSE">AGPL-3.0 license</a></p>
+<p><strong>What does this mean?</strong> If you’re working at a company, you can use this open-source library to clean up your internal datasets. You can also use this open-source library to clean up a dataset used to train a model that is deployed in a commercial product. For non-commercial purposes, feel free to release altered versions of the source code as long as you include the same license.</p>
+<p>Please email <code class="docutils literal notranslate"><span class="pre">team&#64;cleanlab.ai</span></code> to discuss licensing needs if you would like to offer a commercial product that utilizes any cleanlab source code.</p>
+</section>
+<section id="Can't-find-an-answer-to-your-question?">
+<h2>Can’t find an answer to your question?<a class="headerlink" href="#Can't-find-an-answer-to-your-question?" title="Permalink to this heading">#</a></h2>
+<p>If your question is not addressed in these tutorials, please refer to the: <a class="reference external" href="https://github.com/cleanlab/cleanlab/issues?q=is%3Aissue">Cleanlab Github issues</a>, <a class="reference external" href="https://github.com/cleanlab/examples">Cleanlab Code Examples</a> or our <a class="reference external" href="https://cleanlab.ai/slack">Slack Community</a>.</p>
+<p>If your question is not addressed anywhere, please open a <a class="reference external" href="https://github.com/cleanlab/cleanlab/issues/new/choose">new Github issue</a>. Our developers may also provide personalized assistance in our <a class="reference external" href="https://cleanlab.ai/slack">Slack Community</a>.</p>
+<p>Professional support and services are also available from our <a class="reference external" href="https://cleanlab.ai/about/">ML experts</a>, learn more by emailing: <code class="docutils literal notranslate"><span class="pre">team&#64;cleanlab.ai</span></code></p>
+<script type="application/vnd.jupyter.widget-state+json">
+{"state": {"9356b6950403435587cab4c2ec4bfcf7": {"model_name": "LayoutModel", "model_module": "@jupyter-widgets/base", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets/base", "_model_module_version": "2.0.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border_bottom": null, "border_left": null, "border_right": null, "border_top": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "8fd3934759794ac0bfd9eeb1aa45d41e": {"model_name": "ProgressStyleModel", "model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "ProgressStyleModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "StyleView", "bar_color": null, "description_width": ""}}, "d37abdac6098430cbb46e9e1b287a2f2": {"model_name": "FloatProgressModel", "model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "state": {"_dom_classes": [], "_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "FloatProgressModel", "_view_count": null, "_view_module": "@jupyter-widgets/controls", "_view_module_version": "2.0.0", "_view_name": "ProgressView", "bar_style": "success", "description": "", "description_allow_html": false, "layout": "IPY_MODEL_9356b6950403435587cab4c2ec4bfcf7", "max": 50.0, "min": 0.0, "orientation": "horizontal", "style": "IPY_MODEL_8fd3934759794ac0bfd9eeb1aa45d41e", "tabbable": null, "tooltip": null, "value": 50.0}}, "ab01162d698e483c8d0fd45cadd6016b": {"model_name": "LayoutModel", "model_module": "@jupyter-widgets/base", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets/base", "_model_module_version": "2.0.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border_bottom": null, "border_left": null, "border_right": null, "border_top": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "70aba8d1d9f54a1384e825eb75b6edcd": {"model_name": "HTMLStyleModel", "model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "HTMLStyleModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "StyleView", "background": null, "description_width": "", "font_size": null, "text_color": null}}, "a57a76a82ff34af7b3ac205262ea9ce5": {"model_name": "HTMLModel", "model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "state": {"_dom_classes": [], "_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "HTMLModel", "_view_count": null, "_view_module": "@jupyter-widgets/controls", "_view_module_version": "2.0.0", "_view_name": "HTMLView", "description": "", "description_allow_html": false, "layout": "IPY_MODEL_ab01162d698e483c8d0fd45cadd6016b", "placeholder": "\u200b", "style": "IPY_MODEL_70aba8d1d9f54a1384e825eb75b6edcd", "tabbable": null, "tooltip": null, "value": "number\u2007of\u2007examples\u2007processed\u2007for\u2007estimating\u2007thresholds:\u2007"}}, "f5e7f27a1c934213a6d0ebb85caec0c7": {"model_name": "LayoutModel", "model_module": "@jupyter-widgets/base", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets/base", "_model_module_version": "2.0.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border_bottom": null, "border_left": null, "border_right": null, "border_top": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "3059311be44d4757b99beac9808d8af5": {"model_name": "HTMLStyleModel", "model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "HTMLStyleModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "StyleView", "background": null, "description_width": "", "font_size": null, "text_color": null}}, "c96a53330a5346969fe882c83ff9452a": {"model_name": "HTMLModel", "model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "state": {"_dom_classes": [], "_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "HTMLModel", "_view_count": null, "_view_module": "@jupyter-widgets/controls", "_view_module_version": "2.0.0", "_view_name": "HTMLView", "description": "", "description_allow_html": false, "layout": "IPY_MODEL_f5e7f27a1c934213a6d0ebb85caec0c7", "placeholder": "\u200b", "style": "IPY_MODEL_3059311be44d4757b99beac9808d8af5", "tabbable": null, "tooltip": null, "value": "\u200710000/?\u2007[00:00&lt;00:00,\u20071026807.68it/s]"}}, "55b986a2bd5b423695ff91093b40fd13": {"model_name": "LayoutModel", "model_module": "@jupyter-widgets/base", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets/base", "_model_module_version": "2.0.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border_bottom": null, "border_left": null, "border_right": null, "border_top": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "8a84ac36a5a7432190b2ee3fd40edcf1": {"model_name": "HBoxModel", "model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "state": {"_dom_classes": [], "_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "HBoxModel", "_view_count": null, "_view_module": "@jupyter-widgets/controls", "_view_module_version": "2.0.0", "_view_name": "HBoxView", "box_style": "", "children": ["IPY_MODEL_a57a76a82ff34af7b3ac205262ea9ce5", "IPY_MODEL_d37abdac6098430cbb46e9e1b287a2f2", "IPY_MODEL_c96a53330a5346969fe882c83ff9452a"], "layout": "IPY_MODEL_55b986a2bd5b423695ff91093b40fd13", "tabbable": null, "tooltip": null}}, "dad9b87a7f1847c6b521359c90052a0a": {"model_name": "LayoutModel", "model_module": "@jupyter-widgets/base", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets/base", "_model_module_version": "2.0.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border_bottom": null, "border_left": null, "border_right": null, "border_top": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "fc09157e71f34293b31b61e2545aa46b": {"model_name": "ProgressStyleModel", "model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "ProgressStyleModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "StyleView", "bar_color": null, "description_width": ""}}, "cc3d9c2dc11a4e308b8df58ad0bbaf66": {"model_name": "FloatProgressModel", "model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "state": {"_dom_classes": [], "_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "FloatProgressModel", "_view_count": null, "_view_module": "@jupyter-widgets/controls", "_view_module_version": "2.0.0", "_view_name": "ProgressView", "bar_style": "success", "description": "", "description_allow_html": false, "layout": "IPY_MODEL_dad9b87a7f1847c6b521359c90052a0a", "max": 50.0, "min": 0.0, "orientation": "horizontal", "style": "IPY_MODEL_fc09157e71f34293b31b61e2545aa46b", "tabbable": null, "tooltip": null, "value": 50.0}}, "9b8410a675764db998b8abd4d60bae3e": {"model_name": "LayoutModel", "model_module": "@jupyter-widgets/base", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets/base", "_model_module_version": "2.0.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border_bottom": null, "border_left": null, "border_right": null, "border_top": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "a83b708bbf5745ebb9661003db027d8f": {"model_name": "HTMLStyleModel", "model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "HTMLStyleModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "StyleView", "background": null, "description_width": "", "font_size": null, "text_color": null}}, "051b823ae94d451e8dd285fa73191d82": {"model_name": "HTMLModel", "model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "state": {"_dom_classes": [], "_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "HTMLModel", "_view_count": null, "_view_module": "@jupyter-widgets/controls", "_view_module_version": "2.0.0", "_view_name": "HTMLView", "description": "", "description_allow_html": false, "layout": "IPY_MODEL_9b8410a675764db998b8abd4d60bae3e", "placeholder": "\u200b", "style": "IPY_MODEL_a83b708bbf5745ebb9661003db027d8f", "tabbable": null, "tooltip": null, "value": "number\u2007of\u2007examples\u2007processed\u2007for\u2007checking\u2007labels:\u2007"}}, "2b42e3dc68314ebf9ed81b61dfe3acb4": {"model_name": "LayoutModel", "model_module": "@jupyter-widgets/base", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets/base", "_model_module_version": "2.0.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border_bottom": null, "border_left": null, "border_right": null, "border_top": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "af908b8bf0fc4c9db1004d76ac69a6ce": {"model_name": "HTMLStyleModel", "model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "HTMLStyleModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "StyleView", "background": null, "description_width": "", "font_size": null, "text_color": null}}, "5eef2a9948fd4674850d9756c82aedc1": {"model_name": "HTMLModel", "model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "state": {"_dom_classes": [], "_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "HTMLModel", "_view_count": null, "_view_module": "@jupyter-widgets/controls", "_view_module_version": "2.0.0", "_view_name": "HTMLView", "description": "", "description_allow_html": false, "layout": "IPY_MODEL_2b42e3dc68314ebf9ed81b61dfe3acb4", "placeholder": "\u200b", "style": "IPY_MODEL_af908b8bf0fc4c9db1004d76ac69a6ce", "tabbable": null, "tooltip": null, "value": "\u200710000/?\u2007[00:00&lt;00:00,\u20071761054.71it/s]"}}, "6f3ef1abee4a4e66acd34cb6b76f90ce": {"model_name": "LayoutModel", "model_module": "@jupyter-widgets/base", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets/base", "_model_module_version": "2.0.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border_bottom": null, "border_left": null, "border_right": null, "border_top": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "f6e759c789b6417287b7d60c3bce976f": {"model_name": "HBoxModel", "model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "state": {"_dom_classes": [], "_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "HBoxModel", "_view_count": null, "_view_module": "@jupyter-widgets/controls", "_view_module_version": "2.0.0", "_view_name": "HBoxView", "box_style": "", "children": ["IPY_MODEL_051b823ae94d451e8dd285fa73191d82", "IPY_MODEL_cc3d9c2dc11a4e308b8df58ad0bbaf66", "IPY_MODEL_5eef2a9948fd4674850d9756c82aedc1"], "layout": "IPY_MODEL_6f3ef1abee4a4e66acd34cb6b76f90ce", "tabbable": null, "tooltip": null}}}, "version_major": 2, "version_minor": 0}
+</script></section>
+</section>
+ 
+        </article>
+      </div>
+      <footer>
+         
+        <div class="related-pages">
+          <a class="next-page" href="../cleanlab/datalab/index.html">
+              <div class="page-info">
+                <div class="context">
+                  <span>Next</span>
+                </div>
+                <div class="title">datalab</div>
+              </div>
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+            </a>
+          <a class="prev-page" href="pred_probs_cross_val.html">
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+              <div class="page-info">
+                <div class="context">
+                  <span>Previous</span>
+                </div>
+                
+                <div class="title">Computing Out-of-Sample Predicted Probabilities with Cross-Validation</div>
+                
+              </div>
+            </a>
+        </div>
+        <div class="bottom-of-page">
+          <div class="left-details">
+            <div class="copyright">
+                Copyright &#169; 2024, Cleanlab Inc.
+            </div>
+            Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
+            
+            <a href="https://github.com/pradyunsg/furo">Furo</a>
+            
+          </div>
+          <div class="right-details">
+            <div class="icons">
+              <a class="muted-link " href="https://github.com/cleanlab/cleanlab" aria-label="GitHub">
+                <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 16 16">
+                    <path fill-rule="evenodd" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0 0 16 8c0-4.42-3.58-8-8-8z"></path>
+                </svg>
+            </a>
+              
+            </div>
+          </div>
+        </div>
+        
+
+<script type="text/javascript">
+    window.addEventListener("load", () => {
+        let elements = document.getElementsByClassName("left-details");
+
+        elements[0].insertAdjacentHTML(
+            "afterbegin",
+            `<code class="docutils literal notranslate"><span class="pre">cleanlab</span></code> is distributed on <a href="https://pypi.org/project/cleanlab/">PyPI</a> and <a href="https://anaconda.org/conda-forge/cleanlab">conda</a>.`
+        );
+    });
+</script>
+
+
+      </footer>
+    </div>
+    <aside class="toc-drawer">
+      
+      
+      <div class="toc-sticky toc-scroll">
+        <div class="toc-title-container">
+          <span class="toc-title">
+            On this page
+          </span>
+        </div>
+        <div class="toc-tree-container">
+          <div class="toc-tree">
+            <ul>
+<li><a class="reference internal" href="#">FAQ</a><ul>
+<li><a class="reference internal" href="#What-data-can-cleanlab-detect-issues-in?">What data can cleanlab detect issues in?</a></li>
+<li><a class="reference internal" href="#How-do-I-format-classification-labels-for-cleanlab?">How do I format classification labels for cleanlab?</a></li>
+<li><a class="reference internal" href="#How-do-I-infer-the-correct-labels-for-examples-cleanlab-has-flagged?">How do I infer the correct labels for examples cleanlab has flagged?</a></li>
+<li><a class="reference internal" href="#How-should-I-handle-label-errors-in-train-vs.-test-data?">How should I handle label errors in train vs. test data?</a></li>
+<li><a class="reference internal" href="#How-can-I-find-label-issues-in-big-datasets-with-limited-memory?">How can I find label issues in big datasets with limited memory?</a></li>
+<li><a class="reference internal" href="#Why-isn’t-CleanLearning-working-for-me?">Why isn’t CleanLearning working for me?</a></li>
+<li><a class="reference internal" href="#How-can-I-use-different-models-for-data-cleaning-vs.-final-training-in-CleanLearning?">How can I use different models for data cleaning vs. final training in CleanLearning?</a></li>
+<li><a class="reference internal" href="#How-do-I-hyperparameter-tune-only-the-final-model-trained-(and-not-the-one-finding-label-issues)-in-CleanLearning?">How do I hyperparameter tune only the final model trained (and not the one finding label issues) in CleanLearning?</a></li>
+<li><a class="reference internal" href="#Why-does-regression.learn.CleanLearning-take-so-long?">Why does regression.learn.CleanLearning take so long?</a></li>
+<li><a class="reference internal" href="#How-do-I-specify-pre-computed-data-slices/clusters-when-detecting-the-Underperforming-Group-Issue?">How do I specify pre-computed data slices/clusters when detecting the Underperforming Group Issue?</a></li>
+<li><a class="reference internal" href="#How-to-handle-near-duplicate-data-identified-by-Datalab?">How to handle near-duplicate data identified by Datalab?</a></li>
+<li><a class="reference internal" href="#What-ML-models-should-I-run-cleanlab-with?-How-do-I-fix-the-issues-cleanlab-has-identified?">What ML models should I run cleanlab with? How do I fix the issues cleanlab has identified?</a></li>
+<li><a class="reference internal" href="#What-license-is-cleanlab-open-sourced-under?">What license is cleanlab open-sourced under?</a></li>
+<li><a class="reference internal" href="#Can't-find-an-answer-to-your-question?">Can’t find an answer to your question?</a></li>
+</ul>
+</li>
+</ul>
+
+          </div>
+        </div>
+      </div>
+      
+      
+    </aside>
+  </div>
+</div><script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js?v=2b91c5f0"></script>
+    <script src="../_static/doctools.js?v=888ff710"></script>
+    <script src="../_static/sphinx_highlight.js?v=4825356b"></script>
+    <script src="../_static/scripts/furo.js?v=32e29ea5"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=30646c52"></script>
+    <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@jupyter-widgets/html-manager@^1.0.1/dist/embed-amd.js"></script>
+    
+<script async defer src="https://buttons.github.io/buttons.js"></script>
+</body>
+</html>
