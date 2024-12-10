@@ -1331,6 +1331,22 @@ Examples with higher scores more positively influence the resulting model’s pr
 </div>
 </section>
 </section>
+<section id="identifier-column-issue">
+<h3>Identifier Column Issue<a class="headerlink" href="#identifier-column-issue" title="Permalink to this heading">#</a></h3>
+<p>This issue type flags sequential numerical columns in the features of a dataset. A numerical sequential column is most likely an identifier column, which - in most cases - should not be used in training ML models.
+More formally, an identifier column is defined as a column i in features such that set(features[:,i]) = set(c, c+1, …, c+n) for some integer c, where n = num_rows of features. Note we don’t consider the ordering of the column in case the dataset was pre-shuffled.</p>
+<p>If the condition is met in one or more columns, then we say this dataset has the identifier_column issue. The overall issue-summary-score is binary. The score equals 1 if the issue is present and 0 if the issue is not present.</p>
+<p>The info attribute of Datalab shows the indices of the columns with the column_identifier issue.</p>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>This type of issue has the issue name <code class="xref py py-obj docutils literal notranslate"><span class="pre">&quot;identifier_column&quot;</span></code>.</p>
+<p>Run a check for this particular kind of issue by calling <a class="reference internal" href="../datalab.html#cleanlab.datalab.datalab.Datalab.find_issues" title="cleanlab.datalab.datalab.Datalab.find_issues"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Datalab.find_issues()</span></code></a> like so:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># `lab` is a Datalab instance</span>
+<span class="n">lab</span><span class="o">.</span><span class="n">find_issues</span><span class="p">(</span><span class="o">...</span><span class="p">,</span> <span class="n">issue_types</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;identifier_column&quot;</span><span class="p">:</span> <span class="p">{}})</span>
+</pre></div>
+</div>
+</div>
+</section>
 </section>
 <section id="optional-issue-parameters">
 <h2>Optional Issue Parameters<a class="headerlink" href="#optional-issue-parameters" title="Permalink to this heading">#</a></h2>
@@ -1342,6 +1358,7 @@ Appropriate defaults are used for any parameters you do not specify, so no need 
     <span class="s2">&quot;near_duplicate&quot;</span><span class="p">:</span> <span class="n">near_duplicate_kwargs</span><span class="p">,</span> <span class="s2">&quot;non_iid&quot;</span><span class="p">:</span> <span class="n">non_iid_kwargs</span><span class="p">,</span>
     <span class="s2">&quot;class_imbalance&quot;</span><span class="p">:</span> <span class="n">class_imbalance_kwargs</span><span class="p">,</span> <span class="s2">&quot;underperforming_group&quot;</span><span class="p">:</span> <span class="n">underperforming_group_kwargs</span><span class="p">,</span>
     <span class="s2">&quot;null&quot;</span><span class="p">:</span> <span class="n">null_kwargs</span><span class="p">,</span> <span class="s2">&quot;data_valuation&quot;</span><span class="p">:</span> <span class="n">data_valuation_kwargs</span><span class="p">,</span>
+    <span class="s2">&quot;identifier_column&quot;</span><span class="p">:</span> <span class="n">identifier_column_kwargs</span><span class="p">,</span>
 <span class="p">}</span>
 </pre></div>
 </div>
@@ -1482,6 +1499,16 @@ Appropriate defaults are used for any parameters you do not specify, so no need 
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>For more information, view the source code of:  <a class="reference internal" href="../internal/issue_manager/data_valuation.html#cleanlab.datalab.internal.issue_manager.data_valuation.DataValuationIssueManager" title="cleanlab.datalab.internal.issue_manager.data_valuation.DataValuationIssueManager"><code class="xref py py-class docutils literal notranslate"><span class="pre">datalab.internal.issue_manager.data_valuation.DataValuationIssueManager</span></code></a>.</p>
+</div>
+</section>
+<section id="identifier-column-parameters">
+<h3>Identifier Column Parameters<a class="headerlink" href="#identifier-column-parameters" title="Permalink to this heading">#</a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">identifier_column_kwargs</span> <span class="o">=</span> <span class="p">{}</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>For more information, view the source code of:  <code class="xref py py-class docutils literal notranslate"><span class="pre">datalab.internal.issue_manager.identifier_column.IdentifierColumnIssueManager</span></code>.</p>
 </div>
 </section>
 <section id="image-issue-parameters">
@@ -1649,6 +1676,7 @@ Appropriate defaults are used for any parameters you do not specify, so no need 
 <li><a class="reference internal" href="#data-valuation-score"><code class="docutils literal notranslate"><span class="pre">data_valuation_score</span></code></a></li>
 </ul>
 </li>
+<li><a class="reference internal" href="#identifier-column-issue">Identifier Column Issue</a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#optional-issue-parameters">Optional Issue Parameters</a><ul>
@@ -1660,6 +1688,7 @@ Appropriate defaults are used for any parameters you do not specify, so no need 
 <li><a class="reference internal" href="#underperforming-group-issue-parameters">Underperforming Group Issue Parameters</a></li>
 <li><a class="reference internal" href="#null-issue-parameters">Null Issue Parameters</a></li>
 <li><a class="reference internal" href="#data-valuation-issue-parameters">Data Valuation Issue Parameters</a></li>
+<li><a class="reference internal" href="#identifier-column-parameters">Identifier Column Parameters</a></li>
 <li><a class="reference internal" href="#image-issue-parameters">Image Issue Parameters</a></li>
 <li><a class="reference internal" href="#spurious-correlations-issue-parameters">Spurious Correlations Issue Parameters</a></li>
 <li><a class="reference internal" href="#cleanlab-studio-easy-mode">Cleanlab Studio (Easy Mode)</a></li>
