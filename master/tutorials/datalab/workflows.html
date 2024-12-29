@@ -846,7 +846,7 @@ Finding non_iid issues ...
 Finding class_imbalance issues ...
 Finding underperforming_group issues ...
 
-Audit complete. 524 issues found in the dataset.
+Audit complete. 523 issues found in the dataset.
 </pre></div></div>
 </div>
 <div class="nboutput docutils container">
@@ -892,13 +892,13 @@ Audit complete. 524 issues found in the dataset.
     <tr>
       <th>2</th>
       <td>outlier</td>
-      <td>0.356924</td>
-      <td>363</td>
+      <td>0.356958</td>
+      <td>362</td>
     </tr>
     <tr>
       <th>3</th>
       <td>near_duplicate</td>
-      <td>0.619581</td>
+      <td>0.619565</td>
       <td>108</td>
     </tr>
     <tr>
@@ -2271,19 +2271,18 @@ Audit complete. 5 issues found in the dataset.
 </section>
 <section id="Detect-if-your-dataset-is-non-IID">
 <h2>Detect if your dataset is non-IID<a class="headerlink" href="#Detect-if-your-dataset-is-non-IID" title="Permalink to this heading">#</a></h2>
-<p>Here we demonstrate how to discover when your data might violate the foundational IID assumption that underpins most machine learning and analytics. Common violations (that can be caught with <code class="docutils literal notranslate"><span class="pre">Datalab</span></code>) include: data drift, or lack of statistical independence where different data points affect one another. For this demonstration, we’ll work with a 2D dataset where the data points are not independent.</p>
-<section id="id5">
-<h3>1. Load and Prepare the Dataset<a class="headerlink" href="#id5" title="Permalink to this heading">#</a></h3>
-<p>For simplicity, we’ll just work with a numerical dataset. If your data are not numerical, we recommend using numeric model embeddings of the data.</p>
-<p>This issue check is automatically run by <code class="docutils literal notranslate"><span class="pre">Datalab</span></code> whenever you provide numerical data embeddings or predicted probabilities.</p>
+<p>Here we demonstrate how to discover when your data violates the foundational IID assumption that underpins most machine learning and analytics. Common violations (that can be caught with <code class="docutils literal notranslate"><span class="pre">Datalab</span></code>) include: data drift, or lack of statistical independence where different data points affect one another. This demonstration uses a toy 2D dataset.</p>
+<section id="1.-Load-Dataset">
+<h3>1. Load Dataset<a class="headerlink" href="#1.-Load-Dataset" title="Permalink to this heading">#</a></h3>
+<p>For simplicity, we’ll use a numerical dataset. If your data are not numerical, we recommend providing numeric representations of the data (neural network embeddings, or featurization like one-hot encoding, etc).</p>
+<p>By default, the non-IID issue check is automatically run by <code class="docutils literal notranslate"><span class="pre">Datalab</span></code> whenever you provide numerical data embeddings or predicted probabilities.</p>
 <div class="nbinput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[19]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 
-<span class="c1"># Set seed for reproducibility</span>
-<span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>  <span class="c1"># Set seed for reproducibility</span>
 
 
 <span class="k">def</span> <span class="nf">generate_data_dependent</span><span class="p">(</span><span class="n">num_samples</span><span class="p">):</span>
@@ -2298,8 +2297,9 @@ Audit complete. 5 issues found in the dataset.
 </div>
 </div>
 </section>
-<section id="2.-Detect-Non-IID-Issues-Using-Datalab">
-<h3>2. Detect Non-IID Issues Using Datalab<a class="headerlink" href="#2.-Detect-Non-IID-Issues-Using-Datalab" title="Permalink to this heading">#</a></h3>
+<section id="2.-Run-Datalab-to-test-the-IID-assumption">
+<h3>2. Run Datalab to test the IID assumption<a class="headerlink" href="#2.-Run-Datalab-to-test-the-IID-assumption" title="Permalink to this heading">#</a></h3>
+<p><code class="docutils literal notranslate"><span class="pre">Datalab</span></code> computes a p-value to test whether your data violates the IID assumption. A low p-value (close to 0) indicates strong evidence against the null hypothesis that the data was sampled IID, either because the data appear to be drifting in distribution or inter-dependent across samples.</p>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[20]:
 </pre></div>
@@ -2309,18 +2309,14 @@ Audit complete. 5 issues found in the dataset.
 <span class="c1"># Initialize Datalab with the dataset</span>
 <span class="n">lab</span> <span class="o">=</span> <span class="n">Datalab</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;X&quot;</span><span class="p">:</span> <span class="n">X</span><span class="p">})</span>
 
-<span class="c1"># Perform data valuation</span>
+<span class="c1"># Check only for the non-IID issue, not other types of data issues</span>
 <span class="n">lab</span><span class="o">.</span><span class="n">find_issues</span><span class="p">(</span><span class="n">features</span><span class="o">=</span><span class="n">X</span><span class="p">,</span> <span class="n">issue_types</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;non_iid&quot;</span><span class="p">:</span> <span class="p">{}})</span>
 
-<span class="c1"># Collect the identified issues</span>
-<span class="n">non_iid_issues</span> <span class="o">=</span> <span class="n">lab</span><span class="o">.</span><span class="n">get_issues</span><span class="p">(</span><span class="s2">&quot;non_iid&quot;</span><span class="p">)</span>
-
-<span class="c1"># Display the non-iid issues</span>
-<span class="n">display</span><span class="p">(</span><span class="n">non_iid_issues</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">10</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;p-value of the non-IID test:&quot;</span><span class="p">,</span> <span class="n">lab</span><span class="o">.</span><span class="n">get_issue_summary</span><span class="p">(</span><span class="s2">&quot;non_iid&quot;</span><span class="p">)[</span><span class="s2">&quot;score&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">item</span><span class="p">())</span>
 </pre></div>
 </div>
 </div>
-<div class="nboutput docutils container">
+<div class="nboutput nblast docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
@@ -2328,7 +2324,24 @@ Audit complete. 5 issues found in the dataset.
 Finding non_iid issues ...
 
 Audit complete. 1 issues found in the dataset.
+p-value of the non-IID test: 0.0
 </pre></div></div>
+</div>
+<p>Unlike certain issue types detected by <code class="docutils literal notranslate"><span class="pre">Datalab</span></code>, the non-IID issue is a property of the overall dataset as opposed to individual data points. As with other issue types, an overall issue score for the dataset is available via <code class="docutils literal notranslate"><span class="pre">get_issue_summary()</span></code>. For the non-IID issue type, this overall score is the p-value of a statistical test for violations of the IID assumption. The lower the p-value, the more evidence there is that your data are not IID.</p>
+</section>
+<section id="3.-(Optional)-Understand-the-nature-of-IID-violations-in-your-dataset">
+<h3>3. (Optional) Understand the nature of IID violations in your dataset<a class="headerlink" href="#3.-(Optional)-Understand-the-nature-of-IID-violations-in-your-dataset" title="Permalink to this heading">#</a></h3>
+<p>To understand why our data appear non-IID, we can optionally investigate non-IID issues at the level of individual data points. But note that the IID assumption applies to the overall dataset, not to any individual data point. This individual data point analysis should only be used for further investigation, rather than to draw definitive conclusions about specific data points.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[21]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Per data point issues</span>
+<span class="n">non_iid_issues</span> <span class="o">=</span> <span class="n">lab</span><span class="o">.</span><span class="n">get_issues</span><span class="p">(</span><span class="s2">&quot;non_iid&quot;</span><span class="p">)</span>
+
+<span class="n">display</span><span class="p">(</span><span class="n">non_iid_issues</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">10</span><span class="p">))</span>
+</pre></div>
+</div>
 </div>
 <div class="nboutput nblast docutils container">
 <div class="prompt empty docutils container">
@@ -2411,19 +2424,13 @@ Audit complete. 1 issues found in the dataset.
 </table>
 </div></div>
 </div>
-</section>
-<section id="3.-(Optional)-Visualize-the-Results">
-<h3>3. (Optional) Visualize the Results<a class="headerlink" href="#3.-(Optional)-Visualize-the-Results" title="Permalink to this heading">#</a></h3>
-<p>Finally, we’ll visualize the dataset and highlight the non-iid issues detected by <code class="docutils literal notranslate"><span class="pre">Datalab</span></code>.</p>
-<p>Note that only the dataset as a whole can be considered to be non-iid, but no individual data point can be considered non-iid.</p>
-<p>To be compatible with <code class="docutils literal notranslate"><span class="pre">Datalab</span></code>, the point with the lowest non-iid score is assigned the <code class="docutils literal notranslate"><span class="pre">is_non_iid_issue</span></code> flag if the entire dataset is considered non-iid.</p>
+<p>Let’s visualize the non-IID issues detected by <code class="docutils literal notranslate"><span class="pre">Datalab</span></code>. Remember: the individual per data point non-IID scores are not particularly meaningful, but their trends across the dataset may reveal how the dataset is non-IID. If your overall dataset is detected to be non-IID, then the data point with the lowest non-IID score is automatically assigned the <code class="docutils literal notranslate"><span class="pre">is_non_iid_issue</span></code> flag (but do not focus on this specific data point and instead try to understand your dataset as a whole).</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[21]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[22]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
 
-<span class="c1"># Plot the non-iid scores</span>
 <span class="n">non_iid_issues</span><span class="p">[</span><span class="s2">&quot;non_iid_score&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">()</span>
 
 <span class="c1"># Highlight the point assigned as a non-iid issue</span>
@@ -2441,7 +2448,6 @@ Audit complete. 1 issues found in the dataset.
 <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;Feature 1&#39;</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;Feature 2&#39;</span><span class="p">)</span>
 
-<span class="c1"># Add colorbar</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">label</span><span class="o">=</span><span class="s1">&#39;Sample Index&#39;</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
@@ -2451,36 +2457,22 @@ Audit complete. 1 issues found in the dataset.
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../../_images/tutorials_datalab_workflows_50_0.png" src="../../_images/tutorials_datalab_workflows_50_0.png" />
+<img alt="../../_images/tutorials_datalab_workflows_54_0.png" src="../../_images/tutorials_datalab_workflows_54_0.png" />
 </div>
 </div>
 <div class="nboutput nblast docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../../_images/tutorials_datalab_workflows_50_1.png" src="../../_images/tutorials_datalab_workflows_50_1.png" />
+<img alt="../../_images/tutorials_datalab_workflows_54_1.png" src="../../_images/tutorials_datalab_workflows_54_1.png" />
 </div>
 </div>
-<p>These plots help visualize the non-iid scores for each data point and the dataset ordering, highlighting potential dependencies and issues.</p>
-<p>After detecting non-iid issues, you might be interested in quantifying the likelihood that your dataset is non-iid.</p>
-<p>To check if your data is non-iid, <code class="docutils literal notranslate"><span class="pre">Datalab</span></code> computes a p-value. A low p-value (close to 0) indicates strong evidence against the null hypothesis that the data is iid, either because the data appear to be drifting in distribution or inter-dependent across samples.</p>
-<div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[22]:
-</pre></div>
+<p>Plotting the non-IID scores for each data point vs. the ordering of these data points in the dataset (index) may reveal: distribution drift, statistical dependence, or other concerns regarding how the dataset was collected.</p>
+<p>Learn more about the non-IID issue type in the <a class="reference external" href="../../cleanlab/datalab/guide/issue_type_description.html#non-iid-issue">Issue Type Guide</a>.</p>
+<div class="admonition warning">
+<p class="admonition-title">Important</p>
+<p>The non-IID issue is a property of the overall dataset rather than individual data points. Use <code class="docutils literal notranslate"><span class="pre">get_issues()</span></code> scores to glean additional insights about the dataset rather than conclusions about specific data points.</p>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="s2">&quot;p-value:&quot;</span><span class="p">,</span> <span class="n">lab</span><span class="o">.</span><span class="n">get_info</span><span class="p">(</span><span class="s2">&quot;non_iid&quot;</span><span class="p">)[</span><span class="s2">&quot;p-value&quot;</span><span class="p">])</span>
-</pre></div>
-</div>
-</div>
-<div class="nboutput nblast docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<div class="highlight"><pre>
-p-value: 0.0
-</pre></div></div>
-</div>
-<p>Learn more about the non-iid issue type in the <a class="reference external" href="../../cleanlab/datalab/guide/issue_type_description.html#non-iid-issue">Issue Type Guide</a>.</p>
 </section>
 </section>
 <section id="Catch-Null-Values-in-a-Dataset">
@@ -3153,224 +3145,224 @@ Audit complete. 1 issues found in the dataset.
 </div>
 <div class="output_area rendered_html docutils container">
 <style type="text/css">
-#T_a9127_row0_col0, #T_a9127_row0_col1, #T_a9127_row0_col2, #T_a9127_row0_col3, #T_a9127_row0_col4, #T_a9127_row0_col5, #T_a9127_row1_col0, #T_a9127_row1_col5, #T_a9127_row2_col0, #T_a9127_row2_col5, #T_a9127_row3_col0, #T_a9127_row3_col5, #T_a9127_row4_col0, #T_a9127_row5_col0 {
+#T_a60f7_row0_col0, #T_a60f7_row0_col1, #T_a60f7_row0_col2, #T_a60f7_row0_col3, #T_a60f7_row0_col4, #T_a60f7_row0_col5, #T_a60f7_row1_col0, #T_a60f7_row1_col5, #T_a60f7_row2_col0, #T_a60f7_row2_col5, #T_a60f7_row3_col0, #T_a60f7_row3_col5, #T_a60f7_row4_col0, #T_a60f7_row5_col0 {
   background-color: yellow;
 }
-#T_a9127_row0_col7 {
+#T_a60f7_row0_col7 {
   background-color: lightblue;
   background-color: orange;
 }
-#T_a9127_row0_col8, #T_a9127_row1_col7, #T_a9127_row1_col8, #T_a9127_row2_col7, #T_a9127_row2_col8, #T_a9127_row3_col7, #T_a9127_row3_col8, #T_a9127_row4_col7, #T_a9127_row4_col8, #T_a9127_row5_col7, #T_a9127_row5_col8, #T_a9127_row6_col7, #T_a9127_row6_col8, #T_a9127_row7_col7, #T_a9127_row7_col8, #T_a9127_row8_col7, #T_a9127_row8_col8, #T_a9127_row9_col7, #T_a9127_row9_col8, #T_a9127_row10_col7, #T_a9127_row10_col8, #T_a9127_row11_col7, #T_a9127_row11_col8, #T_a9127_row12_col7, #T_a9127_row12_col8, #T_a9127_row13_col7, #T_a9127_row13_col8, #T_a9127_row14_col7, #T_a9127_row14_col8, #T_a9127_row15_col7, #T_a9127_row15_col8 {
+#T_a60f7_row0_col8, #T_a60f7_row1_col7, #T_a60f7_row1_col8, #T_a60f7_row2_col7, #T_a60f7_row2_col8, #T_a60f7_row3_col7, #T_a60f7_row3_col8, #T_a60f7_row4_col7, #T_a60f7_row4_col8, #T_a60f7_row5_col7, #T_a60f7_row5_col8, #T_a60f7_row6_col7, #T_a60f7_row6_col8, #T_a60f7_row7_col7, #T_a60f7_row7_col8, #T_a60f7_row8_col7, #T_a60f7_row8_col8, #T_a60f7_row9_col7, #T_a60f7_row9_col8, #T_a60f7_row10_col7, #T_a60f7_row10_col8, #T_a60f7_row11_col7, #T_a60f7_row11_col8, #T_a60f7_row12_col7, #T_a60f7_row12_col8, #T_a60f7_row13_col7, #T_a60f7_row13_col8, #T_a60f7_row14_col7, #T_a60f7_row14_col8, #T_a60f7_row15_col7, #T_a60f7_row15_col8 {
   background-color: lightblue;
 }
 </style>
-<table id="T_a9127">
+<table id="T_a60f7">
   <thead>
     <tr>
       <th class="blank level0" >&nbsp;</th>
-      <th id="T_a9127_level0_col0" class="col_heading level0 col0" >Age</th>
-      <th id="T_a9127_level0_col1" class="col_heading level0 col1" >Gender</th>
-      <th id="T_a9127_level0_col2" class="col_heading level0 col2" >Location</th>
-      <th id="T_a9127_level0_col3" class="col_heading level0 col3" >Annual_Spending</th>
-      <th id="T_a9127_level0_col4" class="col_heading level0 col4" >Number_of_Transactions</th>
-      <th id="T_a9127_level0_col5" class="col_heading level0 col5" >Last_Purchase_Date</th>
-      <th id="T_a9127_level0_col6" class="col_heading level0 col6" >|</th>
-      <th id="T_a9127_level0_col7" class="col_heading level0 col7" >is_null_issue</th>
-      <th id="T_a9127_level0_col8" class="col_heading level0 col8" >null_score</th>
+      <th id="T_a60f7_level0_col0" class="col_heading level0 col0" >Age</th>
+      <th id="T_a60f7_level0_col1" class="col_heading level0 col1" >Gender</th>
+      <th id="T_a60f7_level0_col2" class="col_heading level0 col2" >Location</th>
+      <th id="T_a60f7_level0_col3" class="col_heading level0 col3" >Annual_Spending</th>
+      <th id="T_a60f7_level0_col4" class="col_heading level0 col4" >Number_of_Transactions</th>
+      <th id="T_a60f7_level0_col5" class="col_heading level0 col5" >Last_Purchase_Date</th>
+      <th id="T_a60f7_level0_col6" class="col_heading level0 col6" >|</th>
+      <th id="T_a60f7_level0_col7" class="col_heading level0 col7" >is_null_issue</th>
+      <th id="T_a60f7_level0_col8" class="col_heading level0 col8" >null_score</th>
     </tr>
   </thead>
   <tbody>
     <tr>
-      <th id="T_a9127_level0_row0" class="row_heading level0 row0" >8</th>
-      <td id="T_a9127_row0_col0" class="data row0 col0" >nan</td>
-      <td id="T_a9127_row0_col1" class="data row0 col1" >nan</td>
-      <td id="T_a9127_row0_col2" class="data row0 col2" >nan</td>
-      <td id="T_a9127_row0_col3" class="data row0 col3" >nan</td>
-      <td id="T_a9127_row0_col4" class="data row0 col4" >nan</td>
-      <td id="T_a9127_row0_col5" class="data row0 col5" >NaT</td>
-      <td id="T_a9127_row0_col6" class="data row0 col6" ></td>
-      <td id="T_a9127_row0_col7" class="data row0 col7" >True</td>
-      <td id="T_a9127_row0_col8" class="data row0 col8" >0.000000</td>
+      <th id="T_a60f7_level0_row0" class="row_heading level0 row0" >8</th>
+      <td id="T_a60f7_row0_col0" class="data row0 col0" >nan</td>
+      <td id="T_a60f7_row0_col1" class="data row0 col1" >nan</td>
+      <td id="T_a60f7_row0_col2" class="data row0 col2" >nan</td>
+      <td id="T_a60f7_row0_col3" class="data row0 col3" >nan</td>
+      <td id="T_a60f7_row0_col4" class="data row0 col4" >nan</td>
+      <td id="T_a60f7_row0_col5" class="data row0 col5" >NaT</td>
+      <td id="T_a60f7_row0_col6" class="data row0 col6" ></td>
+      <td id="T_a60f7_row0_col7" class="data row0 col7" >True</td>
+      <td id="T_a60f7_row0_col8" class="data row0 col8" >0.000000</td>
     </tr>
     <tr>
-      <th id="T_a9127_level0_row1" class="row_heading level0 row1" >1</th>
-      <td id="T_a9127_row1_col0" class="data row1 col0" >nan</td>
-      <td id="T_a9127_row1_col1" class="data row1 col1" >Female</td>
-      <td id="T_a9127_row1_col2" class="data row1 col2" >Rural</td>
-      <td id="T_a9127_row1_col3" class="data row1 col3" >6421.160000</td>
-      <td id="T_a9127_row1_col4" class="data row1 col4" >5.000000</td>
-      <td id="T_a9127_row1_col5" class="data row1 col5" >NaT</td>
-      <td id="T_a9127_row1_col6" class="data row1 col6" ></td>
-      <td id="T_a9127_row1_col7" class="data row1 col7" >False</td>
-      <td id="T_a9127_row1_col8" class="data row1 col8" >0.666667</td>
+      <th id="T_a60f7_level0_row1" class="row_heading level0 row1" >1</th>
+      <td id="T_a60f7_row1_col0" class="data row1 col0" >nan</td>
+      <td id="T_a60f7_row1_col1" class="data row1 col1" >Female</td>
+      <td id="T_a60f7_row1_col2" class="data row1 col2" >Rural</td>
+      <td id="T_a60f7_row1_col3" class="data row1 col3" >6421.160000</td>
+      <td id="T_a60f7_row1_col4" class="data row1 col4" >5.000000</td>
+      <td id="T_a60f7_row1_col5" class="data row1 col5" >NaT</td>
+      <td id="T_a60f7_row1_col6" class="data row1 col6" ></td>
+      <td id="T_a60f7_row1_col7" class="data row1 col7" >False</td>
+      <td id="T_a60f7_row1_col8" class="data row1 col8" >0.666667</td>
     </tr>
     <tr>
-      <th id="T_a9127_level0_row2" class="row_heading level0 row2" >9</th>
-      <td id="T_a9127_row2_col0" class="data row2 col0" >nan</td>
-      <td id="T_a9127_row2_col1" class="data row2 col1" >Male</td>
-      <td id="T_a9127_row2_col2" class="data row2 col2" >Rural</td>
-      <td id="T_a9127_row2_col3" class="data row2 col3" >4655.820000</td>
-      <td id="T_a9127_row2_col4" class="data row2 col4" >1.000000</td>
-      <td id="T_a9127_row2_col5" class="data row2 col5" >NaT</td>
-      <td id="T_a9127_row2_col6" class="data row2 col6" ></td>
-      <td id="T_a9127_row2_col7" class="data row2 col7" >False</td>
-      <td id="T_a9127_row2_col8" class="data row2 col8" >0.666667</td>
+      <th id="T_a60f7_level0_row2" class="row_heading level0 row2" >9</th>
+      <td id="T_a60f7_row2_col0" class="data row2 col0" >nan</td>
+      <td id="T_a60f7_row2_col1" class="data row2 col1" >Male</td>
+      <td id="T_a60f7_row2_col2" class="data row2 col2" >Rural</td>
+      <td id="T_a60f7_row2_col3" class="data row2 col3" >4655.820000</td>
+      <td id="T_a60f7_row2_col4" class="data row2 col4" >1.000000</td>
+      <td id="T_a60f7_row2_col5" class="data row2 col5" >NaT</td>
+      <td id="T_a60f7_row2_col6" class="data row2 col6" ></td>
+      <td id="T_a60f7_row2_col7" class="data row2 col7" >False</td>
+      <td id="T_a60f7_row2_col8" class="data row2 col8" >0.666667</td>
     </tr>
     <tr>
-      <th id="T_a9127_level0_row3" class="row_heading level0 row3" >14</th>
-      <td id="T_a9127_row3_col0" class="data row3 col0" >nan</td>
-      <td id="T_a9127_row3_col1" class="data row3 col1" >Male</td>
-      <td id="T_a9127_row3_col2" class="data row3 col2" >Rural</td>
-      <td id="T_a9127_row3_col3" class="data row3 col3" >6790.460000</td>
-      <td id="T_a9127_row3_col4" class="data row3 col4" >3.000000</td>
-      <td id="T_a9127_row3_col5" class="data row3 col5" >NaT</td>
-      <td id="T_a9127_row3_col6" class="data row3 col6" ></td>
-      <td id="T_a9127_row3_col7" class="data row3 col7" >False</td>
-      <td id="T_a9127_row3_col8" class="data row3 col8" >0.666667</td>
+      <th id="T_a60f7_level0_row3" class="row_heading level0 row3" >14</th>
+      <td id="T_a60f7_row3_col0" class="data row3 col0" >nan</td>
+      <td id="T_a60f7_row3_col1" class="data row3 col1" >Male</td>
+      <td id="T_a60f7_row3_col2" class="data row3 col2" >Rural</td>
+      <td id="T_a60f7_row3_col3" class="data row3 col3" >6790.460000</td>
+      <td id="T_a60f7_row3_col4" class="data row3 col4" >3.000000</td>
+      <td id="T_a60f7_row3_col5" class="data row3 col5" >NaT</td>
+      <td id="T_a60f7_row3_col6" class="data row3 col6" ></td>
+      <td id="T_a60f7_row3_col7" class="data row3 col7" >False</td>
+      <td id="T_a60f7_row3_col8" class="data row3 col8" >0.666667</td>
     </tr>
     <tr>
-      <th id="T_a9127_level0_row4" class="row_heading level0 row4" >13</th>
-      <td id="T_a9127_row4_col0" class="data row4 col0" >nan</td>
-      <td id="T_a9127_row4_col1" class="data row4 col1" >Male</td>
-      <td id="T_a9127_row4_col2" class="data row4 col2" >Urban</td>
-      <td id="T_a9127_row4_col3" class="data row4 col3" >9167.470000</td>
-      <td id="T_a9127_row4_col4" class="data row4 col4" >4.000000</td>
-      <td id="T_a9127_row4_col5" class="data row4 col5" >2024-01-02 00:00:00</td>
-      <td id="T_a9127_row4_col6" class="data row4 col6" ></td>
-      <td id="T_a9127_row4_col7" class="data row4 col7" >False</td>
-      <td id="T_a9127_row4_col8" class="data row4 col8" >0.833333</td>
+      <th id="T_a60f7_level0_row4" class="row_heading level0 row4" >13</th>
+      <td id="T_a60f7_row4_col0" class="data row4 col0" >nan</td>
+      <td id="T_a60f7_row4_col1" class="data row4 col1" >Male</td>
+      <td id="T_a60f7_row4_col2" class="data row4 col2" >Urban</td>
+      <td id="T_a60f7_row4_col3" class="data row4 col3" >9167.470000</td>
+      <td id="T_a60f7_row4_col4" class="data row4 col4" >4.000000</td>
+      <td id="T_a60f7_row4_col5" class="data row4 col5" >2024-01-02 00:00:00</td>
+      <td id="T_a60f7_row4_col6" class="data row4 col6" ></td>
+      <td id="T_a60f7_row4_col7" class="data row4 col7" >False</td>
+      <td id="T_a60f7_row4_col8" class="data row4 col8" >0.833333</td>
     </tr>
     <tr>
-      <th id="T_a9127_level0_row5" class="row_heading level0 row5" >15</th>
-      <td id="T_a9127_row5_col0" class="data row5 col0" >nan</td>
-      <td id="T_a9127_row5_col1" class="data row5 col1" >Other</td>
-      <td id="T_a9127_row5_col2" class="data row5 col2" >Rural</td>
-      <td id="T_a9127_row5_col3" class="data row5 col3" >5327.960000</td>
-      <td id="T_a9127_row5_col4" class="data row5 col4" >8.000000</td>
-      <td id="T_a9127_row5_col5" class="data row5 col5" >2024-01-03 00:00:00</td>
-      <td id="T_a9127_row5_col6" class="data row5 col6" ></td>
-      <td id="T_a9127_row5_col7" class="data row5 col7" >False</td>
-      <td id="T_a9127_row5_col8" class="data row5 col8" >0.833333</td>
+      <th id="T_a60f7_level0_row5" class="row_heading level0 row5" >15</th>
+      <td id="T_a60f7_row5_col0" class="data row5 col0" >nan</td>
+      <td id="T_a60f7_row5_col1" class="data row5 col1" >Other</td>
+      <td id="T_a60f7_row5_col2" class="data row5 col2" >Rural</td>
+      <td id="T_a60f7_row5_col3" class="data row5 col3" >5327.960000</td>
+      <td id="T_a60f7_row5_col4" class="data row5 col4" >8.000000</td>
+      <td id="T_a60f7_row5_col5" class="data row5 col5" >2024-01-03 00:00:00</td>
+      <td id="T_a60f7_row5_col6" class="data row5 col6" ></td>
+      <td id="T_a60f7_row5_col7" class="data row5 col7" >False</td>
+      <td id="T_a60f7_row5_col8" class="data row5 col8" >0.833333</td>
     </tr>
     <tr>
-      <th id="T_a9127_level0_row6" class="row_heading level0 row6" >0</th>
-      <td id="T_a9127_row6_col0" class="data row6 col0" >56.000000</td>
-      <td id="T_a9127_row6_col1" class="data row6 col1" >Other</td>
-      <td id="T_a9127_row6_col2" class="data row6 col2" >Rural</td>
-      <td id="T_a9127_row6_col3" class="data row6 col3" >4099.620000</td>
-      <td id="T_a9127_row6_col4" class="data row6 col4" >3.000000</td>
-      <td id="T_a9127_row6_col5" class="data row6 col5" >2024-01-03 00:00:00</td>
-      <td id="T_a9127_row6_col6" class="data row6 col6" ></td>
-      <td id="T_a9127_row6_col7" class="data row6 col7" >False</td>
-      <td id="T_a9127_row6_col8" class="data row6 col8" >1.000000</td>
+      <th id="T_a60f7_level0_row6" class="row_heading level0 row6" >0</th>
+      <td id="T_a60f7_row6_col0" class="data row6 col0" >56.000000</td>
+      <td id="T_a60f7_row6_col1" class="data row6 col1" >Other</td>
+      <td id="T_a60f7_row6_col2" class="data row6 col2" >Rural</td>
+      <td id="T_a60f7_row6_col3" class="data row6 col3" >4099.620000</td>
+      <td id="T_a60f7_row6_col4" class="data row6 col4" >3.000000</td>
+      <td id="T_a60f7_row6_col5" class="data row6 col5" >2024-01-03 00:00:00</td>
+      <td id="T_a60f7_row6_col6" class="data row6 col6" ></td>
+      <td id="T_a60f7_row6_col7" class="data row6 col7" >False</td>
+      <td id="T_a60f7_row6_col8" class="data row6 col8" >1.000000</td>
     </tr>
     <tr>
-      <th id="T_a9127_level0_row7" class="row_heading level0 row7" >2</th>
-      <td id="T_a9127_row7_col0" class="data row7 col0" >46.000000</td>
-      <td id="T_a9127_row7_col1" class="data row7 col1" >Male</td>
-      <td id="T_a9127_row7_col2" class="data row7 col2" >Suburban</td>
-      <td id="T_a9127_row7_col3" class="data row7 col3" >5436.550000</td>
-      <td id="T_a9127_row7_col4" class="data row7 col4" >3.000000</td>
-      <td id="T_a9127_row7_col5" class="data row7 col5" >2024-02-26 00:00:00</td>
-      <td id="T_a9127_row7_col6" class="data row7 col6" ></td>
-      <td id="T_a9127_row7_col7" class="data row7 col7" >False</td>
-      <td id="T_a9127_row7_col8" class="data row7 col8" >1.000000</td>
+      <th id="T_a60f7_level0_row7" class="row_heading level0 row7" >2</th>
+      <td id="T_a60f7_row7_col0" class="data row7 col0" >46.000000</td>
+      <td id="T_a60f7_row7_col1" class="data row7 col1" >Male</td>
+      <td id="T_a60f7_row7_col2" class="data row7 col2" >Suburban</td>
+      <td id="T_a60f7_row7_col3" class="data row7 col3" >5436.550000</td>
+      <td id="T_a60f7_row7_col4" class="data row7 col4" >3.000000</td>
+      <td id="T_a60f7_row7_col5" class="data row7 col5" >2024-02-26 00:00:00</td>
+      <td id="T_a60f7_row7_col6" class="data row7 col6" ></td>
+      <td id="T_a60f7_row7_col7" class="data row7 col7" >False</td>
+      <td id="T_a60f7_row7_col8" class="data row7 col8" >1.000000</td>
     </tr>
     <tr>
-      <th id="T_a9127_level0_row8" class="row_heading level0 row8" >3</th>
-      <td id="T_a9127_row8_col0" class="data row8 col0" >32.000000</td>
-      <td id="T_a9127_row8_col1" class="data row8 col1" >Female</td>
-      <td id="T_a9127_row8_col2" class="data row8 col2" >Rural</td>
-      <td id="T_a9127_row8_col3" class="data row8 col3" >4046.660000</td>
-      <td id="T_a9127_row8_col4" class="data row8 col4" >3.000000</td>
-      <td id="T_a9127_row8_col5" class="data row8 col5" >2024-03-23 00:00:00</td>
-      <td id="T_a9127_row8_col6" class="data row8 col6" ></td>
-      <td id="T_a9127_row8_col7" class="data row8 col7" >False</td>
-      <td id="T_a9127_row8_col8" class="data row8 col8" >1.000000</td>
+      <th id="T_a60f7_level0_row8" class="row_heading level0 row8" >3</th>
+      <td id="T_a60f7_row8_col0" class="data row8 col0" >32.000000</td>
+      <td id="T_a60f7_row8_col1" class="data row8 col1" >Female</td>
+      <td id="T_a60f7_row8_col2" class="data row8 col2" >Rural</td>
+      <td id="T_a60f7_row8_col3" class="data row8 col3" >4046.660000</td>
+      <td id="T_a60f7_row8_col4" class="data row8 col4" >3.000000</td>
+      <td id="T_a60f7_row8_col5" class="data row8 col5" >2024-03-23 00:00:00</td>
+      <td id="T_a60f7_row8_col6" class="data row8 col6" ></td>
+      <td id="T_a60f7_row8_col7" class="data row8 col7" >False</td>
+      <td id="T_a60f7_row8_col8" class="data row8 col8" >1.000000</td>
     </tr>
     <tr>
-      <th id="T_a9127_level0_row9" class="row_heading level0 row9" >4</th>
-      <td id="T_a9127_row9_col0" class="data row9 col0" >60.000000</td>
-      <td id="T_a9127_row9_col1" class="data row9 col1" >Female</td>
-      <td id="T_a9127_row9_col2" class="data row9 col2" >Suburban</td>
-      <td id="T_a9127_row9_col3" class="data row9 col3" >3467.670000</td>
-      <td id="T_a9127_row9_col4" class="data row9 col4" >6.000000</td>
-      <td id="T_a9127_row9_col5" class="data row9 col5" >2024-03-01 00:00:00</td>
-      <td id="T_a9127_row9_col6" class="data row9 col6" ></td>
-      <td id="T_a9127_row9_col7" class="data row9 col7" >False</td>
-      <td id="T_a9127_row9_col8" class="data row9 col8" >1.000000</td>
+      <th id="T_a60f7_level0_row9" class="row_heading level0 row9" >4</th>
+      <td id="T_a60f7_row9_col0" class="data row9 col0" >60.000000</td>
+      <td id="T_a60f7_row9_col1" class="data row9 col1" >Female</td>
+      <td id="T_a60f7_row9_col2" class="data row9 col2" >Suburban</td>
+      <td id="T_a60f7_row9_col3" class="data row9 col3" >3467.670000</td>
+      <td id="T_a60f7_row9_col4" class="data row9 col4" >6.000000</td>
+      <td id="T_a60f7_row9_col5" class="data row9 col5" >2024-03-01 00:00:00</td>
+      <td id="T_a60f7_row9_col6" class="data row9 col6" ></td>
+      <td id="T_a60f7_row9_col7" class="data row9 col7" >False</td>
+      <td id="T_a60f7_row9_col8" class="data row9 col8" >1.000000</td>
     </tr>
     <tr>
-      <th id="T_a9127_level0_row10" class="row_heading level0 row10" >5</th>
-      <td id="T_a9127_row10_col0" class="data row10 col0" >25.000000</td>
-      <td id="T_a9127_row10_col1" class="data row10 col1" >Female</td>
-      <td id="T_a9127_row10_col2" class="data row10 col2" >Suburban</td>
-      <td id="T_a9127_row10_col3" class="data row10 col3" >4757.370000</td>
-      <td id="T_a9127_row10_col4" class="data row10 col4" >4.000000</td>
-      <td id="T_a9127_row10_col5" class="data row10 col5" >2024-01-03 00:00:00</td>
-      <td id="T_a9127_row10_col6" class="data row10 col6" ></td>
-      <td id="T_a9127_row10_col7" class="data row10 col7" >False</td>
-      <td id="T_a9127_row10_col8" class="data row10 col8" >1.000000</td>
+      <th id="T_a60f7_level0_row10" class="row_heading level0 row10" >5</th>
+      <td id="T_a60f7_row10_col0" class="data row10 col0" >25.000000</td>
+      <td id="T_a60f7_row10_col1" class="data row10 col1" >Female</td>
+      <td id="T_a60f7_row10_col2" class="data row10 col2" >Suburban</td>
+      <td id="T_a60f7_row10_col3" class="data row10 col3" >4757.370000</td>
+      <td id="T_a60f7_row10_col4" class="data row10 col4" >4.000000</td>
+      <td id="T_a60f7_row10_col5" class="data row10 col5" >2024-01-03 00:00:00</td>
+      <td id="T_a60f7_row10_col6" class="data row10 col6" ></td>
+      <td id="T_a60f7_row10_col7" class="data row10 col7" >False</td>
+      <td id="T_a60f7_row10_col8" class="data row10 col8" >1.000000</td>
     </tr>
     <tr>
-      <th id="T_a9127_level0_row11" class="row_heading level0 row11" >6</th>
-      <td id="T_a9127_row11_col0" class="data row11 col0" >38.000000</td>
-      <td id="T_a9127_row11_col1" class="data row11 col1" >Female</td>
-      <td id="T_a9127_row11_col2" class="data row11 col2" >Rural</td>
-      <td id="T_a9127_row11_col3" class="data row11 col3" >4199.530000</td>
-      <td id="T_a9127_row11_col4" class="data row11 col4" >6.000000</td>
-      <td id="T_a9127_row11_col5" class="data row11 col5" >2024-01-03 00:00:00</td>
-      <td id="T_a9127_row11_col6" class="data row11 col6" ></td>
-      <td id="T_a9127_row11_col7" class="data row11 col7" >False</td>
-      <td id="T_a9127_row11_col8" class="data row11 col8" >1.000000</td>
+      <th id="T_a60f7_level0_row11" class="row_heading level0 row11" >6</th>
+      <td id="T_a60f7_row11_col0" class="data row11 col0" >38.000000</td>
+      <td id="T_a60f7_row11_col1" class="data row11 col1" >Female</td>
+      <td id="T_a60f7_row11_col2" class="data row11 col2" >Rural</td>
+      <td id="T_a60f7_row11_col3" class="data row11 col3" >4199.530000</td>
+      <td id="T_a60f7_row11_col4" class="data row11 col4" >6.000000</td>
+      <td id="T_a60f7_row11_col5" class="data row11 col5" >2024-01-03 00:00:00</td>
+      <td id="T_a60f7_row11_col6" class="data row11 col6" ></td>
+      <td id="T_a60f7_row11_col7" class="data row11 col7" >False</td>
+      <td id="T_a60f7_row11_col8" class="data row11 col8" >1.000000</td>
     </tr>
     <tr>
-      <th id="T_a9127_level0_row12" class="row_heading level0 row12" >7</th>
-      <td id="T_a9127_row12_col0" class="data row12 col0" >56.000000</td>
-      <td id="T_a9127_row12_col1" class="data row12 col1" >Male</td>
-      <td id="T_a9127_row12_col2" class="data row12 col2" >Suburban</td>
-      <td id="T_a9127_row12_col3" class="data row12 col3" >4991.710000</td>
-      <td id="T_a9127_row12_col4" class="data row12 col4" >6.000000</td>
-      <td id="T_a9127_row12_col5" class="data row12 col5" >2024-04-03 00:00:00</td>
-      <td id="T_a9127_row12_col6" class="data row12 col6" ></td>
-      <td id="T_a9127_row12_col7" class="data row12 col7" >False</td>
-      <td id="T_a9127_row12_col8" class="data row12 col8" >1.000000</td>
+      <th id="T_a60f7_level0_row12" class="row_heading level0 row12" >7</th>
+      <td id="T_a60f7_row12_col0" class="data row12 col0" >56.000000</td>
+      <td id="T_a60f7_row12_col1" class="data row12 col1" >Male</td>
+      <td id="T_a60f7_row12_col2" class="data row12 col2" >Suburban</td>
+      <td id="T_a60f7_row12_col3" class="data row12 col3" >4991.710000</td>
+      <td id="T_a60f7_row12_col4" class="data row12 col4" >6.000000</td>
+      <td id="T_a60f7_row12_col5" class="data row12 col5" >2024-04-03 00:00:00</td>
+      <td id="T_a60f7_row12_col6" class="data row12 col6" ></td>
+      <td id="T_a60f7_row12_col7" class="data row12 col7" >False</td>
+      <td id="T_a60f7_row12_col8" class="data row12 col8" >1.000000</td>
     </tr>
     <tr>
-      <th id="T_a9127_level0_row13" class="row_heading level0 row13" >10</th>
-      <td id="T_a9127_row13_col0" class="data row13 col0" >40.000000</td>
-      <td id="T_a9127_row13_col1" class="data row13 col1" >Female</td>
-      <td id="T_a9127_row13_col2" class="data row13 col2" >Rural</td>
-      <td id="T_a9127_row13_col3" class="data row13 col3" >5584.020000</td>
-      <td id="T_a9127_row13_col4" class="data row13 col4" >7.000000</td>
-      <td id="T_a9127_row13_col5" class="data row13 col5" >2024-03-29 00:00:00</td>
-      <td id="T_a9127_row13_col6" class="data row13 col6" ></td>
-      <td id="T_a9127_row13_col7" class="data row13 col7" >False</td>
-      <td id="T_a9127_row13_col8" class="data row13 col8" >1.000000</td>
+      <th id="T_a60f7_level0_row13" class="row_heading level0 row13" >10</th>
+      <td id="T_a60f7_row13_col0" class="data row13 col0" >40.000000</td>
+      <td id="T_a60f7_row13_col1" class="data row13 col1" >Female</td>
+      <td id="T_a60f7_row13_col2" class="data row13 col2" >Rural</td>
+      <td id="T_a60f7_row13_col3" class="data row13 col3" >5584.020000</td>
+      <td id="T_a60f7_row13_col4" class="data row13 col4" >7.000000</td>
+      <td id="T_a60f7_row13_col5" class="data row13 col5" >2024-03-29 00:00:00</td>
+      <td id="T_a60f7_row13_col6" class="data row13 col6" ></td>
+      <td id="T_a60f7_row13_col7" class="data row13 col7" >False</td>
+      <td id="T_a60f7_row13_col8" class="data row13 col8" >1.000000</td>
     </tr>
     <tr>
-      <th id="T_a9127_level0_row14" class="row_heading level0 row14" >11</th>
-      <td id="T_a9127_row14_col0" class="data row14 col0" >28.000000</td>
-      <td id="T_a9127_row14_col1" class="data row14 col1" >Female</td>
-      <td id="T_a9127_row14_col2" class="data row14 col2" >Urban</td>
-      <td id="T_a9127_row14_col3" class="data row14 col3" >3102.320000</td>
-      <td id="T_a9127_row14_col4" class="data row14 col4" >2.000000</td>
-      <td id="T_a9127_row14_col5" class="data row14 col5" >2024-04-07 00:00:00</td>
-      <td id="T_a9127_row14_col6" class="data row14 col6" ></td>
-      <td id="T_a9127_row14_col7" class="data row14 col7" >False</td>
-      <td id="T_a9127_row14_col8" class="data row14 col8" >1.000000</td>
+      <th id="T_a60f7_level0_row14" class="row_heading level0 row14" >11</th>
+      <td id="T_a60f7_row14_col0" class="data row14 col0" >28.000000</td>
+      <td id="T_a60f7_row14_col1" class="data row14 col1" >Female</td>
+      <td id="T_a60f7_row14_col2" class="data row14 col2" >Urban</td>
+      <td id="T_a60f7_row14_col3" class="data row14 col3" >3102.320000</td>
+      <td id="T_a60f7_row14_col4" class="data row14 col4" >2.000000</td>
+      <td id="T_a60f7_row14_col5" class="data row14 col5" >2024-04-07 00:00:00</td>
+      <td id="T_a60f7_row14_col6" class="data row14 col6" ></td>
+      <td id="T_a60f7_row14_col7" class="data row14 col7" >False</td>
+      <td id="T_a60f7_row14_col8" class="data row14 col8" >1.000000</td>
     </tr>
     <tr>
-      <th id="T_a9127_level0_row15" class="row_heading level0 row15" >12</th>
-      <td id="T_a9127_row15_col0" class="data row15 col0" >28.000000</td>
-      <td id="T_a9127_row15_col1" class="data row15 col1" >Male</td>
-      <td id="T_a9127_row15_col2" class="data row15 col2" >Rural</td>
-      <td id="T_a9127_row15_col3" class="data row15 col3" >6637.990000</td>
-      <td id="T_a9127_row15_col4" class="data row15 col4" >11.000000</td>
-      <td id="T_a9127_row15_col5" class="data row15 col5" >2024-04-08 00:00:00</td>
-      <td id="T_a9127_row15_col6" class="data row15 col6" ></td>
-      <td id="T_a9127_row15_col7" class="data row15 col7" >False</td>
-      <td id="T_a9127_row15_col8" class="data row15 col8" >1.000000</td>
+      <th id="T_a60f7_level0_row15" class="row_heading level0 row15" >12</th>
+      <td id="T_a60f7_row15_col0" class="data row15 col0" >28.000000</td>
+      <td id="T_a60f7_row15_col1" class="data row15 col1" >Male</td>
+      <td id="T_a60f7_row15_col2" class="data row15 col2" >Rural</td>
+      <td id="T_a60f7_row15_col3" class="data row15 col3" >6637.990000</td>
+      <td id="T_a60f7_row15_col4" class="data row15 col4" >11.000000</td>
+      <td id="T_a60f7_row15_col5" class="data row15 col5" >2024-04-08 00:00:00</td>
+      <td id="T_a60f7_row15_col6" class="data row15 col6" ></td>
+      <td id="T_a60f7_row15_col7" class="data row15 col7" >False</td>
+      <td id="T_a60f7_row15_col8" class="data row15 col8" >1.000000</td>
     </tr>
   </tbody>
 </table></div>
@@ -3481,7 +3473,7 @@ Audit complete. 4 issues found in the dataset.
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../../_images/tutorials_datalab_workflows_74_0.png" src="../../_images/tutorials_datalab_workflows_74_0.png" />
+<img alt="../../_images/tutorials_datalab_workflows_77_0.png" src="../../_images/tutorials_datalab_workflows_77_0.png" />
 </div>
 </div>
 </section>
@@ -3497,8 +3489,8 @@ Audit complete. 4 issues found in the dataset.
 <li><p>More image-specific features from <a class="reference external" href="https://cleanvision.readthedocs.io/en/latest/tutorials/tutorial.html#What-is-CleanVision?">CleanVision</a></p></li>
 </ul>
 <p>This analysis helps identify unintended biases in datasets and guides steps to enhance the robustness of machine learning models.</p>
-<section id="id8">
-<h3>1. Load the Dataset<a class="headerlink" href="#id8" title="Permalink to this heading">#</a></h3>
+<section id="id6">
+<h3>1. Load the Dataset<a class="headerlink" href="#id6" title="Permalink to this heading">#</a></h3>
 <p>For this tutorial, we’ll use a subset of the CIFAR-10 dataset with artificially introduced biases to illustrate how Datalab detects spurious correlations. We’ll assume you have a directory of images organized into subdirectories by class.</p>
 <p>To fetch the data for this tutorial, make sure you have <code class="docutils literal notranslate"><span class="pre">wget</span></code> and <code class="docutils literal notranslate"><span class="pre">zip</span></code> installed.</p>
 <div class="nbinput docutils container">
@@ -3516,16 +3508,16 @@ Audit complete. 4 issues found in the dataset.
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
---2024-12-26 11:17:41--  https://s.cleanlab.ai/CIFAR-10-subset.zip
+--2024-12-29 13:11:22--  https://s.cleanlab.ai/CIFAR-10-subset.zip
 Resolving s.cleanlab.ai (s.cleanlab.ai)... 185.199.111.153, 185.199.110.153, 185.199.109.153, ...
 Connecting to s.cleanlab.ai (s.cleanlab.ai)|185.199.111.153|:443... connected.
 HTTP request sent, awaiting response... 200 OK
 Length: 986707 (964K) [application/zip]
 Saving to: ‘CIFAR-10-subset.zip’
 
-CIFAR-10-subset.zip 100%[===================&gt;] 963.58K  --.-KB/s    in 0.008s
+CIFAR-10-subset.zip 100%[===================&gt;] 963.58K  --.-KB/s    in 0.005s
 
-2024-12-26 11:17:41 (112 MB/s) - ‘CIFAR-10-subset.zip’ saved [986707/986707]
+2024-12-29 13:11:22 (191 MB/s) - ‘CIFAR-10-subset.zip’ saved [986707/986707]
 
 </pre></div></div>
 </div>
@@ -3595,7 +3587,7 @@ Finding dark, light, low_information, odd_aspect_ratio, odd_size, grayscale, blu
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<script type="application/vnd.jupyter.widget-view+json">{"version_major": 2, "version_minor": 0, "model_id": "1d9c2ded32704fc9b13d77ccfe221ea0"}</script></div>
+<script type="application/vnd.jupyter.widget-view+json">{"version_major": 2, "version_minor": 0, "model_id": "cf1e33608fdd4df88a2596d6cc6ea282"}</script></div>
 </div>
 <div class="nboutput docutils container">
 <div class="prompt empty docutils container">
@@ -3639,7 +3631,7 @@ Images with minimum and maximum individual scores for low_information issue:
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../../_images/tutorials_datalab_workflows_82_3.png" src="../../_images/tutorials_datalab_workflows_82_3.png" />
+<img alt="../../_images/tutorials_datalab_workflows_85_3.png" src="../../_images/tutorials_datalab_workflows_85_3.png" />
 </div>
 </div>
 <div class="nboutput docutils container">
@@ -3655,7 +3647,7 @@ Images with minimum and maximum individual scores for light issue:
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../../_images/tutorials_datalab_workflows_82_5.png" src="../../_images/tutorials_datalab_workflows_82_5.png" />
+<img alt="../../_images/tutorials_datalab_workflows_85_5.png" src="../../_images/tutorials_datalab_workflows_85_5.png" />
 </div>
 </div>
 <div class="nboutput docutils container">
@@ -3671,7 +3663,7 @@ Images with minimum and maximum individual scores for dark issue:
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../../_images/tutorials_datalab_workflows_82_7.png" src="../../_images/tutorials_datalab_workflows_82_7.png" />
+<img alt="../../_images/tutorials_datalab_workflows_85_7.png" src="../../_images/tutorials_datalab_workflows_85_7.png" />
 </div>
 </div>
 <div class="nboutput docutils container">
@@ -3687,7 +3679,7 @@ Images with minimum and maximum individual scores for blurry issue:
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../../_images/tutorials_datalab_workflows_82_9.png" src="../../_images/tutorials_datalab_workflows_82_9.png" />
+<img alt="../../_images/tutorials_datalab_workflows_85_9.png" src="../../_images/tutorials_datalab_workflows_85_9.png" />
 </div>
 </div>
 </section>
@@ -3818,35 +3810,35 @@ Image-specific issues:
   <thead>
     <tr style="text-align: right;">
       <th></th>
-      <th>dark_score</th>
       <th>is_dark_issue</th>
+      <th>dark_score</th>
     </tr>
   </thead>
   <tbody>
     <tr>
       <th>0</th>
-      <td>0.237196</td>
       <td>True</td>
+      <td>0.237196</td>
     </tr>
     <tr>
       <th>1</th>
-      <td>0.197229</td>
       <td>True</td>
+      <td>0.197229</td>
     </tr>
     <tr>
       <th>2</th>
-      <td>0.254188</td>
       <td>True</td>
+      <td>0.254188</td>
     </tr>
     <tr>
       <th>3</th>
-      <td>0.229170</td>
       <td>True</td>
+      <td>0.229170</td>
     </tr>
     <tr>
       <th>4</th>
-      <td>0.208907</td>
       <td>True</td>
+      <td>0.208907</td>
     </tr>
     <tr>
       <th>...</th>
@@ -3855,28 +3847,28 @@ Image-specific issues:
     </tr>
     <tr>
       <th>195</th>
-      <td>0.793840</td>
       <td>False</td>
+      <td>0.793840</td>
     </tr>
     <tr>
       <th>196</th>
-      <td>1.000000</td>
       <td>False</td>
+      <td>1.000000</td>
     </tr>
     <tr>
       <th>197</th>
-      <td>0.971560</td>
       <td>False</td>
+      <td>0.971560</td>
     </tr>
     <tr>
       <th>198</th>
-      <td>0.862236</td>
       <td>False</td>
+      <td>0.862236</td>
     </tr>
     <tr>
       <th>199</th>
-      <td>0.973533</td>
       <td>False</td>
+      <td>0.973533</td>
     </tr>
   </tbody>
 </table>
@@ -3933,13 +3925,13 @@ Image-specific issues:
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../../_images/tutorials_datalab_workflows_86_0.png" src="../../_images/tutorials_datalab_workflows_86_0.png" />
+<img alt="../../_images/tutorials_datalab_workflows_89_0.png" src="../../_images/tutorials_datalab_workflows_89_0.png" />
 </div>
 </div>
 <p>The above plot illustrates the distribution of dark scores across class labels. In this dataset, 100 images from the <code class="docutils literal notranslate"><span class="pre">Frog</span></code> class (Class 0 in the plot) have been darkened, while 100 images from the <code class="docutils literal notranslate"><span class="pre">Truck</span></code> class (Class 1 in the plot) remain unchanged, as in the CIFAR-10 dataset. This creates a clear spurious correlation between the ‘darkness’ feature and the class labels: <code class="docutils literal notranslate"><span class="pre">Frog</span></code> images are dark, whereas <code class="docutils literal notranslate"><span class="pre">Truck</span></code> images are not. We can see that the <code class="docutils literal notranslate"><span class="pre">dark_score</span></code> values between the two
 classes are non-overlapping. This characteristic of the dataset is identified by <code class="docutils literal notranslate"><span class="pre">Datalab</span></code>.</p>
 <script type="application/vnd.jupyter.widget-state+json">
-{"state": {"10ecb954bb454d50848c4476cfc650d0": {"model_name": "LayoutModel", "model_module": "@jupyter-widgets/base", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets/base", "_model_module_version": "2.0.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border_bottom": null, "border_left": null, "border_right": null, "border_top": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "421f13711059410a9fbab0283a293f30": {"model_name": "ProgressStyleModel", "model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "ProgressStyleModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "StyleView", "bar_color": null, "description_width": ""}}, "d164481b458b4fd88f671470a650e6eb": {"model_name": "FloatProgressModel", "model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "state": {"_dom_classes": [], "_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "FloatProgressModel", "_view_count": null, "_view_module": "@jupyter-widgets/controls", "_view_module_version": "2.0.0", "_view_name": "ProgressView", "bar_style": "success", "description": "", "description_allow_html": false, "layout": "IPY_MODEL_10ecb954bb454d50848c4476cfc650d0", "max": 200.0, "min": 0.0, "orientation": "horizontal", "style": "IPY_MODEL_421f13711059410a9fbab0283a293f30", "tabbable": null, "tooltip": null, "value": 200.0}}, "af45d51303ce4d418d6bbdc0c4170965": {"model_name": "LayoutModel", "model_module": "@jupyter-widgets/base", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets/base", "_model_module_version": "2.0.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border_bottom": null, "border_left": null, "border_right": null, "border_top": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "66705f4ce9ed45be8ef1c771e32b69e5": {"model_name": "HTMLStyleModel", "model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "HTMLStyleModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "StyleView", "background": null, "description_width": "", "font_size": null, "text_color": null}}, "b62b6a9247914b5ea3542dd95b081f48": {"model_name": "HTMLModel", "model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "state": {"_dom_classes": [], "_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "HTMLModel", "_view_count": null, "_view_module": "@jupyter-widgets/controls", "_view_module_version": "2.0.0", "_view_name": "HTMLView", "description": "", "description_allow_html": false, "layout": "IPY_MODEL_af45d51303ce4d418d6bbdc0c4170965", "placeholder": "\u200b", "style": "IPY_MODEL_66705f4ce9ed45be8ef1c771e32b69e5", "tabbable": null, "tooltip": null, "value": "100%"}}, "9a122a2a2f5c461d8a715a4f6abd3198": {"model_name": "LayoutModel", "model_module": "@jupyter-widgets/base", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets/base", "_model_module_version": "2.0.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border_bottom": null, "border_left": null, "border_right": null, "border_top": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "dff2ca8c3c71471692f0ce2207abe391": {"model_name": "HTMLStyleModel", "model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "HTMLStyleModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "StyleView", "background": null, "description_width": "", "font_size": null, "text_color": null}}, "14b0467bee524a9394e4475e6b4ee8d4": {"model_name": "HTMLModel", "model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "state": {"_dom_classes": [], "_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "HTMLModel", "_view_count": null, "_view_module": "@jupyter-widgets/controls", "_view_module_version": "2.0.0", "_view_name": "HTMLView", "description": "", "description_allow_html": false, "layout": "IPY_MODEL_9a122a2a2f5c461d8a715a4f6abd3198", "placeholder": "\u200b", "style": "IPY_MODEL_dff2ca8c3c71471692f0ce2207abe391", "tabbable": null, "tooltip": null, "value": "\u2007200/200\u2007[00:00&lt;00:00,\u2007786.16it/s]"}}, "74a776db28664ebfaceac7371d300793": {"model_name": "LayoutModel", "model_module": "@jupyter-widgets/base", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets/base", "_model_module_version": "2.0.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border_bottom": null, "border_left": null, "border_right": null, "border_top": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "1d9c2ded32704fc9b13d77ccfe221ea0": {"model_name": "HBoxModel", "model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "state": {"_dom_classes": [], "_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "HBoxModel", "_view_count": null, "_view_module": "@jupyter-widgets/controls", "_view_module_version": "2.0.0", "_view_name": "HBoxView", "box_style": "", "children": ["IPY_MODEL_b62b6a9247914b5ea3542dd95b081f48", "IPY_MODEL_d164481b458b4fd88f671470a650e6eb", "IPY_MODEL_14b0467bee524a9394e4475e6b4ee8d4"], "layout": "IPY_MODEL_74a776db28664ebfaceac7371d300793", "tabbable": null, "tooltip": null}}, "ad52a23dfed547a0b379ba5798df5ac8": {"model_name": "LayoutModel", "model_module": "@jupyter-widgets/base", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets/base", "_model_module_version": "2.0.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border_bottom": null, "border_left": null, "border_right": null, "border_top": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "15e5b0cc29d742ea9dd63569047801a5": {"model_name": "ProgressStyleModel", "model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "ProgressStyleModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "StyleView", "bar_color": null, "description_width": ""}}, "9431a0d0e19245f190305ca7ed7a50da": {"model_name": "FloatProgressModel", "model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "state": {"_dom_classes": [], "_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "FloatProgressModel", "_view_count": null, "_view_module": "@jupyter-widgets/controls", "_view_module_version": "2.0.0", "_view_name": "ProgressView", "bar_style": "success", "description": "", "description_allow_html": false, "layout": "IPY_MODEL_ad52a23dfed547a0b379ba5798df5ac8", "max": 200.0, "min": 0.0, "orientation": "horizontal", "style": "IPY_MODEL_15e5b0cc29d742ea9dd63569047801a5", "tabbable": null, "tooltip": null, "value": 200.0}}, "db410ffcbaea42dcbb50bfe4131179eb": {"model_name": "LayoutModel", "model_module": "@jupyter-widgets/base", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets/base", "_model_module_version": "2.0.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border_bottom": null, "border_left": null, "border_right": null, "border_top": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "e5fbdf55049f4198bfedb99f5a7bae31": {"model_name": "HTMLStyleModel", "model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "HTMLStyleModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "StyleView", "background": null, "description_width": "", "font_size": null, "text_color": null}}, "8bce80871cb84509847cd8fad6d1661d": {"model_name": "HTMLModel", "model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "state": {"_dom_classes": [], "_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "HTMLModel", "_view_count": null, "_view_module": "@jupyter-widgets/controls", "_view_module_version": "2.0.0", "_view_name": "HTMLView", "description": "", "description_allow_html": false, "layout": "IPY_MODEL_db410ffcbaea42dcbb50bfe4131179eb", "placeholder": "\u200b", "style": "IPY_MODEL_e5fbdf55049f4198bfedb99f5a7bae31", "tabbable": null, "tooltip": null, "value": "100%"}}, "fae23f59ea104d4db363ce6aed1cb9e6": {"model_name": "LayoutModel", "model_module": "@jupyter-widgets/base", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets/base", "_model_module_version": "2.0.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border_bottom": null, "border_left": null, "border_right": null, "border_top": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "2bd6a3f7493149f7b6807f2cc4ddaaf0": {"model_name": "HTMLStyleModel", "model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "HTMLStyleModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "StyleView", "background": null, "description_width": "", "font_size": null, "text_color": null}}, "95bd48dee14e4d8bb9ab62b862ddd8f0": {"model_name": "HTMLModel", "model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "state": {"_dom_classes": [], "_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "HTMLModel", "_view_count": null, "_view_module": "@jupyter-widgets/controls", "_view_module_version": "2.0.0", "_view_name": "HTMLView", "description": "", "description_allow_html": false, "layout": "IPY_MODEL_fae23f59ea104d4db363ce6aed1cb9e6", "placeholder": "\u200b", "style": "IPY_MODEL_2bd6a3f7493149f7b6807f2cc4ddaaf0", "tabbable": null, "tooltip": null, "value": "\u2007200/200\u2007[00:00&lt;00:00,\u2007711.82it/s]"}}, "1c02c45e2b9c435b9731085071bb0b76": {"model_name": "LayoutModel", "model_module": "@jupyter-widgets/base", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets/base", "_model_module_version": "2.0.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border_bottom": null, "border_left": null, "border_right": null, "border_top": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "422b3c757ced4c94bae58876e7d6b131": {"model_name": "HBoxModel", "model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "state": {"_dom_classes": [], "_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "HBoxModel", "_view_count": null, "_view_module": "@jupyter-widgets/controls", "_view_module_version": "2.0.0", "_view_name": "HBoxView", "box_style": "", "children": ["IPY_MODEL_8bce80871cb84509847cd8fad6d1661d", "IPY_MODEL_9431a0d0e19245f190305ca7ed7a50da", "IPY_MODEL_95bd48dee14e4d8bb9ab62b862ddd8f0"], "layout": "IPY_MODEL_1c02c45e2b9c435b9731085071bb0b76", "tabbable": null, "tooltip": null}}}, "version_major": 2, "version_minor": 0}
+{"state": {"827af533db444b3da186be2e609273f2": {"model_name": "LayoutModel", "model_module": "@jupyter-widgets/base", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets/base", "_model_module_version": "2.0.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border_bottom": null, "border_left": null, "border_right": null, "border_top": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "725dfbce32ab4bc897f36d62239c3852": {"model_name": "ProgressStyleModel", "model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "ProgressStyleModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "StyleView", "bar_color": null, "description_width": ""}}, "d5aef60507994de9aed0760ce963a416": {"model_name": "FloatProgressModel", "model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "state": {"_dom_classes": [], "_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "FloatProgressModel", "_view_count": null, "_view_module": "@jupyter-widgets/controls", "_view_module_version": "2.0.0", "_view_name": "ProgressView", "bar_style": "success", "description": "", "description_allow_html": false, "layout": "IPY_MODEL_827af533db444b3da186be2e609273f2", "max": 200.0, "min": 0.0, "orientation": "horizontal", "style": "IPY_MODEL_725dfbce32ab4bc897f36d62239c3852", "tabbable": null, "tooltip": null, "value": 200.0}}, "fa07d05504e54f5889086fdb7bbfe4c9": {"model_name": "LayoutModel", "model_module": "@jupyter-widgets/base", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets/base", "_model_module_version": "2.0.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border_bottom": null, "border_left": null, "border_right": null, "border_top": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "5c3a3394f07e4dd8a09b2feffea9eaa6": {"model_name": "HTMLStyleModel", "model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "HTMLStyleModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "StyleView", "background": null, "description_width": "", "font_size": null, "text_color": null}}, "11c70434664740c7b0a05261331e9c0a": {"model_name": "HTMLModel", "model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "state": {"_dom_classes": [], "_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "HTMLModel", "_view_count": null, "_view_module": "@jupyter-widgets/controls", "_view_module_version": "2.0.0", "_view_name": "HTMLView", "description": "", "description_allow_html": false, "layout": "IPY_MODEL_fa07d05504e54f5889086fdb7bbfe4c9", "placeholder": "\u200b", "style": "IPY_MODEL_5c3a3394f07e4dd8a09b2feffea9eaa6", "tabbable": null, "tooltip": null, "value": "100%"}}, "c8af193d6a5a4497842bac69ebc74bab": {"model_name": "LayoutModel", "model_module": "@jupyter-widgets/base", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets/base", "_model_module_version": "2.0.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border_bottom": null, "border_left": null, "border_right": null, "border_top": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "5a5f80c07dd04a13a51599fb51e8f358": {"model_name": "HTMLStyleModel", "model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "HTMLStyleModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "StyleView", "background": null, "description_width": "", "font_size": null, "text_color": null}}, "6c4d5fa00cbd4f8c92b5300c4a746bcb": {"model_name": "HTMLModel", "model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "state": {"_dom_classes": [], "_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "HTMLModel", "_view_count": null, "_view_module": "@jupyter-widgets/controls", "_view_module_version": "2.0.0", "_view_name": "HTMLView", "description": "", "description_allow_html": false, "layout": "IPY_MODEL_c8af193d6a5a4497842bac69ebc74bab", "placeholder": "\u200b", "style": "IPY_MODEL_5a5f80c07dd04a13a51599fb51e8f358", "tabbable": null, "tooltip": null, "value": "\u2007200/200\u2007[00:00&lt;00:00,\u2007797.36it/s]"}}, "eb74d319f6e040668035f5f04a889095": {"model_name": "LayoutModel", "model_module": "@jupyter-widgets/base", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets/base", "_model_module_version": "2.0.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border_bottom": null, "border_left": null, "border_right": null, "border_top": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "cf1e33608fdd4df88a2596d6cc6ea282": {"model_name": "HBoxModel", "model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "state": {"_dom_classes": [], "_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "HBoxModel", "_view_count": null, "_view_module": "@jupyter-widgets/controls", "_view_module_version": "2.0.0", "_view_name": "HBoxView", "box_style": "", "children": ["IPY_MODEL_11c70434664740c7b0a05261331e9c0a", "IPY_MODEL_d5aef60507994de9aed0760ce963a416", "IPY_MODEL_6c4d5fa00cbd4f8c92b5300c4a746bcb"], "layout": "IPY_MODEL_eb74d319f6e040668035f5f04a889095", "tabbable": null, "tooltip": null}}, "4547e4c7704343688460f395829d4bd5": {"model_name": "LayoutModel", "model_module": "@jupyter-widgets/base", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets/base", "_model_module_version": "2.0.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border_bottom": null, "border_left": null, "border_right": null, "border_top": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "9c176cf3b49c4cea9bdc03b0bfcb73c8": {"model_name": "ProgressStyleModel", "model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "ProgressStyleModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "StyleView", "bar_color": null, "description_width": ""}}, "32c6397358b9417298333d8fc2a6a387": {"model_name": "FloatProgressModel", "model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "state": {"_dom_classes": [], "_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "FloatProgressModel", "_view_count": null, "_view_module": "@jupyter-widgets/controls", "_view_module_version": "2.0.0", "_view_name": "ProgressView", "bar_style": "success", "description": "", "description_allow_html": false, "layout": "IPY_MODEL_4547e4c7704343688460f395829d4bd5", "max": 200.0, "min": 0.0, "orientation": "horizontal", "style": "IPY_MODEL_9c176cf3b49c4cea9bdc03b0bfcb73c8", "tabbable": null, "tooltip": null, "value": 200.0}}, "07522f07dcd6402ea77ac2a7c2418cb7": {"model_name": "LayoutModel", "model_module": "@jupyter-widgets/base", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets/base", "_model_module_version": "2.0.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border_bottom": null, "border_left": null, "border_right": null, "border_top": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "f094d4f9c8c848118f66e921914982ab": {"model_name": "HTMLStyleModel", "model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "HTMLStyleModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "StyleView", "background": null, "description_width": "", "font_size": null, "text_color": null}}, "984a24e6c4a547c5a7df4c0c3e9b9317": {"model_name": "HTMLModel", "model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "state": {"_dom_classes": [], "_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "HTMLModel", "_view_count": null, "_view_module": "@jupyter-widgets/controls", "_view_module_version": "2.0.0", "_view_name": "HTMLView", "description": "", "description_allow_html": false, "layout": "IPY_MODEL_07522f07dcd6402ea77ac2a7c2418cb7", "placeholder": "\u200b", "style": "IPY_MODEL_f094d4f9c8c848118f66e921914982ab", "tabbable": null, "tooltip": null, "value": "100%"}}, "440e6f75dbf84429b08b983dc524b447": {"model_name": "LayoutModel", "model_module": "@jupyter-widgets/base", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets/base", "_model_module_version": "2.0.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border_bottom": null, "border_left": null, "border_right": null, "border_top": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "3446b5fabf514bdb89b9443f432c96a7": {"model_name": "HTMLStyleModel", "model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "HTMLStyleModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "StyleView", "background": null, "description_width": "", "font_size": null, "text_color": null}}, "7928b93e1a7149b1822f209402c875e3": {"model_name": "HTMLModel", "model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "state": {"_dom_classes": [], "_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "HTMLModel", "_view_count": null, "_view_module": "@jupyter-widgets/controls", "_view_module_version": "2.0.0", "_view_name": "HTMLView", "description": "", "description_allow_html": false, "layout": "IPY_MODEL_440e6f75dbf84429b08b983dc524b447", "placeholder": "\u200b", "style": "IPY_MODEL_3446b5fabf514bdb89b9443f432c96a7", "tabbable": null, "tooltip": null, "value": "\u2007200/200\u2007[00:00&lt;00:00,\u2007720.37it/s]"}}, "3b01e7b18f3f4fb98047f641ea483260": {"model_name": "LayoutModel", "model_module": "@jupyter-widgets/base", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets/base", "_model_module_version": "2.0.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border_bottom": null, "border_left": null, "border_right": null, "border_top": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "af3ad264bb3140e78cc52e740e68a519": {"model_name": "HBoxModel", "model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "state": {"_dom_classes": [], "_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "HBoxModel", "_view_count": null, "_view_module": "@jupyter-widgets/controls", "_view_module_version": "2.0.0", "_view_name": "HBoxView", "box_style": "", "children": ["IPY_MODEL_984a24e6c4a547c5a7df4c0c3e9b9317", "IPY_MODEL_32c6397358b9417298333d8fc2a6a387", "IPY_MODEL_7928b93e1a7149b1822f209402c875e3"], "layout": "IPY_MODEL_3b01e7b18f3f4fb98047f641ea483260", "tabbable": null, "tooltip": null}}}, "version_major": 2, "version_minor": 0}
 </script></section>
 </section>
 </section>
@@ -4053,9 +4045,9 @@ classes are non-overlapping. This characteristic of the dataset is identified by
 </ul>
 </li>
 <li><a class="reference internal" href="#Detect-if-your-dataset-is-non-IID">Detect if your dataset is non-IID</a><ul>
-<li><a class="reference internal" href="#id5">1. Load and Prepare the Dataset</a></li>
-<li><a class="reference internal" href="#2.-Detect-Non-IID-Issues-Using-Datalab">2. Detect Non-IID Issues Using Datalab</a></li>
-<li><a class="reference internal" href="#3.-(Optional)-Visualize-the-Results">3. (Optional) Visualize the Results</a></li>
+<li><a class="reference internal" href="#1.-Load-Dataset">1. Load Dataset</a></li>
+<li><a class="reference internal" href="#2.-Run-Datalab-to-test-the-IID-assumption">2. Run Datalab to test the IID assumption</a></li>
+<li><a class="reference internal" href="#3.-(Optional)-Understand-the-nature-of-IID-violations-in-your-dataset">3. (Optional) Understand the nature of IID violations in your dataset</a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#Catch-Null-Values-in-a-Dataset">Catch Null Values in a Dataset</a><ul>
@@ -4074,7 +4066,7 @@ classes are non-overlapping. This characteristic of the dataset is identified by
 </ul>
 </li>
 <li><a class="reference internal" href="#Identify-Spurious-Correlations-in-Image-Datasets">Identify Spurious Correlations in Image Datasets</a><ul>
-<li><a class="reference internal" href="#id8">1. Load the Dataset</a></li>
+<li><a class="reference internal" href="#id6">1. Load the Dataset</a></li>
 <li><a class="reference internal" href="#2.-Run-Datalab-Analysis">2. Run Datalab Analysis</a></li>
 <li><a class="reference internal" href="#3.-Interpret-the-Results">3. Interpret the Results</a></li>
 </ul>
