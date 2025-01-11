@@ -25,7 +25,7 @@
 
     <link rel="shortcut icon" href="https://raw.githubusercontent.com/cleanlab/assets/a4483476d449f2f05a4c7cde329e72358099cc07/cleanlab/cleanlab_favicon.svg"/><!-- Generated with Sphinx 7.1.2 and Furo 2023.09.10 -->
         <title>Creating Your Own Issues Manager - cleanlab</title>
-      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=a746c00c" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=8f2a1f02" />
     <link rel="stylesheet" type="text/css" href="../../../_static/styles/furo.css?v=135e06be" />
     <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
     <link rel="stylesheet" type="text/css" href="../../../_static/tabs.css?v=a5c4661c" />
@@ -645,14 +645,14 @@ to detect a custom-defined type of issue alongside the pre-defined issue types i
 <ul>
 <li><dl>
 <dt><a class="reference internal" href="../internal/factory.html#cleanlab.datalab.internal.issue_manager_factory.register" title="cleanlab.datalab.internal.issue_manager_factory.register"><code class="xref py py-meth docutils literal notranslate"><span class="pre">register</span></code></a>:</dt><dd><p>You can either use this function at runtime to register a new issue manager:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">cleanlab.datalab.internal.issue_manager_factory</span> <span class="kn">import</span> <span class="n">register</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">cleanlab.datalab.internal.issue_manager_factory</span><span class="w"> </span><span class="kn">import</span> <span class="n">register</span>
 <span class="n">register</span><span class="p">(</span><span class="n">MyIssueManager</span><span class="p">)</span>  <span class="c1"># Defaults to task=&quot;classification&quot;</span>
 <span class="c1"># register(MyIssueManagerForRegression, task=&quot;regression&quot;)  # Alternative for regression tasks</span>
 </pre></div>
 </div>
 <p>or add as a decorator to the class definition (currently only works for classification tasks):</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="nd">@register</span>
-<span class="k">class</span> <span class="nc">MyIssueManager</span><span class="p">(</span><span class="n">IssueManager</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">MyIssueManager</span><span class="p">(</span><span class="n">IssueManager</span><span class="p">):</span>
     <span class="o">...</span>
 </pre></div>
 </div>
@@ -675,9 +675,9 @@ to detect a custom-defined type of issue alongside the pre-defined issue types i
 </pre></div>
 </div>
 </div>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
-<span class="kn">from</span> <span class="nn">cleanlab</span> <span class="kn">import</span> <span class="n">IssueManager</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">cleanlab</span><span class="w"> </span><span class="kn">import</span> <span class="n">IssueManager</span>
 
 <span class="c1"># Create a dummy dataset</span>
 <span class="n">N</span> <span class="o">=</span> <span class="mi">20</span>
@@ -702,10 +702,10 @@ assign a name to the class as the class-variable, <code class="xref py py-obj do
 method should mark each example in the dataset as an issue or not with a boolean array.
 It should also provide a score for each example in the dataset that quantifies the quality of the example
 with regards to the issue.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Basic</span><span class="p">(</span><span class="n">IssueManager</span><span class="p">):</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">Basic</span><span class="p">(</span><span class="n">IssueManager</span><span class="p">):</span>
     <span class="c1"># Assign a name to the issue</span>
     <span class="n">issue_name</span> <span class="o">=</span> <span class="s2">&quot;basic&quot;</span>
-    <span class="k">def</span> <span class="nf">find_issues</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">find_issues</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="c1"># Compute scores for each example</span>
         <span class="n">scores</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">rand</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">datalab</span><span class="o">.</span><span class="n">data</span><span class="p">))</span>
 
@@ -733,7 +733,7 @@ with regards to the issue.</p>
 <p>The information can be included in a report generated by <a class="reference internal" href="../datalab.html#cleanlab.datalab.datalab.Datalab" title="cleanlab.datalab.datalab.Datalab"><code class="xref py py-class docutils literal notranslate"><span class="pre">Datalab</span></code></a>,
 if you add any of the keys to the <code class="xref py py-obj docutils literal notranslate"><span class="pre">verbosity_levels</span></code> class-attribute.
 Optionally, you can also add a description of the type of issue this issue manager handles to the <code class="xref py py-obj docutils literal notranslate"><span class="pre">description</span></code> class-attribute.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Intermediate</span><span class="p">(</span><span class="n">IssueManager</span><span class="p">):</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">Intermediate</span><span class="p">(</span><span class="n">IssueManager</span><span class="p">):</span>
     <span class="n">issue_name</span> <span class="o">=</span> <span class="s2">&quot;intermediate&quot;</span>
     <span class="c1"># Add a dictionary of information to include in the report</span>
     <span class="n">verbosity_levels</span> <span class="o">=</span> <span class="p">{</span>
@@ -743,7 +743,7 @@ Optionally, you can also add a description of the type of issue this issue manag
     <span class="p">}</span>
     <span class="c1"># Add a description of the issue</span>
     <span class="n">description</span> <span class="o">=</span> <span class="s2">&quot;Intermediate issues are a bit more involved than basic issues.&quot;</span>
-    <span class="k">def</span> <span class="nf">find_issues</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">intermediate_arg</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">find_issues</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">intermediate_arg</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">N</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">datalab</span><span class="o">.</span><span class="n">data</span><span class="p">)</span>
         <span class="n">raw_scores</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">rand</span><span class="p">(</span><span class="n">N</span><span class="p">)</span>
         <span class="n">std</span> <span class="o">=</span> <span class="n">raw_scores</span><span class="o">.</span><span class="n">std</span><span class="p">()</span>
@@ -778,8 +778,8 @@ Optionally, you can also add a description of the type of issue this issue manag
 <p>We can create a
 <a class="reference internal" href="../datalab.html#cleanlab.datalab.datalab.Datalab" title="cleanlab.datalab.datalab.Datalab"><code class="xref py py-class docutils literal notranslate"><span class="pre">Datalab</span></code></a>
 instance and run issue checks with the custom issue managers we created like so:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">cleanlab.datalab.internal.issue_manager_factory</span> <span class="kn">import</span> <span class="n">register</span>
-<span class="kn">from</span> <span class="nn">cleanlab</span> <span class="kn">import</span> <span class="n">Datalab</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">cleanlab.datalab.internal.issue_manager_factory</span><span class="w"> </span><span class="kn">import</span> <span class="n">register</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">cleanlab</span><span class="w"> </span><span class="kn">import</span> <span class="n">Datalab</span>
 
 
 <span class="c1"># Register the issue manager</span>
@@ -870,7 +870,7 @@ Examples representing most severe instances of this issue:
         <div class="bottom-of-page">
           <div class="left-details">
             <div class="copyright">
-                Copyright &#169; 2024, Cleanlab Inc.
+                Copyright &#169; 2025, Cleanlab Inc.
             </div>
             Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
             

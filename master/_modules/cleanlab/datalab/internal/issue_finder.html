@@ -16,7 +16,7 @@
 
     <link rel="shortcut icon" href="https://raw.githubusercontent.com/cleanlab/assets/a4483476d449f2f05a4c7cde329e72358099cc07/cleanlab/cleanlab_favicon.svg"/><!-- Generated with Sphinx 7.1.2 and Furo 2023.09.10 -->
         <title>cleanlab.datalab.internal.issue_finder - cleanlab</title>
-      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=a746c00c" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=8f2a1f02" />
     <link rel="stylesheet" type="text/css" href="../../../../_static/styles/furo.css?v=135e06be" />
     <link rel="stylesheet" type="text/css" href="../../../../_static/copybutton.css?v=76b2166b" />
     <link rel="stylesheet" type="text/css" href="../../../../_static/tabs.css?v=a5c4661c" />
@@ -654,31 +654,31 @@
 <span class="sd">    This module is not intended to be used directly. Instead, use the public-facing</span>
 <span class="sd">    :py:meth:`Datalab.find_issues &lt;cleanlab.datalab.datalab.Datalab.find_issues&gt;` method.</span>
 <span class="sd">&quot;&quot;&quot;</span>
-<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">annotations</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
 
-<span class="kn">import</span> <span class="nn">warnings</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">TYPE_CHECKING</span><span class="p">,</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Optional</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">warnings</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">TYPE_CHECKING</span><span class="p">,</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Optional</span>
 
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">from</span> <span class="nn">scipy.sparse</span> <span class="kn">import</span> <span class="n">csr_matrix</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">scipy.sparse</span><span class="w"> </span><span class="kn">import</span> <span class="n">csr_matrix</span>
 
-<span class="kn">from</span> <span class="nn">cleanlab.datalab.internal.issue_manager_factory</span> <span class="kn">import</span> <span class="p">(</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">cleanlab.datalab.internal.issue_manager_factory</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
     <span class="n">_IssueManagerFactory</span><span class="p">,</span>
     <span class="n">list_default_issue_types</span><span class="p">,</span>
 <span class="p">)</span>
-<span class="kn">from</span> <span class="nn">cleanlab.datalab.internal.model_outputs</span> <span class="kn">import</span> <span class="p">(</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">cleanlab.datalab.internal.model_outputs</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
     <span class="n">MultiClassPredProbs</span><span class="p">,</span>
     <span class="n">MultiLabelPredProbs</span><span class="p">,</span>
     <span class="n">RegressionPredictions</span><span class="p">,</span>
 <span class="p">)</span>
-<span class="kn">from</span> <span class="nn">cleanlab.datalab.internal.task</span> <span class="kn">import</span> <span class="n">Task</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">cleanlab.datalab.internal.task</span><span class="w"> </span><span class="kn">import</span> <span class="n">Task</span>
 
 <span class="k">if</span> <span class="n">TYPE_CHECKING</span><span class="p">:</span>  <span class="c1"># pragma: no cover</span>
-    <span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Callable</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Callable</span>
 
-    <span class="kn">import</span> <span class="nn">numpy.typing</span> <span class="k">as</span> <span class="nn">npt</span>
+    <span class="kn">import</span><span class="w"> </span><span class="nn">numpy.typing</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">npt</span>
 
-    <span class="kn">from</span> <span class="nn">cleanlab.datalab.datalab</span> <span class="kn">import</span> <span class="n">Datalab</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">cleanlab.datalab.datalab</span><span class="w"> </span><span class="kn">import</span> <span class="n">Datalab</span>
 
 
 <span class="n">_CLASSIFICATION_ARGS_DICT</span> <span class="o">=</span> <span class="p">{</span>
@@ -711,7 +711,7 @@
 <span class="p">}</span>
 
 
-<span class="k">def</span> <span class="nf">_resolve_required_args_for_classification</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_resolve_required_args_for_classification</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Resolves the required arguments for each issue type intended for classification tasks.&quot;&quot;&quot;</span>
     <span class="n">initial_args_dict</span> <span class="o">=</span> <span class="n">_CLASSIFICATION_ARGS_DICT</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
     <span class="n">args_dict</span> <span class="o">=</span> <span class="p">{</span>
@@ -753,7 +753,7 @@
     <span class="k">return</span> <span class="n">args_dict</span>
 
 
-<span class="k">def</span> <span class="nf">_resolve_required_args_for_regression</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_resolve_required_args_for_regression</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Resolves the required arguments for each issue type intended for regression tasks.&quot;&quot;&quot;</span>
     <span class="n">initial_args_dict</span> <span class="o">=</span> <span class="n">_REGRESSION_ARGS_DICT</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
     <span class="n">args_dict</span> <span class="o">=</span> <span class="p">{</span>
@@ -778,7 +778,7 @@
     <span class="k">return</span> <span class="n">args_dict</span>
 
 
-<span class="k">def</span> <span class="nf">_resolve_required_args_for_multilabel</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_resolve_required_args_for_multilabel</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Resolves the required arguments for each issue type intended for multilabel tasks.&quot;&quot;&quot;</span>
     <span class="n">initial_args_dict</span> <span class="o">=</span> <span class="n">_MULTILABEL_ARGS_DICT</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
     <span class="n">args_dict</span> <span class="o">=</span> <span class="p">{</span>
@@ -803,7 +803,7 @@
     <span class="k">return</span> <span class="n">args_dict</span>
 
 
-<span class="k">def</span> <span class="nf">_select_strategy_for_resolving_required_args</span><span class="p">(</span><span class="n">task</span><span class="p">:</span> <span class="n">Task</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Callable</span><span class="p">:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_select_strategy_for_resolving_required_args</span><span class="p">(</span><span class="n">task</span><span class="p">:</span> <span class="n">Task</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Callable</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Helper function that selects the strategy for resolving required arguments for each issue type.</span>
 
 <span class="sd">    Each strategy resolves the required arguments for each issue type.</span>
@@ -834,7 +834,7 @@
     <span class="k">return</span> <span class="n">selected_strategy</span>
 
 
-<div class="viewcode-block" id="IssueFinder"><a class="viewcode-back" href="../../../../cleanlab/datalab/internal/issue_finder.html#cleanlab.datalab.internal.issue_finder.IssueFinder">[docs]</a><span class="k">class</span> <span class="nc">IssueFinder</span><span class="p">:</span>
+<div class="viewcode-block" id="IssueFinder"><a class="viewcode-back" href="../../../../cleanlab/datalab/internal/issue_finder.html#cleanlab.datalab.internal.issue_finder.IssueFinder">[docs]</a><span class="k">class</span><span class="w"> </span><span class="nc">IssueFinder</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    The IssueFinder class is responsible for managing the process of identifying</span>
 <span class="sd">    issues in the dataset by handling the creation and execution of relevant</span>
@@ -865,12 +865,12 @@
 <span class="sd">    `Datalab.find_issues` method which internally utilizes an IssueFinder instance.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">datalab</span><span class="p">:</span> <span class="s2">&quot;Datalab&quot;</span><span class="p">,</span> <span class="n">task</span><span class="p">:</span> <span class="n">Task</span><span class="p">,</span> <span class="n">verbosity</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">datalab</span><span class="p">:</span> <span class="s2">&quot;Datalab&quot;</span><span class="p">,</span> <span class="n">task</span><span class="p">:</span> <span class="n">Task</span><span class="p">,</span> <span class="n">verbosity</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">datalab</span> <span class="o">=</span> <span class="n">datalab</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">task</span> <span class="o">=</span> <span class="n">task</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">verbosity</span> <span class="o">=</span> <span class="n">verbosity</span>
 
-<div class="viewcode-block" id="IssueFinder.find_issues"><a class="viewcode-back" href="../../../../cleanlab/datalab/internal/issue_finder.html#cleanlab.datalab.internal.issue_finder.IssueFinder.find_issues">[docs]</a>    <span class="k">def</span> <span class="nf">find_issues</span><span class="p">(</span>
+<div class="viewcode-block" id="IssueFinder.find_issues"><a class="viewcode-back" href="../../../../cleanlab/datalab/internal/issue_finder.html#cleanlab.datalab.internal.issue_finder.IssueFinder.find_issues">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">find_issues</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="o">*</span><span class="p">,</span>
         <span class="n">pred_probs</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
@@ -960,7 +960,7 @@
             <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Failed to check for these issue types: </span><span class="si">{</span><span class="n">failed_managers</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
         <span class="n">data_issues</span><span class="o">.</span><span class="n">set_health_score</span><span class="p">()</span></div>
 
-    <span class="k">def</span> <span class="nf">_set_issue_types</span><span class="p">(</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_set_issue_types</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">issue_types</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]],</span>
         <span class="n">required_defaults_dict</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span>
@@ -1008,7 +1008,7 @@
         <span class="k">return</span> <span class="n">issue_types_copy</span>
 
     <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">_check_missing_args</span><span class="p">(</span><span class="n">required_defaults_dict</span><span class="p">,</span> <span class="n">issue_types</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_check_missing_args</span><span class="p">(</span><span class="n">required_defaults_dict</span><span class="p">,</span> <span class="n">issue_types</span><span class="p">):</span>
         <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">issue_type_value</span> <span class="ow">in</span> <span class="n">issue_types</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
             <span class="n">missing_args</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">required_defaults_dict</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="p">{}))</span> <span class="o">-</span> <span class="nb">set</span><span class="p">(</span><span class="n">issue_type_value</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
             <span class="c1"># Impute missing arguments with default values.</span>
@@ -1019,7 +1019,7 @@
             <span class="n">issue_types</span><span class="p">[</span><span class="n">key</span><span class="p">]</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">missing_dict</span><span class="p">)</span>
 
     <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">_validate_issue_types_dict</span><span class="p">(</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_validate_issue_types_dict</span><span class="p">(</span>
         <span class="n">issue_types</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span> <span class="n">required_defaults_dict</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">missing_required_args_dict</span> <span class="o">=</span> <span class="p">{}</span>
@@ -1034,7 +1034,7 @@
                 <span class="n">error_message</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot;Required argument </span><span class="si">{</span><span class="n">missing_required_args</span><span class="si">}</span><span class="s2"> for issue type </span><span class="si">{</span><span class="n">issue_name</span><span class="si">}</span><span class="s2"> was not provided.</span><span class="se">\n</span><span class="s2">&quot;</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="n">error_message</span><span class="p">)</span>
 
-<div class="viewcode-block" id="IssueFinder.get_available_issue_types"><a class="viewcode-back" href="../../../../cleanlab/datalab/internal/issue_finder.html#cleanlab.datalab.internal.issue_finder.IssueFinder.get_available_issue_types">[docs]</a>    <span class="k">def</span> <span class="nf">get_available_issue_types</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="IssueFinder.get_available_issue_types"><a class="viewcode-back" href="../../../../cleanlab/datalab/internal/issue_finder.html#cleanlab.datalab.internal.issue_finder.IssueFinder.get_available_issue_types">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">get_available_issue_types</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns a dictionary of issue types that can be used in :py:meth:`Datalab.find_issues</span>
 <span class="sd">        &lt;cleanlab.datalab.datalab.Datalab.find_issues&gt;` method.&quot;&quot;&quot;</span>
 
@@ -1140,7 +1140,7 @@
         <div class="bottom-of-page">
           <div class="left-details">
             <div class="copyright">
-                Copyright &#169; 2024, Cleanlab Inc.
+                Copyright &#169; 2025, Cleanlab Inc.
             </div>
             Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
             

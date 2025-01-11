@@ -16,7 +16,7 @@
 
     <link rel="shortcut icon" href="https://raw.githubusercontent.com/cleanlab/assets/a4483476d449f2f05a4c7cde329e72358099cc07/cleanlab/cleanlab_favicon.svg"/><!-- Generated with Sphinx 7.1.2 and Furo 2023.09.10 -->
         <title>cleanlab.multilabel_classification.dataset - cleanlab</title>
-      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=a746c00c" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=8f2a1f02" />
     <link rel="stylesheet" type="text/css" href="../../../_static/styles/furo.css?v=135e06be" />
     <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
     <link rel="stylesheet" type="text/css" href="../../../_static/tabs.css?v=a5c4661c" />
@@ -647,18 +647,18 @@
 <span class="sd">Unlike in standard multi-class classification, model-predicted class probabilities need not sum to 1 for each row in multi-label classification.</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
-<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">cast</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Any</span>  <span class="c1"># noqa: F401</span>
-<span class="kn">from</span> <span class="nn">cleanlab.multilabel_classification.filter</span> <span class="kn">import</span> <span class="p">(</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">cast</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Any</span>  <span class="c1"># noqa: F401</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">cleanlab.multilabel_classification.filter</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
     <span class="n">find_multilabel_issues_per_class</span><span class="p">,</span>
     <span class="n">find_label_issues</span><span class="p">,</span>
 <span class="p">)</span>
-<span class="kn">from</span> <span class="nn">cleanlab.internal.multilabel_utils</span> <span class="kn">import</span> <span class="n">get_onehot_num_classes</span>
-<span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">defaultdict</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">cleanlab.internal.multilabel_utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_onehot_num_classes</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">collections</span><span class="w"> </span><span class="kn">import</span> <span class="n">defaultdict</span>
 
 
-<div class="viewcode-block" id="common_multilabel_issues"><a class="viewcode-back" href="../../../cleanlab/multilabel_classification/dataset.html#cleanlab.multilabel_classification.dataset.common_multilabel_issues">[docs]</a><span class="k">def</span> <span class="nf">common_multilabel_issues</span><span class="p">(</span>
+<div class="viewcode-block" id="common_multilabel_issues"><a class="viewcode-back" href="../../../cleanlab/multilabel_classification/dataset.html#cleanlab.multilabel_classification.dataset.common_multilabel_issues">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">common_multilabel_issues</span><span class="p">(</span>
     <span class="n">labels</span><span class="o">=</span><span class="nb">list</span><span class="p">,</span>
     <span class="n">pred_probs</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
     <span class="o">*</span><span class="p">,</span>
@@ -740,7 +740,7 @@
     <span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="rank_classes_by_multilabel_quality"><a class="viewcode-back" href="../../../cleanlab/multilabel_classification/dataset.html#cleanlab.multilabel_classification.dataset.rank_classes_by_multilabel_quality">[docs]</a><span class="k">def</span> <span class="nf">rank_classes_by_multilabel_quality</span><span class="p">(</span>
+<div class="viewcode-block" id="rank_classes_by_multilabel_quality"><a class="viewcode-back" href="../../../cleanlab/multilabel_classification/dataset.html#cleanlab.multilabel_classification.dataset.rank_classes_by_multilabel_quality">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">rank_classes_by_multilabel_quality</span><span class="p">(</span>
     <span class="n">labels</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
     <span class="n">pred_probs</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
     <span class="o">*</span><span class="p">,</span>
@@ -829,7 +829,7 @@
     <span class="p">)[</span><span class="n">return_columns</span><span class="p">]</span></div>
 
 
-<span class="k">def</span> <span class="nf">_get_num_examples_multilabel</span><span class="p">(</span><span class="n">labels</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">confident_joint</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_get_num_examples_multilabel</span><span class="p">(</span><span class="n">labels</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">confident_joint</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Helper method that finds the number of examples from the parameters or throws an error</span>
 <span class="sd">    if neither parameter is provided.</span>
 
@@ -858,7 +858,7 @@
     <span class="k">return</span> <span class="n">num_examples</span>
 
 
-<div class="viewcode-block" id="overall_multilabel_health_score"><a class="viewcode-back" href="../../../cleanlab/multilabel_classification/dataset.html#cleanlab.multilabel_classification.dataset.overall_multilabel_health_score">[docs]</a><span class="k">def</span> <span class="nf">overall_multilabel_health_score</span><span class="p">(</span>
+<div class="viewcode-block" id="overall_multilabel_health_score"><a class="viewcode-back" href="../../../cleanlab/multilabel_classification/dataset.html#cleanlab.multilabel_classification.dataset.overall_multilabel_health_score">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">overall_multilabel_health_score</span><span class="p">(</span>
     <span class="n">labels</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
     <span class="n">pred_probs</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
     <span class="o">*</span><span class="p">,</span>
@@ -886,7 +886,7 @@
     <span class="k">return</span> <span class="mf">1.0</span> <span class="o">-</span> <span class="nb">sum</span><span class="p">(</span><span class="n">issues</span><span class="p">)</span> <span class="o">/</span> <span class="n">num_examples</span></div>
 
 
-<div class="viewcode-block" id="multilabel_health_summary"><a class="viewcode-back" href="../../../cleanlab/multilabel_classification/dataset.html#cleanlab.multilabel_classification.dataset.multilabel_health_summary">[docs]</a><span class="k">def</span> <span class="nf">multilabel_health_summary</span><span class="p">(</span>
+<div class="viewcode-block" id="multilabel_health_summary"><a class="viewcode-back" href="../../../cleanlab/multilabel_classification/dataset.html#cleanlab.multilabel_classification.dataset.multilabel_health_summary">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">multilabel_health_summary</span><span class="p">(</span>
     <span class="n">labels</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
     <span class="n">pred_probs</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
     <span class="o">*</span><span class="p">,</span>
@@ -913,7 +913,7 @@
 <span class="sd">            - ``&quot;classes_by_multilabel_quality&quot;``, corresponding to output of `~cleanlab.multilabel_classification.dataset.rank_classes_by_multilabel_quality`</span>
 <span class="sd">            - ``&quot;common_multilabel_issues&quot;``, corresponding to output of `~cleanlab.multilabel_classification.dataset.common_multilabel_issues`</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="kn">from</span> <span class="nn">cleanlab.internal.util</span> <span class="kn">import</span> <span class="n">smart_display_dataframe</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">cleanlab.internal.util</span><span class="w"> </span><span class="kn">import</span> <span class="n">smart_display_dataframe</span>
 
     <span class="k">if</span> <span class="n">num_examples</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">num_examples</span> <span class="o">=</span> <span class="n">_get_num_examples_multilabel</span><span class="p">(</span><span class="n">labels</span><span class="o">=</span><span class="n">labels</span><span class="p">)</span>
@@ -979,7 +979,7 @@
         <div class="bottom-of-page">
           <div class="left-details">
             <div class="copyright">
-                Copyright &#169; 2024, Cleanlab Inc.
+                Copyright &#169; 2025, Cleanlab Inc.
             </div>
             Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
             

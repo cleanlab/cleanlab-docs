@@ -16,7 +16,7 @@
 
     <link rel="shortcut icon" href="https://raw.githubusercontent.com/cleanlab/assets/a4483476d449f2f05a4c7cde329e72358099cc07/cleanlab/cleanlab_favicon.svg"/><!-- Generated with Sphinx 7.1.2 and Furo 2023.09.10 -->
         <title>cleanlab.datalab.internal.issue_manager.regression.label - cleanlab</title>
-      <link rel="stylesheet" type="text/css" href="../../../../../../_static/pygments.css?v=a746c00c" />
+      <link rel="stylesheet" type="text/css" href="../../../../../../_static/pygments.css?v=8f2a1f02" />
     <link rel="stylesheet" type="text/css" href="../../../../../../_static/styles/furo.css?v=135e06be" />
     <link rel="stylesheet" type="text/css" href="../../../../../../_static/copybutton.css?v=76b2166b" />
     <link rel="stylesheet" type="text/css" href="../../../../../../_static/tabs.css?v=a5c4661c" />
@@ -641,21 +641,21 @@
 <span class="c1"># You should have received a copy of the GNU Affero General Public License</span>
 <span class="c1"># along with cleanlab.  If not, see &lt;https://www.gnu.org/licenses/&gt;.</span>
 
-<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">annotations</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
 
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">TYPE_CHECKING</span><span class="p">,</span> <span class="n">Any</span><span class="p">,</span> <span class="n">ClassVar</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Optional</span>
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">TYPE_CHECKING</span><span class="p">,</span> <span class="n">Any</span><span class="p">,</span> <span class="n">ClassVar</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Optional</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
 
-<span class="kn">from</span> <span class="nn">cleanlab.regression.learn</span> <span class="kn">import</span> <span class="n">CleanLearning</span>
-<span class="kn">from</span> <span class="nn">cleanlab.datalab.internal.issue_manager</span> <span class="kn">import</span> <span class="n">IssueManager</span>
-<span class="kn">from</span> <span class="nn">cleanlab.regression.rank</span> <span class="kn">import</span> <span class="n">get_label_quality_scores</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">cleanlab.regression.learn</span><span class="w"> </span><span class="kn">import</span> <span class="n">CleanLearning</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">cleanlab.datalab.internal.issue_manager</span><span class="w"> </span><span class="kn">import</span> <span class="n">IssueManager</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">cleanlab.regression.rank</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_label_quality_scores</span>
 
 <span class="k">if</span> <span class="n">TYPE_CHECKING</span><span class="p">:</span>  <span class="c1"># pragma: no cover</span>
-    <span class="kn">from</span> <span class="nn">cleanlab.datalab.datalab</span> <span class="kn">import</span> <span class="n">Datalab</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">cleanlab.datalab.datalab</span><span class="w"> </span><span class="kn">import</span> <span class="n">Datalab</span>
 
 
-<div class="viewcode-block" id="RegressionLabelIssueManager"><a class="viewcode-back" href="../../../../../../cleanlab/datalab/internal/issue_manager/regression/label.html#cleanlab.datalab.internal.issue_manager.regression.label.RegressionLabelIssueManager">[docs]</a><span class="k">class</span> <span class="nc">RegressionLabelIssueManager</span><span class="p">(</span><span class="n">IssueManager</span><span class="p">):</span>
+<div class="viewcode-block" id="RegressionLabelIssueManager"><a class="viewcode-back" href="../../../../../../cleanlab/datalab/internal/issue_manager/regression/label.html#cleanlab.datalab.internal.issue_manager.regression.label.RegressionLabelIssueManager">[docs]</a><span class="k">class</span><span class="w"> </span><span class="nc">RegressionLabelIssueManager</span><span class="p">(</span><span class="n">IssueManager</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Manages label issues in a Datalab for regression tasks.</span>
 
 <span class="sd">    Parameters</span>
@@ -687,7 +687,7 @@
         <span class="mi">3</span><span class="p">:</span> <span class="p">[],</span>  <span class="c1"># TODO</span>
     <span class="p">}</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">datalab</span><span class="p">:</span> <span class="n">Datalab</span><span class="p">,</span>
         <span class="n">clean_learning_kwargs</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
@@ -701,7 +701,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_uses_custom_model</span> <span class="o">=</span> <span class="s2">&quot;model&quot;</span> <span class="ow">in</span> <span class="p">(</span><span class="n">clean_learning_kwargs</span> <span class="ow">or</span> <span class="p">{})</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">threshold</span> <span class="o">=</span> <span class="n">threshold</span>
 
-<div class="viewcode-block" id="RegressionLabelIssueManager.find_issues"><a class="viewcode-back" href="../../../../../../cleanlab/datalab/internal/issue_manager/regression/label.html#cleanlab.datalab.internal.issue_manager.regression.label.RegressionLabelIssueManager.find_issues">[docs]</a>    <span class="k">def</span> <span class="nf">find_issues</span><span class="p">(</span>
+<div class="viewcode-block" id="RegressionLabelIssueManager.find_issues"><a class="viewcode-back" href="../../../../../../cleanlab/datalab/internal/issue_manager/regression/label.html#cleanlab.datalab.internal.issue_manager.regression.label.RegressionLabelIssueManager.find_issues">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">find_issues</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">features</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">predictions</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
@@ -762,7 +762,7 @@
         <span class="c1"># Drop columns from issues that are in the info</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">issues</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">issues</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;given_label&quot;</span><span class="p">,</span> <span class="s2">&quot;predicted_label&quot;</span><span class="p">])</span></div>
 
-<div class="viewcode-block" id="RegressionLabelIssueManager.collect_info"><a class="viewcode-back" href="../../../../../../cleanlab/datalab/internal/issue_manager/regression/label.html#cleanlab.datalab.internal.issue_manager.regression.label.RegressionLabelIssueManager.collect_info">[docs]</a>    <span class="k">def</span> <span class="nf">collect_info</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">issues</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+<div class="viewcode-block" id="RegressionLabelIssueManager.collect_info"><a class="viewcode-back" href="../../../../../../cleanlab/datalab/internal/issue_manager/regression/label.html#cleanlab.datalab.internal.issue_manager.regression.label.RegressionLabelIssueManager.collect_info">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">collect_info</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">issues</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
         <span class="n">issues_info</span> <span class="o">=</span> <span class="p">{</span>
             <span class="s2">&quot;num_label_issues&quot;</span><span class="p">:</span> <span class="nb">sum</span><span class="p">(</span><span class="n">issues</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;is_</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">issue_name</span><span class="si">}</span><span class="s2">_issue&quot;</span><span class="p">]),</span>
             <span class="s2">&quot;average_label_quality&quot;</span><span class="p">:</span> <span class="n">issues</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">issue_score_key</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">(),</span>
@@ -783,7 +783,7 @@
         <span class="k">return</span> <span class="n">info_dict</span></div></div>
 
 
-<div class="viewcode-block" id="find_issues_with_predictions"><a class="viewcode-back" href="../../../../../../cleanlab/datalab/internal/issue_manager/regression/label.html#cleanlab.datalab.internal.issue_manager.regression.label.find_issues_with_predictions">[docs]</a><span class="k">def</span> <span class="nf">find_issues_with_predictions</span><span class="p">(</span>
+<div class="viewcode-block" id="find_issues_with_predictions"><a class="viewcode-back" href="../../../../../../cleanlab/datalab/internal/issue_manager/regression/label.html#cleanlab.datalab.internal.issue_manager.regression.label.find_issues_with_predictions">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">find_issues_with_predictions</span><span class="p">(</span>
     <span class="n">predictions</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
     <span class="n">y</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
     <span class="n">threshold</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
@@ -840,7 +840,7 @@
     <span class="k">return</span> <span class="n">issues</span></div>
 
 
-<div class="viewcode-block" id="find_issues_with_features"><a class="viewcode-back" href="../../../../../../cleanlab/datalab/internal/issue_manager/regression/label.html#cleanlab.datalab.internal.issue_manager.regression.label.find_issues_with_features">[docs]</a><span class="k">def</span> <span class="nf">find_issues_with_features</span><span class="p">(</span>
+<div class="viewcode-block" id="find_issues_with_features"><a class="viewcode-back" href="../../../../../../cleanlab/datalab/internal/issue_manager/regression/label.html#cleanlab.datalab.internal.issue_manager.regression.label.find_issues_with_features">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">find_issues_with_features</span><span class="p">(</span>
     <span class="n">features</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
     <span class="n">y</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
     <span class="n">cl</span><span class="p">:</span> <span class="n">CleanLearning</span><span class="p">,</span>
@@ -894,7 +894,7 @@
         <div class="bottom-of-page">
           <div class="left-details">
             <div class="copyright">
-                Copyright &#169; 2024, Cleanlab Inc.
+                Copyright &#169; 2025, Cleanlab Inc.
             </div>
             Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
             

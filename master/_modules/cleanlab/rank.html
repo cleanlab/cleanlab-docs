@@ -16,7 +16,7 @@
 
     <link rel="shortcut icon" href="https://raw.githubusercontent.com/cleanlab/assets/a4483476d449f2f05a4c7cde329e72358099cc07/cleanlab/cleanlab_favicon.svg"/><!-- Generated with Sphinx 7.1.2 and Furo 2023.09.10 -->
         <title>cleanlab.rank - cleanlab</title>
-      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=a746c00c" />
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=8f2a1f02" />
     <link rel="stylesheet" type="text/css" href="../../_static/styles/furo.css?v=135e06be" />
     <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
     <link rel="stylesheet" type="text/css" href="../../_static/tabs.css?v=a5c4661c" />
@@ -658,23 +658,23 @@
 <span class="sd">To obtain out-of-sample predicted probabilities for every datapoint in your dataset, you can use :ref:`cross-validation &lt;pred_probs_cross_val&gt;`. This is encouraged to get better results.</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">from</span> <span class="nn">sklearn.metrics</span> <span class="kn">import</span> <span class="n">log_loss</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span>
-<span class="kn">import</span> <span class="nn">warnings</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.metrics</span><span class="w"> </span><span class="kn">import</span> <span class="n">log_loss</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">warnings</span>
 
-<span class="kn">from</span> <span class="nn">cleanlab.internal.validation</span> <span class="kn">import</span> <span class="n">assert_valid_inputs</span>
-<span class="kn">from</span> <span class="nn">cleanlab.internal.constants</span> <span class="kn">import</span> <span class="p">(</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">cleanlab.internal.validation</span><span class="w"> </span><span class="kn">import</span> <span class="n">assert_valid_inputs</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">cleanlab.internal.constants</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
     <span class="n">CLIPPING_LOWER_BOUND</span><span class="p">,</span>
 <span class="p">)</span>  <span class="c1"># lower-bound clipping threshold to prevents 0 in logs and division</span>
 
-<span class="kn">from</span> <span class="nn">cleanlab.internal.label_quality_utils</span> <span class="kn">import</span> <span class="p">(</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">cleanlab.internal.label_quality_utils</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
     <span class="n">_subtract_confident_thresholds</span><span class="p">,</span>
     <span class="n">get_normalized_entropy</span><span class="p">,</span>
 <span class="p">)</span>
 
 
-<div class="viewcode-block" id="get_label_quality_scores"><a class="viewcode-back" href="../../cleanlab/rank.html#cleanlab.rank.get_label_quality_scores">[docs]</a><span class="k">def</span> <span class="nf">get_label_quality_scores</span><span class="p">(</span>
+<div class="viewcode-block" id="get_label_quality_scores"><a class="viewcode-back" href="../../cleanlab/rank.html#cleanlab.rank.get_label_quality_scores">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">get_label_quality_scores</span><span class="p">(</span>
     <span class="n">labels</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
     <span class="n">pred_probs</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
     <span class="o">*</span><span class="p">,</span>
@@ -761,7 +761,7 @@
     <span class="p">)</span></div>
 
 
-<span class="k">def</span> <span class="nf">_compute_label_quality_scores</span><span class="p">(</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_compute_label_quality_scores</span><span class="p">(</span>
     <span class="n">labels</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
     <span class="n">pred_probs</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
     <span class="o">*</span><span class="p">,</span>
@@ -799,7 +799,7 @@
     <span class="k">return</span> <span class="n">label_quality_scores</span>
 
 
-<div class="viewcode-block" id="get_label_quality_ensemble_scores"><a class="viewcode-back" href="../../cleanlab/rank.html#cleanlab.rank.get_label_quality_ensemble_scores">[docs]</a><span class="k">def</span> <span class="nf">get_label_quality_ensemble_scores</span><span class="p">(</span>
+<div class="viewcode-block" id="get_label_quality_ensemble_scores"><a class="viewcode-back" href="../../cleanlab/rank.html#cleanlab.rank.get_label_quality_ensemble_scores">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">get_label_quality_ensemble_scores</span><span class="p">(</span>
     <span class="n">labels</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
     <span class="n">pred_probs_list</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">],</span>
     <span class="o">*</span><span class="p">,</span>
@@ -1010,7 +1010,7 @@
     <span class="k">return</span> <span class="n">label_quality_scores</span></div>
 
 
-<div class="viewcode-block" id="find_top_issues"><a class="viewcode-back" href="../../cleanlab/rank.html#cleanlab.rank.find_top_issues">[docs]</a><span class="k">def</span> <span class="nf">find_top_issues</span><span class="p">(</span><span class="n">quality_scores</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">top</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">10</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<div class="viewcode-block" id="find_top_issues"><a class="viewcode-back" href="../../cleanlab/rank.html#cleanlab.rank.find_top_issues">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">find_top_issues</span><span class="p">(</span><span class="n">quality_scores</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">top</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">10</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Returns the sorted indices of the `top` issues in `quality_scores`, ordered from smallest to largest quality score</span>
 <span class="sd">    (i.e., from most to least likely to be an issue). For example, the first value returned is the index corresponding</span>
 <span class="sd">    to the smallest value in `quality_scores` (most likely to be an issue). The second value in the returned array is</span>
@@ -1039,7 +1039,7 @@
     <span class="k">return</span> <span class="n">top_outlier_indices</span></div>
 
 
-<div class="viewcode-block" id="order_label_issues"><a class="viewcode-back" href="../../cleanlab/rank.html#cleanlab.rank.order_label_issues">[docs]</a><span class="k">def</span> <span class="nf">order_label_issues</span><span class="p">(</span>
+<div class="viewcode-block" id="order_label_issues"><a class="viewcode-back" href="../../cleanlab/rank.html#cleanlab.rank.order_label_issues">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">order_label_issues</span><span class="p">(</span>
     <span class="n">label_issues_mask</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
     <span class="n">labels</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
     <span class="n">pred_probs</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
@@ -1105,7 +1105,7 @@
     <span class="k">return</span> <span class="n">label_issues_idx</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">argsort</span><span class="p">(</span><span class="n">label_quality_scores_issues</span><span class="p">)]</span></div>
 
 
-<div class="viewcode-block" id="get_self_confidence_for_each_label"><a class="viewcode-back" href="../../cleanlab/rank.html#cleanlab.rank.get_self_confidence_for_each_label">[docs]</a><span class="k">def</span> <span class="nf">get_self_confidence_for_each_label</span><span class="p">(</span>
+<div class="viewcode-block" id="get_self_confidence_for_each_label"><a class="viewcode-back" href="../../cleanlab/rank.html#cleanlab.rank.get_self_confidence_for_each_label">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">get_self_confidence_for_each_label</span><span class="p">(</span>
     <span class="n">labels</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
     <span class="n">pred_probs</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
@@ -1140,7 +1140,7 @@
     <span class="k">return</span> <span class="n">pred_probs</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">labels</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span> <span class="n">labels</span><span class="p">]</span></div>
 
 
-<div class="viewcode-block" id="get_normalized_margin_for_each_label"><a class="viewcode-back" href="../../cleanlab/rank.html#cleanlab.rank.get_normalized_margin_for_each_label">[docs]</a><span class="k">def</span> <span class="nf">get_normalized_margin_for_each_label</span><span class="p">(</span>
+<div class="viewcode-block" id="get_normalized_margin_for_each_label"><a class="viewcode-back" href="../../cleanlab/rank.html#cleanlab.rank.get_normalized_margin_for_each_label">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">get_normalized_margin_for_each_label</span><span class="p">(</span>
     <span class="n">labels</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
     <span class="n">pred_probs</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
@@ -1186,7 +1186,7 @@
     <span class="k">return</span> <span class="n">label_quality_scores</span></div>
 
 
-<div class="viewcode-block" id="get_confidence_weighted_entropy_for_each_label"><a class="viewcode-back" href="../../cleanlab/rank.html#cleanlab.rank.get_confidence_weighted_entropy_for_each_label">[docs]</a><span class="k">def</span> <span class="nf">get_confidence_weighted_entropy_for_each_label</span><span class="p">(</span>
+<div class="viewcode-block" id="get_confidence_weighted_entropy_for_each_label"><a class="viewcode-back" href="../../cleanlab/rank.html#cleanlab.rank.get_confidence_weighted_entropy_for_each_label">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">get_confidence_weighted_entropy_for_each_label</span><span class="p">(</span>
     <span class="n">labels</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">pred_probs</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Returns the &quot;confidence weighted entropy&quot; label-quality score for each datapoint.</span>
@@ -1236,7 +1236,7 @@
         <div class="bottom-of-page">
           <div class="left-details">
             <div class="copyright">
-                Copyright &#169; 2024, Cleanlab Inc.
+                Copyright &#169; 2025, Cleanlab Inc.
             </div>
             Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
             

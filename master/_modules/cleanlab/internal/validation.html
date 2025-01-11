@@ -16,7 +16,7 @@
 
     <link rel="shortcut icon" href="https://raw.githubusercontent.com/cleanlab/assets/a4483476d449f2f05a4c7cde329e72358099cc07/cleanlab/cleanlab_favicon.svg"/><!-- Generated with Sphinx 7.1.2 and Furo 2023.09.10 -->
         <title>cleanlab.internal.validation - cleanlab</title>
-      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=a746c00c" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=8f2a1f02" />
     <link rel="stylesheet" type="text/css" href="../../../_static/styles/furo.css?v=135e06be" />
     <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
     <link rel="stylesheet" type="text/css" href="../../../_static/tabs.css?v=a5c4661c" />
@@ -645,15 +645,15 @@
 <span class="sd">Checks to ensure valid inputs for various methods.</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
-<span class="kn">from</span> <span class="nn">cleanlab.typing</span> <span class="kn">import</span> <span class="n">LabelLike</span><span class="p">,</span> <span class="n">DatasetLike</span>
-<span class="kn">from</span> <span class="nn">cleanlab.internal.constants</span> <span class="kn">import</span> <span class="n">FLOATING_POINT_COMPARISON</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Union</span>
-<span class="kn">import</span> <span class="nn">warnings</span>
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">cleanlab.typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">LabelLike</span><span class="p">,</span> <span class="n">DatasetLike</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">cleanlab.internal.constants</span><span class="w"> </span><span class="kn">import</span> <span class="n">FLOATING_POINT_COMPARISON</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Union</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">warnings</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
 
 
-<div class="viewcode-block" id="assert_valid_inputs"><a class="viewcode-back" href="../../../cleanlab/internal/validation.html#cleanlab.internal.validation.assert_valid_inputs">[docs]</a><span class="k">def</span> <span class="nf">assert_valid_inputs</span><span class="p">(</span>
+<div class="viewcode-block" id="assert_valid_inputs"><a class="viewcode-back" href="../../../cleanlab/internal/validation.html#cleanlab.internal.validation.assert_valid_inputs">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">assert_valid_inputs</span><span class="p">(</span>
     <span class="n">X</span><span class="p">:</span> <span class="n">DatasetLike</span><span class="p">,</span>
     <span class="n">y</span><span class="p">:</span> <span class="n">LabelLike</span><span class="p">,</span>
     <span class="n">pred_probs</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
@@ -674,7 +674,7 @@
     <span class="k">if</span> <span class="n">pred_probs</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">allow_empty_X</span> <span class="o">=</span> <span class="kc">False</span>
     <span class="k">try</span><span class="p">:</span>
-        <span class="kn">import</span> <span class="nn">tensorflow</span>
+        <span class="kn">import</span><span class="w"> </span><span class="nn">tensorflow</span>
 
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">tensorflow</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">Dataset</span><span class="p">):</span>
             <span class="n">allow_empty_X</span> <span class="o">=</span> <span class="kc">True</span>  <span class="c1"># length of X may differ due to batch-size used in tf Dataset, so don&#39;t check it</span>
@@ -731,7 +731,7 @@
             <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s2">&quot;When X and pred_probs are both provided, the former may be ignored.&quot;</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="assert_valid_class_labels"><a class="viewcode-back" href="../../../cleanlab/internal/validation.html#cleanlab.internal.validation.assert_valid_class_labels">[docs]</a><span class="k">def</span> <span class="nf">assert_valid_class_labels</span><span class="p">(</span>
+<div class="viewcode-block" id="assert_valid_class_labels"><a class="viewcode-back" href="../../../cleanlab/internal/validation.html#cleanlab.internal.validation.assert_valid_class_labels">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">assert_valid_class_labels</span><span class="p">(</span>
     <span class="n">y</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
     <span class="n">allow_missing_classes</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
     <span class="n">allow_one_class</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
@@ -762,13 +762,13 @@
             <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="assert_nonempty_input"><a class="viewcode-back" href="../../../cleanlab/internal/validation.html#cleanlab.internal.validation.assert_nonempty_input">[docs]</a><span class="k">def</span> <span class="nf">assert_nonempty_input</span><span class="p">(</span><span class="n">X</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<div class="viewcode-block" id="assert_nonempty_input"><a class="viewcode-back" href="../../../cleanlab/internal/validation.html#cleanlab.internal.validation.assert_nonempty_input">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">assert_nonempty_input</span><span class="p">(</span><span class="n">X</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Ensures input is not None.&quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">X</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Data features X cannot be None. Currently X is None.&quot;</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="assert_indexing_works"><a class="viewcode-back" href="../../../cleanlab/internal/validation.html#cleanlab.internal.validation.assert_indexing_works">[docs]</a><span class="k">def</span> <span class="nf">assert_indexing_works</span><span class="p">(</span>
+<div class="viewcode-block" id="assert_indexing_works"><a class="viewcode-back" href="../../../cleanlab/internal/validation.html#cleanlab.internal.validation.assert_indexing_works">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">assert_indexing_works</span><span class="p">(</span>
     <span class="n">X</span><span class="p">:</span> <span class="n">DatasetLike</span><span class="p">,</span> <span class="n">idx</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">length_X</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Ensures we can do list-based indexing into ``X`` and ``y``.</span>
@@ -791,7 +791,7 @@
         <span class="k">pass</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">is_indexed</span><span class="p">:</span>
         <span class="k">try</span><span class="p">:</span>  <span class="c1"># check if X is pytorch Dataset object using lazy import</span>
-            <span class="kn">import</span> <span class="nn">torch</span>
+            <span class="kn">import</span><span class="w"> </span><span class="nn">torch</span>
 
             <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">Dataset</span><span class="p">):</span>  <span class="c1"># indexing for pytorch Dataset</span>
                 <span class="n">_</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">Subset</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">idx</span><span class="p">)</span>  <span class="c1"># type: ignore[call-overload]</span>
@@ -800,7 +800,7 @@
             <span class="k">pass</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">is_indexed</span><span class="p">:</span>
         <span class="k">try</span><span class="p">:</span>  <span class="c1"># check if X is tensorflow Dataset object using lazy import</span>
-            <span class="kn">import</span> <span class="nn">tensorflow</span> <span class="k">as</span> <span class="nn">tf</span>
+            <span class="kn">import</span><span class="w"> </span><span class="nn">tensorflow</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">tf</span>
 
             <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">tf</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">Dataset</span><span class="p">):</span>
                 <span class="n">is_indexed</span> <span class="o">=</span> <span class="kc">True</span>  <span class="c1"># skip check for tensorflow Dataset (too expensive)</span>
@@ -818,7 +818,7 @@
             <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="labels_to_array"><a class="viewcode-back" href="../../../cleanlab/internal/validation.html#cleanlab.internal.validation.labels_to_array">[docs]</a><span class="k">def</span> <span class="nf">labels_to_array</span><span class="p">(</span><span class="n">y</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">LabelLike</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">generic</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<div class="viewcode-block" id="labels_to_array"><a class="viewcode-back" href="../../../cleanlab/internal/validation.html#cleanlab.internal.validation.labels_to_array">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">labels_to_array</span><span class="p">(</span><span class="n">y</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">LabelLike</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">generic</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Converts different types of label objects to 1D numpy array and checks their validity.</span>
 
 <span class="sd">    Parameters</span>
@@ -849,7 +849,7 @@
             <span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="labels_to_list_multilabel"><a class="viewcode-back" href="../../../cleanlab/internal/validation.html#cleanlab.internal.validation.labels_to_list_multilabel">[docs]</a><span class="k">def</span> <span class="nf">labels_to_list_multilabel</span><span class="p">(</span><span class="n">y</span><span class="p">:</span> <span class="n">List</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]]:</span>
+<div class="viewcode-block" id="labels_to_list_multilabel"><a class="viewcode-back" href="../../../cleanlab/internal/validation.html#cleanlab.internal.validation.labels_to_list_multilabel">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">labels_to_list_multilabel</span><span class="p">(</span><span class="n">y</span><span class="p">:</span> <span class="n">List</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Converts different types of label objects to nested list and checks their validity.</span>
 
 <span class="sd">    Parameters</span>
@@ -880,7 +880,7 @@
         <div class="bottom-of-page">
           <div class="left-details">
             <div class="copyright">
-                Copyright &#169; 2024, Cleanlab Inc.
+                Copyright &#169; 2025, Cleanlab Inc.
             </div>
             Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
             

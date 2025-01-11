@@ -16,7 +16,7 @@
 
     <link rel="shortcut icon" href="https://raw.githubusercontent.com/cleanlab/assets/a4483476d449f2f05a4c7cde329e72358099cc07/cleanlab/cleanlab_favicon.svg"/><!-- Generated with Sphinx 7.1.2 and Furo 2023.09.10 -->
         <title>cleanlab.segmentation.summary - cleanlab</title>
-      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=a746c00c" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=8f2a1f02" />
     <link rel="stylesheet" type="text/css" href="../../../_static/styles/furo.css?v=135e06be" />
     <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
     <link rel="stylesheet" type="text/css" href="../../../_static/tabs.css?v=a5c4661c" />
@@ -645,17 +645,17 @@
 <span class="sd">Methods to display images and their label issues in a semantic segmentation dataset, as well as summarize the overall types of issues identified.</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">cast</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">cast</span>
 
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
-<span class="kn">from</span> <span class="nn">tqdm.auto</span> <span class="kn">import</span> <span class="n">tqdm</span>
-
-
-<span class="kn">from</span> <span class="nn">cleanlab.internal.segmentation_utils</span> <span class="kn">import</span> <span class="n">_get_summary_optional_params</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">tqdm.auto</span><span class="w"> </span><span class="kn">import</span> <span class="n">tqdm</span>
 
 
-<div class="viewcode-block" id="display_issues"><a class="viewcode-back" href="../../../cleanlab/segmentation/summary.html#cleanlab.segmentation.summary.display_issues">[docs]</a><span class="k">def</span> <span class="nf">display_issues</span><span class="p">(</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">cleanlab.internal.segmentation_utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">_get_summary_optional_params</span>
+
+
+<div class="viewcode-block" id="display_issues"><a class="viewcode-back" href="../../../cleanlab/segmentation/summary.html#cleanlab.segmentation.summary.display_issues">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">display_issues</span><span class="p">(</span>
     <span class="n">issues</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
     <span class="o">*</span><span class="p">,</span>
     <span class="n">labels</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
@@ -728,10 +728,10 @@
     <span class="n">correct_ordering</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argsort</span><span class="p">(</span><span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">issues</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)))[:</span><span class="n">top</span><span class="p">]</span>
 
     <span class="k">try</span><span class="p">:</span>
-        <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
-        <span class="kn">import</span> <span class="nn">matplotlib.patches</span> <span class="k">as</span> <span class="nn">mpatches</span>
-        <span class="kn">from</span> <span class="nn">matplotlib.axes</span> <span class="kn">import</span> <span class="n">Axes</span>
-        <span class="kn">from</span> <span class="nn">matplotlib.colors</span> <span class="kn">import</span> <span class="n">ListedColormap</span>
+        <span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+        <span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.patches</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">mpatches</span>
+        <span class="kn">from</span><span class="w"> </span><span class="nn">matplotlib.axes</span><span class="w"> </span><span class="kn">import</span> <span class="n">Axes</span>
+        <span class="kn">from</span><span class="w"> </span><span class="nn">matplotlib.colors</span><span class="w"> </span><span class="kn">import</span> <span class="n">ListedColormap</span>
     <span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">ImportError</span><span class="p">(</span><span class="s1">&#39;try &quot;pip install matplotlib&quot;&#39;</span><span class="p">)</span>
 
@@ -799,7 +799,7 @@
     <span class="k">return</span> <span class="kc">None</span></div>
 
 
-<div class="viewcode-block" id="common_label_issues"><a class="viewcode-back" href="../../../cleanlab/segmentation/summary.html#cleanlab.segmentation.summary.common_label_issues">[docs]</a><span class="k">def</span> <span class="nf">common_label_issues</span><span class="p">(</span>
+<div class="viewcode-block" id="common_label_issues"><a class="viewcode-back" href="../../../cleanlab/segmentation/summary.html#cleanlab.segmentation.summary.common_label_issues">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">common_label_issues</span><span class="p">(</span>
     <span class="n">issues</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
     <span class="n">labels</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
     <span class="n">pred_probs</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
@@ -908,7 +908,7 @@
     <span class="k">return</span> <span class="n">issues_df</span></div>
 
 
-<div class="viewcode-block" id="filter_by_class"><a class="viewcode-back" href="../../../cleanlab/segmentation/summary.html#cleanlab.segmentation.summary.filter_by_class">[docs]</a><span class="k">def</span> <span class="nf">filter_by_class</span><span class="p">(</span>
+<div class="viewcode-block" id="filter_by_class"><a class="viewcode-back" href="../../../cleanlab/segmentation/summary.html#cleanlab.segmentation.summary.filter_by_class">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">filter_by_class</span><span class="p">(</span>
     <span class="n">class_index</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">issues</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">labels</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">pred_probs</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
@@ -951,7 +951,7 @@
     <span class="k">return</span> <span class="n">issues_subset</span></div>
 
 
-<span class="k">def</span> <span class="nf">_generate_colormap</span><span class="p">(</span><span class="n">num_colors</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_generate_colormap</span><span class="p">(</span><span class="n">num_colors</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Finds a unique color map based on the number of colors inputted ideal for semantic segmentation.</span>
 <span class="sd">    Parameters</span>
@@ -966,7 +966,7 @@
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">try</span><span class="p">:</span>
-        <span class="kn">from</span> <span class="nn">matplotlib.cm</span> <span class="kn">import</span> <span class="n">hsv</span>
+        <span class="kn">from</span><span class="w"> </span><span class="nn">matplotlib.cm</span><span class="w"> </span><span class="kn">import</span> <span class="n">hsv</span>
     <span class="k">except</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">ImportError</span><span class="p">(</span><span class="s1">&#39;try &quot;pip install matplotlib&quot;&#39;</span><span class="p">)</span>
 
@@ -1009,7 +1009,7 @@
         <div class="bottom-of-page">
           <div class="left-details">
             <div class="copyright">
-                Copyright &#169; 2024, Cleanlab Inc.
+                Copyright &#169; 2025, Cleanlab Inc.
             </div>
             Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
             

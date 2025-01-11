@@ -16,7 +16,7 @@
 
     <link rel="shortcut icon" href="https://raw.githubusercontent.com/cleanlab/assets/a4483476d449f2f05a4c7cde329e72358099cc07/cleanlab/cleanlab_favicon.svg"/><!-- Generated with Sphinx 7.1.2 and Furo 2023.09.10 -->
         <title>cleanlab.datalab.internal.issue_manager.noniid - cleanlab</title>
-      <link rel="stylesheet" type="text/css" href="../../../../../_static/pygments.css?v=a746c00c" />
+      <link rel="stylesheet" type="text/css" href="../../../../../_static/pygments.css?v=8f2a1f02" />
     <link rel="stylesheet" type="text/css" href="../../../../../_static/styles/furo.css?v=135e06be" />
     <link rel="stylesheet" type="text/css" href="../../../../../_static/copybutton.css?v=76b2166b" />
     <link rel="stylesheet" type="text/css" href="../../../../../_static/tabs.css?v=a5c4661c" />
@@ -625,25 +625,25 @@
 <!-- End of Version Warning Banner -->
 
  <h1>Source code for cleanlab.datalab.internal.issue_manager.noniid</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">annotations</span>
+<span></span><span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
 
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">TYPE_CHECKING</span><span class="p">,</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">ClassVar</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Union</span><span class="p">,</span> <span class="n">cast</span>
-<span class="kn">import</span> <span class="nn">itertools</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">TYPE_CHECKING</span><span class="p">,</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">ClassVar</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Union</span><span class="p">,</span> <span class="n">cast</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">itertools</span>
 
-<span class="kn">from</span> <span class="nn">scipy.stats</span> <span class="kn">import</span> <span class="n">gaussian_kde</span>
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
-<span class="kn">from</span> <span class="nn">scipy.sparse</span> <span class="kn">import</span> <span class="n">csr_matrix</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">scipy.stats</span><span class="w"> </span><span class="kn">import</span> <span class="n">gaussian_kde</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">scipy.sparse</span><span class="w"> </span><span class="kn">import</span> <span class="n">csr_matrix</span>
 
-<span class="kn">from</span> <span class="nn">cleanlab.datalab.internal.issue_manager</span> <span class="kn">import</span> <span class="n">IssueManager</span>
-<span class="kn">from</span> <span class="nn">cleanlab.datalab.internal.issue_manager.knn_graph_helpers</span> <span class="kn">import</span> <span class="n">knn_exists</span><span class="p">,</span> <span class="n">set_knn_graph</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">cleanlab.datalab.internal.issue_manager</span><span class="w"> </span><span class="kn">import</span> <span class="n">IssueManager</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">cleanlab.datalab.internal.issue_manager.knn_graph_helpers</span><span class="w"> </span><span class="kn">import</span> <span class="n">knn_exists</span><span class="p">,</span> <span class="n">set_knn_graph</span>
 
 <span class="k">if</span> <span class="n">TYPE_CHECKING</span><span class="p">:</span>  <span class="c1"># pragma: no cover</span>
-    <span class="kn">import</span> <span class="nn">numpy.typing</span> <span class="k">as</span> <span class="nn">npt</span>
-    <span class="kn">from</span> <span class="nn">cleanlab.datalab.datalab</span> <span class="kn">import</span> <span class="n">Datalab</span>
+    <span class="kn">import</span><span class="w"> </span><span class="nn">numpy.typing</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">npt</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">cleanlab.datalab.datalab</span><span class="w"> </span><span class="kn">import</span> <span class="n">Datalab</span>
 
 
-<div class="viewcode-block" id="simplified_kolmogorov_smirnov_test"><a class="viewcode-back" href="../../../../../cleanlab/datalab/internal/issue_manager/noniid.html#cleanlab.datalab.internal.issue_manager.noniid.simplified_kolmogorov_smirnov_test">[docs]</a><span class="k">def</span> <span class="nf">simplified_kolmogorov_smirnov_test</span><span class="p">(</span>
+<div class="viewcode-block" id="simplified_kolmogorov_smirnov_test"><a class="viewcode-back" href="../../../../../cleanlab/datalab/internal/issue_manager/noniid.html#cleanlab.datalab.internal.issue_manager.noniid.simplified_kolmogorov_smirnov_test">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">simplified_kolmogorov_smirnov_test</span><span class="p">(</span>
     <span class="n">neighbor_histogram</span><span class="p">:</span> <span class="n">npt</span><span class="o">.</span><span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">],</span>
     <span class="n">non_neighbor_histogram</span><span class="p">:</span> <span class="n">npt</span><span class="o">.</span><span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">],</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
@@ -684,7 +684,7 @@
     <span class="k">return</span> <span class="n">statistic</span></div>
 
 
-<div class="viewcode-block" id="NonIIDIssueManager"><a class="viewcode-back" href="../../../../../cleanlab/datalab/internal/issue_manager/noniid.html#cleanlab.datalab.internal.issue_manager.noniid.NonIIDIssueManager">[docs]</a><span class="k">class</span> <span class="nc">NonIIDIssueManager</span><span class="p">(</span><span class="n">IssueManager</span><span class="p">):</span>
+<div class="viewcode-block" id="NonIIDIssueManager"><a class="viewcode-back" href="../../../../../cleanlab/datalab/internal/issue_manager/noniid.html#cleanlab.datalab.internal.issue_manager.noniid.NonIIDIssueManager">[docs]</a><span class="k">class</span><span class="w"> </span><span class="nc">NonIIDIssueManager</span><span class="p">(</span><span class="n">IssueManager</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Manages issues related to non-iid data distributions.</span>
 
 <span class="sd">    Parameters</span>
@@ -727,7 +727,7 @@
         <span class="mi">2</span><span class="p">:</span> <span class="p">[],</span>
     <span class="p">}</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">datalab</span><span class="p">:</span> <span class="n">Datalab</span><span class="p">,</span>
         <span class="n">metric</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Callable</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
@@ -753,7 +753,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_skip_storing_knn_graph_for_pred_probs</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
 
     <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">_determine_optional_features</span><span class="p">(</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_determine_optional_features</span><span class="p">(</span>
         <span class="n">features</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">npt</span><span class="o">.</span><span class="n">NDArray</span><span class="p">],</span>
         <span class="n">pred_probs</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">],</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">npt</span><span class="o">.</span><span class="n">NDArray</span><span class="p">]:</span>
@@ -788,7 +788,7 @@
 
         <span class="k">return</span> <span class="kc">None</span>
 
-<div class="viewcode-block" id="NonIIDIssueManager.find_issues"><a class="viewcode-back" href="../../../../../cleanlab/datalab/internal/issue_manager/noniid.html#cleanlab.datalab.internal.issue_manager.noniid.NonIIDIssueManager.find_issues">[docs]</a>    <span class="k">def</span> <span class="nf">find_issues</span><span class="p">(</span>
+<div class="viewcode-block" id="NonIIDIssueManager.find_issues"><a class="viewcode-back" href="../../../../../cleanlab/datalab/internal/issue_manager/noniid.html#cleanlab.datalab.internal.issue_manager.noniid.NonIIDIssueManager.find_issues">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">find_issues</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">features</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">npt</span><span class="o">.</span><span class="n">NDArray</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">pred_probs</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
@@ -836,7 +836,7 @@
 
         <span class="bp">self</span><span class="o">.</span><span class="n">info</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">collect_info</span><span class="p">(</span><span class="n">knn_graph</span><span class="o">=</span><span class="n">knn_graph</span><span class="p">)</span></div>
 
-    <span class="k">def</span> <span class="nf">_determine_if_knn_graph_storage_should_be_skipped</span><span class="p">(</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_determine_if_knn_graph_storage_should_be_skipped</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">features</span><span class="p">,</span> <span class="n">pred_probs</span><span class="p">,</span> <span class="n">kwargs</span><span class="p">,</span> <span class="n">statistics</span><span class="p">,</span> <span class="n">k</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Decide whether to skip storing the knn graph based on the availability of pred_probs.</span>
@@ -851,7 +851,7 @@
         <span class="k">if</span> <span class="n">pred_probs_needed</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_skip_storing_knn_graph_for_pred_probs</span> <span class="o">=</span> <span class="kc">True</span>
 
-<div class="viewcode-block" id="NonIIDIssueManager.collect_info"><a class="viewcode-back" href="../../../../../cleanlab/datalab/internal/issue_manager/noniid.html#cleanlab.datalab.internal.issue_manager.noniid.NonIIDIssueManager.collect_info">[docs]</a>    <span class="k">def</span> <span class="nf">collect_info</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">knn_graph</span><span class="p">:</span> <span class="n">csr_matrix</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+<div class="viewcode-block" id="NonIIDIssueManager.collect_info"><a class="viewcode-back" href="../../../../../cleanlab/datalab/internal/issue_manager/noniid.html#cleanlab.datalab.internal.issue_manager.noniid.NonIIDIssueManager.collect_info">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">collect_info</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">knn_graph</span><span class="p">:</span> <span class="n">csr_matrix</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
         <span class="n">issues_dict</span> <span class="o">=</span> <span class="p">{</span>
             <span class="s2">&quot;p-value&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">p_value</span><span class="p">,</span>
         <span class="p">}</span>
@@ -870,7 +870,7 @@
         <span class="p">}</span>
         <span class="k">return</span> <span class="n">info_dict</span></div>
 
-    <span class="k">def</span> <span class="nf">_build_statistics_dictionary</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">knn_graph</span><span class="p">:</span> <span class="n">csr_matrix</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_build_statistics_dictionary</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">knn_graph</span><span class="p">:</span> <span class="n">csr_matrix</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]:</span>
         <span class="n">statistics_dict</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;statistics&quot;</span><span class="p">:</span> <span class="p">{}}</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_skip_storing_knn_graph_for_pred_probs</span><span class="p">:</span>
@@ -891,7 +891,7 @@
 
         <span class="k">return</span> <span class="n">statistics_dict</span>
 
-    <span class="k">def</span> <span class="nf">_permutation_test</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">num_permutations</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_permutation_test</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">num_permutations</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
         <span class="n">N</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">N</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">seed</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
@@ -925,7 +925,7 @@
 
         <span class="k">return</span> <span class="n">p_value</span>
 
-    <span class="k">def</span> <span class="nf">_score_dataset</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">npt</span><span class="o">.</span><span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">]:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_score_dataset</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">npt</span><span class="o">.</span><span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;This function computes a variant of the KS statistic for each</span>
 <span class="sd">        datapoint. Rather than computing the maximum difference</span>
 <span class="sd">        between the CDF of the neighbor distances (foreground</span>
@@ -1041,7 +1041,7 @@
         <span class="n">scores</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">tanh</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span> <span class="o">*</span> <span class="n">scores</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span>
         <span class="k">return</span> <span class="n">scores</span>
 
-    <span class="k">def</span> <span class="nf">_get_neighbors</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">knn_graph</span><span class="p">:</span> <span class="n">csr_matrix</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_get_neighbors</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">knn_graph</span><span class="p">:</span> <span class="n">csr_matrix</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Given a knn graph, returns an (N, k) array in</span>
 <span class="sd">        which j is in A[i] if item i and j are nearest neighbors.</span>
@@ -1050,7 +1050,7 @@
         <span class="n">kneighbors</span> <span class="o">=</span> <span class="n">knn_graph</span><span class="o">.</span><span class="n">indices</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">N</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">kneighbors</span>
 
-    <span class="k">def</span> <span class="nf">_get_statistics</span><span class="p">(</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_get_statistics</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">neighbor_index_distances</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">float</span><span class="p">]:</span>
@@ -1083,7 +1083,7 @@
         <div class="bottom-of-page">
           <div class="left-details">
             <div class="copyright">
-                Copyright &#169; 2024, Cleanlab Inc.
+                Copyright &#169; 2025, Cleanlab Inc.
             </div>
             Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
             

@@ -25,7 +25,7 @@
 
     <link rel="shortcut icon" href="https://raw.githubusercontent.com/cleanlab/assets/a4483476d449f2f05a4c7cde329e72358099cc07/cleanlab/cleanlab_favicon.svg"/><!-- Generated with Sphinx 7.1.2 and Furo 2023.09.10 -->
         <title>Find Label Errors in Token Classification (Text) Datasets - cleanlab</title>
-      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=a746c00c" />
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=8f2a1f02" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?v=135e06be" />
     <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
     <link rel="stylesheet" type="text/css" href="../_static/tabs.css?v=a5c4661c" />
@@ -693,8 +693,8 @@
 <li><p><code class="docutils literal notranslate"><span class="pre">pred_probs</span></code>: List whose <code class="docutils literal notranslate"><span class="pre">i</span></code>-th element is a np.ndarray of shape <code class="docutils literal notranslate"><span class="pre">(N_i,</span> <span class="pre">K)</span></code> corresponding to predicted class probabilities for each token in the <code class="docutils literal notranslate"><span class="pre">i</span></code>-th sentence (assuming this sentence contains <code class="docutils literal notranslate"><span class="pre">N_i</span></code> tokens and dataset has <code class="docutils literal notranslate"><span class="pre">K</span></code> possible classes). These should be out-of-sample <code class="docutils literal notranslate"><span class="pre">pred_probs</span></code> obtained from a token classification model via cross-validation. Example: <code class="docutils literal notranslate"><span class="pre">[...,</span> <span class="pre">np.array([[0.8,0.2],</span> <span class="pre">[0.9,0.1],</span> <span class="pre">[0.3,0.7]]),</span> <span class="pre">...]</span></code></p></li>
 </ul>
 <p>Using these, you can find/display label issues with this code:</p>
-<div class="markdown" style="background:white;margin:16px"><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">cleanlab.token_classification.filter</span> <span class="kn">import</span> <span class="n">find_label_issues</span>
-<span class="kn">from</span> <span class="nn">cleanlab.token_classification.summary</span> <span class="kn">import</span> <span class="n">display_issues</span>
+<div class="markdown" style="background:white;margin:16px"><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">cleanlab.token_classification.filter</span><span class="w"> </span><span class="kn">import</span> <span class="n">find_label_issues</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">cleanlab.token_classification.summary</span><span class="w"> </span><span class="kn">import</span> <span class="n">display_issues</span>
 
 <span class="n">issues</span> <span class="o">=</span> <span class="n">find_label_issues</span><span class="p">(</span><span class="n">labels</span><span class="p">,</span> <span class="n">pred_probs</span><span class="p">)</span>
 <span class="n">display_issues</span><span class="p">(</span><span class="n">issues</span><span class="p">,</span> <span class="n">tokens</span><span class="p">,</span> <span class="n">pred_probs</span><span class="o">=</span><span class="n">pred_probs</span><span class="p">,</span> <span class="n">labels</span><span class="o">=</span><span class="n">labels</span><span class="p">,</span>
@@ -723,16 +723,16 @@
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
---2024-12-29 13:16:41--  https://data.deepai.org/conll2003.zip
-Resolving data.deepai.org (data.deepai.org)... 143.244.50.210, 2400:52e0:1a01::1112:1
-Connecting to data.deepai.org (data.deepai.org)|143.244.50.210|:443... connected.
+--2025-01-11 04:21:27--  https://data.deepai.org/conll2003.zip
+Resolving data.deepai.org (data.deepai.org)... 169.150.249.169, 2400:52e0:1a01::984:1
+Connecting to data.deepai.org (data.deepai.org)|169.150.249.169|:443... connected.
 HTTP request sent, awaiting response... 200 OK
 Length: 982975 (960K) [application/zip]
 Saving to: ‘conll2003.zip’
 
-conll2003.zip       100%[===================&gt;] 959.94K  --.-KB/s    in 0.05s
+conll2003.zip       100%[===================&gt;] 959.94K  5.29MB/s    in 0.2s
 
-2024-12-29 13:16:42 (19.4 MB/s) - ‘conll2003.zip’ saved [982975/982975]
+2025-01-11 04:21:28 (5.29 MB/s) - ‘conll2003.zip’ saved [982975/982975]
 
 mkdir: cannot create directory ‘data’: File exists
 Archive:  conll2003.zip
@@ -740,16 +740,16 @@ Archive:  conll2003.zip
   inflating: data/test.txt
   inflating: data/train.txt
   inflating: data/valid.txt
---2024-12-29 13:16:42--  https://cleanlab-public.s3.amazonaws.com/TokenClassification/pred_probs.npz
-Resolving cleanlab-public.s3.amazonaws.com (cleanlab-public.s3.amazonaws.com)... 16.15.176.104, 16.15.178.22, 16.15.216.105, ...
-Connecting to cleanlab-public.s3.amazonaws.com (cleanlab-public.s3.amazonaws.com)|16.15.176.104|:443... connected.
+--2025-01-11 04:21:28--  https://cleanlab-public.s3.amazonaws.com/TokenClassification/pred_probs.npz
+Resolving cleanlab-public.s3.amazonaws.com (cleanlab-public.s3.amazonaws.com)... 16.15.185.203, 3.5.22.29, 52.217.114.241, ...
+Connecting to cleanlab-public.s3.amazonaws.com (cleanlab-public.s3.amazonaws.com)|16.15.185.203|:443... connected.
 HTTP request sent, awaiting response... 200 OK
 Length: 17045998 (16M) [binary/octet-stream]
 Saving to: ‘pred_probs.npz’
 
-pred_probs.npz      100%[===================&gt;]  16.26M  20.9MB/s    in 0.8s
+pred_probs.npz      100%[===================&gt;]  16.26M  20.4MB/s    in 0.8s
 
-2024-12-29 13:16:43 (20.9 MB/s) - ‘pred_probs.npz’ saved [17045998/17045998]
+2025-01-11 04:21:29 (20.4 MB/s) - ‘pred_probs.npz’ saved [17045998/17045998]
 
 </pre></div></div>
 </div>
@@ -757,11 +757,11 @@ pred_probs.npz      100%[===================&gt;]  16.26M  20.9MB/s    in 0.8s
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">from</span> <span class="nn">cleanlab.token_classification.filter</span> <span class="kn">import</span> <span class="n">find_label_issues</span>
-<span class="kn">from</span> <span class="nn">cleanlab.token_classification.rank</span> <span class="kn">import</span> <span class="n">get_label_quality_scores</span><span class="p">,</span> <span class="n">issues_from_scores</span>
-<span class="kn">from</span> <span class="nn">cleanlab.internal.token_classification_utils</span> <span class="kn">import</span> <span class="n">get_sentence</span><span class="p">,</span> <span class="n">filter_sentence</span><span class="p">,</span> <span class="n">mapping</span>
-<span class="kn">from</span> <span class="nn">cleanlab.token_classification.summary</span> <span class="kn">import</span> <span class="n">display_issues</span><span class="p">,</span> <span class="n">common_label_issues</span><span class="p">,</span> <span class="n">filter_by_token</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">cleanlab.token_classification.filter</span><span class="w"> </span><span class="kn">import</span> <span class="n">find_label_issues</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">cleanlab.token_classification.rank</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_label_quality_scores</span><span class="p">,</span> <span class="n">issues_from_scores</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">cleanlab.internal.token_classification_utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_sentence</span><span class="p">,</span> <span class="n">filter_sentence</span><span class="p">,</span> <span class="n">mapping</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">cleanlab.token_classification.summary</span><span class="w"> </span><span class="kn">import</span> <span class="n">display_issues</span><span class="p">,</span> <span class="n">common_label_issues</span><span class="p">,</span> <span class="n">filter_by_token</span>
 
 <span class="n">np</span><span class="o">.</span><span class="n">set_printoptions</span><span class="p">(</span><span class="n">suppress</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 </pre></div>
@@ -775,7 +775,7 @@ BERT Transformer fit via cross-validation. Our example notebook <a class="refere
 <details><summary><p>See the code for reading the <code class="docutils literal notranslate"><span class="pre">.npz</span></code> file <strong>(click to expand)</strong></p>
 </summary><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Note: This pulldown content is for docs.cleanlab.ai, if running on local Jupyter or Colab, please ignore it.</span>
 
-<span class="k">def</span> <span class="nf">read_npz</span><span class="p">(</span><span class="n">filepath</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">read_npz</span><span class="p">(</span><span class="n">filepath</span><span class="p">):</span>
     <span class="n">data</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">filepath</span><span class="p">))</span>
     <span class="n">data</span> <span class="o">=</span> <span class="p">[</span><span class="n">data</span><span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">)]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">))]</span>
     <span class="k">return</span> <span class="n">data</span>
@@ -807,7 +807,7 @@ BERT Transformer fit via cross-validation. Our example notebook <a class="refere
 <span class="n">entities</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;O&#39;</span><span class="p">,</span> <span class="s1">&#39;MISC&#39;</span><span class="p">,</span> <span class="s1">&#39;PER&#39;</span><span class="p">,</span> <span class="s1">&#39;ORG&#39;</span><span class="p">,</span> <span class="s1">&#39;LOC&#39;</span><span class="p">]</span>
 <span class="n">entity_map</span> <span class="o">=</span> <span class="p">{</span><span class="n">entity</span><span class="p">:</span> <span class="n">i</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">entity</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">given_entities</span><span class="p">)}</span>
 
-<span class="k">def</span> <span class="nf">readfile</span><span class="p">(</span><span class="n">filepath</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s1">&#39; &#39;</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">readfile</span><span class="p">(</span><span class="n">filepath</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s1">&#39; &#39;</span><span class="p">):</span>
     <span class="n">lines</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">filepath</span><span class="p">)</span>
     <span class="n">data</span><span class="p">,</span> <span class="n">sentence</span><span class="p">,</span> <span class="n">label</span> <span class="o">=</span> <span class="p">[],</span> <span class="p">[],</span> <span class="p">[]</span>
     <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">lines</span><span class="p">:</span>
@@ -1438,7 +1438,7 @@ Given label: ORG, predicted label according to provided pred_probs: O
         <div class="bottom-of-page">
           <div class="left-details">
             <div class="copyright">
-                Copyright &#169; 2024, Cleanlab Inc.
+                Copyright &#169; 2025, Cleanlab Inc.
             </div>
             Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
             

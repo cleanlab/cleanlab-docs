@@ -25,7 +25,7 @@
 
     <link rel="shortcut icon" href="https://raw.githubusercontent.com/cleanlab/assets/a4483476d449f2f05a4c7cde329e72358099cc07/cleanlab/cleanlab_favicon.svg"/><!-- Generated with Sphinx 7.1.2 and Furo 2023.09.10 -->
         <title>Find Label Errors in Multi-Label Classification Datasets - cleanlab</title>
-      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=a746c00c" />
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=8f2a1f02" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?v=135e06be" />
     <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
     <link rel="stylesheet" type="text/css" href="../_static/tabs.css?v=a5c4661c" />
@@ -675,7 +675,7 @@ tagging (or document tagging), where multiple tags can be appropriate for a sing
 <div class="admonition note">
 <p class="admonition-title">Quickstart</p>
 <p>cleanlab finds data/label issues based on two inputs: <code class="docutils literal notranslate"><span class="pre">labels</span></code> formatted as a list of lists of integer class indices that apply to each example in your dataset, and <code class="docutils literal notranslate"><span class="pre">pred_probs</span></code> from a trained multi-label classification model (which do not need to sum to 1 since the classes are not mutually exclusive). Once you have these, run the code below to find issues in your multi-label dataset:</p>
-<div class="markdown" style="background:white;margin:16px"><div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">cleanlab</span> <span class="kn">import</span> <span class="n">Datalab</span>
+<div class="markdown" style="background:white;margin:16px"><div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">cleanlab</span><span class="w"> </span><span class="kn">import</span> <span class="n">Datalab</span>
 
 <span class="c1"># Assuming your dataset has a label column named &#39;label&#39;</span>
 <span class="n">lab</span> <span class="o">=</span> <span class="n">Datalab</span><span class="p">(</span><span class="n">dataset</span><span class="p">,</span> <span class="n">label_name</span><span class="o">=</span><span class="s1">&#39;label&#39;</span><span class="p">,</span> <span class="n">task</span><span class="o">=</span><span class="s1">&#39;multilabel&#39;</span><span class="p">)</span>
@@ -700,16 +700,16 @@ tagging (or document tagging), where multiple tags can be appropriate for a sing
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">random</span>
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">import</span> <span class="nn">sklearn</span>
-<span class="kn">from</span> <span class="nn">sklearn.multiclass</span> <span class="kn">import</span> <span class="n">OneVsRestClassifier</span>
-<span class="kn">from</span> <span class="nn">sklearn.ensemble</span> <span class="kn">import</span> <span class="n">RandomForestClassifier</span>
-<span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="kn">import</span> <span class="n">StratifiedKFold</span>
-<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">random</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">sklearn</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.multiclass</span><span class="w"> </span><span class="kn">import</span> <span class="n">OneVsRestClassifier</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.ensemble</span><span class="w"> </span><span class="kn">import</span> <span class="n">RandomForestClassifier</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.model_selection</span><span class="w"> </span><span class="kn">import</span> <span class="n">StratifiedKFold</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
 
-<span class="kn">from</span> <span class="nn">cleanlab</span> <span class="kn">import</span> <span class="n">Datalab</span>
-<span class="kn">from</span> <span class="nn">cleanlab.internal.multilabel_utils</span> <span class="kn">import</span> <span class="n">int2onehot</span><span class="p">,</span> <span class="n">onehot2int</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">cleanlab</span><span class="w"> </span><span class="kn">import</span> <span class="n">Datalab</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">cleanlab.internal.multilabel_utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">int2onehot</span><span class="p">,</span> <span class="n">onehot2int</span>
 </pre></div>
 </div>
 </div>
@@ -717,12 +717,12 @@ tagging (or document tagging), where multiple tags can be appropriate for a sing
 <details><summary><p>Code to generate dataset (can skip these details) <strong>(click to expand)</strong></p>
 </summary><div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Note: This pulldown content is for docs.cleanlab.ai, if running on local Jupyter or Colab, please ignore it.</span>
 
-<span class="kn">from</span> <span class="nn">cleanlab.benchmarking.noise_generation</span> <span class="kn">import</span> <span class="p">(</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">cleanlab.benchmarking.noise_generation</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
     <span class="n">generate_noise_matrix_from_trace</span><span class="p">,</span>
     <span class="n">generate_noisy_labels</span><span class="p">,</span>
 <span class="p">)</span>
 
-<span class="k">def</span> <span class="nf">make_multilabel_data</span><span class="p">(</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">make_multilabel_data</span><span class="p">(</span>
     <span class="n">means</span><span class="o">=</span><span class="p">[[</span><span class="o">-</span><span class="mi">5</span><span class="p">,</span> <span class="mf">3.5</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span> <span class="p">[</span><span class="o">-</span><span class="mi">3</span><span class="p">,</span> <span class="mi">6</span><span class="p">]],</span>
     <span class="n">covs</span><span class="o">=</span><span class="p">[[[</span><span class="mi">3</span><span class="p">,</span> <span class="o">-</span><span class="mf">1.5</span><span class="p">],</span> <span class="p">[</span><span class="o">-</span><span class="mf">1.5</span><span class="p">,</span> <span class="mi">1</span><span class="p">]],</span> <span class="p">[[</span><span class="mi">5</span><span class="p">,</span> <span class="o">-</span><span class="mf">1.5</span><span class="p">],</span> <span class="p">[</span><span class="o">-</span><span class="mf">1.5</span><span class="p">,</span> <span class="mi">1</span><span class="p">]],</span> <span class="p">[[</span><span class="mi">3</span><span class="p">,</span> <span class="o">-</span><span class="mf">1.5</span><span class="p">],</span> <span class="p">[</span><span class="o">-</span><span class="mf">1.5</span><span class="p">,</span> <span class="mi">1</span><span class="p">]]],</span>
     <span class="n">boxes_coordinates</span><span class="o">=</span><span class="p">[[</span><span class="o">-</span><span class="mf">3.5</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mf">1.5</span><span class="p">,</span> <span class="mf">1.7</span><span class="p">],</span> <span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">],</span> <span class="p">[</span><span class="o">-</span><span class="mi">5</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="o">-</span><span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">],</span> <span class="p">[</span><span class="o">-</span><span class="mi">3</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">4</span><span class="p">]],</span>
@@ -747,7 +747,7 @@ tagging (or document tagging), where multiple tags can be appropriate for a sing
         <span class="n">test_labels</span> <span class="o">+=</span> <span class="p">[[</span><span class="n">i</span><span class="p">]]</span> <span class="o">*</span> <span class="n">sizes</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
         <span class="n">labels</span> <span class="o">+=</span> <span class="p">[[</span><span class="n">i</span><span class="p">]]</span> <span class="o">*</span> <span class="n">sizes</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
 
-    <span class="k">def</span> <span class="nf">make_multi</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">,</span> <span class="n">bx1</span><span class="p">,</span> <span class="n">by1</span><span class="p">,</span> <span class="n">bx2</span><span class="p">,</span> <span class="n">by2</span><span class="p">,</span> <span class="n">label_list</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">make_multi</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">,</span> <span class="n">bx1</span><span class="p">,</span> <span class="n">by1</span><span class="p">,</span> <span class="n">bx2</span><span class="p">,</span> <span class="n">by2</span><span class="p">,</span> <span class="n">label_list</span><span class="p">):</span>
         <span class="n">ll</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">bx1</span><span class="p">,</span> <span class="n">by1</span><span class="p">])</span>  <span class="c1"># lower-left</span>
         <span class="n">ur</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">bx2</span><span class="p">,</span> <span class="n">by2</span><span class="p">])</span>  <span class="c1"># upper-right</span>
 
@@ -793,7 +793,7 @@ tagging (or document tagging), where multiple tags can be appropriate for a sing
 
     <span class="p">}</span>
 
-<span class="k">def</span> <span class="nf">get_color_array</span><span class="p">(</span><span class="n">labels</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_color_array</span><span class="p">(</span><span class="n">labels</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    This function returns a dictionary mapping multi-labels to unique colors</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -807,7 +807,7 @@ tagging (or document tagging), where multiple tags can be appropriate for a sing
 
     <span class="k">return</span> <span class="p">[</span><span class="s2">&quot;#&quot;</span><span class="o">+</span><span class="n">dcolors</span><span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">)]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">labels</span><span class="p">]</span>
 
-<span class="k">def</span> <span class="nf">plot_data</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">circles</span><span class="p">,</span> <span class="n">title</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span><span class="n">colors</span> <span class="o">=</span> <span class="p">[]):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">plot_data</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">circles</span><span class="p">,</span> <span class="n">title</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span><span class="n">colors</span> <span class="o">=</span> <span class="p">[]):</span>
     <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">14</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>
     <span class="n">done</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
     <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">)):</span>
@@ -1071,7 +1071,7 @@ the same across different types of ML tasks).</p>
         <div class="bottom-of-page">
           <div class="left-details">
             <div class="copyright">
-                Copyright &#169; 2024, Cleanlab Inc.
+                Copyright &#169; 2025, Cleanlab Inc.
             </div>
             Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
             

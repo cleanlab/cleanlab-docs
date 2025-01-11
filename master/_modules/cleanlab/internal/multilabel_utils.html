@@ -16,7 +16,7 @@
 
     <link rel="shortcut icon" href="https://raw.githubusercontent.com/cleanlab/assets/a4483476d449f2f05a4c7cde329e72358099cc07/cleanlab/cleanlab_favicon.svg"/><!-- Generated with Sphinx 7.1.2 and Furo 2023.09.10 -->
         <title>cleanlab.internal.multilabel_utils - cleanlab</title>
-      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=a746c00c" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=8f2a1f02" />
     <link rel="stylesheet" type="text/css" href="../../../_static/styles/furo.css?v=135e06be" />
     <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
     <link rel="stylesheet" type="text/css" href="../../../_static/tabs.css?v=a5c4661c" />
@@ -644,14 +644,14 @@
 <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">Helper functions used internally for multi-label classification tasks.</span>
 <span class="sd">&quot;&quot;&quot;</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Tuple</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Tuple</span>
 
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 
-<span class="kn">from</span> <span class="nn">cleanlab.internal.util</span> <span class="kn">import</span> <span class="n">get_num_classes</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">cleanlab.internal.util</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_num_classes</span>
 
 
-<span class="k">def</span> <span class="nf">_is_multilabel</span><span class="p">(</span><span class="n">y</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_is_multilabel</span><span class="p">(</span><span class="n">y</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Checks whether `y` is in a multi-label indicator matrix format.</span>
 
 <span class="sd">    Sparse matrices are not supported.</span>
@@ -661,7 +661,7 @@
     <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array_equal</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">y</span><span class="p">),</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
 
 
-<div class="viewcode-block" id="stack_complement"><a class="viewcode-back" href="../../../cleanlab/internal/multilabel_utils.html#cleanlab.internal.multilabel_utils.stack_complement">[docs]</a><span class="k">def</span> <span class="nf">stack_complement</span><span class="p">(</span><span class="n">pred_prob_slice</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<div class="viewcode-block" id="stack_complement"><a class="viewcode-back" href="../../../cleanlab/internal/multilabel_utils.html#cleanlab.internal.multilabel_utils.stack_complement">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">stack_complement</span><span class="p">(</span><span class="n">pred_prob_slice</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Extends predicted probabilities of a single class to two columns.</span>
 
@@ -682,7 +682,7 @@
     <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">((</span><span class="mi">1</span> <span class="o">-</span> <span class="n">pred_prob_slice</span><span class="p">,</span> <span class="n">pred_prob_slice</span><span class="p">))</span><span class="o">.</span><span class="n">T</span></div>
 
 
-<div class="viewcode-block" id="get_onehot_num_classes"><a class="viewcode-back" href="../../../cleanlab/internal/multilabel_utils.html#cleanlab.internal.multilabel_utils.get_onehot_num_classes">[docs]</a><span class="k">def</span> <span class="nf">get_onehot_num_classes</span><span class="p">(</span>
+<div class="viewcode-block" id="get_onehot_num_classes"><a class="viewcode-back" href="../../../cleanlab/internal/multilabel_utils.html#cleanlab.internal.multilabel_utils.get_onehot_num_classes">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">get_onehot_num_classes</span><span class="p">(</span>
     <span class="n">labels</span><span class="p">:</span> <span class="nb">list</span><span class="p">,</span> <span class="n">pred_probs</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="nb">int</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Returns OneHot encoding of MultiLabel Data, and number of classes&quot;&quot;&quot;</span>
@@ -696,7 +696,7 @@
     <span class="k">return</span> <span class="n">y_one</span><span class="p">,</span> <span class="n">num_classes</span></div>
 
 
-<div class="viewcode-block" id="int2onehot"><a class="viewcode-back" href="../../../cleanlab/internal/multilabel_utils.html#cleanlab.internal.multilabel_utils.int2onehot">[docs]</a><span class="k">def</span> <span class="nf">int2onehot</span><span class="p">(</span><span class="n">labels</span><span class="p">:</span> <span class="nb">list</span><span class="p">,</span> <span class="n">K</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<div class="viewcode-block" id="int2onehot"><a class="viewcode-back" href="../../../cleanlab/internal/multilabel_utils.html#cleanlab.internal.multilabel_utils.int2onehot">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">int2onehot</span><span class="p">(</span><span class="n">labels</span><span class="p">:</span> <span class="nb">list</span><span class="p">,</span> <span class="n">K</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Convert multi-label classification `labels` from a ``List[List[int]]`` format to a onehot matrix.</span>
 <span class="sd">    This returns a binarized format of the labels as a multi-hot vector for each example, where the entries in this vector are 1 for each class that applies to this example and 0 otherwise.</span>
 
@@ -708,13 +708,13 @@
 <span class="sd">    K: int</span>
 <span class="sd">      The number of classes.&quot;&quot;&quot;</span>
 
-    <span class="kn">from</span> <span class="nn">sklearn.preprocessing</span> <span class="kn">import</span> <span class="n">MultiLabelBinarizer</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.preprocessing</span><span class="w"> </span><span class="kn">import</span> <span class="n">MultiLabelBinarizer</span>
 
     <span class="n">mlb</span> <span class="o">=</span> <span class="n">MultiLabelBinarizer</span><span class="p">(</span><span class="n">classes</span><span class="o">=</span><span class="nb">range</span><span class="p">(</span><span class="n">K</span><span class="p">))</span>
     <span class="k">return</span> <span class="n">mlb</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">labels</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="onehot2int"><a class="viewcode-back" href="../../../cleanlab/internal/multilabel_utils.html#cleanlab.internal.multilabel_utils.onehot2int">[docs]</a><span class="k">def</span> <span class="nf">onehot2int</span><span class="p">(</span><span class="n">onehot_matrix</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]]:</span>
+<div class="viewcode-block" id="onehot2int"><a class="viewcode-back" href="../../../cleanlab/internal/multilabel_utils.html#cleanlab.internal.multilabel_utils.onehot2int">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">onehot2int</span><span class="p">(</span><span class="n">onehot_matrix</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Convert multi-label classification `labels` from a onehot matrix format to a ``List[List[int]]`` format that can be used with other cleanlab functions.</span>
 
 <span class="sd">    Parameters</span>
@@ -742,7 +742,7 @@
         <div class="bottom-of-page">
           <div class="left-details">
             <div class="copyright">
-                Copyright &#169; 2024, Cleanlab Inc.
+                Copyright &#169; 2025, Cleanlab Inc.
             </div>
             Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
             
