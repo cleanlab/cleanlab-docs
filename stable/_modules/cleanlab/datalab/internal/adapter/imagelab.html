@@ -16,7 +16,7 @@
 
     <link rel="shortcut icon" href="https://raw.githubusercontent.com/cleanlab/assets/a4483476d449f2f05a4c7cde329e72358099cc07/cleanlab/cleanlab_favicon.svg"/><!-- Generated with Sphinx 7.1.2 and Furo 2023.09.10 -->
         <title>cleanlab.datalab.internal.adapter.imagelab - cleanlab</title>
-      <link rel="stylesheet" type="text/css" href="../../../../../_static/pygments.css?v=a746c00c" />
+      <link rel="stylesheet" type="text/css" href="../../../../../_static/pygments.css?v=8f2a1f02" />
     <link rel="stylesheet" type="text/css" href="../../../../../_static/styles/furo.css?v=135e06be" />
     <link rel="stylesheet" type="text/css" href="../../../../../_static/copybutton.css?v=76b2166b" />
     <link rel="stylesheet" type="text/css" href="../../../../../_static/tabs.css?v=a5c4661c" />
@@ -169,7 +169,7 @@
     
 </a>
 
-<div class="centered">
+<div style="margin-left: 12px; margin-top: 4px;">
     <a style="margin-top: 6px;" class="github-button" href="https://github.com/cleanlab/cleanlab" data-size="large" data-show-count="true"
     aria-label="Star cleanlab/cleanlab on GitHub">Star</a>
 </div>
@@ -380,6 +380,15 @@
         
         <li class="toctree-l1">
             <a
+                id="v2.7.1"
+                class="reference internal"
+                href="/v2.7.1/"
+                >v2.7.1</a
+            >
+        </li>
+        
+        <li class="toctree-l1">
+            <a
                 id="v2.7.0"
                 class="reference internal"
                 href="/v2.7.0/"
@@ -583,11 +592,25 @@
           
 
 <noscript>
-  <div class="admonition warning">
-    <p class="admonition-title">Warning</p>
-    <p>Parts of this site uses JavaScript, but your browser does not support it.</p>
-  </div>
+    <div class="admonition warning">
+        <p class="admonition-title">Warning</p>
+        <p>
+            Parts of this site uses JavaScript, but your browser does not
+            support it.
+        </p>
+    </div>
 </noscript>
+
+<div>
+    <agility-assistant
+        access-token="public-assistant-1e1cd1d0-5f87546555cc7497"
+        assistant-id="69391e48-a95f-4f8d-8dc2-025f1e1cd1d0"
+        assistant-title="Cleanlab Open Source Assistant"
+        assistant-placeholder="Ask a question"
+        assistant-description="An assistant to help you with your questions about Cleanlab Open Source"
+        logo-url="https://cleanlab.ai/icon-512.png"
+    />
+</div>
 
 
 
@@ -595,26 +618,29 @@
 
 <p id="doc_ver_warning"></p>
 
-<script
-    type="text/javascript"
-    src="/versioning.js"
-></script>
+<script type="text/javascript" src="/versioning.js"></script>
 <script type="text/javascript">
     window.addEventListener("load", () => {
         const version_number = Version.version_number;
         const path_arr = window.location.pathname.split("/");
 
         if (path_arr.includes("master")) {
-            document.getElementById("doc_ver_warning").innerHTML =
-            `<div class="admonition warning">
+            document.getElementById(
+                "doc_ver_warning"
+            ).innerHTML = `<div class="admonition warning">
             <p class="admonition-title">Warning</p>
             <p>This version of the documentation corresponds to the master branch of <code class="docutils literal notranslate"><span class="pre">cleanlab</span></code> source code from <a href="https://github.com/cleanlab/cleanlab/">GitHub</a>. To see the documentation for the latest <code class="docutils literal notranslate"><span class="pre">pip</span></code>-installed version, click <a href="/">here</a>.</p>
             </div>`;
-        } else if (!path_arr.includes(version_number) && !path_arr.includes("stable")) {
+        } else if (
+            !path_arr.includes(version_number) &&
+            !path_arr.includes("stable")
+        ) {
             document.getElementById("doc_ver_warning").innerHTML =
-            `<div class="admonition warning">
+                `<div class="admonition warning">
             <p class="admonition-title">Warning</p>
-            <p>This documentation is for an old version (<code class="docutils literal notranslate"><span class="pre">v2.7.0</span></code>) of <code class="docutils literal notranslate"><span class="pre">cleanlab</span></code>. To see the documentation for the latest stable version (<code class="docutils literal notranslate"><span class="pre">` + version_number + `</span></code>), click <a href="/">here</a>.</p>
+            <p>This documentation is for an old version (<code class="docutils literal notranslate"><span class="pre">v2.7.1</span></code>) of <code class="docutils literal notranslate"><span class="pre">cleanlab</span></code>. To see the documentation for the latest stable version (<code class="docutils literal notranslate"><span class="pre">` +
+                version_number +
+                `</span></code>), click <a href="/">here</a>.</p>
             </div>`;
         } else {
             document.getElementById("doc_ver_warning").remove();
@@ -630,32 +656,32 @@
 <span class="sd">The methods/classes in this module are just intended for internal use.</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
-<span class="kn">import</span> <span class="nn">warnings</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">TYPE_CHECKING</span><span class="p">,</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Type</span><span class="p">,</span> <span class="n">cast</span><span class="p">,</span> <span class="n">Union</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">warnings</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">TYPE_CHECKING</span><span class="p">,</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Type</span><span class="p">,</span> <span class="n">cast</span><span class="p">,</span> <span class="n">Union</span>
 
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">import</span> <span class="nn">numpy.typing</span> <span class="k">as</span> <span class="nn">npt</span>
-<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
-<span class="kn">from</span> <span class="nn">scipy.sparse</span> <span class="kn">import</span> <span class="n">csr_matrix</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy.typing</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">npt</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">scipy.sparse</span><span class="w"> </span><span class="kn">import</span> <span class="n">csr_matrix</span>
 
-<span class="kn">from</span> <span class="nn">cleanlab.datalab.internal.adapter.constants</span> <span class="kn">import</span> <span class="p">(</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">cleanlab.datalab.internal.adapter.constants</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
     <span class="n">DEFAULT_CLEANVISION_ISSUES</span><span class="p">,</span>
     <span class="n">IMAGELAB_ISSUES_MAX_PREVALENCE</span><span class="p">,</span>
     <span class="n">SPURIOUS_CORRELATION_ISSUE</span><span class="p">,</span>
 <span class="p">)</span>
-<span class="kn">from</span> <span class="nn">cleanlab.datalab.internal.data</span> <span class="kn">import</span> <span class="n">Data</span>
-<span class="kn">from</span> <span class="nn">cleanlab.datalab.internal.data_issues</span> <span class="kn">import</span> <span class="n">DataIssues</span><span class="p">,</span> <span class="n">_InfoStrategy</span>
-<span class="kn">from</span> <span class="nn">cleanlab.datalab.internal.issue_finder</span> <span class="kn">import</span> <span class="n">IssueFinder</span>
-<span class="kn">from</span> <span class="nn">cleanlab.datalab.internal.report</span> <span class="kn">import</span> <span class="n">Reporter</span>
-<span class="kn">from</span> <span class="nn">cleanlab.datalab.internal.task</span> <span class="kn">import</span> <span class="n">Task</span>
-<span class="kn">from</span> <span class="nn">cleanlab.datalab.internal.spurious_correlation</span> <span class="kn">import</span> <span class="n">SpuriousCorrelations</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">cleanlab.datalab.internal.data</span><span class="w"> </span><span class="kn">import</span> <span class="n">Data</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">cleanlab.datalab.internal.data_issues</span><span class="w"> </span><span class="kn">import</span> <span class="n">DataIssues</span><span class="p">,</span> <span class="n">_InfoStrategy</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">cleanlab.datalab.internal.issue_finder</span><span class="w"> </span><span class="kn">import</span> <span class="n">IssueFinder</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">cleanlab.datalab.internal.report</span><span class="w"> </span><span class="kn">import</span> <span class="n">Reporter</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">cleanlab.datalab.internal.task</span><span class="w"> </span><span class="kn">import</span> <span class="n">Task</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">cleanlab.datalab.internal.spurious_correlation</span><span class="w"> </span><span class="kn">import</span> <span class="n">SpuriousCorrelations</span>
 
 <span class="k">if</span> <span class="n">TYPE_CHECKING</span><span class="p">:</span>  <span class="c1"># pragma: no cover</span>
-    <span class="kn">from</span> <span class="nn">cleanvision</span> <span class="kn">import</span> <span class="n">Imagelab</span>
-    <span class="kn">from</span> <span class="nn">datasets.arrow_dataset</span> <span class="kn">import</span> <span class="n">Dataset</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">cleanvision</span><span class="w"> </span><span class="kn">import</span> <span class="n">Imagelab</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">datasets.arrow_dataset</span><span class="w"> </span><span class="kn">import</span> <span class="n">Dataset</span>
 
 
-<div class="viewcode-block" id="create_imagelab"><a class="viewcode-back" href="../../../../../cleanlab/datalab/internal/adapter/imagelab.html#cleanlab.datalab.internal.adapter.imagelab.create_imagelab">[docs]</a><span class="k">def</span> <span class="nf">create_imagelab</span><span class="p">(</span><span class="n">dataset</span><span class="p">:</span> <span class="s2">&quot;Dataset&quot;</span><span class="p">,</span> <span class="n">image_key</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="s2">&quot;Imagelab&quot;</span><span class="p">]:</span>
+<div class="viewcode-block" id="create_imagelab"><a class="viewcode-back" href="../../../../../cleanlab/datalab/internal/adapter/imagelab.html#cleanlab.datalab.internal.adapter.imagelab.create_imagelab">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">create_imagelab</span><span class="p">(</span><span class="n">dataset</span><span class="p">:</span> <span class="s2">&quot;Dataset&quot;</span><span class="p">,</span> <span class="n">image_key</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="s2">&quot;Imagelab&quot;</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Creates Imagelab instance for running CleanVision checks. CleanVision checks are only supported for</span>
 <span class="sd">    huggingface datasets as of now.</span>
 
@@ -674,8 +700,8 @@
     <span class="k">if</span> <span class="ow">not</span> <span class="n">image_key</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">imagelab</span>
     <span class="k">try</span><span class="p">:</span>
-        <span class="kn">from</span> <span class="nn">cleanvision</span> <span class="kn">import</span> <span class="n">Imagelab</span>
-        <span class="kn">from</span> <span class="nn">datasets.arrow_dataset</span> <span class="kn">import</span> <span class="n">Dataset</span>
+        <span class="kn">from</span><span class="w"> </span><span class="nn">cleanvision</span><span class="w"> </span><span class="kn">import</span> <span class="n">Imagelab</span>
+        <span class="kn">from</span><span class="w"> </span><span class="nn">datasets.arrow_dataset</span><span class="w"> </span><span class="kn">import</span> <span class="n">Dataset</span>
 
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">dataset</span><span class="p">,</span> <span class="n">Dataset</span><span class="p">):</span>
             <span class="n">imagelab</span> <span class="o">=</span> <span class="n">Imagelab</span><span class="p">(</span><span class="n">hf_dataset</span><span class="o">=</span><span class="n">dataset</span><span class="p">,</span> <span class="n">image_key</span><span class="o">=</span><span class="n">image_key</span><span class="p">)</span>
@@ -692,7 +718,7 @@
     <span class="k">return</span> <span class="n">imagelab</span></div>
 
 
-<div class="viewcode-block" id="ImagelabDataIssuesAdapter"><a class="viewcode-back" href="../../../../../cleanlab/datalab/internal/adapter/imagelab.html#cleanlab.datalab.internal.adapter.imagelab.ImagelabDataIssuesAdapter">[docs]</a><span class="k">class</span> <span class="nc">ImagelabDataIssuesAdapter</span><span class="p">(</span><span class="n">DataIssues</span><span class="p">):</span>
+<div class="viewcode-block" id="ImagelabDataIssuesAdapter"><a class="viewcode-back" href="../../../../../cleanlab/datalab/internal/adapter/imagelab.html#cleanlab.datalab.internal.adapter.imagelab.ImagelabDataIssuesAdapter">[docs]</a><span class="k">class</span><span class="w"> </span><span class="nc">ImagelabDataIssuesAdapter</span><span class="p">(</span><span class="n">DataIssues</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Class that collects and stores information and statistics on issues found in a dataset.</span>
 
@@ -714,10 +740,10 @@
 <span class="sd">        A dictionary that contains information and statistics about the data and each issue type.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">Data</span><span class="p">,</span> <span class="n">strategy</span><span class="p">:</span> <span class="n">Type</span><span class="p">[</span><span class="n">_InfoStrategy</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">Data</span><span class="p">,</span> <span class="n">strategy</span><span class="p">:</span> <span class="n">Type</span><span class="p">[</span><span class="n">_InfoStrategy</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">strategy</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">_update_issues_imagelab</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">imagelab</span><span class="p">:</span> <span class="s2">&quot;Imagelab&quot;</span><span class="p">,</span> <span class="n">overlapping_issues</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_update_issues_imagelab</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">imagelab</span><span class="p">:</span> <span class="s2">&quot;Imagelab&quot;</span><span class="p">,</span> <span class="n">overlapping_issues</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">overwrite_columns</span> <span class="o">=</span> <span class="p">[</span><span class="sa">f</span><span class="s2">&quot;is_</span><span class="si">{</span><span class="n">issue_type</span><span class="si">}</span><span class="s2">_issue&quot;</span> <span class="k">for</span> <span class="n">issue_type</span> <span class="ow">in</span> <span class="n">overlapping_issues</span><span class="p">]</span>
         <span class="n">overwrite_columns</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">issue_type</span><span class="si">}</span><span class="s2">_score&quot;</span> <span class="k">for</span> <span class="n">issue_type</span> <span class="ow">in</span> <span class="n">overlapping_issues</span><span class="p">])</span>
 
@@ -730,7 +756,7 @@
         <span class="n">new_columnns</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">imagelab</span><span class="o">.</span><span class="n">issues</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span><span class="o">.</span><span class="n">difference</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">issues</span><span class="o">.</span><span class="n">columns</span><span class="p">))</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">issues</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">issues</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">imagelab</span><span class="o">.</span><span class="n">issues</span><span class="p">[</span><span class="n">new_columnns</span><span class="p">],</span> <span class="n">how</span><span class="o">=</span><span class="s2">&quot;outer&quot;</span><span class="p">)</span>
 
-<div class="viewcode-block" id="ImagelabDataIssuesAdapter.filter_based_on_max_prevalence"><a class="viewcode-back" href="../../../../../cleanlab/datalab/internal/adapter/imagelab.html#cleanlab.datalab.internal.adapter.imagelab.ImagelabDataIssuesAdapter.filter_based_on_max_prevalence">[docs]</a>    <span class="k">def</span> <span class="nf">filter_based_on_max_prevalence</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">issue_summary</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">max_num</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
+<div class="viewcode-block" id="ImagelabDataIssuesAdapter.filter_based_on_max_prevalence"><a class="viewcode-back" href="../../../../../cleanlab/datalab/internal/adapter/imagelab.html#cleanlab.datalab.internal.adapter.imagelab.ImagelabDataIssuesAdapter.filter_based_on_max_prevalence">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">filter_based_on_max_prevalence</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">issue_summary</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">max_num</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
         <span class="n">removed_issues</span> <span class="o">=</span> <span class="n">issue_summary</span><span class="p">[</span><span class="n">issue_summary</span><span class="p">[</span><span class="s2">&quot;num_images&quot;</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">max_num</span><span class="p">][</span><span class="s2">&quot;issue_type&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">removed_issues</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
             <span class="nb">print</span><span class="p">(</span>
@@ -738,7 +764,7 @@
             <span class="p">)</span>
         <span class="k">return</span> <span class="n">issue_summary</span><span class="p">[</span><span class="n">issue_summary</span><span class="p">[</span><span class="s2">&quot;num_images&quot;</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="n">max_num</span><span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span></div>
 
-<div class="viewcode-block" id="ImagelabDataIssuesAdapter.collect_issues_from_imagelab"><a class="viewcode-back" href="../../../../../cleanlab/datalab/internal/adapter/imagelab.html#cleanlab.datalab.internal.adapter.imagelab.ImagelabDataIssuesAdapter.collect_issues_from_imagelab">[docs]</a>    <span class="k">def</span> <span class="nf">collect_issues_from_imagelab</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">imagelab</span><span class="p">:</span> <span class="s2">&quot;Imagelab&quot;</span><span class="p">,</span> <span class="n">issue_types</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<div class="viewcode-block" id="ImagelabDataIssuesAdapter.collect_issues_from_imagelab"><a class="viewcode-back" href="../../../../../cleanlab/datalab/internal/adapter/imagelab.html#cleanlab.datalab.internal.adapter.imagelab.ImagelabDataIssuesAdapter.collect_issues_from_imagelab">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">collect_issues_from_imagelab</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">imagelab</span><span class="p">:</span> <span class="s2">&quot;Imagelab&quot;</span><span class="p">,</span> <span class="n">issue_types</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Collect results from Imagelab and update datalab.issues and datalab.issue_summary</span>
 
@@ -769,7 +795,7 @@
         <span class="k">for</span> <span class="n">issue_type</span> <span class="ow">in</span> <span class="n">issue_types</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_update_issue_info</span><span class="p">(</span><span class="n">issue_type</span><span class="p">,</span> <span class="n">imagelab</span><span class="o">.</span><span class="n">info</span><span class="p">[</span><span class="n">issue_type</span><span class="p">])</span></div>
 
-<div class="viewcode-block" id="ImagelabDataIssuesAdapter.get_info"><a class="viewcode-back" href="../../../../../cleanlab/datalab/internal/adapter/imagelab.html#cleanlab.datalab.internal.adapter.imagelab.ImagelabDataIssuesAdapter.get_info">[docs]</a>    <span class="k">def</span> <span class="nf">get_info</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">issue_name</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+<div class="viewcode-block" id="ImagelabDataIssuesAdapter.get_info"><a class="viewcode-back" href="../../../../../cleanlab/datalab/internal/adapter/imagelab.html#cleanlab.datalab.internal.adapter.imagelab.ImagelabDataIssuesAdapter.get_info">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">get_info</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">issue_name</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
         <span class="c1"># Extend method for fetching info about spurious correlations</span>
         <span class="k">if</span> <span class="n">issue_name</span> <span class="o">!=</span> <span class="s2">&quot;spurious_correlations&quot;</span><span class="p">:</span>
             <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">get_info</span><span class="p">(</span><span class="n">issue_name</span><span class="p">)</span>
@@ -782,15 +808,15 @@
         <span class="k">return</span> <span class="n">correlations_info</span></div></div>
 
 
-<div class="viewcode-block" id="CorrelationVisualizer"><a class="viewcode-back" href="../../../../../cleanlab/datalab/internal/adapter/imagelab.html#cleanlab.datalab.internal.adapter.imagelab.CorrelationVisualizer">[docs]</a><span class="k">class</span> <span class="nc">CorrelationVisualizer</span><span class="p">:</span>
+<div class="viewcode-block" id="CorrelationVisualizer"><a class="viewcode-back" href="../../../../../cleanlab/datalab/internal/adapter/imagelab.html#cleanlab.datalab.internal.adapter.imagelab.CorrelationVisualizer">[docs]</a><span class="k">class</span><span class="w"> </span><span class="nc">CorrelationVisualizer</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Class to visualize images corresponding to the extreme (minimum and maximum) individual</span>
 <span class="sd">    scores for each of the detected correlated properties.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="c1"># Wrapper for VizManager that&#39;s from the optional cleanvision dependency</span>
         <span class="k">try</span><span class="p">:</span>
-            <span class="kn">from</span> <span class="nn">cleanvision.utils.viz_manager</span> <span class="kn">import</span> <span class="n">VizManager</span>
+            <span class="kn">from</span><span class="w"> </span><span class="nn">cleanvision.utils.viz_manager</span><span class="w"> </span><span class="kn">import</span> <span class="n">VizManager</span>
 
             <span class="bp">self</span><span class="o">.</span><span class="n">viz_manager</span> <span class="o">=</span> <span class="n">VizManager</span>
         <span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
@@ -798,7 +824,7 @@
                 <span class="s2">&quot;cleanvision is required for correlation visualization. Please install it to use this feature.&quot;</span>
             <span class="p">)</span>
 
-<div class="viewcode-block" id="CorrelationVisualizer.visualize"><a class="viewcode-back" href="../../../../../cleanlab/datalab/internal/adapter/imagelab.html#cleanlab.datalab.internal.adapter.imagelab.CorrelationVisualizer.visualize">[docs]</a>    <span class="k">def</span> <span class="nf">visualize</span><span class="p">(</span>
+<div class="viewcode-block" id="CorrelationVisualizer.visualize"><a class="viewcode-back" href="../../../../../cleanlab/datalab/internal/adapter/imagelab.html#cleanlab.datalab.internal.adapter.imagelab.CorrelationVisualizer.visualize">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">visualize</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">images</span><span class="p">:</span> <span class="n">List</span><span class="p">,</span> <span class="n">title_info</span><span class="p">:</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">ncols</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">2</span><span class="p">,</span> <span class="n">cell_size</span><span class="p">:</span> <span class="nb">tuple</span> <span class="o">=</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">viz_manager</span><span class="o">.</span><span class="n">individual_images</span><span class="p">(</span>
@@ -809,13 +835,13 @@
         <span class="p">)</span></div></div>
 
 
-<div class="viewcode-block" id="CorrelationReporter"><a class="viewcode-back" href="../../../../../cleanlab/datalab/internal/adapter/imagelab.html#cleanlab.datalab.internal.adapter.imagelab.CorrelationReporter">[docs]</a><span class="k">class</span> <span class="nc">CorrelationReporter</span><span class="p">:</span>
+<div class="viewcode-block" id="CorrelationReporter"><a class="viewcode-back" href="../../../../../cleanlab/datalab/internal/adapter/imagelab.html#cleanlab.datalab.internal.adapter.imagelab.CorrelationReporter">[docs]</a><span class="k">class</span><span class="w"> </span><span class="nc">CorrelationReporter</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Class to report spurious correlations between image features and class labels detected in the data.</span>
 
 <span class="sd">    If no spurious correlations are found, the class will not report anything.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data_issues</span><span class="p">:</span> <span class="s2">&quot;DataIssues&quot;</span><span class="p">,</span> <span class="n">imagelab</span><span class="p">:</span> <span class="s2">&quot;Imagelab&quot;</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data_issues</span><span class="p">:</span> <span class="s2">&quot;DataIssues&quot;</span><span class="p">,</span> <span class="n">imagelab</span><span class="p">:</span> <span class="s2">&quot;Imagelab&quot;</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">imagelab</span><span class="p">:</span> <span class="s2">&quot;Imagelab&quot;</span> <span class="o">=</span> <span class="n">imagelab</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">data_issues</span> <span class="o">=</span> <span class="n">data_issues</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">threshold</span> <span class="o">=</span> <span class="n">data_issues</span><span class="o">.</span><span class="n">get_info</span><span class="p">(</span><span class="s2">&quot;spurious_correlations&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;threshold&quot;</span><span class="p">)</span>
@@ -825,7 +851,7 @@
             <span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">visualizer</span> <span class="o">=</span> <span class="n">CorrelationVisualizer</span><span class="p">()</span>
 
-<div class="viewcode-block" id="CorrelationReporter.report"><a class="viewcode-back" href="../../../../../cleanlab/datalab/internal/adapter/imagelab.html#cleanlab.datalab.internal.adapter.imagelab.CorrelationReporter.report">[docs]</a>    <span class="k">def</span> <span class="nf">report</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<div class="viewcode-block" id="CorrelationReporter.report"><a class="viewcode-back" href="../../../../../cleanlab/datalab/internal/adapter/imagelab.html#cleanlab.datalab.internal.adapter.imagelab.CorrelationReporter.report">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">report</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Reports spurious correlations between image features and class labels detected in the data,</span>
 <span class="sd">        if any are found.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -844,13 +870,13 @@
 
         <span class="bp">self</span><span class="o">.</span><span class="n">_visualize_extremes</span><span class="p">(</span><span class="n">correlated_properties</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">data_issues</span><span class="p">)</span></div>
 
-    <span class="k">def</span> <span class="nf">_print_correlation_summary</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_print_correlation_summary</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n\n</span><span class="s2">&quot;</span><span class="p">)</span>
         <span class="n">report_correlation_header</span> <span class="o">=</span> <span class="s2">&quot;Summary of (potentially spurious) correlations between image properties and class labels detected in the data:</span><span class="se">\n\n</span><span class="s2">&quot;</span>
         <span class="n">report_correlation_metric</span> <span class="o">=</span> <span class="s2">&quot;Lower scores below correspond to images properties that are more strongly correlated with the class labels.</span><span class="se">\n\n</span><span class="s2">&quot;</span>
         <span class="nb">print</span><span class="p">(</span><span class="n">report_correlation_header</span> <span class="o">+</span> <span class="n">report_correlation_metric</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">_visualize_extremes</span><span class="p">(</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_visualize_extremes</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">correlated_properties</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">data_issues</span><span class="p">:</span> <span class="s2">&quot;DataIssues&quot;</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">report_extremal_images</span> <span class="o">=</span> <span class="s2">&quot;Here are the images corresponding to the extreme (minimum and maximum) individual scores for each of the detected correlated properties:</span><span class="se">\n\n</span><span class="s2">&quot;</span>
@@ -861,7 +887,7 @@
         <span class="p">}</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_visualize</span><span class="p">(</span><span class="n">correlated_indices</span><span class="p">,</span> <span class="n">issues</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">_visualize</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">correlated_indices</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="n">Any</span><span class="p">]],</span> <span class="n">issues</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_visualize</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">correlated_indices</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="n">Any</span><span class="p">]],</span> <span class="n">issues</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">for</span> <span class="n">prop</span><span class="p">,</span> <span class="n">image_ids</span> <span class="ow">in</span> <span class="n">correlated_indices</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
             <span class="nb">print</span><span class="p">(</span>
                 <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="s1">&#39;Images with minimum and maximum individual scores for &#39;</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">prop</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;_score&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;&#39;</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="s1">&#39; issue:&#39;</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span>
@@ -872,13 +898,13 @@
                 <span class="n">title_info</span><span class="o">=</span><span class="n">title_info</span><span class="p">,</span>
             <span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">_get_correlated_properties</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_get_correlated_properties</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
         <span class="n">correlations_df</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data_issues</span><span class="o">.</span><span class="n">get_info</span><span class="p">(</span><span class="s2">&quot;spurious_correlations&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;correlations_df&quot;</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">correlations_df</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">correlations_df</span><span class="o">.</span><span class="n">empty</span><span class="p">:</span>
             <span class="k">return</span> <span class="p">[]</span>
         <span class="k">return</span> <span class="n">correlations_df</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s2">&quot;score &lt; @self.threshold&quot;</span><span class="p">)[</span><span class="s2">&quot;property&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
 
-    <span class="k">def</span> <span class="nf">_get_filtered_correlated_properties</span><span class="p">(</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_get_filtered_correlated_properties</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">correlations_df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">correlated_properties</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
         <span class="n">query_str</span> <span class="o">=</span> <span class="s2">&quot;property in @correlated_properties&quot;</span>
@@ -889,8 +915,8 @@
         <span class="k">return</span> <span class="n">filtered_correlations_df</span></div>
 
 
-<div class="viewcode-block" id="ImagelabReporterAdapter"><a class="viewcode-back" href="../../../../../cleanlab/datalab/internal/adapter/imagelab.html#cleanlab.datalab.internal.adapter.imagelab.ImagelabReporterAdapter">[docs]</a><span class="k">class</span> <span class="nc">ImagelabReporterAdapter</span><span class="p">(</span><span class="n">Reporter</span><span class="p">):</span>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+<div class="viewcode-block" id="ImagelabReporterAdapter"><a class="viewcode-back" href="../../../../../cleanlab/datalab/internal/adapter/imagelab.html#cleanlab.datalab.internal.adapter.imagelab.ImagelabReporterAdapter">[docs]</a><span class="k">class</span><span class="w"> </span><span class="nc">ImagelabReporterAdapter</span><span class="p">(</span><span class="n">Reporter</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">data_issues</span><span class="p">:</span> <span class="s2">&quot;DataIssues&quot;</span><span class="p">,</span>
         <span class="n">imagelab</span><span class="p">:</span> <span class="s2">&quot;Imagelab&quot;</span><span class="p">,</span>
@@ -916,7 +942,7 @@
             <span class="c1"># Spurious correlations have not been calculated</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">correlation_reporter</span> <span class="o">=</span> <span class="kc">None</span>
 
-<div class="viewcode-block" id="ImagelabReporterAdapter.report"><a class="viewcode-back" href="../../../../../cleanlab/datalab/internal/adapter/imagelab.html#cleanlab.datalab.internal.adapter.imagelab.ImagelabReporterAdapter.report">[docs]</a>    <span class="k">def</span> <span class="nf">report</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">num_examples</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<div class="viewcode-block" id="ImagelabReporterAdapter.report"><a class="viewcode-back" href="../../../../../cleanlab/datalab/internal/adapter/imagelab.html#cleanlab.datalab.internal.adapter.imagelab.ImagelabReporterAdapter.report">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">report</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">num_examples</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">report</span><span class="p">(</span><span class="n">num_examples</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_report_imagelab</span><span class="p">(</span><span class="n">num_examples</span><span class="p">)</span>
 
@@ -924,7 +950,7 @@
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">correlation_reporter</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">correlation_reporter</span><span class="o">.</span><span class="n">report</span><span class="p">()</span></div>
 
-    <span class="k">def</span> <span class="nf">_report_imagelab</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">num_examples</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_report_imagelab</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">num_examples</span><span class="p">):</span>
         <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n\n</span><span class="s2">&quot;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">imagelab</span><span class="o">.</span><span class="n">report</span><span class="p">(</span>
             <span class="n">num_images</span><span class="o">=</span><span class="n">num_examples</span><span class="p">,</span>
@@ -935,12 +961,12 @@
         <span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="ImagelabIssueFinderAdapter"><a class="viewcode-back" href="../../../../../cleanlab/datalab/internal/adapter/imagelab.html#cleanlab.datalab.internal.adapter.imagelab.ImagelabIssueFinderAdapter">[docs]</a><span class="k">class</span> <span class="nc">ImagelabIssueFinderAdapter</span><span class="p">(</span><span class="n">IssueFinder</span><span class="p">):</span>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">datalab</span><span class="p">,</span> <span class="n">task</span><span class="p">,</span> <span class="n">verbosity</span><span class="p">):</span>
+<div class="viewcode-block" id="ImagelabIssueFinderAdapter"><a class="viewcode-back" href="../../../../../cleanlab/datalab/internal/adapter/imagelab.html#cleanlab.datalab.internal.adapter.imagelab.ImagelabIssueFinderAdapter">[docs]</a><span class="k">class</span><span class="w"> </span><span class="nc">ImagelabIssueFinderAdapter</span><span class="p">(</span><span class="n">IssueFinder</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">datalab</span><span class="p">,</span> <span class="n">task</span><span class="p">,</span> <span class="n">verbosity</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">datalab</span><span class="p">,</span> <span class="n">task</span><span class="p">,</span> <span class="n">verbosity</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">imagelab</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">datalab</span><span class="o">.</span><span class="n">_imagelab</span>
 
-    <span class="k">def</span> <span class="nf">_get_imagelab_issue_types</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">issue_types</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_get_imagelab_issue_types</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">issue_types</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="k">if</span> <span class="n">issue_types</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">DEFAULT_CLEANVISION_ISSUES</span>
 
@@ -956,7 +982,7 @@
 
         <span class="k">return</span> <span class="n">issue_types_copy</span>
 
-<div class="viewcode-block" id="ImagelabIssueFinderAdapter.find_issues"><a class="viewcode-back" href="../../../../../cleanlab/datalab/internal/adapter/imagelab.html#cleanlab.datalab.internal.adapter.imagelab.ImagelabIssueFinderAdapter.find_issues">[docs]</a>    <span class="k">def</span> <span class="nf">find_issues</span><span class="p">(</span>
+<div class="viewcode-block" id="ImagelabIssueFinderAdapter.find_issues"><a class="viewcode-back" href="../../../../../cleanlab/datalab/internal/adapter/imagelab.html#cleanlab.datalab.internal.adapter.imagelab.ImagelabIssueFinderAdapter.find_issues">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">find_issues</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="o">*</span><span class="p">,</span>
         <span class="n">pred_probs</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
@@ -1038,7 +1064,7 @@
             <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Error in checking for spurious correlations: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span></div></div>
 
 
-<div class="viewcode-block" id="handle_spurious_correlations"><a class="viewcode-back" href="../../../../../cleanlab/datalab/internal/adapter/imagelab.html#cleanlab.datalab.internal.adapter.imagelab.handle_spurious_correlations">[docs]</a><span class="k">def</span> <span class="nf">handle_spurious_correlations</span><span class="p">(</span>
+<div class="viewcode-block" id="handle_spurious_correlations"><a class="viewcode-back" href="../../../../../cleanlab/datalab/internal/adapter/imagelab.html#cleanlab.datalab.internal.adapter.imagelab.handle_spurious_correlations">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">handle_spurious_correlations</span><span class="p">(</span>
     <span class="o">*</span><span class="p">,</span>
     <span class="n">imagelab_issues</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span>
     <span class="n">labels</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]]],</span>
@@ -1067,7 +1093,7 @@
         <div class="bottom-of-page">
           <div class="left-details">
             <div class="copyright">
-                Copyright &#169; 2024, Cleanlab Inc.
+                Copyright &#169; 2025, Cleanlab Inc.
             </div>
             Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
             
@@ -1118,5 +1144,6 @@
     <script src="https://cdn.jsdelivr.net/npm/@jupyter-widgets/html-manager@^1.0.1/dist/embed-amd.js"></script>
     
 <script async defer src="https://buttons.github.io/buttons.js"></script>
+<script src="https://cdn.cleanlab.ai/v1.1.1/agility-web-component.js"></script>
 </body>
 </html>

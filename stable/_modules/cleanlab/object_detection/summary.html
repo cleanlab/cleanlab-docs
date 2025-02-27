@@ -16,7 +16,7 @@
 
     <link rel="shortcut icon" href="https://raw.githubusercontent.com/cleanlab/assets/a4483476d449f2f05a4c7cde329e72358099cc07/cleanlab/cleanlab_favicon.svg"/><!-- Generated with Sphinx 7.1.2 and Furo 2023.09.10 -->
         <title>cleanlab.object_detection.summary - cleanlab</title>
-      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=a746c00c" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=8f2a1f02" />
     <link rel="stylesheet" type="text/css" href="../../../_static/styles/furo.css?v=135e06be" />
     <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
     <link rel="stylesheet" type="text/css" href="../../../_static/tabs.css?v=a5c4661c" />
@@ -169,7 +169,7 @@
     
 </a>
 
-<div class="centered">
+<div style="margin-left: 12px; margin-top: 4px;">
     <a style="margin-top: 6px;" class="github-button" href="https://github.com/cleanlab/cleanlab" data-size="large" data-show-count="true"
     aria-label="Star cleanlab/cleanlab on GitHub">Star</a>
 </div>
@@ -380,6 +380,15 @@
         
         <li class="toctree-l1">
             <a
+                id="v2.7.1"
+                class="reference internal"
+                href="/v2.7.1/"
+                >v2.7.1</a
+            >
+        </li>
+        
+        <li class="toctree-l1">
+            <a
                 id="v2.7.0"
                 class="reference internal"
                 href="/v2.7.0/"
@@ -583,11 +592,25 @@
           
 
 <noscript>
-  <div class="admonition warning">
-    <p class="admonition-title">Warning</p>
-    <p>Parts of this site uses JavaScript, but your browser does not support it.</p>
-  </div>
+    <div class="admonition warning">
+        <p class="admonition-title">Warning</p>
+        <p>
+            Parts of this site uses JavaScript, but your browser does not
+            support it.
+        </p>
+    </div>
 </noscript>
+
+<div>
+    <agility-assistant
+        access-token="public-assistant-1e1cd1d0-5f87546555cc7497"
+        assistant-id="69391e48-a95f-4f8d-8dc2-025f1e1cd1d0"
+        assistant-title="Cleanlab Open Source Assistant"
+        assistant-placeholder="Ask a question"
+        assistant-description="An assistant to help you with your questions about Cleanlab Open Source"
+        logo-url="https://cleanlab.ai/icon-512.png"
+    />
+</div>
 
 
 
@@ -595,26 +618,29 @@
 
 <p id="doc_ver_warning"></p>
 
-<script
-    type="text/javascript"
-    src="/versioning.js"
-></script>
+<script type="text/javascript" src="/versioning.js"></script>
 <script type="text/javascript">
     window.addEventListener("load", () => {
         const version_number = Version.version_number;
         const path_arr = window.location.pathname.split("/");
 
         if (path_arr.includes("master")) {
-            document.getElementById("doc_ver_warning").innerHTML =
-            `<div class="admonition warning">
+            document.getElementById(
+                "doc_ver_warning"
+            ).innerHTML = `<div class="admonition warning">
             <p class="admonition-title">Warning</p>
             <p>This version of the documentation corresponds to the master branch of <code class="docutils literal notranslate"><span class="pre">cleanlab</span></code> source code from <a href="https://github.com/cleanlab/cleanlab/">GitHub</a>. To see the documentation for the latest <code class="docutils literal notranslate"><span class="pre">pip</span></code>-installed version, click <a href="/">here</a>.</p>
             </div>`;
-        } else if (!path_arr.includes(version_number) && !path_arr.includes("stable")) {
+        } else if (
+            !path_arr.includes(version_number) &&
+            !path_arr.includes("stable")
+        ) {
             document.getElementById("doc_ver_warning").innerHTML =
-            `<div class="admonition warning">
+                `<div class="admonition warning">
             <p class="admonition-title">Warning</p>
-            <p>This documentation is for an old version (<code class="docutils literal notranslate"><span class="pre">v2.7.0</span></code>) of <code class="docutils literal notranslate"><span class="pre">cleanlab</span></code>. To see the documentation for the latest stable version (<code class="docutils literal notranslate"><span class="pre">` + version_number + `</span></code>), click <a href="/">here</a>.</p>
+            <p>This documentation is for an old version (<code class="docutils literal notranslate"><span class="pre">v2.7.1</span></code>) of <code class="docutils literal notranslate"><span class="pre">cleanlab</span></code>. To see the documentation for the latest stable version (<code class="docutils literal notranslate"><span class="pre">` +
+                version_number +
+                `</span></code>), click <a href="/">here</a>.</p>
             </div>`;
         } else {
             document.getElementById("doc_ver_warning").remove();
@@ -645,8 +671,8 @@
 <span class="sd">Methods to display examples and their label issues in an object detection dataset.</span>
 <span class="sd">Here each image can have multiple objects, each with its own bounding box and class label.</span>
 <span class="sd">&quot;&quot;&quot;</span>
-<span class="kn">from</span> <span class="nn">multiprocessing</span> <span class="kn">import</span> <span class="n">Pool</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="p">(</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">multiprocessing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Pool</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
     <span class="n">Optional</span><span class="p">,</span>
     <span class="n">Any</span><span class="p">,</span>
     <span class="n">Dict</span><span class="p">,</span>
@@ -659,35 +685,35 @@
     <span class="n">cast</span><span class="p">,</span>
 <span class="p">)</span>
 
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">import</span> <span class="nn">collections</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">collections</span>
 
-<span class="kn">from</span> <span class="nn">cleanlab.internal.constants</span> <span class="kn">import</span> <span class="p">(</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">cleanlab.internal.constants</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
     <span class="n">MAX_CLASS_TO_SHOW</span><span class="p">,</span>
     <span class="n">ALPHA</span><span class="p">,</span>
     <span class="n">EPSILON</span><span class="p">,</span>
     <span class="n">TINY_VALUE</span><span class="p">,</span>
 <span class="p">)</span>
-<span class="kn">from</span> <span class="nn">cleanlab.object_detection.filter</span> <span class="kn">import</span> <span class="p">(</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">cleanlab.object_detection.filter</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
     <span class="n">_filter_by_class</span><span class="p">,</span>
     <span class="n">_calculate_true_positives_false_positives</span><span class="p">,</span>
 <span class="p">)</span>
-<span class="kn">from</span> <span class="nn">cleanlab.object_detection.rank</span> <span class="kn">import</span> <span class="p">(</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">cleanlab.object_detection.rank</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
     <span class="n">_get_valid_inputs_for_compute_scores</span><span class="p">,</span>
     <span class="n">_separate_prediction</span><span class="p">,</span>
     <span class="n">_separate_label</span><span class="p">,</span>
     <span class="n">_get_prediction_type</span><span class="p">,</span>
 <span class="p">)</span>
 
-<span class="kn">from</span> <span class="nn">cleanlab.internal.object_detection_utils</span> <span class="kn">import</span> <span class="n">bbox_xyxy_to_xywh</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">cleanlab.internal.object_detection_utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">bbox_xyxy_to_xywh</span>
 
 <span class="k">if</span> <span class="n">TYPE_CHECKING</span><span class="p">:</span>
-    <span class="kn">from</span> <span class="nn">PIL.Image</span> <span class="kn">import</span> <span class="n">Image</span> <span class="k">as</span> <span class="n">Image</span>  <span class="c1"># pragma: no cover</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">PIL.Image</span><span class="w"> </span><span class="kn">import</span> <span class="n">Image</span> <span class="k">as</span> <span class="n">Image</span>  <span class="c1"># pragma: no cover</span>
 <span class="k">else</span><span class="p">:</span>
     <span class="n">Image</span> <span class="o">=</span> <span class="n">TypeVar</span><span class="p">(</span><span class="s2">&quot;Image&quot;</span><span class="p">)</span>
 
 
-<div class="viewcode-block" id="object_counts_per_image"><a class="viewcode-back" href="../../../cleanlab/object_detection/summary.html#cleanlab.object_detection.summary.object_counts_per_image">[docs]</a><span class="k">def</span> <span class="nf">object_counts_per_image</span><span class="p">(</span>
+<div class="viewcode-block" id="object_counts_per_image"><a class="viewcode-back" href="../../../cleanlab/object_detection/summary.html#cleanlab.object_detection.summary.object_counts_per_image">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">object_counts_per_image</span><span class="p">(</span>
     <span class="n">labels</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
     <span class="n">predictions</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
     <span class="o">*</span><span class="p">,</span>
@@ -742,7 +768,7 @@
     <span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="bounding_box_size_distribution"><a class="viewcode-back" href="../../../cleanlab/object_detection/summary.html#cleanlab.object_detection.summary.bounding_box_size_distribution">[docs]</a><span class="k">def</span> <span class="nf">bounding_box_size_distribution</span><span class="p">(</span>
+<div class="viewcode-block" id="bounding_box_size_distribution"><a class="viewcode-back" href="../../../cleanlab/object_detection/summary.html#cleanlab.object_detection.summary.bounding_box_size_distribution">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">bounding_box_size_distribution</span><span class="p">(</span>
     <span class="n">labels</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
     <span class="n">predictions</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
     <span class="o">*</span><span class="p">,</span>
@@ -796,7 +822,7 @@
     <span class="k">return</span> <span class="n">lab_area</span><span class="p">,</span> <span class="n">pred_area</span></div>
 
 
-<div class="viewcode-block" id="class_label_distribution"><a class="viewcode-back" href="../../../cleanlab/object_detection/summary.html#cleanlab.object_detection.summary.class_label_distribution">[docs]</a><span class="k">def</span> <span class="nf">class_label_distribution</span><span class="p">(</span>
+<div class="viewcode-block" id="class_label_distribution"><a class="viewcode-back" href="../../../cleanlab/object_detection/summary.html#cleanlab.object_detection.summary.class_label_distribution">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">class_label_distribution</span><span class="p">(</span>
     <span class="n">labels</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
     <span class="n">predictions</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
     <span class="o">*</span><span class="p">,</span>
@@ -845,7 +871,7 @@
     <span class="k">return</span> <span class="n">label_norm</span><span class="p">,</span> <span class="n">pred_norm</span></div>
 
 
-<div class="viewcode-block" id="get_sorted_bbox_count_idxs"><a class="viewcode-back" href="../../../cleanlab/object_detection/summary.html#cleanlab.object_detection.summary.get_sorted_bbox_count_idxs">[docs]</a><span class="k">def</span> <span class="nf">get_sorted_bbox_count_idxs</span><span class="p">(</span><span class="n">labels</span><span class="p">,</span> <span class="n">predictions</span><span class="p">):</span>
+<div class="viewcode-block" id="get_sorted_bbox_count_idxs"><a class="viewcode-back" href="../../../cleanlab/object_detection/summary.html#cleanlab.object_detection.summary.get_sorted_bbox_count_idxs">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">get_sorted_bbox_count_idxs</span><span class="p">(</span><span class="n">labels</span><span class="p">,</span> <span class="n">predictions</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Returns a tuple of idxs and bounding box counts of images sorted from highest to lowest number of bounding boxes.</span>
 
@@ -878,7 +904,7 @@
     <span class="k">return</span> <span class="n">sorted_lab</span><span class="p">,</span> <span class="n">sorted_pred</span></div>
 
 
-<div class="viewcode-block" id="plot_class_size_distributions"><a class="viewcode-back" href="../../../cleanlab/object_detection/summary.html#cleanlab.object_detection.summary.plot_class_size_distributions">[docs]</a><span class="k">def</span> <span class="nf">plot_class_size_distributions</span><span class="p">(</span>
+<div class="viewcode-block" id="plot_class_size_distributions"><a class="viewcode-back" href="../../../cleanlab/object_detection/summary.html#cleanlab.object_detection.summary.plot_class_size_distributions">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">plot_class_size_distributions</span><span class="p">(</span>
     <span class="n">labels</span><span class="p">,</span> <span class="n">predictions</span><span class="p">,</span> <span class="n">class_names</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">class_to_show</span><span class="o">=</span><span class="n">MAX_CLASS_TO_SHOW</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span>
 <span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
@@ -908,7 +934,7 @@
 <span class="sd">        Additional keyword arguments to pass to ``plt.show()`` (matplotlib.pyplot.show).</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">try</span><span class="p">:</span>
-        <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+        <span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
     <span class="k">except</span> <span class="ne">ImportError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">ImportError</span><span class="p">(</span>
             <span class="s2">&quot;This functionality requires matplotlib. Install it via: `pip install matplotlib`&quot;</span>
@@ -935,7 +961,7 @@
         <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="plot_class_distribution"><a class="viewcode-back" href="../../../cleanlab/object_detection/summary.html#cleanlab.object_detection.summary.plot_class_distribution">[docs]</a><span class="k">def</span> <span class="nf">plot_class_distribution</span><span class="p">(</span><span class="n">labels</span><span class="p">,</span> <span class="n">predictions</span><span class="p">,</span> <span class="n">class_names</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="plot_class_distribution"><a class="viewcode-back" href="../../../cleanlab/object_detection/summary.html#cleanlab.object_detection.summary.plot_class_distribution">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">plot_class_distribution</span><span class="p">(</span><span class="n">labels</span><span class="p">,</span> <span class="n">predictions</span><span class="p">,</span> <span class="n">class_names</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Plots the distribution of class labels associated with all annotated bounding boxes and predicted bounding boxes in the dataset.</span>
 
@@ -958,7 +984,7 @@
 <span class="sd">        Additional keyword arguments to pass to ``plt.show()`` (matplotlib.pyplot.show).</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">try</span><span class="p">:</span>
-        <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+        <span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
     <span class="k">except</span> <span class="ne">ImportError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">ImportError</span><span class="p">(</span>
             <span class="s2">&quot;This functionality requires matplotlib. Install it via: `pip install matplotlib`&quot;</span>
@@ -974,7 +1000,7 @@
     <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="visualize"><a class="viewcode-back" href="../../../cleanlab/object_detection/summary.html#cleanlab.object_detection.summary.visualize">[docs]</a><span class="k">def</span> <span class="nf">visualize</span><span class="p">(</span>
+<div class="viewcode-block" id="visualize"><a class="viewcode-back" href="../../../cleanlab/object_detection/summary.html#cleanlab.object_detection.summary.visualize">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">visualize</span><span class="p">(</span>
     <span class="n">image</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">Image</span><span class="p">],</span>
     <span class="o">*</span><span class="p">,</span>
     <span class="n">label</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
@@ -1030,8 +1056,8 @@
 <span class="sd">        Additional keyword arguments to pass to ``plt.show()`` (matplotlib.pyplot.show).</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">try</span><span class="p">:</span>
-        <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
-        <span class="kn">from</span> <span class="nn">matplotlib.axes</span> <span class="kn">import</span> <span class="n">Axes</span>
+        <span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+        <span class="kn">from</span><span class="w"> </span><span class="nn">matplotlib.axes</span><span class="w"> </span><span class="kn">import</span> <span class="n">Axes</span>
     <span class="k">except</span> <span class="ne">ImportError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">ImportError</span><span class="p">(</span>
             <span class="s2">&quot;This functionality requires matplotlib. Install it via: `pip install matplotlib`&quot;</span>
@@ -1104,7 +1130,7 @@
     <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 
-<span class="k">def</span> <span class="nf">_get_per_class_confusion_matrix_dict_</span><span class="p">(</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_get_per_class_confusion_matrix_dict_</span><span class="p">(</span>
     <span class="n">labels</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]],</span>
     <span class="n">predictions</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">],</span>
     <span class="n">iou_threshold</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.5</span><span class="p">,</span>
@@ -1140,7 +1166,7 @@
     <span class="k">return</span> <span class="n">counter_dict</span>
 
 
-<span class="k">def</span> <span class="nf">_sort_dict_to_list</span><span class="p">(</span><span class="n">index_value_dict</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_sort_dict_to_list</span><span class="p">(</span><span class="n">index_value_dict</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Convert a dictionary to a list sorted by index and return the values in that order.</span>
 
@@ -1161,7 +1187,7 @@
     <span class="k">return</span> <span class="n">sorted_list</span>
 
 
-<div class="viewcode-block" id="get_average_per_class_confusion_matrix"><a class="viewcode-back" href="../../../cleanlab/object_detection/summary.html#cleanlab.object_detection.summary.get_average_per_class_confusion_matrix">[docs]</a><span class="k">def</span> <span class="nf">get_average_per_class_confusion_matrix</span><span class="p">(</span>
+<div class="viewcode-block" id="get_average_per_class_confusion_matrix"><a class="viewcode-back" href="../../../cleanlab/object_detection/summary.html#cleanlab.object_detection.summary.get_average_per_class_confusion_matrix">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">get_average_per_class_confusion_matrix</span><span class="p">(</span>
     <span class="n">labels</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]],</span>
     <span class="n">predictions</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">],</span>
     <span class="n">num_procs</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
@@ -1234,7 +1260,7 @@
     <span class="k">return</span> <span class="n">avg_metrics</span></div>
 
 
-<div class="viewcode-block" id="calculate_per_class_metrics"><a class="viewcode-back" href="../../../cleanlab/object_detection/summary.html#cleanlab.object_detection.summary.calculate_per_class_metrics">[docs]</a><span class="k">def</span> <span class="nf">calculate_per_class_metrics</span><span class="p">(</span>
+<div class="viewcode-block" id="calculate_per_class_metrics"><a class="viewcode-back" href="../../../cleanlab/object_detection/summary.html#cleanlab.object_detection.summary.calculate_per_class_metrics">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">calculate_per_class_metrics</span><span class="p">(</span>
     <span class="n">labels</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]],</span>
     <span class="n">predictions</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">],</span>
     <span class="n">num_procs</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
@@ -1292,13 +1318,13 @@
     <span class="k">return</span> <span class="n">avg_metrics_dict</span></div>
 
 
-<span class="k">def</span> <span class="nf">_normalize_by_total</span><span class="p">(</span><span class="n">freq</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_normalize_by_total</span><span class="p">(</span><span class="n">freq</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Helper function to normalize a frequency distribution.&quot;&quot;&quot;</span>
     <span class="n">total</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">freq</span><span class="o">.</span><span class="n">values</span><span class="p">())</span>
     <span class="k">return</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="nb">round</span><span class="p">(</span><span class="n">v</span> <span class="o">/</span> <span class="p">(</span><span class="n">total</span> <span class="o">+</span> <span class="n">EPSILON</span><span class="p">),</span> <span class="mi">2</span><span class="p">)</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">freq</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span>
 
 
-<span class="k">def</span> <span class="nf">_get_bbox_areas</span><span class="p">(</span><span class="n">labels</span><span class="p">,</span> <span class="n">boxes</span><span class="p">,</span> <span class="n">class_area_dict</span><span class="p">,</span> <span class="n">class_names</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_get_bbox_areas</span><span class="p">(</span><span class="n">labels</span><span class="p">,</span> <span class="n">boxes</span><span class="p">,</span> <span class="n">class_area_dict</span><span class="p">,</span> <span class="n">class_names</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Helper function to compute the area of bounding boxes for each class.&quot;&quot;&quot;</span>
     <span class="k">for</span> <span class="n">cl</span><span class="p">,</span> <span class="n">bbox</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">labels</span><span class="p">,</span> <span class="n">boxes</span><span class="p">):</span>
         <span class="k">if</span> <span class="n">class_names</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
@@ -1308,7 +1334,7 @@
         <span class="n">class_area_dict</span><span class="p">[</span><span class="n">cl</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">bbox</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">-</span> <span class="n">bbox</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">*</span> <span class="p">(</span><span class="n">bbox</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="o">-</span> <span class="n">bbox</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span>
 
 
-<span class="k">def</span> <span class="nf">_get_class_instances</span><span class="p">(</span><span class="n">labels</span><span class="p">,</span> <span class="n">class_instances_dict</span><span class="p">,</span> <span class="n">class_names</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_get_class_instances</span><span class="p">(</span><span class="n">labels</span><span class="p">,</span> <span class="n">class_instances_dict</span><span class="p">,</span> <span class="n">class_names</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Helper function to count the number of class instances in each image.&quot;&quot;&quot;</span>
     <span class="k">for</span> <span class="n">cl</span> <span class="ow">in</span> <span class="n">labels</span><span class="p">:</span>
         <span class="k">if</span> <span class="n">class_names</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
@@ -1316,7 +1342,7 @@
         <span class="n">class_instances_dict</span><span class="p">[</span><span class="n">cl</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
 
 
-<span class="k">def</span> <span class="nf">_plot_legend</span><span class="p">(</span><span class="n">class_names</span><span class="p">,</span> <span class="n">label</span><span class="p">,</span> <span class="n">prediction</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_plot_legend</span><span class="p">(</span><span class="n">class_names</span><span class="p">,</span> <span class="n">label</span><span class="p">,</span> <span class="n">prediction</span><span class="p">):</span>
     <span class="n">colors</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;black&quot;</span><span class="p">]</span>
     <span class="n">colors</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="s2">&quot;red&quot;</span><span class="p">]</span> <span class="k">if</span> <span class="n">label</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="p">[])</span>
     <span class="n">colors</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="s2">&quot;blue&quot;</span><span class="p">]</span> <span class="k">if</span> <span class="n">prediction</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="p">[])</span>
@@ -1335,7 +1361,7 @@
         <span class="n">labels</span> <span class="o">+=</span> <span class="p">[</span><span class="sa">r</span><span class="s2">&quot;$\bf</span><span class="si">{classes}</span><span class="s2">$&quot;</span><span class="p">]</span> <span class="o">+</span> <span class="nb">list</span><span class="p">(</span><span class="n">class_names</span><span class="o">.</span><span class="n">values</span><span class="p">())</span>
 
     <span class="k">try</span><span class="p">:</span>
-        <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+        <span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
     <span class="k">except</span> <span class="ne">ImportError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">ImportError</span><span class="p">(</span>
             <span class="s2">&quot;This functionality requires matplotlib. Install it via: `pip install matplotlib`&quot;</span>
@@ -1350,7 +1376,7 @@
     <span class="k">return</span> <span class="n">legend</span><span class="p">,</span> <span class="n">plt</span>
 
 
-<span class="k">def</span> <span class="nf">_draw_labels</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">rect</span><span class="p">,</span> <span class="n">label</span><span class="p">,</span> <span class="n">edgecolor</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_draw_labels</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">rect</span><span class="p">,</span> <span class="n">label</span><span class="p">,</span> <span class="n">edgecolor</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Helper function to draw labels on an axis.&quot;&quot;&quot;</span>
 
     <span class="n">rx</span><span class="p">,</span> <span class="n">ry</span> <span class="o">=</span> <span class="n">rect</span><span class="o">.</span><span class="n">get_xy</span><span class="p">()</span>
@@ -1370,12 +1396,12 @@
     <span class="k">return</span> <span class="n">ax</span>
 
 
-<span class="k">def</span> <span class="nf">_draw_boxes</span><span class="p">(</span><span class="n">fig</span><span class="p">,</span> <span class="n">ax</span><span class="p">,</span> <span class="n">bboxes</span><span class="p">,</span> <span class="n">labels</span><span class="p">,</span> <span class="n">edgecolor</span><span class="o">=</span><span class="s2">&quot;g&quot;</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s2">&quot;-&quot;</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">3</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_draw_boxes</span><span class="p">(</span><span class="n">fig</span><span class="p">,</span> <span class="n">ax</span><span class="p">,</span> <span class="n">bboxes</span><span class="p">,</span> <span class="n">labels</span><span class="p">,</span> <span class="n">edgecolor</span><span class="o">=</span><span class="s2">&quot;g&quot;</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s2">&quot;-&quot;</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">3</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Helper function to draw bboxes and labels on an axis.&quot;&quot;&quot;</span>
     <span class="n">bboxes</span> <span class="o">=</span> <span class="p">[</span><span class="n">bbox_xyxy_to_xywh</span><span class="p">(</span><span class="n">box</span><span class="p">)</span> <span class="k">for</span> <span class="n">box</span> <span class="ow">in</span> <span class="n">bboxes</span><span class="p">]</span>
 
     <span class="k">try</span><span class="p">:</span>
-        <span class="kn">from</span> <span class="nn">matplotlib.patches</span> <span class="kn">import</span> <span class="n">Rectangle</span>
+        <span class="kn">from</span><span class="w"> </span><span class="nn">matplotlib.patches</span><span class="w"> </span><span class="kn">import</span> <span class="n">Rectangle</span>
     <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">ImportError</span><span class="p">(</span>
             <span class="s2">&quot;This functionality requires matplotlib. Install it via: `pip install matplotlib`&quot;</span>
@@ -1409,7 +1435,7 @@
         <div class="bottom-of-page">
           <div class="left-details">
             <div class="copyright">
-                Copyright &#169; 2024, Cleanlab Inc.
+                Copyright &#169; 2025, Cleanlab Inc.
             </div>
             Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
             
@@ -1460,5 +1486,6 @@
     <script src="https://cdn.jsdelivr.net/npm/@jupyter-widgets/html-manager@^1.0.1/dist/embed-amd.js"></script>
     
 <script async defer src="https://buttons.github.io/buttons.js"></script>
+<script src="https://cdn.cleanlab.ai/v1.1.1/agility-web-component.js"></script>
 </body>
 </html>
