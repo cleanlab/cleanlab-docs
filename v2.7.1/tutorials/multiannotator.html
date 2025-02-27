@@ -1,0 +1,1696 @@
+<!doctype html>
+<html class="no-js" lang="en" data-content_root="">
+  <head><meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width,initial-scale=1"/>
+    <meta name="color-scheme" content="light dark"><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+        <script async src="https://www.googletagmanager.com/gtag/js?id=G-EV8RVEFX82"></script>
+        <script>
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            
+            gtag('config', 'G-EV8RVEFX82');
+            
+        </script>
+    <meta property="og:title" content="Estimate Consensus and Annotator Quality for Data Labeled by Multiple Annotators" />
+<meta property="og:type" content="website" />
+<meta property="og:url" content="https://docs.cleanlab.ai/stable/tutorials/multiannotator.html" />
+<meta property="og:site_name" content="cleanlab" />
+<meta property="og:description" content="This 5-minute quickstart tutorial shows how to use cleanlab for classification data that has been labeled by multiple annotators (where each example has been labeled by at least one annotator, but ..." />
+<meta property="og:image" content="https://raw.githubusercontent.com/cleanlab/assets/master/cleanlab/clos-preview-card.png" />
+<meta property="og:image:alt" content="cleanlab" />
+<meta name="description" content="This 5-minute quickstart tutorial shows how to use cleanlab for classification data that has been labeled by multiple annotators (where each example has been labeled by at least one annotator, but ..." />
+<link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="Find Label Errors in Multi-Label Classification Datasets" href="multilabel_classification.html" /><link rel="prev" title="Detect Outliers with Cleanlab and PyTorch Image Models (timm)" href="outliers.html" />
+
+    <link rel="shortcut icon" href="https://raw.githubusercontent.com/cleanlab/assets/a4483476d449f2f05a4c7cde329e72358099cc07/cleanlab/cleanlab_favicon.svg"/><!-- Generated with Sphinx 7.1.2 and Furo 2023.09.10 -->
+        <title>Estimate Consensus and Annotator Quality for Data Labeled by Multiple Annotators - cleanlab</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?v=135e06be" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/tabs.css?v=a5c4661c" />
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/katex-math.css?v=91adb8b6" />
+    <link rel="stylesheet" type="text/css" href="../_static/nbsphinx-code-cells.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?v=36a5483c" />
+    <link rel="stylesheet" type="text/css" href="../_static/css/custom.css?v=96bccb3e" />
+    
+    
+
+
+<style>
+  body {
+    --color-code-background: #f8f8f8;
+  --color-code-foreground: black;
+  
+  }
+  @media not print {
+    body[data-theme="dark"] {
+      --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+    }
+    @media (prefers-color-scheme: dark) {
+      body:not([data-theme="light"]) {
+        --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+      }
+    }
+  }
+</style></head>
+  <body>
+    
+    <script>
+      document.body.dataset.theme = localStorage.getItem("theme") || "auto";
+    </script>
+    
+
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+  <symbol id="svg-toc" viewBox="0 0 24 24">
+    <title>Contents</title>
+    <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 1024 1024">
+      <path d="M408 442h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8zm-8 204c0 4.4 3.6 8 8 8h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56zm504-486H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zm0 632H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zM115.4 518.9L271.7 642c5.8 4.6 14.4.5 14.4-6.9V388.9c0-7.4-8.5-11.5-14.4-6.9L115.4 505.1a8.74 8.74 0 0 0 0 13.8z"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-menu" viewBox="0 0 24 24">
+    <title>Menu</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-menu">
+      <line x1="3" y1="12" x2="21" y2="12"></line>
+      <line x1="3" y1="6" x2="21" y2="6"></line>
+      <line x1="3" y1="18" x2="21" y2="18"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-arrow-right" viewBox="0 0 24 24">
+    <title>Expand</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-chevron-right">
+      <polyline points="9 18 15 12 9 6"></polyline>
+    </svg>
+  </symbol>
+  <symbol id="svg-sun" viewBox="0 0 24 24">
+    <title>Light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="feather-sun">
+      <circle cx="12" cy="12" r="5"></circle>
+      <line x1="12" y1="1" x2="12" y2="3"></line>
+      <line x1="12" y1="21" x2="12" y2="23"></line>
+      <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+      <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+      <line x1="1" y1="12" x2="3" y2="12"></line>
+      <line x1="21" y1="12" x2="23" y2="12"></line>
+      <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+      <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon" viewBox="0 0 24 24">
+    <title>Dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-moon">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454z" />
+    </svg>
+  </symbol>
+  <symbol id="svg-sun-half" viewBox="0 0 24 24">
+    <title>Auto light/dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-shadow">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+      <circle cx="12" cy="12" r="9" />
+      <path d="M13 12h5" />
+      <path d="M13 15h4" />
+      <path d="M13 18h1" />
+      <path d="M13 9h4" />
+      <path d="M13 6h1" />
+    </svg>
+  </symbol>
+</svg>
+
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation">
+<input type="checkbox" class="sidebar-toggle" name="__toc" id="__toc">
+<label class="overlay sidebar-overlay" for="__navigation">
+  <div class="visually-hidden">Hide navigation sidebar</div>
+</label>
+<label class="overlay toc-overlay" for="__toc">
+  <div class="visually-hidden">Hide table of contents sidebar</div>
+</label>
+
+
+
+<div class="page">
+  <header class="mobile-header">
+    <div class="header-left">
+      <label class="nav-overlay-icon" for="__navigation">
+        <div class="visually-hidden">Toggle site navigation sidebar</div>
+        <i class="icon"><svg><use href="#svg-menu"></use></svg></i>
+      </label>
+    </div>
+    <div class="header-center">
+      <a href="../index.html"><div class="brand">cleanlab</div></a>
+    </div>
+    <div class="header-right">
+      <div class="theme-toggle-container theme-toggle-header">
+        <button class="theme-toggle">
+          <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+          <svg class="theme-icon-when-auto"><use href="#svg-sun-half"></use></svg>
+          <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+          <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+        </button>
+      </div>
+      <label class="toc-overlay-icon toc-header-icon" for="__toc">
+        <div class="visually-hidden">Toggle table of contents sidebar</div>
+        <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+      </label>
+    </div>
+  </header>
+  <aside class="sidebar-drawer">
+    <div class="sidebar-container">
+      
+      <div class="sidebar-sticky"><a style="padding-bottom: 0px;" class="sidebar-brand" href="../index.html">
+    
+    <div class="sidebar-logo-container">
+        <img class="sidebar-logo" src="https://raw.githubusercontent.com/cleanlab/assets/master/cleanlab/cleanlab_logo_only.png" alt="Logo" />
+    </div>
+    
+    <span style="margin-bottom:0px" class="sidebar-brand-text">
+        cleanlab
+    </span>
+    
+</a>
+
+<div style="margin-left: 12px; margin-top: 4px;">
+    <a style="margin-top: 6px;" class="github-button" href="https://github.com/cleanlab/cleanlab" data-size="large" data-show-count="true"
+    aria-label="Star cleanlab/cleanlab on GitHub">Star</a>
+</div>
+<form class="sidebar-search-container" method="get" action="../search.html" role="search">
+  <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
+  <input type="hidden" name="check_keywords" value="yes">
+  <input type="hidden" name="area" value="default">
+</form>
+<div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
+  <ul>
+<li class="toctree-l1"><a class="reference internal" href="../index.html">Quickstart</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Tutorials</span></p>
+<ul class="current">
+<li class="toctree-l1 has-children"><a class="reference internal" href="datalab/index.html">Datalab Tutorials</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle navigation of Datalab Tutorials</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="datalab/datalab_quickstart.html">Detecting Common Data Issues with Datalab</a></li>
+<li class="toctree-l2"><a class="reference internal" href="datalab/datalab_advanced.html">Advanced Data Auditing with Datalab</a></li>
+<li class="toctree-l2"><a class="reference internal" href="datalab/text.html">Text Data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="datalab/tabular.html">Tabular Data (Numeric/Categorical)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="datalab/image.html">Image Data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="datalab/audio.html">Audio Data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../cleanlab/datalab/guide/issue_type_description.html">Guide to Datalab Issue Types</a></li>
+<li class="toctree-l2"><a class="reference internal" href="datalab/workflows.html">Miscellaneous workflows with Datalab</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="improving_ml_performance.html">Improving ML Performance</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="clean_learning/index.html">CleanLearning Tutorials</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><div class="visually-hidden">Toggle navigation of CleanLearning Tutorials</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="clean_learning/text.html">Text Classification</a></li>
+<li class="toctree-l2"><a class="reference internal" href="clean_learning/tabular.html">Tabular Classification (Numeric/Categorical)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="indepth_overview.html">Workflows of Data-Centric AI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="dataset_health.html">Analyze Dataset-level Issues</a></li>
+<li class="toctree-l1"><a class="reference internal" href="outliers.html">Outlier Detection</a></li>
+<li class="toctree-l1 current current-page"><a class="current reference internal" href="#">Improving Consensus Labels for Multiannotator Data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="multilabel_classification.html">Multi-Label Classification</a></li>
+<li class="toctree-l1"><a class="reference internal" href="regression.html">Noisy Labels in Regression</a></li>
+<li class="toctree-l1"><a class="reference internal" href="token_classification.html">Token Classification (text)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="segmentation.html">Image Segmentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="object_detection.html">Object Detection</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pred_probs_cross_val.html">Predicted Probabilities via Cross Validation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="faq.html">FAQ</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API Reference</span></p>
+<ul>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../cleanlab/datalab/index.html">datalab</a><input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" role="switch" type="checkbox"/><label for="toctree-checkbox-3"><div class="visually-hidden">Toggle navigation of datalab</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../cleanlab/datalab/guide/index.html">Datalab guides</a><input class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" role="switch" type="checkbox"/><label for="toctree-checkbox-4"><div class="visually-hidden">Toggle navigation of Datalab guides</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../cleanlab/datalab/guide/issue_type_description.html">Datalab Issue Types</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../cleanlab/datalab/guide/custom_issue_manager.html">Creating Your Own Issues Manager</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../cleanlab/datalab/datalab.html">datalab</a></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../cleanlab/datalab/internal/index.html">internal</a><input class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" role="switch" type="checkbox"/><label for="toctree-checkbox-5"><div class="visually-hidden">Toggle navigation of internal</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../cleanlab/datalab/internal/adapter/index.html">adapter</a><input class="toctree-checkbox" id="toctree-checkbox-6" name="toctree-checkbox-6" role="switch" type="checkbox"/><label for="toctree-checkbox-6"><div class="visually-hidden">Toggle navigation of adapter</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="../cleanlab/datalab/internal/adapter/imagelab.html">imagelab</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../cleanlab/datalab/internal/data.html">data</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../cleanlab/datalab/internal/data_issues.html">data_issues</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../cleanlab/datalab/internal/issue_finder.html">issue_finder</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../cleanlab/datalab/internal/factory.html">factory</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../cleanlab/datalab/internal/model_outputs.html">model_outputs</a></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../cleanlab/datalab/internal/issue_manager/index.html">issue_manager</a><input class="toctree-checkbox" id="toctree-checkbox-7" name="toctree-checkbox-7" role="switch" type="checkbox"/><label for="toctree-checkbox-7"><div class="visually-hidden">Toggle navigation of issue_manager</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="../cleanlab/datalab/internal/issue_manager/issue_manager.html">Base issue_manager module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../cleanlab/datalab/internal/issue_manager/label.html">label</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../cleanlab/datalab/internal/issue_manager/outlier.html">outlier</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../cleanlab/datalab/internal/issue_manager/duplicate.html">duplicate</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../cleanlab/datalab/internal/issue_manager/noniid.html">noniid</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../cleanlab/datalab/internal/issue_manager/imbalance.html">imbalance</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../cleanlab/datalab/internal/issue_manager/underperforming_group.html">underperforming_group</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../cleanlab/datalab/internal/issue_manager/null.html">null</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../cleanlab/datalab/internal/issue_manager/data_valuation.html">data_valuation</a></li>
+<li class="toctree-l4 has-children"><a class="reference internal" href="../cleanlab/datalab/internal/issue_manager/regression/index.html">regression</a><input class="toctree-checkbox" id="toctree-checkbox-8" name="toctree-checkbox-8" role="switch" type="checkbox"/><label for="toctree-checkbox-8"><div class="visually-hidden">Toggle navigation of regression</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l5"><a class="reference internal" href="../cleanlab/datalab/internal/issue_manager/regression/label.html">label</a></li>
+</ul>
+</li>
+<li class="toctree-l4 has-children"><a class="reference internal" href="../cleanlab/datalab/internal/issue_manager/multilabel/index.html">multilabel</a><input class="toctree-checkbox" id="toctree-checkbox-9" name="toctree-checkbox-9" role="switch" type="checkbox"/><label for="toctree-checkbox-9"><div class="visually-hidden">Toggle navigation of multilabel</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l5"><a class="reference internal" href="../cleanlab/datalab/internal/issue_manager/multilabel/label.html">label</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../cleanlab/datalab/internal/report.html">report</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../cleanlab/datalab/internal/task.html">task</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../cleanlab/classification.html">classification</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cleanlab/filter.html">filter</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cleanlab/rank.html">rank</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cleanlab/count.html">count</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cleanlab/dataset.html">dataset</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cleanlab/outlier.html">outlier</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cleanlab/multiannotator.html">multiannotator</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cleanlab/data_valuation.html">data_valuation</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../cleanlab/multilabel_classification/index.html">multilabel_classification</a><input class="toctree-checkbox" id="toctree-checkbox-10" name="toctree-checkbox-10" role="switch" type="checkbox"/><label for="toctree-checkbox-10"><div class="visually-hidden">Toggle navigation of multilabel_classification</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../cleanlab/multilabel_classification/filter.html">filter</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../cleanlab/multilabel_classification/rank.html">rank</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../cleanlab/multilabel_classification/dataset.html">dataset</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../cleanlab/regression/index.html">regression</a><input class="toctree-checkbox" id="toctree-checkbox-11" name="toctree-checkbox-11" role="switch" type="checkbox"/><label for="toctree-checkbox-11"><div class="visually-hidden">Toggle navigation of regression</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../cleanlab/regression/rank.html">regression.rank</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../cleanlab/regression/learn.html">regression.learn</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../cleanlab/token_classification/index.html">token_classification</a><input class="toctree-checkbox" id="toctree-checkbox-12" name="toctree-checkbox-12" role="switch" type="checkbox"/><label for="toctree-checkbox-12"><div class="visually-hidden">Toggle navigation of token_classification</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../cleanlab/token_classification/filter.html">filter</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../cleanlab/token_classification/rank.html">rank</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../cleanlab/token_classification/summary.html">summary</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../cleanlab/segmentation/index.html">segmentation</a><input class="toctree-checkbox" id="toctree-checkbox-13" name="toctree-checkbox-13" role="switch" type="checkbox"/><label for="toctree-checkbox-13"><div class="visually-hidden">Toggle navigation of segmentation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../cleanlab/segmentation/rank.html">rank</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../cleanlab/segmentation/filter.html">filter</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../cleanlab/segmentation/summary.html">summary</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../cleanlab/object_detection/index.html">object_detection</a><input class="toctree-checkbox" id="toctree-checkbox-14" name="toctree-checkbox-14" role="switch" type="checkbox"/><label for="toctree-checkbox-14"><div class="visually-hidden">Toggle navigation of object_detection</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../cleanlab/object_detection/rank.html">rank</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../cleanlab/object_detection/filter.html">filter</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../cleanlab/object_detection/summary.html">summary</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../cleanlab/benchmarking/index.html">benchmarking</a><input class="toctree-checkbox" id="toctree-checkbox-15" name="toctree-checkbox-15" role="switch" type="checkbox"/><label for="toctree-checkbox-15"><div class="visually-hidden">Toggle navigation of benchmarking</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../cleanlab/benchmarking/noise_generation.html">noise_generation</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../cleanlab/models/index.html">models</a><input class="toctree-checkbox" id="toctree-checkbox-16" name="toctree-checkbox-16" role="switch" type="checkbox"/><label for="toctree-checkbox-16"><div class="visually-hidden">Toggle navigation of models</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../cleanlab/models/keras.html">keras</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../cleanlab/experimental/index.html">experimental</a><input class="toctree-checkbox" id="toctree-checkbox-17" name="toctree-checkbox-17" role="switch" type="checkbox"/><label for="toctree-checkbox-17"><div class="visually-hidden">Toggle navigation of experimental</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../cleanlab/experimental/label_issues_batched.html">label_issues_batched</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../cleanlab/experimental/span_classification.html">span_classification</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../cleanlab/experimental/mnist_pytorch.html">mnist_pytorch</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../cleanlab/experimental/coteaching.html">coteaching</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../cleanlab/experimental/cifar_cnn.html">cifar_cnn</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../cleanlab/internal/index.html">internal</a><input class="toctree-checkbox" id="toctree-checkbox-18" name="toctree-checkbox-18" role="switch" type="checkbox"/><label for="toctree-checkbox-18"><div class="visually-hidden">Toggle navigation of internal</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../cleanlab/internal/util.html">util</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../cleanlab/internal/latent_algebra.html">latent_algebra</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../cleanlab/internal/label_quality_utils.html">label_quality_utils</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../cleanlab/internal/multilabel_utils.html">multilabel_utils</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../cleanlab/internal/multilabel_scorer.html">multilabel_scorer</a></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../cleanlab/internal/neighbor/index.html">neighbor</a><input class="toctree-checkbox" id="toctree-checkbox-19" name="toctree-checkbox-19" role="switch" type="checkbox"/><label for="toctree-checkbox-19"><div class="visually-hidden">Toggle navigation of neighbor</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../cleanlab/internal/neighbor/knn_graph.html">knn_graph</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../cleanlab/internal/neighbor/metric.html">metric</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../cleanlab/internal/neighbor/search.html">search</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../cleanlab/internal/outlier.html">outlier</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../cleanlab/internal/token_classification_utils.html">token_classification_utils</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../cleanlab/internal/validation.html">validation</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Guides</span></p>
+<ul>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../cleanlab/datalab/guide/index.html">Datalab issue types</a><input class="toctree-checkbox" id="toctree-checkbox-20" name="toctree-checkbox-20" role="switch" type="checkbox"/><label for="toctree-checkbox-20"><div class="visually-hidden">Toggle navigation of Datalab issue types</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../cleanlab/datalab/guide/issue_type_description.html">Datalab Issue Types</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../cleanlab/datalab/guide/custom_issue_manager.html">Creating Your Own Issues Manager</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/cleanlab/cleanlab/blob/master/CONTRIBUTING.md">How to contribute</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Links</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference external" href="https://cleanlab.ai">Website</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/cleanlab/cleanlab">GitHub</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://pypi.org/project/cleanlab/">PyPI</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://anaconda.org/conda-forge/cleanlab">Conda</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://cleanlab.ai/slack">Community Discussions</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://cleanlab.ai/blog/">Blog</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://www.youtube.com/@CleanlabAI/playlists">Videos</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://cleanlab.ai/blog/data-centric-ai/">Cleanlab Studio (Easy Mode)</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://help.cleanlab.ai">Cleanlab Studio Docs</a></li>
+</ul>
+
+</div>
+
+
+<!-- Start of versioning -->
+
+<div class="sidebar-tree">
+    <p class="caption" role="heading">
+        <span class="caption-text">Versions</span>
+    </p>
+    <ul>
+        <li class="toctree-l1">
+            <a
+                id="version_number"
+                class="reference internal"
+                href="/"
+                >stable</a
+            >
+        </li>
+        <li class="toctree-l1">
+            <a
+                id="commit_hash"
+                class="reference internal"
+                href="/master/"
+                >developer</a
+            >
+        </li>
+        
+        <li class="toctree-l1">
+            <a
+                id="v2.7.1"
+                class="reference internal"
+                href="/v2.7.1/"
+                >v2.7.1</a
+            >
+        </li>
+        
+        <li class="toctree-l1">
+            <a
+                id="v2.7.0"
+                class="reference internal"
+                href="/v2.7.0/"
+                >v2.7.0</a
+            >
+        </li>
+        
+        <li class="toctree-l1">
+            <a
+                id="v2.6.6"
+                class="reference internal"
+                href="/v2.6.6/"
+                >v2.6.6</a
+            >
+        </li>
+        
+        <li class="toctree-l1">
+            <a
+                id="v2.6.5"
+                class="reference internal"
+                href="/v2.6.5/"
+                >v2.6.5</a
+            >
+        </li>
+        
+        <li class="toctree-l1">
+            <a
+                id="v2.6.4"
+                class="reference internal"
+                href="/v2.6.4/"
+                >v2.6.4</a
+            >
+        </li>
+        
+        <li class="toctree-l1">
+            <a
+                id="v2.6.3"
+                class="reference internal"
+                href="/v2.6.3/"
+                >v2.6.3</a
+            >
+        </li>
+        
+        <li class="toctree-l1">
+            <a
+                id="v2.6.2"
+                class="reference internal"
+                href="/v2.6.2/"
+                >v2.6.2</a
+            >
+        </li>
+        
+        <li class="toctree-l1">
+            <a
+                id="v2.6.1"
+                class="reference internal"
+                href="/v2.6.1/"
+                >v2.6.1</a
+            >
+        </li>
+        
+        <li class="toctree-l1">
+            <a
+                id="v2.6.0"
+                class="reference internal"
+                href="/v2.6.0/"
+                >v2.6.0</a
+            >
+        </li>
+        
+        <li class="toctree-l1">
+            <a
+                id="v2.5.0"
+                class="reference internal"
+                href="/v2.5.0/"
+                >v2.5.0</a
+            >
+        </li>
+        
+        <li class="toctree-l1">
+            <a
+                id="v2.4.0"
+                class="reference internal"
+                href="/v2.4.0/"
+                >v2.4.0</a
+            >
+        </li>
+        
+        <li class="toctree-l1">
+            <a
+                id="v2.3.1"
+                class="reference internal"
+                href="/v2.3.1/"
+                >v2.3.1</a
+            >
+        </li>
+        
+        <li class="toctree-l1">
+            <a
+                id="v2.3.0"
+                class="reference internal"
+                href="/v2.3.0/"
+                >v2.3.0</a
+            >
+        </li>
+        
+        <li class="toctree-l1">
+            <a
+                id="v2.2.0"
+                class="reference internal"
+                href="/v2.2.0/"
+                >v2.2.0</a
+            >
+        </li>
+        
+        <li class="toctree-l1">
+            <a
+                id="v2.1.0"
+                class="reference internal"
+                href="/v2.1.0/"
+                >v2.1.0</a
+            >
+        </li>
+        
+        <li class="toctree-l1">
+            <a
+                id="v2.0.0"
+                class="reference internal"
+                href="/v2.0.0/"
+                >v2.0.0</a
+            >
+        </li>
+        
+        <li class="toctree-l1">
+            <a
+                id="v1.0.1"
+                class="reference internal"
+                href="/v1.0.1/"
+                >v1.0.1</a
+            >
+        </li>
+        
+    </ul>
+</div>
+
+<br>
+<br>
+
+<script
+    type="text/javascript"
+    src="/versioning.js"
+></script>
+
+<script type="text/javascript">
+    window.addEventListener("load", () => {
+        const version_number = Version.version_number;
+        const commit_hash = Version.commit_hash;
+
+        document.getElementById("version_number").innerHTML =
+            "stable <code class='docutils literal notranslate'><span class='pre'> (" +
+            version_number +
+            ")</span></code>";
+        document.getElementById("commit_hash").innerHTML =
+            "master <code class='docutils literal notranslate'><span class='pre'> (" +
+            commit_hash.slice(0, 7) +
+            "&hellip;)</span></code>";
+    });
+</script>
+
+<!-- End of versioning -->
+
+</div>
+      </div>
+      
+    </div>
+  </aside>
+  <div class="main">
+    <div class="content">
+      <div class="article-container">
+        <a href="#" class="back-to-top muted-link">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12z"></path>
+          </svg>
+          <span>Back to top</span>
+        </a>
+        <div class="content-icon-container">
+          
+<div class="theme-toggle-container theme-toggle-content">
+            <button class="theme-toggle">
+              <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+              <svg class="theme-icon-when-auto"><use href="#svg-sun-half"></use></svg>
+              <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+              <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+            </button>
+          </div>
+          <label class="toc-overlay-icon toc-content-icon" for="__toc">
+            <div class="visually-hidden">Toggle table of contents sidebar</div>
+            <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+          </label>
+        </div>
+        <article role="main">
+          
+
+<noscript>
+    <div class="admonition warning">
+        <p class="admonition-title">Warning</p>
+        <p>
+            Parts of this site uses JavaScript, but your browser does not
+            support it.
+        </p>
+    </div>
+</noscript>
+
+<div>
+    <agility-assistant
+        access-token="public-assistant-1e1cd1d0-5f87546555cc7497"
+        assistant-id="69391e48-a95f-4f8d-8dc2-025f1e1cd1d0"
+        assistant-title="Cleanlab Open Source Assistant"
+        assistant-placeholder="Ask a question"
+        assistant-description="An assistant to help you with your questions about Cleanlab Open Source"
+        logo-url="https://cleanlab.ai/icon-512.png"
+    />
+</div>
+
+
+
+<!-- Start of Version Warning Banner -->
+
+<p id="doc_ver_warning"></p>
+
+<script type="text/javascript" src="/versioning.js"></script>
+<script type="text/javascript">
+    window.addEventListener("load", () => {
+        const version_number = Version.version_number;
+        const path_arr = window.location.pathname.split("/");
+
+        if (path_arr.includes("master")) {
+            document.getElementById(
+                "doc_ver_warning"
+            ).innerHTML = `<div class="admonition warning">
+            <p class="admonition-title">Warning</p>
+            <p>This version of the documentation corresponds to the master branch of <code class="docutils literal notranslate"><span class="pre">cleanlab</span></code> source code from <a href="https://github.com/cleanlab/cleanlab/">GitHub</a>. To see the documentation for the latest <code class="docutils literal notranslate"><span class="pre">pip</span></code>-installed version, click <a href="/">here</a>.</p>
+            </div>`;
+        } else if (
+            !path_arr.includes(version_number) &&
+            !path_arr.includes("stable")
+        ) {
+            document.getElementById("doc_ver_warning").innerHTML =
+                `<div class="admonition warning">
+            <p class="admonition-title">Warning</p>
+            <p>This documentation is for an old version (<code class="docutils literal notranslate"><span class="pre">v2.7.1</span></code>) of <code class="docutils literal notranslate"><span class="pre">cleanlab</span></code>. To see the documentation for the latest stable version (<code class="docutils literal notranslate"><span class="pre">` +
+                version_number +
+                `</span></code>), click <a href="/">here</a>.</p>
+            </div>`;
+        } else {
+            document.getElementById("doc_ver_warning").remove();
+        }
+    });
+</script>
+
+<!-- End of Version Warning Banner -->
+
+ <style>
+    .nbinput .prompt,
+    .nboutput .prompt {
+        display: none;
+    }
+
+    .output_area {
+        max-height: 300px;
+        overflow: auto;
+    }
+
+    .dataframe {
+        background: #D7D7D7;
+    }
+
+    th {
+        color:black;
+    }
+</style>
+
+<script type="text/javascript">
+    window.addEventListener('load', () => {
+        const h1_element = document.getElementsByTagName("h1");
+        h1_element[0].insertAdjacentHTML("afterend", `
+        <p>
+            <a style="background-color:white;color:black;padding:4px 12px;text-decoration:none;display:inline-block;border-radius:8px;box-shadow:0 2px 4px 0 rgba(0, 0, 0, 0.2), 0 3px 10px 0 rgba(0, 0, 0, 0.19)" href="https://colab.research.google.com/github/cleanlab/cleanlab-docs/blob/master/v2.7.1/tutorials/multiannotator.ipynb" target="_blank">
+            <img src="https://colab.research.google.com/img/colab_favicon_256px.png" alt="" style="width:40px;height:40px;vertical-align:middle">
+            <span style="vertical-align:middle">Run in Google Colab</span>
+            </a>
+        </p>
+        `);
+    })
+
+</script><section id="Estimate-Consensus-and-Annotator-Quality-for-Data-Labeled-by-Multiple-Annotators">
+<h1>Estimate Consensus and Annotator Quality for Data Labeled by Multiple Annotators<a class="headerlink" href="#Estimate-Consensus-and-Annotator-Quality-for-Data-Labeled-by-Multiple-Annotators" title="Permalink to this heading">#</a></h1>
+<p>This 5-minute quickstart tutorial shows how to use cleanlab for classification data that has been labeled by <em>multiple</em> annotators (where each example has been labeled by at least one annotator, but not every annotator has labeled every example). Compared to existing crowdsourcing tools, cleanlab helps you better analyze such data by leveraging a trained classifier model in addition to the raw annotations. With one line of code, you can automatically compute:</p>
+<ul class="simple">
+<li><p>A <strong>consensus label</strong> for each example (i.e. <em>truth inference</em>) that aggregates the individual annotations (more accurately than algorithms from crowdsourcing like majority-vote, Dawid-Skene, or GLAD).</p></li>
+<li><p>A <strong>quality score for each consensus label</strong> which measures our confidence that this label is correct (via well-calibrated estimates that account for the: number of annotators which have labeled this example, overall quality of each annotator, and quality of our trained ML models).</p></li>
+<li><p>An analogous <strong>label quality score</strong> for each individual label chosen by one annotator for a particular example (to measure our confidence in alternate labels when annotators differ from the consensus).</p></li>
+<li><p>An <strong>overall quality score for each annotator</strong> which measures our confidence in the overall correctness of labels obtained from this annotator.</p></li>
+</ul>
+<p><strong>Overview of what we’ll do in this tutorial:</strong></p>
+<ul class="simple">
+<li><p>Obtain initial consensus labels of multiannotator data using majority vote.</p></li>
+<li><p>Train a classifier model on the initial consensus labels and use it to obtain out-of-sample predicted class probabilities.</p></li>
+<li><p>Use cleanlab’s <code class="docutils literal notranslate"><span class="pre">multiannotator.get_label_quality_multiannotator</span></code> function to get improved consensus labels that more accurately reflect the ground truth.</p></li>
+<li><p>View other information about your multiannotator dataset, such as consensus and annotator quality scores, agreement between annotators, detailed label quality scores and more!</p></li>
+</ul>
+<p><strong>Consensus labels</strong> represent the best guess of the true label for each example and can be used for more reliable modeling/analytics. Cleanlab automatically produces enhanced estimates of consensus through the use of machine learning. <strong>Quality scores</strong> help us determine how much trust we can place in each: consensus label, individual annotator, and particular label from a particular annotator. These quality scores can help you determine which annotators are best/worst overall, as well as which
+current consensus labels are least trustworthy and should perhaps be verified via additional annotation.</p>
+<p>This tutorial uses a toy <em>tabular</em> dataset labeled with multiple annotators but <strong>these steps can easily be applied to image or text data</strong>.</p>
+<div class="admonition note">
+<p class="admonition-title">Quickstart</p>
+<p>Already have <code class="docutils literal notranslate"><span class="pre">multiannotator_labels</span></code> and (out-of-sample) <code class="docutils literal notranslate"><span class="pre">pred_probs</span></code> from a model trained on an existing set of consensus labels? Run the code below to get improved consensus labels and more information about the quality of your labels and annotators.</p>
+<div class="markdown" style="background:white;margin:16px"><div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">cleanlab.multiannotator</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_label_quality_multiannotator</span>
+
+<span class="n">get_label_quality_multiannotator</span><span class="p">(</span><span class="n">multiannotator_labels</span><span class="p">,</span> <span class="n">pred_probs</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div><section id="1.-Install-and-import-required-dependencies">
+<h2>1. Install and import required dependencies<a class="headerlink" href="#1.-Install-and-import-required-dependencies" title="Permalink to this heading">#</a></h2>
+<p>You can use <code class="docutils literal notranslate"><span class="pre">pip</span></code> to install all packages required for this tutorial as follows:</p>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">!</span>pip<span class="w"> </span>install<span class="w"> </span>cleanlab
+
+<span class="c1"># Make sure to install the version corresponding to this tutorial</span>
+<span class="c1"># E.g. if viewing master branch documentation:</span>
+<span class="c1">#     !pip install git+https://github.com/cleanlab/cleanlab.git</span>
+</pre></div>
+</div>
+<p>Let’s import some of the packages needed throughout this tutorial.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.linear_model</span><span class="w"> </span><span class="kn">import</span> <span class="n">LogisticRegression</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.model_selection</span><span class="w"> </span><span class="kn">import</span> <span class="n">cross_val_predict</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">cleanlab.multiannotator</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_label_quality_multiannotator</span><span class="p">,</span> <span class="n">get_majority_vote_label</span>
+</pre></div>
+</div>
+</div>
+</section>
+<section id="2.-Create-the-data-(can-skip-these-details)">
+<h2>2. Create the data (can skip these details)<a class="headerlink" href="#2.-Create-the-data-(can-skip-these-details)" title="Permalink to this heading">#</a></h2>
+<p>For this tutorial we will generate a toy dataset that has 50 annotators and 300 examples. There are three possible classes, <code class="docutils literal notranslate"><span class="pre">0</span></code>, <code class="docutils literal notranslate"><span class="pre">1</span></code> and <code class="docutils literal notranslate"><span class="pre">2</span></code>.</p>
+<p>Each annotator annotates approximately 10% of the examples. We also synthetically made the last 5 annotators in our toy dataset have much noisier labels than the rest of the annotators.</p>
+<p>Solely for evaluating cleanlab’s consensus labels against other consensus methods, we here also generate the true labels for this example dataset. However, true labels are not required for any cleanlab multiannotator functions (and they usually are not available in real applications). To generate our multiannotator data, we define a <code class="docutils literal notranslate"><span class="pre">make_data()</span></code> method (can skip these details).</p>
+<details><summary><p>See the code for data generation <strong>(click to expand)</strong></p>
+</summary><div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Note: This pulldown content is for docs.cleanlab.ai, if running on local Jupyter or Colab, please ignore it.</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">cleanlab.benchmarking.noise_generation</span><span class="w"> </span><span class="kn">import</span> <span class="n">generate_noise_matrix_from_trace</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">cleanlab.benchmarking.noise_generation</span><span class="w"> </span><span class="kn">import</span> <span class="n">generate_noisy_labels</span>
+
+<span class="n">SEED</span> <span class="o">=</span> <span class="mi">111</span> <span class="c1"># set to None for non-reproducible randomness</span>
+<span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="n">seed</span><span class="o">=</span><span class="n">SEED</span><span class="p">)</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">make_data</span><span class="p">(</span>
+    <span class="n">means</span><span class="o">=</span><span class="p">[[</span><span class="mi">3</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span> <span class="p">[</span><span class="mi">7</span><span class="p">,</span> <span class="mi">7</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">8</span><span class="p">]],</span>
+    <span class="n">covs</span><span class="o">=</span><span class="p">[[[</span><span class="mi">5</span><span class="p">,</span> <span class="o">-</span><span class="mf">1.5</span><span class="p">],</span> <span class="p">[</span><span class="o">-</span><span class="mf">1.5</span><span class="p">,</span> <span class="mi">1</span><span class="p">]],</span> <span class="p">[[</span><span class="mi">1</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">],</span> <span class="p">[</span><span class="mf">0.5</span><span class="p">,</span> <span class="mi">4</span><span class="p">]],</span> <span class="p">[[</span><span class="mi">5</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">5</span><span class="p">]]],</span>
+    <span class="n">sizes</span><span class="o">=</span><span class="p">[</span><span class="mi">150</span><span class="p">,</span> <span class="mi">75</span><span class="p">,</span> <span class="mi">75</span><span class="p">],</span>
+    <span class="n">num_annotators</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span>
+<span class="p">):</span>
+
+    <span class="n">m</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">means</span><span class="p">)</span>  <span class="c1"># number of classes</span>
+    <span class="n">n</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">sizes</span><span class="p">)</span>
+    <span class="n">local_data</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">labels</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="k">for</span> <span class="n">idx</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">m</span><span class="p">):</span>
+        <span class="n">local_data</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+            <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">multivariate_normal</span><span class="p">(</span><span class="n">mean</span><span class="o">=</span><span class="n">means</span><span class="p">[</span><span class="n">idx</span><span class="p">],</span> <span class="n">cov</span><span class="o">=</span><span class="n">covs</span><span class="p">[</span><span class="n">idx</span><span class="p">],</span> <span class="n">size</span><span class="o">=</span><span class="n">sizes</span><span class="p">[</span><span class="n">idx</span><span class="p">])</span>
+        <span class="p">)</span>
+        <span class="n">labels</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">idx</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">sizes</span><span class="p">[</span><span class="n">idx</span><span class="p">])]))</span>
+    <span class="n">X_train</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">(</span><span class="n">local_data</span><span class="p">)</span>
+    <span class="n">true_labels_train</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">hstack</span><span class="p">(</span><span class="n">labels</span><span class="p">)</span>
+
+    <span class="c1"># Compute p(true_label=k)</span>
+    <span class="n">py</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">bincount</span><span class="p">(</span><span class="n">true_labels_train</span><span class="p">)</span> <span class="o">/</span> <span class="nb">float</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">true_labels_train</span><span class="p">))</span>
+
+    <span class="n">noise_matrix_better</span> <span class="o">=</span> <span class="n">generate_noise_matrix_from_trace</span><span class="p">(</span>
+        <span class="n">m</span><span class="p">,</span>
+        <span class="n">trace</span><span class="o">=</span><span class="mf">0.8</span> <span class="o">*</span> <span class="n">m</span><span class="p">,</span>
+        <span class="n">py</span><span class="o">=</span><span class="n">py</span><span class="p">,</span>
+        <span class="n">valid_noise_matrix</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">seed</span><span class="o">=</span><span class="n">SEED</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="n">noise_matrix_worse</span> <span class="o">=</span> <span class="n">generate_noise_matrix_from_trace</span><span class="p">(</span>
+        <span class="n">m</span><span class="p">,</span>
+        <span class="n">trace</span><span class="o">=</span><span class="mf">0.35</span> <span class="o">*</span> <span class="n">m</span><span class="p">,</span>
+        <span class="n">py</span><span class="o">=</span><span class="n">py</span><span class="p">,</span>
+        <span class="n">valid_noise_matrix</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">seed</span><span class="o">=</span><span class="n">SEED</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="c1"># Generate our noisy labels using the noise_matrix for specified number of annotators.</span>
+    <span class="n">s</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
+        <span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">(</span>
+            <span class="p">[</span>
+                <span class="n">generate_noisy_labels</span><span class="p">(</span><span class="n">true_labels_train</span><span class="p">,</span> <span class="n">noise_matrix_better</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">num_annotators</span> <span class="o">-</span> <span class="mi">5</span>
+                <span class="k">else</span> <span class="n">generate_noisy_labels</span><span class="p">(</span><span class="n">true_labels_train</span><span class="p">,</span> <span class="n">noise_matrix_worse</span><span class="p">)</span>
+                <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_annotators</span><span class="p">)</span>
+            <span class="p">]</span>
+        <span class="p">)</span><span class="o">.</span><span class="n">transpose</span><span class="p">()</span>
+    <span class="p">)</span>
+
+    <span class="c1"># Each annotator only labels approximately 10% of the dataset</span>
+    <span class="c1"># (unlabeled points represented with NaN)</span>
+    <span class="n">s</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">mask</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">random</span><span class="p">(</span><span class="n">n</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mf">0.9</span><span class="p">))</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s2">&quot;Int64&quot;</span><span class="p">)</span>
+    <span class="n">s</span><span class="o">.</span><span class="n">dropna</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">how</span><span class="o">=</span><span class="s2">&quot;all&quot;</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">s</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;A&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">)</span><span class="o">.</span><span class="n">zfill</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">num_annotators</span><span class="o">+</span><span class="mi">1</span><span class="p">)]</span>
+
+    <span class="n">row_NA_check</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">notna</span><span class="p">(</span><span class="n">s</span><span class="p">)</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="p">{</span>
+        <span class="s2">&quot;X_train&quot;</span><span class="p">:</span> <span class="n">X_train</span><span class="p">[</span><span class="n">row_NA_check</span><span class="p">],</span>
+        <span class="s2">&quot;true_labels_train&quot;</span><span class="p">:</span> <span class="n">true_labels_train</span><span class="p">[</span><span class="n">row_NA_check</span><span class="p">],</span>
+        <span class="s2">&quot;multiannotator_labels&quot;</span><span class="p">:</span> <span class="n">s</span><span class="p">[</span><span class="n">row_NA_check</span><span class="p">]</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">),</span>
+    <span class="p">}</span>
+</pre></div>
+</div>
+</details><div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">data_dict</span> <span class="o">=</span> <span class="n">make_data</span><span class="p">()</span>
+
+<span class="n">X</span> <span class="o">=</span> <span class="n">data_dict</span><span class="p">[</span><span class="s2">&quot;X_train&quot;</span><span class="p">]</span>
+<span class="n">multiannotator_labels</span> <span class="o">=</span> <span class="n">data_dict</span><span class="p">[</span><span class="s2">&quot;multiannotator_labels&quot;</span><span class="p">]</span>
+<span class="n">true_labels</span> <span class="o">=</span> <span class="n">data_dict</span><span class="p">[</span><span class="s2">&quot;true_labels_train&quot;</span><span class="p">]</span> <span class="c1"># used for comparing the accuracy of consensus labels</span>
+</pre></div>
+</div>
+</div>
+<p>Let’s view the first few rows of the data used for this tutorial. Here are the labels selected by each annotator for the first few examples (rows) in the dataset:</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">multiannotator_labels</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
+</pre></div>
+</div>
+<div class="output_area rendered_html docutils container">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>A0001</th>
+      <th>A0002</th>
+      <th>A0003</th>
+      <th>A0004</th>
+      <th>A0005</th>
+      <th>A0006</th>
+      <th>A0007</th>
+      <th>A0008</th>
+      <th>A0009</th>
+      <th>A0010</th>
+      <th>...</th>
+      <th>A0041</th>
+      <th>A0042</th>
+      <th>A0043</th>
+      <th>A0044</th>
+      <th>A0045</th>
+      <th>A0046</th>
+      <th>A0047</th>
+      <th>A0048</th>
+      <th>A0049</th>
+      <th>A0050</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>&lt;NA&gt;</td>
+      <td>&lt;NA&gt;</td>
+      <td>&lt;NA&gt;</td>
+      <td>&lt;NA&gt;</td>
+      <td>&lt;NA&gt;</td>
+      <td>&lt;NA&gt;</td>
+      <td>&lt;NA&gt;</td>
+      <td>&lt;NA&gt;</td>
+      <td>&lt;NA&gt;</td>
+      <td>&lt;NA&gt;</td>
+      <td>...</td>
+      <td>&lt;NA&gt;</td>
+      <td>&lt;NA&gt;</td>
+      <td>&lt;NA&gt;</td>
+      <td>&lt;NA&gt;</td>
+      <td>&lt;NA&gt;</td>
+      <td>&lt;NA&gt;</td>
+      <td>&lt;NA&gt;</td>
+      <td>&lt;NA&gt;</td>
+      <td>&lt;NA&gt;</td>
+      <td>&lt;NA&gt;</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>&lt;NA&gt;</td>
+      <td>&lt;NA&gt;</td>
+      <td>&lt;NA&gt;</td>
+      <td>&lt;NA&gt;</td>
+      <td>&lt;NA&gt;</td>
+      <td>&lt;NA&gt;</td>
+      <td>0</td>
+      <td>&lt;NA&gt;</td>
+      <td>&lt;NA&gt;</td>
+      <td>&lt;NA&gt;</td>
+      <td>...</td>
+      <td>&lt;NA&gt;</td>
+      <td>&lt;NA&gt;</td>
+      <td>&lt;NA&gt;</td>
+      <td>&lt;NA&gt;</td>
+      <td>&lt;NA&gt;</td>
+      <td>&lt;NA&gt;</td>
+      <td>&lt;NA&gt;</td>
+      <td>&lt;NA&gt;</td>
+      <td>&lt;NA&gt;</td>
+      <td>&lt;NA&gt;</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>&lt;NA&gt;</td>
+      <td>&lt;NA&gt;</td>
+      <td>&lt;NA&gt;</td>
+      <td>&lt;NA&gt;</td>
+      <td>&lt;NA&gt;</td>
+      <td>&lt;NA&gt;</td>
+      <td>&lt;NA&gt;</td>
+      <td>&lt;NA&gt;</td>
+      <td>&lt;NA&gt;</td>
+      <td>&lt;NA&gt;</td>
+      <td>...</td>
+      <td>&lt;NA&gt;</td>
+      <td>0</td>
+      <td>&lt;NA&gt;</td>
+      <td>&lt;NA&gt;</td>
+      <td>&lt;NA&gt;</td>
+      <td>&lt;NA&gt;</td>
+      <td>&lt;NA&gt;</td>
+      <td>2</td>
+      <td>&lt;NA&gt;</td>
+      <td>&lt;NA&gt;</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>&lt;NA&gt;</td>
+      <td>&lt;NA&gt;</td>
+      <td>&lt;NA&gt;</td>
+      <td>&lt;NA&gt;</td>
+      <td>&lt;NA&gt;</td>
+      <td>&lt;NA&gt;</td>
+      <td>2</td>
+      <td>&lt;NA&gt;</td>
+      <td>&lt;NA&gt;</td>
+      <td>&lt;NA&gt;</td>
+      <td>...</td>
+      <td>0</td>
+      <td>&lt;NA&gt;</td>
+      <td>&lt;NA&gt;</td>
+      <td>&lt;NA&gt;</td>
+      <td>&lt;NA&gt;</td>
+      <td>&lt;NA&gt;</td>
+      <td>&lt;NA&gt;</td>
+      <td>&lt;NA&gt;</td>
+      <td>&lt;NA&gt;</td>
+      <td>&lt;NA&gt;</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>&lt;NA&gt;</td>
+      <td>&lt;NA&gt;</td>
+      <td>&lt;NA&gt;</td>
+      <td>&lt;NA&gt;</td>
+      <td>&lt;NA&gt;</td>
+      <td>&lt;NA&gt;</td>
+      <td>&lt;NA&gt;</td>
+      <td>&lt;NA&gt;</td>
+      <td>&lt;NA&gt;</td>
+      <td>&lt;NA&gt;</td>
+      <td>...</td>
+      <td>&lt;NA&gt;</td>
+      <td>&lt;NA&gt;</td>
+      <td>&lt;NA&gt;</td>
+      <td>2</td>
+      <td>&lt;NA&gt;</td>
+      <td>&lt;NA&gt;</td>
+      <td>0</td>
+      <td>&lt;NA&gt;</td>
+      <td>&lt;NA&gt;</td>
+      <td>&lt;NA&gt;</td>
+    </tr>
+  </tbody>
+</table>
+<p>5 rows × 50 columns</p>
+</div></div>
+</div>
+<p>Here are the corresponding features for these examples:</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">X</span><span class="p">[:</span><span class="mi">5</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+array([[ 5.60856743,  1.41693214],
+       [-0.40908785,  2.87147629],
+       [ 4.64941785,  1.10774851],
+       [ 3.0524466 ,  1.71853246],
+       [ 4.37169848,  0.66031048]])
+</pre></div></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">multiannotator_labels</span></code> contains the class label that each annotator chose for each example in the dataset, with examples that a particular annotator did not label represented using <code class="docutils literal notranslate"><span class="pre">np.nan</span></code>. <code class="docutils literal notranslate"><span class="pre">X</span></code> contains the features for each example, which happen to be numeric in this tutorial but any feature modality can be used with <code class="docutils literal notranslate"><span class="pre">cleanlab.multiannotator</span></code>.</p>
+<div class="admonition note">
+<p class="admonition-title">Bringing Your Own Data (BYOD)?</p>
+<p>You can easily replace the above with your own multiannotator labels and features, then continue with the rest of the tutorial.</p>
+<p><code class="docutils literal notranslate"><span class="pre">multiannotator_labels</span></code> should be a numpy array or pandas DataFrame with each column representing an annotator and each row representing an example. Your labels should be represented as integer indices 0, 1, …, num_classes - 1, where examples that are not annotated by a particular annotator are represented using <code class="docutils literal notranslate"><span class="pre">np.nan</span></code> or <code class="docutils literal notranslate"><span class="pre">pd.NA</span></code>. If you have string labels or other labels that do not fit the required format, you can convert them to the proper format using
+<code class="docutils literal notranslate"><span class="pre">cleanlab.internal.multiannotator_utils.format_multiannotator_labels</span></code>.</p>
+<p>Your features can be represented however you like (since these are not inputs to <code class="docutils literal notranslate"><span class="pre">cleanlab.multiannotator</span></code> methods) as long as you are able to fit a classifer to them and obtain its predicted class probabilities!</p>
+</div>
+</section>
+<section id="3.-Get-initial-consensus-labels-via-majority-vote-and-compute-out-of-sample-predicted-probabilities">
+<h2>3. Get initial consensus labels via majority vote and compute out-of-sample predicted probabilities<a class="headerlink" href="#3.-Get-initial-consensus-labels-via-majority-vote-and-compute-out-of-sample-predicted-probabilities" title="Permalink to this heading">#</a></h2>
+<p>Before training a machine learning model, we must first obtain initial consensus labels from the data annotations representing a crude guess of the best label for each example. The most straight forward way to obtain an initial set of consensus labels is via simple majority vote.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">majority_vote_label</span> <span class="o">=</span> <span class="n">get_majority_vote_label</span><span class="p">(</span><span class="n">multiannotator_labels</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<p>Majority vote consensus labels may not be very reliable, particularly for examples that were only labeled by one or a few annotators. To more reliably estimate consensus, we can account for the features associated with each example (based on which the annotations were derived in the first place). Fitting a classifier model serves as a natural way to account for these feature values, here we train a simple logistic regression model to get significantly more accurate estimates of consensus labels
+and associated quality scores.</p>
+<p>We fit the model with our initial consensus labels, and then get (out-of-sample) predicted class probabilities for each example in the dataset from the trained model. These predicted probabilities help us estimate the best consensus labels and associated confidence values in a statistically optimal manner that accounts for all the available information.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">model</span> <span class="o">=</span> <span class="n">LogisticRegression</span><span class="p">()</span>
+
+<span class="n">num_crossval_folds</span> <span class="o">=</span> <span class="mi">5</span>
+<span class="n">pred_probs</span> <span class="o">=</span> <span class="n">cross_val_predict</span><span class="p">(</span>
+    <span class="n">estimator</span><span class="o">=</span><span class="n">model</span><span class="p">,</span> <span class="n">X</span><span class="o">=</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">majority_vote_label</span><span class="p">,</span> <span class="n">cv</span><span class="o">=</span><span class="n">num_crossval_folds</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s2">&quot;predict_proba&quot;</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</section>
+<section id="4.-Use-cleanlab-to-get-better-consensus-labels-and-other-statistics">
+<h2>4. Use cleanlab to get better consensus labels and other statistics<a class="headerlink" href="#4.-Use-cleanlab-to-get-better-consensus-labels-and-other-statistics" title="Permalink to this heading">#</a></h2>
+<p>Using the annotators’ labels and the (out-of-sample) predicted class probabilities from the model, cleanlab can estimate <strong>improved consensus labels</strong> for our data that are more accurate than our initial consensus labels were.</p>
+<p>Having accurate labels provides insight on each annotator’s label quality and is key for boosting model accuracy and achieving dependable real-world results.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">results</span> <span class="o">=</span> <span class="n">get_label_quality_multiannotator</span><span class="p">(</span><span class="n">multiannotator_labels</span><span class="p">,</span> <span class="n">pred_probs</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<p>Here, we use the <code class="docutils literal notranslate"><span class="pre">multiannotator.get_label_quality_multiannotator()</span></code> function which returns a dictionary containing three items:</p>
+<ol class="arabic simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">label_quality</span></code> which gives us the improved consensus labels using information from each of the annotators and the model. The DataFrame also contains information about the number of annotations, annotator agreement and consensus quality score for each example.</p></li>
+</ol>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">results</span><span class="p">[</span><span class="s2">&quot;label_quality&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
+</pre></div>
+</div>
+<div class="output_area rendered_html docutils container">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>consensus_label</th>
+      <th>consensus_quality_score</th>
+      <th>annotator_agreement</th>
+      <th>num_annotations</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>0</td>
+      <td>0.736118</td>
+      <td>0.5</td>
+      <td>2</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>0</td>
+      <td>0.757751</td>
+      <td>1.0</td>
+      <td>3</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>0</td>
+      <td>0.782232</td>
+      <td>0.6</td>
+      <td>5</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>0</td>
+      <td>0.715565</td>
+      <td>0.6</td>
+      <td>5</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>0</td>
+      <td>0.824256</td>
+      <td>0.8</td>
+      <td>5</td>
+    </tr>
+  </tbody>
+</table>
+</div></div>
+</div>
+<ol class="arabic simple" start="2">
+<li><p><code class="docutils literal notranslate"><span class="pre">detailed_label_quality</span></code> which returns the label quality score for each label given by every annotator</p></li>
+</ol>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">results</span><span class="p">[</span><span class="s2">&quot;detailed_label_quality&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
+</pre></div>
+</div>
+<div class="output_area rendered_html docutils container">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>quality_annotator_A0001</th>
+      <th>quality_annotator_A0002</th>
+      <th>quality_annotator_A0003</th>
+      <th>quality_annotator_A0004</th>
+      <th>quality_annotator_A0005</th>
+      <th>quality_annotator_A0006</th>
+      <th>quality_annotator_A0007</th>
+      <th>quality_annotator_A0008</th>
+      <th>quality_annotator_A0009</th>
+      <th>quality_annotator_A0010</th>
+      <th>...</th>
+      <th>quality_annotator_A0041</th>
+      <th>quality_annotator_A0042</th>
+      <th>quality_annotator_A0043</th>
+      <th>quality_annotator_A0044</th>
+      <th>quality_annotator_A0045</th>
+      <th>quality_annotator_A0046</th>
+      <th>quality_annotator_A0047</th>
+      <th>quality_annotator_A0048</th>
+      <th>quality_annotator_A0049</th>
+      <th>quality_annotator_A0050</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>...</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>0.757751</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>...</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>...</td>
+      <td>NaN</td>
+      <td>0.782232</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>0.070564</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>0.216078</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>...</td>
+      <td>0.715565</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>...</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>0.119188</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>0.824256</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+  </tbody>
+</table>
+<p>5 rows × 50 columns</p>
+</div></div>
+</div>
+<ol class="arabic simple" start="3">
+<li><p><code class="docutils literal notranslate"><span class="pre">annotator_stats</span></code> which gives us the annotator quality score for each annotator, alongisde other information such as the number of examples each annotator labeled, their agreement with the consensus labels and the class they perform the worst at.</p></li>
+</ol>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[12]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">results</span><span class="p">[</span><span class="s2">&quot;annotator_stats&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[12]:
+</pre></div>
+</div>
+<div class="output_area rendered_html docutils container">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>annotator_quality</th>
+      <th>agreement_with_consensus</th>
+      <th>worst_class</th>
+      <th>num_examples_labeled</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>A0050</th>
+      <td>0.244981</td>
+      <td>0.208333</td>
+      <td>2</td>
+      <td>24</td>
+    </tr>
+    <tr>
+      <th>A0047</th>
+      <td>0.295979</td>
+      <td>0.294118</td>
+      <td>2</td>
+      <td>34</td>
+    </tr>
+    <tr>
+      <th>A0049</th>
+      <td>0.324197</td>
+      <td>0.310345</td>
+      <td>1</td>
+      <td>29</td>
+    </tr>
+    <tr>
+      <th>A0046</th>
+      <td>0.355316</td>
+      <td>0.346154</td>
+      <td>1</td>
+      <td>26</td>
+    </tr>
+    <tr>
+      <th>A0048</th>
+      <td>0.439732</td>
+      <td>0.480000</td>
+      <td>2</td>
+      <td>25</td>
+    </tr>
+    <tr>
+      <th>A0031</th>
+      <td>0.523205</td>
+      <td>0.580645</td>
+      <td>2</td>
+      <td>31</td>
+    </tr>
+    <tr>
+      <th>A0034</th>
+      <td>0.535313</td>
+      <td>0.607143</td>
+      <td>2</td>
+      <td>28</td>
+    </tr>
+    <tr>
+      <th>A0021</th>
+      <td>0.606999</td>
+      <td>0.718750</td>
+      <td>1</td>
+      <td>32</td>
+    </tr>
+    <tr>
+      <th>A0015</th>
+      <td>0.609526</td>
+      <td>0.678571</td>
+      <td>2</td>
+      <td>28</td>
+    </tr>
+    <tr>
+      <th>A0011</th>
+      <td>0.621103</td>
+      <td>0.692308</td>
+      <td>1</td>
+      <td>26</td>
+    </tr>
+  </tbody>
+</table>
+</div></div>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">annotator_stats</span></code> DataFrame is sorted by increasing <code class="docutils literal notranslate"><span class="pre">annotator_quality</span></code>, showing us the worst annotators first.</p>
+<p>Notice that in the above table annotators with ids A0046 to A0050 have the worst annotator quality score, which is expected because we made the last 5 annotators systematically worse than the rest.</p>
+<section id="Comparing-improved-consensus-labels">
+<h3>Comparing improved consensus labels<a class="headerlink" href="#Comparing-improved-consensus-labels" title="Permalink to this heading">#</a></h3>
+<p>We can get the improved consensus labels from the <code class="docutils literal notranslate"><span class="pre">label_quality</span></code> DataFrame shown above.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[13]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">improved_consensus_label</span> <span class="o">=</span> <span class="n">results</span><span class="p">[</span><span class="s2">&quot;label_quality&quot;</span><span class="p">][</span><span class="s2">&quot;consensus_label&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span>
+</pre></div>
+</div>
+</div>
+<p>Since our toy dataset is synthetically generated by adding noise to each annotator’s labels, we know the ground truth labels for each example. Hence we can compare the accuracy of the consensus labels obtained using majority vote, and the improved consensus labels obtained using cleanlab.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[14]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">majority_vote_accuracy</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">true_labels</span> <span class="o">==</span> <span class="n">majority_vote_label</span><span class="p">)</span>
+<span class="n">cleanlab_label_accuracy</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">true_labels</span> <span class="o">==</span> <span class="n">improved_consensus_label</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Accuracy of majority vote labels = </span><span class="si">{</span><span class="n">majority_vote_accuracy</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Accuracy of cleanlab consensus labels = </span><span class="si">{</span><span class="n">cleanlab_label_accuracy</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Accuracy of majority vote labels = 0.8581081081081081
+Accuracy of cleanlab consensus labels = 0.9797297297297297
+</pre></div></div>
+</div>
+<p>We can see that the accuracy of the consensus labels improved as a result of using cleanlab, which not only takes the annotators’ labels into account, but also a model to compute better consensus labels.</p>
+</section>
+<section id="Inspecting-consensus-quality-scores-to-find-potential-consensus-label-errors">
+<h3>Inspecting consensus quality scores to find potential consensus label errors<a class="headerlink" href="#Inspecting-consensus-quality-scores-to-find-potential-consensus-label-errors" title="Permalink to this heading">#</a></h3>
+<p>We can get the consensus quality score from the <code class="docutils literal notranslate"><span class="pre">label_quality</span></code> DataFrame shown above.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[15]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">consensus_quality_score</span> <span class="o">=</span> <span class="n">results</span><span class="p">[</span><span class="s2">&quot;label_quality&quot;</span><span class="p">][</span><span class="s2">&quot;consensus_quality_score&quot;</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+<p>Besides obtaining improved consensus labels, cleanlab also computes consensus quality scores for each example. The lower scores represent potential consensus label errors in the dataset.</p>
+<p>Here, we will extract 15 examples that have the lowest consensus quality score, and we can compare their average accuracy when compared to the true labels. We will also compute the average accuracy for the rest of the examples for comparison.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[16]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sorted_consensus_quality_score</span> <span class="o">=</span> <span class="n">consensus_quality_score</span><span class="o">.</span><span class="n">sort_values</span><span class="p">()</span>
+<span class="n">worst_quality</span> <span class="o">=</span> <span class="n">sorted_consensus_quality_score</span><span class="o">.</span><span class="n">index</span><span class="p">[:</span><span class="mi">15</span><span class="p">]</span>
+<span class="n">better_quality</span> <span class="o">=</span> <span class="n">sorted_consensus_quality_score</span><span class="o">.</span><span class="n">index</span><span class="p">[</span><span class="mi">15</span><span class="p">:]</span>
+
+<span class="n">worst_quality_accuracy</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">true_labels</span><span class="p">[</span><span class="n">worst_quality</span><span class="p">]</span> <span class="o">==</span> <span class="n">improved_consensus_label</span><span class="p">[</span><span class="n">worst_quality</span><span class="p">])</span>
+<span class="n">better_quality_accuracy</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">true_labels</span><span class="p">[</span><span class="n">better_quality</span><span class="p">]</span> <span class="o">==</span> <span class="n">improved_consensus_label</span><span class="p">[</span><span class="n">better_quality</span><span class="p">])</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Accuracy of 15 worst quality examples = </span><span class="si">{</span><span class="n">worst_quality_accuracy</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Accuracy of better quality examples = </span><span class="si">{</span><span class="n">better_quality_accuracy</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Accuracy of 15 worst quality examples = 0.8
+Accuracy of better quality examples = 0.9893238434163701
+</pre></div></div>
+</div>
+<p>We observe that the 15 worst-consensus-quality-score examples have a lower average accuracy compared to the rest of the examples. Cleanlab automatically determines which consensus labels are least trustworthy (perhaps want to have another annotator look at that data). Here we see these trustworthiness estimates really do correspond to the true quality of the consensus labels (which we know in this toy dataset because we have the true labels, unlike in your applications)</p>
+</section>
+</section>
+<section id="5.-Retrain-model-using-improved-consensus-labels">
+<h2>5. Retrain model using improved consensus labels<a class="headerlink" href="#5.-Retrain-model-using-improved-consensus-labels" title="Permalink to this heading">#</a></h2>
+<p>After obtaining the improved consensus labels, we can now retrain a better version of our machine learning model using these newly obtained labels.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[17]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">model</span> <span class="o">=</span> <span class="n">LogisticRegression</span><span class="p">()</span>
+
+<span class="n">num_crossval_folds</span> <span class="o">=</span> <span class="mi">5</span>
+<span class="n">improved_pred_probs</span> <span class="o">=</span> <span class="n">cross_val_predict</span><span class="p">(</span>
+    <span class="n">estimator</span><span class="o">=</span><span class="n">model</span><span class="p">,</span> <span class="n">X</span><span class="o">=</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">improved_consensus_label</span><span class="p">,</span> <span class="n">cv</span><span class="o">=</span><span class="n">num_crossval_folds</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s2">&quot;predict_proba&quot;</span>
+<span class="p">)</span>
+
+<span class="c1"># alternatively, we can treat all the improved consensus labels as training labels to fit the model</span>
+<span class="c1"># model.fit(X, improved_consensus_label)</span>
+</pre></div>
+</div>
+</div>
+</section>
+<section id="Further-improvements">
+<h2>Further improvements<a class="headerlink" href="#Further-improvements" title="Permalink to this heading">#</a></h2>
+<p>You can also repeat this process of getting better consensus labels using the model’s out-of-sample predicted probabilities and then retraining the model with the improved labels to get even better predicted class probabilities in a virtuous cycle! For details, see our <a class="reference external" href="https://github.com/cleanlab/examples">examples</a> notebook on <a class="reference external" href="https://github.com/cleanlab/examples/blob/master/multiannotator_cifar10/multiannotator_cifar10.ipynb">Iterative use of Cleanlab to Improve Classification Models (and Consensus Labels) from Data Labeled by Multiple
+Annotators</a>.</p>
+<p>If possible, the best way to improve your model is to collect additional labels for both previously annotated data and extra not-yet-labeled examples (i.e. <em>active learning</em>). To decide which data is most informative to label next, use <code class="docutils literal notranslate"><span class="pre">cleanlab.multiannotator.get_active_learning_scores()</span></code> rather than the methods from this tutorial. This is demonstrated in our examples notebook on <a class="reference external" href="https://github.com/cleanlab/examples/blob/master/active_learning_multiannotator/active_learning.ipynb">Active Learning with Multiple Data Annotators via
+ActiveLab</a>.</p>
+<p>While this notebook focused on analzying the labels of your data, cleanlab can also check your data features for various issues. Learn how to do this by following our <a class="reference external" href="../tutorials/datalab/index.html">Datalab tutorials</a>, except you do not need to pass in <code class="docutils literal notranslate"><span class="pre">labels</span></code> now that you’ve already analyzed them with this notebook (or you can provide <code class="docutils literal notranslate"><span class="pre">labels</span></code> to Datalab as the consensus labels estimated here).</p>
+</section>
+<section id="How-does-cleanlab.multiannotator-work?">
+<h2>How does cleanlab.multiannotator work?<a class="headerlink" href="#How-does-cleanlab.multiannotator-work?" title="Permalink to this heading">#</a></h2>
+<p>All estimates above are produced via the CROWDLAB algorithm, described in this paper that contains extensive benchmarks which show CROWDLAB can produce better estimates than popular methods like Dawid-Skene and GLAD:</p>
+<p><a class="reference external" href="https://arxiv.org/abs/2210.06812">CROWDLAB: Supervised learning to infer consensus labels and quality scores for data with multiple annotators</a></p>
+</section>
+</section>
+ 
+        </article>
+      </div>
+      <footer>
+         
+        <div class="related-pages">
+          <a class="next-page" href="multilabel_classification.html">
+              <div class="page-info">
+                <div class="context">
+                  <span>Next</span>
+                </div>
+                <div class="title">Find Label Errors in Multi-Label Classification Datasets</div>
+              </div>
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+            </a>
+          <a class="prev-page" href="outliers.html">
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+              <div class="page-info">
+                <div class="context">
+                  <span>Previous</span>
+                </div>
+                
+                <div class="title">Detect Outliers with Cleanlab and PyTorch Image Models (timm)</div>
+                
+              </div>
+            </a>
+        </div>
+        <div class="bottom-of-page">
+          <div class="left-details">
+            <div class="copyright">
+                Copyright &#169; 2025, Cleanlab Inc.
+            </div>
+            Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
+            
+            <a href="https://github.com/pradyunsg/furo">Furo</a>
+            
+          </div>
+          <div class="right-details">
+            <div class="icons">
+              <a class="muted-link " href="https://github.com/cleanlab/cleanlab" aria-label="GitHub">
+                <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 16 16">
+                    <path fill-rule="evenodd" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0 0 16 8c0-4.42-3.58-8-8-8z"></path>
+                </svg>
+            </a>
+              
+            </div>
+          </div>
+        </div>
+        
+
+<script type="text/javascript">
+    window.addEventListener("load", () => {
+        let elements = document.getElementsByClassName("left-details");
+
+        elements[0].insertAdjacentHTML(
+            "afterbegin",
+            `<code class="docutils literal notranslate"><span class="pre">cleanlab</span></code> is distributed on <a href="https://pypi.org/project/cleanlab/">PyPI</a> and <a href="https://anaconda.org/conda-forge/cleanlab">conda</a>.`
+        );
+    });
+</script>
+
+
+      </footer>
+    </div>
+    <aside class="toc-drawer">
+      
+      
+      <div class="toc-sticky toc-scroll">
+        <div class="toc-title-container">
+          <span class="toc-title">
+            On this page
+          </span>
+        </div>
+        <div class="toc-tree-container">
+          <div class="toc-tree">
+            <ul>
+<li><a class="reference internal" href="#">Estimate Consensus and Annotator Quality for Data Labeled by Multiple Annotators</a><ul>
+<li><a class="reference internal" href="#1.-Install-and-import-required-dependencies">1. Install and import required dependencies</a></li>
+<li><a class="reference internal" href="#2.-Create-the-data-(can-skip-these-details)">2. Create the data (can skip these details)</a></li>
+<li><a class="reference internal" href="#3.-Get-initial-consensus-labels-via-majority-vote-and-compute-out-of-sample-predicted-probabilities">3. Get initial consensus labels via majority vote and compute out-of-sample predicted probabilities</a></li>
+<li><a class="reference internal" href="#4.-Use-cleanlab-to-get-better-consensus-labels-and-other-statistics">4. Use cleanlab to get better consensus labels and other statistics</a><ul>
+<li><a class="reference internal" href="#Comparing-improved-consensus-labels">Comparing improved consensus labels</a></li>
+<li><a class="reference internal" href="#Inspecting-consensus-quality-scores-to-find-potential-consensus-label-errors">Inspecting consensus quality scores to find potential consensus label errors</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#5.-Retrain-model-using-improved-consensus-labels">5. Retrain model using improved consensus labels</a></li>
+<li><a class="reference internal" href="#Further-improvements">Further improvements</a></li>
+<li><a class="reference internal" href="#How-does-cleanlab.multiannotator-work?">How does cleanlab.multiannotator work?</a></li>
+</ul>
+</li>
+</ul>
+
+          </div>
+        </div>
+      </div>
+      
+      
+    </aside>
+  </div>
+</div><script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js?v=2b91c5f0"></script>
+    <script src="../_static/doctools.js?v=888ff710"></script>
+    <script src="../_static/sphinx_highlight.js?v=4825356b"></script>
+    <script src="../_static/scripts/furo.js?v=32e29ea5"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=30646c52"></script>
+    <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@jupyter-widgets/html-manager@^1.0.1/dist/embed-amd.js"></script>
+    
+<script async defer src="https://buttons.github.io/buttons.js"></script>
+<script src="https://cdn.cleanlab.ai/v1.1.1/agility-web-component.js"></script>
+</body>
+</html>
