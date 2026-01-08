@@ -6,11 +6,11 @@ on:
 
 jobs:
   deploy:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-24.04
     concurrency:
       group: ${{ github.workflow }}-${{ github.ref }}
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
@@ -18,20 +18,20 @@ jobs:
         run: |
           git config --global user.email "actions@github.com"
           git config --global user.name "GitHub Actions"
-
+          
       - name: Get the latest stable version number
         id: get-latest-version
-        run: echo "::set-output name=version::$(cat latest_release.txt)"
+        run: echo "version=$(cat latest_release.txt)" >> $GITHUB_OUTPUT
 
       - name: Delete current "stable" directory
         run: |
           git rm -r stable
-
+          
       - name: Copy latest stable version content to "stable" directory
         run: |
           mkdir stable
           cp -a ${{ steps.get-latest-version.outputs.version }}/* stable
-
+          
       - name: Commit and push
         run: |
           git add -A
