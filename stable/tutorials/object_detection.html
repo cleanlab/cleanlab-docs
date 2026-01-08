@@ -346,19 +346,13 @@
 <li class="toctree-l2"><a class="reference internal" href="../cleanlab/datalab/guide/custom_issue_manager.html">Creating Your Own Issues Manager</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference external" href="https://github.com/cleanlab/cleanlab/blob/master/CONTRIBUTING.md">How to contribute</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Links</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference external" href="https://cleanlab.ai">Website</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://github.com/cleanlab/cleanlab">GitHub</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://pypi.org/project/cleanlab/">PyPI</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://anaconda.org/conda-forge/cleanlab">Conda</a></li>
-<li class="toctree-l1"><a class="reference external" href="https://cleanlab.ai/slack">Community Discussions</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://cleanlab.ai/blog/">Blog</a></li>
-<li class="toctree-l1"><a class="reference external" href="https://www.youtube.com/@CleanlabAI/playlists">Videos</a></li>
-<li class="toctree-l1"><a class="reference external" href="https://cleanlab.ai/blog/data-centric-ai/">Cleanlab Studio (Easy Mode)</a></li>
-<li class="toctree-l1"><a class="reference external" href="https://help.cleanlab.ai">Cleanlab Studio Docs</a></li>
 </ul>
 
 </div>
@@ -612,17 +606,6 @@
     </div>
 </noscript>
 
-<div>
-    <agility-assistant
-        access-token="public-assistant-1e1cd1d0-5f87546555cc7497"
-        assistant-id="69391e48-a95f-4f8d-8dc2-025f1e1cd1d0"
-        assistant-title="Cleanlab Open Source Assistant"
-        assistant-placeholder="Ask a question"
-        assistant-description="An assistant to help you with your questions about Cleanlab Open Source"
-        logo-url="https://cleanlab.ai/icon-512.png"
-    />
-</div>
-
 
 
 <!-- Start of Version Warning Banner -->
@@ -649,7 +632,7 @@
             document.getElementById("doc_ver_warning").innerHTML =
                 `<div class="admonition warning">
             <p class="admonition-title">Warning</p>
-            <p>This documentation is for an old version (<code class="docutils literal notranslate"><span class="pre">v2.7.1</span></code>) of <code class="docutils literal notranslate"><span class="pre">cleanlab</span></code>. To see the documentation for the latest stable version (<code class="docutils literal notranslate"><span class="pre">` +
+            <p>This documentation is for an old version (<code class="docutils literal notranslate"><span class="pre">v2.8.0</span></code>) of <code class="docutils literal notranslate"><span class="pre">cleanlab</span></code>. To see the documentation for the latest stable version (<code class="docutils literal notranslate"><span class="pre">` +
                 version_number +
                 `</span></code>), click <a href="/">here</a>.</p>
             </div>`;
@@ -686,7 +669,7 @@
         const h1_element = document.getElementsByTagName("h1");
         h1_element[0].insertAdjacentHTML("afterend", `
         <p>
-            <a style="background-color:white;color:black;padding:4px 12px;text-decoration:none;display:inline-block;border-radius:8px;box-shadow:0 2px 4px 0 rgba(0, 0, 0, 0.2), 0 3px 10px 0 rgba(0, 0, 0, 0.19)" href="https://colab.research.google.com/github/cleanlab/cleanlab-docs/blob/master/v2.7.1/tutorials/object_detection.ipynb" target="_blank">
+            <a style="background-color:white;color:black;padding:4px 12px;text-decoration:none;display:inline-block;border-radius:8px;box-shadow:0 2px 4px 0 rgba(0, 0, 0, 0.2), 0 3px 10px 0 rgba(0, 0, 0, 0.19)" href="https://colab.research.google.com/github/cleanlab/cleanlab-docs/blob/master/v2.8.0/tutorials/object_detection.ipynb" target="_blank">
             <img src="https://colab.research.google.com/img/colab_favicon_256px.png" alt="" style="width:40px;height:40px;vertical-align:middle">
             <span style="vertical-align:middle">Run in Google Colab</span>
             </a>
@@ -735,11 +718,32 @@ image.</p>
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>%%capture
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%capture</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">huggingface_hub</span><span class="w"> </span><span class="kn">import</span> <span class="n">hf_hub_download</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">zipfile</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
 
-!wget -nc &#39;https://cleanlab-public.s3.amazonaws.com/ObjectDetectionBenchmarking/tutorial_obj/predictions.pkl&#39;
-!wget -nc &#39;https://cleanlab-public.s3.amazonaws.com/ObjectDetectionBenchmarking/tutorial_obj/labels.pkl&#39;
-!wget -nc &#39;https://cleanlab-public.s3.amazonaws.com/ObjectDetectionBenchmarking/tutorial_obj/example_images.zip&#39; &amp;&amp; unzip -q -o example_images.zip
+<span class="c1"># Download files from HuggingFace Hub</span>
+<span class="n">labels_path</span> <span class="o">=</span> <span class="n">hf_hub_download</span><span class="p">(</span><span class="s1">&#39;Cleanlab/object-detection-tutorial&#39;</span><span class="p">,</span> <span class="s1">&#39;labels.pkl&#39;</span><span class="p">,</span> <span class="n">repo_type</span><span class="o">=</span><span class="s2">&quot;dataset&quot;</span><span class="p">)</span>
+<span class="n">predictions_path</span> <span class="o">=</span> <span class="n">hf_hub_download</span><span class="p">(</span><span class="s1">&#39;Cleanlab/object-detection-tutorial&#39;</span><span class="p">,</span> <span class="s1">&#39;predictions.pkl&#39;</span><span class="p">,</span> <span class="n">repo_type</span><span class="o">=</span><span class="s2">&quot;dataset&quot;</span><span class="p">)</span>
+<span class="n">images_path</span> <span class="o">=</span> <span class="n">hf_hub_download</span><span class="p">(</span><span class="s1">&#39;Cleanlab/object-detection-tutorial&#39;</span><span class="p">,</span> <span class="s1">&#39;example_images.zip&#39;</span><span class="p">,</span> <span class="n">repo_type</span><span class="o">=</span><span class="s2">&quot;dataset&quot;</span><span class="p">)</span>
+
+<span class="c1"># Extract images to the correct location</span>
+<span class="c1"># The zip file contains an example_images/ folder, so we extract it and then move contents</span>
+<span class="k">with</span> <span class="n">zipfile</span><span class="o">.</span><span class="n">ZipFile</span><span class="p">(</span><span class="n">images_path</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">zip_ref</span><span class="p">:</span>
+    <span class="n">zip_ref</span><span class="o">.</span><span class="n">extractall</span><span class="p">(</span><span class="s1">&#39;temp_extract/&#39;</span><span class="p">)</span>
+
+<span class="c1"># Move images from nested directory to target directory</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">shutil</span>
+<span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="s1">&#39;temp_extract/example_images/&#39;</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="s1">&#39;example_images/&#39;</span><span class="p">):</span>
+        <span class="n">shutil</span><span class="o">.</span><span class="n">rmtree</span><span class="p">(</span><span class="s1">&#39;example_images/&#39;</span><span class="p">)</span>
+    <span class="n">shutil</span><span class="o">.</span><span class="n">move</span><span class="p">(</span><span class="s1">&#39;temp_extract/example_images/&#39;</span><span class="p">,</span> <span class="s1">&#39;example_images/&#39;</span><span class="p">)</span>
+    <span class="n">shutil</span><span class="o">.</span><span class="n">rmtree</span><span class="p">(</span><span class="s1">&#39;temp_extract/&#39;</span><span class="p">)</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="c1"># Fallback: extract directly if structure is different</span>
+    <span class="k">with</span> <span class="n">zipfile</span><span class="o">.</span><span class="n">ZipFile</span><span class="p">(</span><span class="n">images_path</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">zip_ref</span><span class="p">:</span>
+        <span class="n">zip_ref</span><span class="o">.</span><span class="n">extractall</span><span class="p">(</span><span class="s1">&#39;example_images/&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -770,8 +774,12 @@ image.</p>
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">IMAGE_PATH</span> <span class="o">=</span> <span class="s1">&#39;./example_images/&#39;</span>  <span class="c1"># path to raw image files downloaded above</span>
-<span class="n">predictions</span> <span class="o">=</span> <span class="n">pickle</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="nb">open</span><span class="p">(</span><span class="s2">&quot;predictions.pkl&quot;</span><span class="p">,</span> <span class="s2">&quot;rb&quot;</span><span class="p">))</span>
-<span class="n">labels</span> <span class="o">=</span> <span class="n">pickle</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="nb">open</span><span class="p">(</span><span class="s2">&quot;labels.pkl&quot;</span><span class="p">,</span> <span class="s2">&quot;rb&quot;</span><span class="p">))</span>
+
+<span class="c1"># Load pickle files</span>
+<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">labels_path</span><span class="p">,</span> <span class="s1">&#39;rb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+    <span class="n">labels</span> <span class="o">=</span> <span class="n">pickle</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">predictions_path</span><span class="p">,</span> <span class="s1">&#39;rb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+    <span class="n">predictions</span> <span class="o">=</span> <span class="n">pickle</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -781,9 +789,17 @@ image.</p>
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">image_to_visualize</span> <span class="o">=</span> <span class="mi">8</span>  <span class="c1"># change this to view other images</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+
+<span class="n">image_to_visualize</span> <span class="o">=</span> <span class="mi">8</span>  <span class="c1"># change this to view other images</span>
 <span class="n">image_path</span> <span class="o">=</span> <span class="n">IMAGE_PATH</span> <span class="o">+</span> <span class="n">labels</span><span class="p">[</span><span class="n">image_to_visualize</span><span class="p">][</span><span class="s1">&#39;seg_map&#39;</span><span class="p">]</span>
-<span class="n">visualize</span><span class="p">(</span><span class="n">image_path</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="n">labels</span><span class="p">[</span><span class="n">image_to_visualize</span><span class="p">],</span> <span class="n">prediction</span><span class="o">=</span><span class="n">predictions</span><span class="p">[</span><span class="n">image_to_visualize</span><span class="p">],</span> <span class="n">overlay</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+<span class="c1"># Check if the image file exists before trying to visualize</span>
+<span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">image_path</span><span class="p">):</span>
+    <span class="n">visualize</span><span class="p">(</span><span class="n">image_path</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="n">labels</span><span class="p">[</span><span class="n">image_to_visualize</span><span class="p">],</span> <span class="n">prediction</span><span class="o">=</span><span class="n">predictions</span><span class="p">[</span><span class="n">image_to_visualize</span><span class="p">],</span> <span class="n">overlay</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Image file not found: </span><span class="si">{</span><span class="n">image_path</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Skipping visualization - this is expected during documentation build.&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -1169,7 +1185,11 @@ array([0.97489622, 0.70610878, 0.98764951, 0.88899237, 0.99085805])
 <span class="n">image_path</span> <span class="o">=</span> <span class="n">IMAGE_PATH</span> <span class="o">+</span> <span class="n">label</span><span class="p">[</span><span class="s1">&#39;seg_map&#39;</span><span class="p">]</span>
 
 <span class="nb">print</span><span class="p">(</span><span class="n">image_path</span><span class="p">,</span> <span class="s1">&#39;| idx&#39;</span><span class="p">,</span> <span class="n">issue_to_visualize</span> <span class="p">,</span> <span class="s1">&#39;| label quality score:&#39;</span><span class="p">,</span> <span class="n">score</span><span class="p">,</span> <span class="s1">&#39;| is issue: True&#39;</span><span class="p">)</span>
-<span class="n">visualize</span><span class="p">(</span><span class="n">image_path</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="n">label</span><span class="p">,</span> <span class="n">prediction</span><span class="o">=</span><span class="n">prediction</span><span class="p">,</span> <span class="n">class_names</span><span class="o">=</span><span class="n">class_names</span><span class="p">,</span> <span class="n">overlay</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">image_path</span><span class="p">):</span>
+    <span class="n">visualize</span><span class="p">(</span><span class="n">image_path</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="n">label</span><span class="p">,</span> <span class="n">prediction</span><span class="o">=</span><span class="n">prediction</span><span class="p">,</span> <span class="n">class_names</span><span class="o">=</span><span class="n">class_names</span><span class="p">,</span> <span class="n">overlay</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Image file not found: </span><span class="si">{</span><span class="n">image_path</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Skipping visualization - this is expected during documentation build.&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -1206,7 +1226,11 @@ array([0.97489622, 0.70610878, 0.98764951, 0.88899237, 0.99085805])
 
 <span class="n">image_path</span> <span class="o">=</span> <span class="n">IMAGE_PATH</span> <span class="o">+</span> <span class="n">label</span><span class="p">[</span><span class="s1">&#39;seg_map&#39;</span><span class="p">]</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">image_path</span><span class="p">,</span> <span class="s1">&#39;| idx&#39;</span><span class="p">,</span> <span class="n">issue_to_visualize</span> <span class="p">,</span> <span class="s1">&#39;| label quality score:&#39;</span><span class="p">,</span> <span class="n">score</span><span class="p">,</span> <span class="s1">&#39;| is issue: True&#39;</span><span class="p">)</span>
-<span class="n">visualize</span><span class="p">(</span><span class="n">image_path</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="n">label</span><span class="p">,</span> <span class="n">prediction</span><span class="o">=</span><span class="n">prediction</span><span class="p">,</span> <span class="n">class_names</span><span class="o">=</span><span class="n">class_names</span><span class="p">,</span> <span class="n">overlay</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">image_path</span><span class="p">):</span>
+    <span class="n">visualize</span><span class="p">(</span><span class="n">image_path</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="n">label</span><span class="p">,</span> <span class="n">prediction</span><span class="o">=</span><span class="n">prediction</span><span class="p">,</span> <span class="n">class_names</span><span class="o">=</span><span class="n">class_names</span><span class="p">,</span> <span class="n">overlay</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Image file not found: </span><span class="si">{</span><span class="n">image_path</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Skipping visualization - this is expected during documentation build.&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -1237,7 +1261,11 @@ array([0.97489622, 0.70610878, 0.98764951, 0.88899237, 0.99085805])
 
 <span class="n">image_path</span> <span class="o">=</span> <span class="n">IMAGE_PATH</span> <span class="o">+</span> <span class="n">label</span><span class="p">[</span><span class="s1">&#39;seg_map&#39;</span><span class="p">]</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">image_path</span><span class="p">,</span> <span class="s1">&#39;| idx&#39;</span><span class="p">,</span> <span class="n">issue_to_visualize</span> <span class="p">,</span> <span class="s1">&#39;| label quality score:&#39;</span><span class="p">,</span> <span class="n">score</span><span class="p">,</span> <span class="s1">&#39;| is issue: True&#39;</span><span class="p">)</span>
-<span class="n">visualize</span><span class="p">(</span><span class="n">image_path</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="n">label</span><span class="p">,</span> <span class="n">prediction</span><span class="o">=</span><span class="n">prediction</span><span class="p">,</span> <span class="n">class_names</span><span class="o">=</span><span class="n">class_names</span><span class="p">,</span> <span class="n">overlay</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">image_path</span><span class="p">):</span>
+    <span class="n">visualize</span><span class="p">(</span><span class="n">image_path</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="n">label</span><span class="p">,</span> <span class="n">prediction</span><span class="o">=</span><span class="n">prediction</span><span class="p">,</span> <span class="n">class_names</span><span class="o">=</span><span class="n">class_names</span><span class="p">,</span> <span class="n">overlay</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Image file not found: </span><span class="si">{</span><span class="n">image_path</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Skipping visualization - this is expected during documentation build.&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -1268,7 +1296,11 @@ array([0.97489622, 0.70610878, 0.98764951, 0.88899237, 0.99085805])
 
 <span class="n">image_path</span> <span class="o">=</span> <span class="n">IMAGE_PATH</span> <span class="o">+</span> <span class="n">label</span><span class="p">[</span><span class="s1">&#39;seg_map&#39;</span><span class="p">]</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">image_path</span><span class="p">,</span> <span class="s1">&#39;| idx&#39;</span><span class="p">,</span> <span class="n">issue_to_visualize</span> <span class="p">,</span> <span class="s1">&#39;| label quality score:&#39;</span><span class="p">,</span> <span class="n">score</span><span class="p">,</span> <span class="s1">&#39;| is issue: True&#39;</span><span class="p">)</span>
-<span class="n">visualize</span><span class="p">(</span><span class="n">image_path</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="n">label</span><span class="p">,</span> <span class="n">prediction</span><span class="o">=</span><span class="n">prediction</span><span class="p">,</span> <span class="n">class_names</span><span class="o">=</span><span class="n">class_names</span><span class="p">,</span> <span class="n">overlay</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">image_path</span><span class="p">):</span>
+    <span class="n">visualize</span><span class="p">(</span><span class="n">image_path</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="n">label</span><span class="p">,</span> <span class="n">prediction</span><span class="o">=</span><span class="n">prediction</span><span class="p">,</span> <span class="n">class_names</span><span class="o">=</span><span class="n">class_names</span><span class="p">,</span> <span class="n">overlay</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Image file not found: </span><span class="si">{</span><span class="n">image_path</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Skipping visualization - this is expected during documentation build.&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -1301,7 +1333,11 @@ array([0.97489622, 0.70610878, 0.98764951, 0.88899237, 0.99085805])
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">image_to_visualize</span> <span class="o">=</span> <span class="mi">0</span>
 <span class="n">image_path</span> <span class="o">=</span> <span class="n">IMAGE_PATH</span> <span class="o">+</span> <span class="n">labels</span><span class="p">[</span><span class="n">image_to_visualize</span><span class="p">][</span><span class="s1">&#39;seg_map&#39;</span><span class="p">]</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">image_path</span><span class="p">,</span> <span class="s1">&#39;| idx&#39;</span><span class="p">,</span> <span class="n">image_to_visualize</span> <span class="p">,</span> <span class="s1">&#39;| label quality score:&#39;</span><span class="p">,</span> <span class="n">scores</span><span class="p">[</span><span class="n">image_to_visualize</span><span class="p">],</span> <span class="s1">&#39;| is issue:&#39;</span><span class="p">,</span> <span class="n">image_to_visualize</span> <span class="ow">in</span> <span class="n">issue_idx</span><span class="p">)</span>
-<span class="n">visualize</span><span class="p">(</span><span class="n">image_path</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="n">labels</span><span class="p">[</span><span class="n">image_to_visualize</span><span class="p">],</span> <span class="n">prediction</span><span class="o">=</span><span class="n">predictions</span><span class="p">[</span><span class="n">image_to_visualize</span><span class="p">],</span> <span class="n">class_names</span><span class="o">=</span><span class="n">class_names</span><span class="p">,</span> <span class="n">save_path</span><span class="o">=</span><span class="s1">&#39;./example_image.png&#39;</span><span class="p">)</span>
+<span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">image_path</span><span class="p">):</span>
+    <span class="n">visualize</span><span class="p">(</span><span class="n">image_path</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="n">labels</span><span class="p">[</span><span class="n">image_to_visualize</span><span class="p">],</span> <span class="n">prediction</span><span class="o">=</span><span class="n">predictions</span><span class="p">[</span><span class="n">image_to_visualize</span><span class="p">],</span> <span class="n">class_names</span><span class="o">=</span><span class="n">class_names</span><span class="p">,</span> <span class="n">save_path</span><span class="o">=</span><span class="s1">&#39;./example_image.png&#39;</span><span class="p">)</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Image file not found: </span><span class="si">{</span><span class="n">image_path</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Skipping visualization - this is expected during documentation build.&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -1328,7 +1364,11 @@ array([0.97489622, 0.70610878, 0.98764951, 0.88899237, 0.99085805])
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">image_to_visualize</span> <span class="o">=</span> <span class="mi">3</span>
 <span class="n">image_path</span> <span class="o">=</span> <span class="n">IMAGE_PATH</span> <span class="o">+</span> <span class="n">labels</span><span class="p">[</span><span class="n">image_to_visualize</span><span class="p">][</span><span class="s1">&#39;seg_map&#39;</span><span class="p">]</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">image_path</span><span class="p">,</span> <span class="s1">&#39;| idx&#39;</span><span class="p">,</span> <span class="n">image_to_visualize</span> <span class="p">,</span> <span class="s1">&#39;| label quality score:&#39;</span><span class="p">,</span> <span class="n">scores</span><span class="p">[</span><span class="n">image_to_visualize</span><span class="p">],</span> <span class="s1">&#39;| is issue:&#39;</span><span class="p">,</span> <span class="n">image_to_visualize</span> <span class="ow">in</span> <span class="n">issue_idx</span><span class="p">)</span>
-<span class="n">visualize</span><span class="p">(</span><span class="n">image_path</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="n">labels</span><span class="p">[</span><span class="n">image_to_visualize</span><span class="p">],</span> <span class="n">class_names</span><span class="o">=</span><span class="n">class_names</span><span class="p">)</span>
+<span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">image_path</span><span class="p">):</span>
+    <span class="n">visualize</span><span class="p">(</span><span class="n">image_path</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="n">labels</span><span class="p">[</span><span class="n">image_to_visualize</span><span class="p">],</span> <span class="n">class_names</span><span class="o">=</span><span class="n">class_names</span><span class="p">)</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Image file not found: </span><span class="si">{</span><span class="n">image_path</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Skipping visualization - this is expected during documentation build.&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -1355,7 +1395,11 @@ array([0.97489622, 0.70610878, 0.98764951, 0.88899237, 0.99085805])
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">image_to_visualize</span> <span class="o">=</span> <span class="mi">2</span>
 <span class="n">image_path</span> <span class="o">=</span> <span class="n">IMAGE_PATH</span> <span class="o">+</span> <span class="n">labels</span><span class="p">[</span><span class="n">image_to_visualize</span><span class="p">][</span><span class="s1">&#39;seg_map&#39;</span><span class="p">]</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">image_path</span><span class="p">,</span> <span class="s1">&#39;| idx&#39;</span><span class="p">,</span> <span class="n">image_to_visualize</span> <span class="p">,</span> <span class="s1">&#39;| label quality score:&#39;</span><span class="p">,</span> <span class="n">scores</span><span class="p">[</span><span class="n">image_to_visualize</span><span class="p">],</span> <span class="s1">&#39;| is issue:&#39;</span><span class="p">,</span> <span class="n">image_to_visualize</span> <span class="ow">in</span> <span class="n">issue_idx</span><span class="p">)</span>
-<span class="n">visualize</span><span class="p">(</span><span class="n">image_path</span><span class="p">)</span>
+<span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">image_path</span><span class="p">):</span>
+    <span class="n">visualize</span><span class="p">(</span><span class="n">image_path</span><span class="p">)</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Image file not found: </span><span class="si">{</span><span class="n">image_path</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Skipping visualization - this is expected during documentation build.&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -1403,7 +1447,11 @@ array([0.97489622, 0.70610878, 0.98764951, 0.88899237, 0.99085805])
 <span class="k">for</span> <span class="n">image_to_visualize</span> <span class="ow">in</span> <span class="n">np</span><span class="o">.</span><span class="n">argsort</span><span class="p">(</span><span class="n">lab_object_counts</span><span class="p">)[::</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">:</span><span class="n">num_imgs_to_show</span><span class="p">]:</span>
     <span class="n">image_path</span> <span class="o">=</span> <span class="n">IMAGE_PATH</span> <span class="o">+</span> <span class="n">labels</span><span class="p">[</span><span class="n">image_to_visualize</span><span class="p">][</span><span class="s1">&#39;seg_map&#39;</span><span class="p">]</span>
     <span class="nb">print</span><span class="p">(</span><span class="n">image_path</span><span class="p">,</span> <span class="s1">&#39;| idx&#39;</span><span class="p">,</span> <span class="n">image_to_visualize</span><span class="p">)</span>
-    <span class="n">visualize</span><span class="p">(</span><span class="n">image_path</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="n">labels</span><span class="p">[</span><span class="n">image_to_visualize</span><span class="p">],</span> <span class="n">class_names</span><span class="o">=</span><span class="n">class_names</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">image_path</span><span class="p">):</span>
+        <span class="n">visualize</span><span class="p">(</span><span class="n">image_path</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="n">labels</span><span class="p">[</span><span class="n">image_to_visualize</span><span class="p">],</span> <span class="n">class_names</span><span class="o">=</span><span class="n">class_names</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Image file not found: </span><span class="si">{</span><span class="n">image_path</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Skipping visualization - this is expected during documentation build.&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -1526,12 +1574,16 @@ traffic light : 0.03 | 0.04
     <span class="n">sorted_indices</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argsort</span><span class="p">(</span><span class="n">max_deviation_values</span><span class="p">)[::</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
     <span class="n">count</span> <span class="o">=</span> <span class="mi">0</span>
 
-    <span class="k">for</span> <span class="n">image_to_visualize</span> <span class="ow">in</span> <span class="n">sorted_indices</span><span class="p">:</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">sorted_indices</span><span class="p">:</span>
         <span class="k">if</span> <span class="n">max_deviation_values</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">max_deviation_classes</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">!=</span> <span class="n">class_num</span><span class="p">:</span>
             <span class="k">continue</span>
-        <span class="n">image_path</span> <span class="o">=</span> <span class="n">IMAGE_PATH</span> <span class="o">+</span> <span class="n">labels</span><span class="p">[</span><span class="n">image_to_visualize</span><span class="p">][</span><span class="s1">&#39;seg_map&#39;</span><span class="p">]</span>
-        <span class="nb">print</span><span class="p">(</span><span class="n">image_path</span><span class="p">,</span> <span class="s1">&#39;| idx&#39;</span><span class="p">,</span> <span class="n">image_to_visualize</span><span class="p">,</span> <span class="s1">&#39;| class&#39;</span><span class="p">,</span> <span class="n">class_names</span><span class="p">[</span><span class="n">c</span><span class="p">])</span>
-        <span class="n">visualize</span><span class="p">(</span><span class="n">image_path</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="n">labels</span><span class="p">[</span><span class="n">image_to_visualize</span><span class="p">],</span> <span class="n">class_names</span><span class="o">=</span><span class="n">class_names</span><span class="p">)</span>
+        <span class="n">image_path</span> <span class="o">=</span> <span class="n">IMAGE_PATH</span> <span class="o">+</span> <span class="n">labels</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="s1">&#39;seg_map&#39;</span><span class="p">]</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">image_path</span><span class="p">,</span> <span class="s1">&#39;| idx&#39;</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="s1">&#39;| class&#39;</span><span class="p">,</span> <span class="n">class_names</span><span class="p">[</span><span class="n">c</span><span class="p">])</span>
+        <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">image_path</span><span class="p">):</span>
+            <span class="n">visualize</span><span class="p">(</span><span class="n">image_path</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="n">labels</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">class_names</span><span class="o">=</span><span class="n">class_names</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Image file not found: </span><span class="si">{</span><span class="n">image_path</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Skipping visualization - this is expected during documentation build.&quot;</span><span class="p">)</span>
 
         <span class="n">count</span> <span class="o">+=</span> <span class="mi">1</span>
         <span class="k">if</span> <span class="n">count</span> <span class="o">==</span> <span class="n">num_imgs_to_show_per_class</span><span class="p">:</span>
@@ -1544,7 +1596,7 @@ traffic light : 0.03 | 0.04
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-./example_images/000000422886.jpg | idx 103 | class person
+./example_images/000000407083.jpg | idx 115 | class car
 </pre></div></div>
 </div>
 <div class="nboutput docutils container">
@@ -1559,7 +1611,7 @@ traffic light : 0.03 | 0.04
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-./example_images/000000341828.jpg | idx 104 | class person
+./example_images/000000260925.jpg | idx 116 | class car
 </pre></div></div>
 </div>
 <div class="nboutput docutils container">
@@ -1574,17 +1626,199 @@ traffic light : 0.03 | 0.04
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-./example_images/000000461009.jpg | idx 105 | class person
+./example_images/000000065485.jpg | idx 117 | class car
 </pre></div></div>
 </div>
-<div class="nboutput nblast docutils container">
+<div class="nboutput docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
 <img alt="../_images/tutorials_object_detection_44_5.png" src="../_images/tutorials_object_detection_44_5.png" />
 </div>
 </div>
-</section>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+./example_images/000000057232.jpg | idx 109 | class chair
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/tutorials_object_detection_44_7.png" src="../_images/tutorials_object_detection_44_7.png" />
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+./example_images/000000044068.jpg | idx 110 | class chair
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/tutorials_object_detection_44_9.png" src="../_images/tutorials_object_detection_44_9.png" />
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+./example_images/000000353970.jpg | idx 111 | class chair
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/tutorials_object_detection_44_11.png" src="../_images/tutorials_object_detection_44_11.png" />
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+./example_images/000000463283.jpg | idx 106 | class cup
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/tutorials_object_detection_44_13.png" src="../_images/tutorials_object_detection_44_13.png" />
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+./example_images/000000331569.jpg | idx 107 | class cup
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/tutorials_object_detection_44_15.png" src="../_images/tutorials_object_detection_44_15.png" />
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+./example_images/000000450100.jpg | idx 108 | class cup
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/tutorials_object_detection_44_17.png" src="../_images/tutorials_object_detection_44_17.png" />
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+./example_images/000000422886.jpg | idx 103 | class person
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/tutorials_object_detection_44_19.png" src="../_images/tutorials_object_detection_44_19.png" />
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+./example_images/000000341828.jpg | idx 104 | class person
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/tutorials_object_detection_44_21.png" src="../_images/tutorials_object_detection_44_21.png" />
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+./example_images/000000461009.jpg | idx 105 | class person
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/tutorials_object_detection_44_23.png" src="../_images/tutorials_object_detection_44_23.png" />
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+./example_images/000000069138.jpg | idx 112 | class traffic light
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/tutorials_object_detection_44_25.png" src="../_images/tutorials_object_detection_44_25.png" />
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+./example_images/000000531134.jpg | idx 113 | class traffic light
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/tutorials_object_detection_44_27.png" src="../_images/tutorials_object_detection_44_27.png" />
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+./example_images/000000361103.jpg | idx 114 | class traffic light
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/tutorials_object_detection_44_29.png" src="../_images/tutorials_object_detection_44_29.png" />
+</div>
+</div>
+<script type="application/vnd.jupyter.widget-state+json">
+{"state": {"fd98346b94584cffaf0d5b03f88fd208": {"model_name": "LayoutModel", "model_module": "@jupyter-widgets/base", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets/base", "_model_module_version": "2.0.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border_bottom": null, "border_left": null, "border_right": null, "border_top": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "585cc8277f04442796867495bcbaa5bb": {"model_name": "ProgressStyleModel", "model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "ProgressStyleModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "StyleView", "bar_color": null, "description_width": ""}}, "bb279b6694b2483c8d1d62c6f4143e72": {"model_name": "FloatProgressModel", "model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "state": {"_dom_classes": [], "_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "FloatProgressModel", "_view_count": null, "_view_module": "@jupyter-widgets/controls", "_view_module_version": "2.0.0", "_view_name": "ProgressView", "bar_style": "success", "description": "", "description_allow_html": false, "layout": "IPY_MODEL_fd98346b94584cffaf0d5b03f88fd208", "max": 229195.0, "min": 0.0, "orientation": "horizontal", "style": "IPY_MODEL_585cc8277f04442796867495bcbaa5bb", "tabbable": null, "tooltip": null, "value": 229195.0}}, "ed0c6acffbcd4185bb4ae12efef403ca": {"model_name": "LayoutModel", "model_module": "@jupyter-widgets/base", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets/base", "_model_module_version": "2.0.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border_bottom": null, "border_left": null, "border_right": null, "border_top": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "7d30c83e901e46edae21c354b5788922": {"model_name": "HTMLStyleModel", "model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "HTMLStyleModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "StyleView", "background": null, "description_width": "", "font_size": null, "text_color": null}}, "87910376b6144c46886a5aa14814fbc3": {"model_name": "HTMLModel", "model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "state": {"_dom_classes": [], "_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "HTMLModel", "_view_count": null, "_view_module": "@jupyter-widgets/controls", "_view_module_version": "2.0.0", "_view_name": "HTMLView", "description": "", "description_allow_html": false, "layout": "IPY_MODEL_ed0c6acffbcd4185bb4ae12efef403ca", "placeholder": "\u200b", "style": "IPY_MODEL_7d30c83e901e46edae21c354b5788922", "tabbable": null, "tooltip": null, "value": "labels.pkl:\u2007100%"}}, "6459726f4980404e99cf7028b094abdc": {"model_name": "LayoutModel", "model_module": "@jupyter-widgets/base", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets/base", "_model_module_version": "2.0.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border_bottom": null, "border_left": null, "border_right": null, "border_top": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "ea07fd80ecab464d804956b2b1fe3908": {"model_name": "HTMLStyleModel", "model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "HTMLStyleModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "StyleView", "background": null, "description_width": "", "font_size": null, "text_color": null}}, "98d4ad24c53241138a93bf943ac49348": {"model_name": "HTMLModel", "model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "state": {"_dom_classes": [], "_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "HTMLModel", "_view_count": null, "_view_module": "@jupyter-widgets/controls", "_view_module_version": "2.0.0", "_view_name": "HTMLView", "description": "", "description_allow_html": false, "layout": "IPY_MODEL_6459726f4980404e99cf7028b094abdc", "placeholder": "\u200b", "style": "IPY_MODEL_ea07fd80ecab464d804956b2b1fe3908", "tabbable": null, "tooltip": null, "value": "\u2007229k/229k\u2007[00:00&lt;00:00,\u200720.7MB/s]"}}, "bd21e12608d9495d88d029cef62a4570": {"model_name": "LayoutModel", "model_module": "@jupyter-widgets/base", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets/base", "_model_module_version": "2.0.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border_bottom": null, "border_left": null, "border_right": null, "border_top": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "efe7d5447cd043879f6ebe128667d873": {"model_name": "HBoxModel", "model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "state": {"_dom_classes": [], "_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "HBoxModel", "_view_count": null, "_view_module": "@jupyter-widgets/controls", "_view_module_version": "2.0.0", "_view_name": "HBoxView", "box_style": "", "children": ["IPY_MODEL_87910376b6144c46886a5aa14814fbc3", "IPY_MODEL_bb279b6694b2483c8d1d62c6f4143e72", "IPY_MODEL_98d4ad24c53241138a93bf943ac49348"], "layout": "IPY_MODEL_bd21e12608d9495d88d029cef62a4570", "tabbable": null, "tooltip": null}}, "26bdc9bdfdd7499fbbc6902fea27eec8": {"model_name": "LayoutModel", "model_module": "@jupyter-widgets/base", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets/base", "_model_module_version": "2.0.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border_bottom": null, "border_left": null, "border_right": null, "border_top": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "ca769fd09e41439dbe787cccf08b7841": {"model_name": "ProgressStyleModel", "model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "ProgressStyleModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "StyleView", "bar_color": null, "description_width": ""}}, "8026b75838844394a336766738c06c7b": {"model_name": "FloatProgressModel", "model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "state": {"_dom_classes": [], "_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "FloatProgressModel", "_view_count": null, "_view_module": "@jupyter-widgets/controls", "_view_module_version": "2.0.0", "_view_name": "ProgressView", "bar_style": "success", "description": "", "description_allow_html": false, "layout": "IPY_MODEL_26bdc9bdfdd7499fbbc6902fea27eec8", "max": 29494.0, "min": 0.0, "orientation": "horizontal", "style": "IPY_MODEL_ca769fd09e41439dbe787cccf08b7841", "tabbable": null, "tooltip": null, "value": 29494.0}}, "264287d3425e4dd595be1c46f1699e58": {"model_name": "LayoutModel", "model_module": "@jupyter-widgets/base", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets/base", "_model_module_version": "2.0.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border_bottom": null, "border_left": null, "border_right": null, "border_top": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "e7934ac66fa3409992a0adc145fd8cfb": {"model_name": "HTMLStyleModel", "model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "HTMLStyleModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "StyleView", "background": null, "description_width": "", "font_size": null, "text_color": null}}, "c23e07d79f5e4533acb9832eabd03f88": {"model_name": "HTMLModel", "model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "state": {"_dom_classes": [], "_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "HTMLModel", "_view_count": null, "_view_module": "@jupyter-widgets/controls", "_view_module_version": "2.0.0", "_view_name": "HTMLView", "description": "", "description_allow_html": false, "layout": "IPY_MODEL_264287d3425e4dd595be1c46f1699e58", "placeholder": "\u200b", "style": "IPY_MODEL_e7934ac66fa3409992a0adc145fd8cfb", "tabbable": null, "tooltip": null, "value": "predictions.pkl:\u2007100%"}}, "71382982109d44f099db5728eff0a5bb": {"model_name": "LayoutModel", "model_module": "@jupyter-widgets/base", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets/base", "_model_module_version": "2.0.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border_bottom": null, "border_left": null, "border_right": null, "border_top": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "86e53cec8bfd479a84335068fc8e1319": {"model_name": "HTMLStyleModel", "model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "HTMLStyleModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "StyleView", "background": null, "description_width": "", "font_size": null, "text_color": null}}, "0a3c2a55efd64ab484b1884cc8c4fff9": {"model_name": "HTMLModel", "model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "state": {"_dom_classes": [], "_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "HTMLModel", "_view_count": null, "_view_module": "@jupyter-widgets/controls", "_view_module_version": "2.0.0", "_view_name": "HTMLView", "description": "", "description_allow_html": false, "layout": "IPY_MODEL_71382982109d44f099db5728eff0a5bb", "placeholder": "\u200b", "style": "IPY_MODEL_86e53cec8bfd479a84335068fc8e1319", "tabbable": null, "tooltip": null, "value": "\u200729.5k/29.5k\u2007[00:00&lt;00:00,\u20077.15MB/s]"}}, "44f26217d0884d11bacecf4f3f42aef5": {"model_name": "LayoutModel", "model_module": "@jupyter-widgets/base", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets/base", "_model_module_version": "2.0.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border_bottom": null, "border_left": null, "border_right": null, "border_top": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "a9b65fc23647404d942979434780b13b": {"model_name": "HBoxModel", "model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "state": {"_dom_classes": [], "_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "HBoxModel", "_view_count": null, "_view_module": "@jupyter-widgets/controls", "_view_module_version": "2.0.0", "_view_name": "HBoxView", "box_style": "", "children": ["IPY_MODEL_c23e07d79f5e4533acb9832eabd03f88", "IPY_MODEL_8026b75838844394a336766738c06c7b", "IPY_MODEL_0a3c2a55efd64ab484b1884cc8c4fff9"], "layout": "IPY_MODEL_44f26217d0884d11bacecf4f3f42aef5", "tabbable": null, "tooltip": null}}, "4f11eb6937e044fc911d6c7c2860e990": {"model_name": "LayoutModel", "model_module": "@jupyter-widgets/base", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets/base", "_model_module_version": "2.0.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border_bottom": null, "border_left": null, "border_right": null, "border_top": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "7adfa77c67c84ebc85f6158faf9ce95c": {"model_name": "ProgressStyleModel", "model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "ProgressStyleModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "StyleView", "bar_color": null, "description_width": ""}}, "8f3db2bfee03460289d428123967b5ed": {"model_name": "FloatProgressModel", "model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "state": {"_dom_classes": [], "_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "FloatProgressModel", "_view_count": null, "_view_module": "@jupyter-widgets/controls", "_view_module_version": "2.0.0", "_view_name": "ProgressView", "bar_style": "success", "description": "", "description_allow_html": false, "layout": "IPY_MODEL_4f11eb6937e044fc911d6c7c2860e990", "max": 17340957.0, "min": 0.0, "orientation": "horizontal", "style": "IPY_MODEL_7adfa77c67c84ebc85f6158faf9ce95c", "tabbable": null, "tooltip": null, "value": 17340957.0}}, "c1ac94ac775e4d11b0f05416d3184162": {"model_name": "LayoutModel", "model_module": "@jupyter-widgets/base", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets/base", "_model_module_version": "2.0.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border_bottom": null, "border_left": null, "border_right": null, "border_top": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "e9a1c88f29a24dce84581a26b430313f": {"model_name": "HTMLStyleModel", "model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "HTMLStyleModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "StyleView", "background": null, "description_width": "", "font_size": null, "text_color": null}}, "8a3f2742a82649adb9af1fd247b96faa": {"model_name": "HTMLModel", "model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "state": {"_dom_classes": [], "_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "HTMLModel", "_view_count": null, "_view_module": "@jupyter-widgets/controls", "_view_module_version": "2.0.0", "_view_name": "HTMLView", "description": "", "description_allow_html": false, "layout": "IPY_MODEL_c1ac94ac775e4d11b0f05416d3184162", "placeholder": "\u200b", "style": "IPY_MODEL_e9a1c88f29a24dce84581a26b430313f", "tabbable": null, "tooltip": null, "value": "example_images.zip:\u2007100%"}}, "a232f98b7d804907a2965e9b91e24e5f": {"model_name": "LayoutModel", "model_module": "@jupyter-widgets/base", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets/base", "_model_module_version": "2.0.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border_bottom": null, "border_left": null, "border_right": null, "border_top": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "d16bcbb525724822b3147f855d51fb93": {"model_name": "HTMLStyleModel", "model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "HTMLStyleModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "StyleView", "background": null, "description_width": "", "font_size": null, "text_color": null}}, "e439b45fd9f94bbcb61125dfbfcacf4a": {"model_name": "HTMLModel", "model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "state": {"_dom_classes": [], "_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "HTMLModel", "_view_count": null, "_view_module": "@jupyter-widgets/controls", "_view_module_version": "2.0.0", "_view_name": "HTMLView", "description": "", "description_allow_html": false, "layout": "IPY_MODEL_a232f98b7d804907a2965e9b91e24e5f", "placeholder": "\u200b", "style": "IPY_MODEL_d16bcbb525724822b3147f855d51fb93", "tabbable": null, "tooltip": null, "value": "\u200717.3M/17.3M\u2007[00:00&lt;00:00,\u2007461MB/s]"}}, "4eb0da6a32a1491b831018163ff28906": {"model_name": "LayoutModel", "model_module": "@jupyter-widgets/base", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets/base", "_model_module_version": "2.0.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border_bottom": null, "border_left": null, "border_right": null, "border_top": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "82ec89e5ad1e4a75ad232ad68d2a259b": {"model_name": "HBoxModel", "model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "state": {"_dom_classes": [], "_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "HBoxModel", "_view_count": null, "_view_module": "@jupyter-widgets/controls", "_view_module_version": "2.0.0", "_view_name": "HBoxView", "box_style": "", "children": ["IPY_MODEL_8a3f2742a82649adb9af1fd247b96faa", "IPY_MODEL_8f3db2bfee03460289d428123967b5ed", "IPY_MODEL_e439b45fd9f94bbcb61125dfbfcacf4a"], "layout": "IPY_MODEL_4eb0da6a32a1491b831018163ff28906", "tabbable": null, "tooltip": null}}}, "version_major": 2, "version_minor": 0}
+</script></section>
 </section>
  
         </article>
@@ -1616,7 +1850,7 @@ traffic light : 0.03 | 0.04
         <div class="bottom-of-page">
           <div class="left-details">
             <div class="copyright">
-                Copyright &#169; 2025, Cleanlab Inc.
+                Copyright &#169; 2026, Cleanlab Inc.
             </div>
             Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
             
@@ -1696,6 +1930,5 @@ traffic light : 0.03 | 0.04
     <script src="https://cdn.jsdelivr.net/npm/@jupyter-widgets/html-manager@^1.0.1/dist/embed-amd.js"></script>
     
 <script async defer src="https://buttons.github.io/buttons.js"></script>
-<script src="https://cdn.cleanlab.ai/v1.1.1/agility-web-component.js"></script>
 </body>
 </html>
