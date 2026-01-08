@@ -344,11 +344,8 @@
 <li class="toctree-l1"><a class="reference external" href="https://github.com/cleanlab/cleanlab">GitHub</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://pypi.org/project/cleanlab/">PyPI</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://anaconda.org/conda-forge/cleanlab">Conda</a></li>
-<li class="toctree-l1"><a class="reference external" href="https://cleanlab.ai/slack">Community Discussions</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://cleanlab.ai/blog/">Blog</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://www.youtube.com/@CleanlabAI/playlists">Videos</a></li>
-<li class="toctree-l1"><a class="reference external" href="https://cleanlab.ai/blog/data-centric-ai/">Cleanlab Studio (Easy Mode)</a></li>
-<li class="toctree-l1"><a class="reference external" href="https://help.cleanlab.ai">Cleanlab Studio Docs</a></li>
 </ul>
 
 </div>
@@ -640,23 +637,7 @@
 <!-- End of Version Warning Banner -->
 
  <h1>Source code for cleanlab.filter</h1><div class="highlight"><pre>
-<span></span><span class="c1"># Copyright (C) 2017-2023  Cleanlab Inc.</span>
-<span class="c1"># This file is part of cleanlab.</span>
-<span class="c1">#</span>
-<span class="c1"># cleanlab is free software: you can redistribute it and/or modify</span>
-<span class="c1"># it under the terms of the GNU Affero General Public License as published</span>
-<span class="c1"># by the Free Software Foundation, either version 3 of the License, or</span>
-<span class="c1"># (at your option) any later version.</span>
-<span class="c1">#</span>
-<span class="c1"># cleanlab is distributed in the hope that it will be useful,</span>
-<span class="c1"># but WITHOUT ANY WARRANTY; without even the implied warranty of</span>
-<span class="c1"># MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the</span>
-<span class="c1"># GNU Affero General Public License for more details.</span>
-<span class="c1">#</span>
-<span class="c1"># You should have received a copy of the GNU Affero General Public License</span>
-<span class="c1"># along with cleanlab.  If not, see &lt;https://www.gnu.org/licenses/&gt;.</span>
-
-<span class="sd">&quot;&quot;&quot;</span>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">Methods to identify which examples have label issues in a classification dataset.</span>
 <span class="sd">The documentation below assumes a dataset with ``N`` examples and ``K`` classes.</span>
 <span class="sd">This module is for standard (multi-class) classification where each example is labeled as belonging to exactly one of K classes (e.g. ``labels = np.array([0,0,1,0,2,1])``).</span>
@@ -1014,12 +995,14 @@
             <span class="n">prune_count_matrix</span> <span class="o">=</span> <span class="n">round_preserving_row_totals</span><span class="p">(</span><span class="n">tmp</span><span class="p">)</span>
 
         <span class="c1"># Prepare multiprocessing shared data</span>
-        <span class="c1"># On Linux, multiprocessing is started with fork,</span>
-        <span class="c1"># so data can be shared with global vairables + COW</span>
+        <span class="c1"># On Linux with Python &lt;3.14, multiprocessing is started with fork,</span>
+        <span class="c1"># so data can be shared with global variables + COW</span>
         <span class="c1"># On Window/macOS, processes are started with spawn,</span>
         <span class="c1"># so data will need to be pickled to the subprocesses through input args</span>
+        <span class="c1"># In Python 3.14+, global variable sharing is no longer reliable even on Linux</span>
         <span class="n">chunksize</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">K</span> <span class="o">//</span> <span class="n">n_jobs</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">n_jobs</span> <span class="o">==</span> <span class="mi">1</span> <span class="ow">or</span> <span class="n">os_name</span> <span class="o">==</span> <span class="s2">&quot;Linux&quot;</span><span class="p">:</span>
+        <span class="n">use_global_vars</span> <span class="o">=</span> <span class="n">n_jobs</span> <span class="o">==</span> <span class="mi">1</span> <span class="ow">or</span> <span class="p">(</span><span class="n">os_name</span> <span class="o">==</span> <span class="s2">&quot;Linux&quot;</span> <span class="ow">and</span> <span class="n">sys</span><span class="o">.</span><span class="n">version_info</span> <span class="o">&lt;</span> <span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">14</span><span class="p">))</span>
+        <span class="k">if</span> <span class="n">use_global_vars</span><span class="p">:</span>
             <span class="k">global</span> <span class="n">pred_probs_by_class</span><span class="p">,</span> <span class="n">prune_count_matrix_cols</span>
             <span class="n">pred_probs_by_class</span> <span class="o">=</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="n">pred_probs</span><span class="p">[</span><span class="n">labels</span> <span class="o">==</span> <span class="n">k</span><span class="p">]</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">K</span><span class="p">)}</span>
             <span class="n">prune_count_matrix_cols</span> <span class="o">=</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="n">prune_count_matrix</span><span class="p">[:,</span> <span class="n">k</span><span class="p">]</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">K</span><span class="p">)}</span>
@@ -1618,7 +1601,7 @@
         <div class="bottom-of-page">
           <div class="left-details">
             <div class="copyright">
-                Copyright &#169; 2025, Cleanlab Inc.
+                Copyright &#169; 2026, Cleanlab Inc.
             </div>
             Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
             

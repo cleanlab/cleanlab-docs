@@ -344,11 +344,8 @@
 <li class="toctree-l1"><a class="reference external" href="https://github.com/cleanlab/cleanlab">GitHub</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://pypi.org/project/cleanlab/">PyPI</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://anaconda.org/conda-forge/cleanlab">Conda</a></li>
-<li class="toctree-l1"><a class="reference external" href="https://cleanlab.ai/slack">Community Discussions</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://cleanlab.ai/blog/">Blog</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://www.youtube.com/@CleanlabAI/playlists">Videos</a></li>
-<li class="toctree-l1"><a class="reference external" href="https://cleanlab.ai/blog/data-centric-ai/">Cleanlab Studio (Easy Mode)</a></li>
-<li class="toctree-l1"><a class="reference external" href="https://help.cleanlab.ai">Cleanlab Studio Docs</a></li>
 </ul>
 
 </div>
@@ -640,23 +637,7 @@
 <!-- End of Version Warning Banner -->
 
  <h1>Source code for cleanlab.experimental.label_issues_batched</h1><div class="highlight"><pre>
-<span></span><span class="c1"># Copyright (C) 2017-2023  Cleanlab Inc.</span>
-<span class="c1"># This file is part of cleanlab.</span>
-<span class="c1">#</span>
-<span class="c1"># cleanlab is free software: you can redistribute it and/or modify</span>
-<span class="c1"># it under the terms of the GNU Affero General Public License as published</span>
-<span class="c1"># by the Free Software Foundation, either version 3 of the License, or</span>
-<span class="c1"># (at your option) any later version.</span>
-<span class="c1">#</span>
-<span class="c1"># cleanlab is distributed in the hope that it will be useful,</span>
-<span class="c1"># but WITHOUT ANY WARRANTY; without even the implied warranty of</span>
-<span class="c1"># MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the</span>
-<span class="c1"># GNU Affero General Public License for more details.</span>
-<span class="c1">#</span>
-<span class="c1"># You should have received a copy of the GNU Affero General Public License</span>
-<span class="c1"># along with cleanlab.  If not, see &lt;https://www.gnu.org/licenses/&gt;.</span>
-
-<span class="sd">&quot;&quot;&quot;</span>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">Implementation of :py:func:`filter.find_label_issues &lt;cleanlab.filter.find_label_issues&gt;`</span>
 <span class="sd">that does not need much memory by operating in mini-batches.</span>
 <span class="sd">You can also use this approach to estimate label quality scores or the number of label issues</span>
@@ -1306,7 +1287,17 @@
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">use_thorough</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">inds</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">bool</span><span class="p">)</span>
             <span class="n">args</span> <span class="o">=</span> <span class="nb">zip</span><span class="p">(</span><span class="n">inds</span><span class="p">,</span> <span class="n">use_thorough</span><span class="p">)</span>
-            <span class="k">with</span> <span class="n">mp</span><span class="o">.</span><span class="n">Pool</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n_jobs</span><span class="p">)</span> <span class="k">as</span> <span class="n">pool</span><span class="p">:</span>
+
+            <span class="c1"># Use fork method explicitly for Python 3.14+ compatibility</span>
+            <span class="c1"># Falls back to default method if fork is not available</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">ctx</span> <span class="o">=</span> <span class="n">mp</span><span class="o">.</span><span class="n">get_context</span><span class="p">(</span><span class="s2">&quot;fork&quot;</span><span class="p">)</span>
+                <span class="n">pool_class</span> <span class="o">=</span> <span class="n">ctx</span><span class="o">.</span><span class="n">Pool</span>
+            <span class="k">except</span> <span class="p">(</span><span class="ne">RuntimeError</span><span class="p">,</span> <span class="ne">ValueError</span><span class="p">):</span>
+                <span class="c1"># fork not available (Windows) or already set, use default</span>
+                <span class="n">pool_class</span> <span class="o">=</span> <span class="n">mp</span><span class="o">.</span><span class="n">Pool</span>
+
+            <span class="k">with</span> <span class="n">pool_class</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n_jobs</span><span class="p">)</span> <span class="k">as</span> <span class="n">pool</span><span class="p">:</span>
                 <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">off_diagonal_calibrated</span><span class="p">:</span>
                     <span class="n">prune_count_batch</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span>
                         <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">pool</span><span class="o">.</span><span class="n">imap_unordered</span><span class="p">(</span><span class="n">_compute_num_issues</span><span class="p">,</span> <span class="n">args</span><span class="p">)))</span>
@@ -1418,7 +1409,7 @@
         <div class="bottom-of-page">
           <div class="left-details">
             <div class="copyright">
-                Copyright &#169; 2025, Cleanlab Inc.
+                Copyright &#169; 2026, Cleanlab Inc.
             </div>
             Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
             

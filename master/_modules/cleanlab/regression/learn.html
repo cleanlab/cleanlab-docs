@@ -344,11 +344,8 @@
 <li class="toctree-l1"><a class="reference external" href="https://github.com/cleanlab/cleanlab">GitHub</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://pypi.org/project/cleanlab/">PyPI</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://anaconda.org/conda-forge/cleanlab">Conda</a></li>
-<li class="toctree-l1"><a class="reference external" href="https://cleanlab.ai/slack">Community Discussions</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://cleanlab.ai/blog/">Blog</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://www.youtube.com/@CleanlabAI/playlists">Videos</a></li>
-<li class="toctree-l1"><a class="reference external" href="https://cleanlab.ai/blog/data-centric-ai/">Cleanlab Studio (Easy Mode)</a></li>
-<li class="toctree-l1"><a class="reference external" href="https://help.cleanlab.ai">Cleanlab Studio Docs</a></li>
 </ul>
 
 </div>
@@ -640,23 +637,7 @@
 <!-- End of Version Warning Banner -->
 
  <h1>Source code for cleanlab.regression.learn</h1><div class="highlight"><pre>
-<span></span><span class="c1"># Copyright (C) 2017-2023  Cleanlab Inc.</span>
-<span class="c1"># This file is part of cleanlab.</span>
-<span class="c1">#</span>
-<span class="c1"># cleanlab is free software: you can redistribute it and/or modify</span>
-<span class="c1"># it under the terms of the GNU Affero General Public License as published</span>
-<span class="c1"># by the Free Software Foundation, either version 3 of the License, or</span>
-<span class="c1"># (at your option) any later version.</span>
-<span class="c1">#</span>
-<span class="c1"># cleanlab is distributed in the hope that it will be useful,</span>
-<span class="c1"># but WITHOUT ANY WARRANTY; without even the implied warranty of</span>
-<span class="c1"># MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the</span>
-<span class="c1"># GNU Affero General Public License for more details.</span>
-<span class="c1">#</span>
-<span class="c1"># You should have received a copy of the GNU Affero General Public License</span>
-<span class="c1"># along with cleanlab.  If not, see &lt;https://www.gnu.org/licenses/&gt;.</span>
-
-<span class="sd">&quot;&quot;&quot;</span>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">cleanlab can be used for learning with noisy data for any dataset and regression model.</span>
 
 <span class="sd">For regression tasks, the :py:class:`regression.learn.CleanLearning &lt;cleanlab.regression.learn.CleanLearning&gt;`</span>
@@ -670,31 +651,31 @@
 <span class="sd">* ``model.predict(X)``</span>
 <span class="sd">* ``model.score(X, y, sample_weight=None)``</span>
 
-<span class="sd">where ``X`` contains the data (i.e. features, covariates, independant variables) and ``y`` contains the target </span>
-<span class="sd">value (i.e. label, response/dependant variable). The first index of ``X`` and of ``y`` should correspond to the different </span>
+<span class="sd">where ``X`` contains the data (i.e. features, covariates, independant variables) and ``y`` contains the target</span>
+<span class="sd">value (i.e. label, response/dependant variable). The first index of ``X`` and of ``y`` should correspond to the different</span>
 <span class="sd">examples in the dataset, such that ``len(X) = len(y) = N`` (sample-size).</span>
 
 <span class="sd">Your model should be correctly clonable via</span>
 <span class="sd">`sklearn.base.clone &lt;https://scikit-learn.org/stable/modules/generated/sklearn.base.clone.html&gt;`_:</span>
-<span class="sd">cleanlab internally creates multiple instances of the model, and if you e.g. manually wrap a </span>
-<span class="sd">PyTorch model, ensure that every call to the estimator&#39;s ``__init__()`` creates an independent </span>
-<span class="sd">instance of the model (for sklearn compatibility, the weights of neural network models should typically </span>
+<span class="sd">cleanlab internally creates multiple instances of the model, and if you e.g. manually wrap a</span>
+<span class="sd">PyTorch model, ensure that every call to the estimator&#39;s ``__init__()`` creates an independent</span>
+<span class="sd">instance of the model (for sklearn compatibility, the weights of neural network models should typically</span>
 <span class="sd">be initialized inside of ``clf.fit()``).</span>
 
 <span class="sd">Example</span>
 <span class="sd">-------</span>
 <span class="sd">&gt;&gt;&gt; from cleanlab.regression.learn import CleanLearning</span>
-<span class="sd">&gt;&gt;&gt; from sklearn.linear_model import LinearRegression </span>
+<span class="sd">&gt;&gt;&gt; from sklearn.linear_model import LinearRegression</span>
 <span class="sd">&gt;&gt;&gt; cl = CleanLearning(clf=LinearRegression()) # Pass in any model.</span>
 <span class="sd">&gt;&gt;&gt; cl.fit(X, y_with_noise)</span>
 <span class="sd">&gt;&gt;&gt; # Estimate the predictions as if you had trained without label issues.</span>
 <span class="sd">&gt;&gt;&gt; predictions = cl.predict(y)</span>
 
-<span class="sd">If your model is not sklearn-compatible by default, it might be the case that standard packages can adapt </span>
-<span class="sd">the model. For example, you can adapt PyTorch models using `skorch &lt;https://skorch.readthedocs.io/&gt;`_ </span>
+<span class="sd">If your model is not sklearn-compatible by default, it might be the case that standard packages can adapt</span>
+<span class="sd">the model. For example, you can adapt PyTorch models using `skorch &lt;https://skorch.readthedocs.io/&gt;`_</span>
 <span class="sd">and adapt Keras models using `SciKeras &lt;https://www.adriangb.com/scikeras/&gt;`_.</span>
 
-<span class="sd">If an adapter doesn&#39;t already exist, you can manually wrap your </span>
+<span class="sd">If an adapter doesn&#39;t already exist, you can manually wrap your</span>
 <span class="sd">model to be sklearn-compatible. This is made easy by inheriting from</span>
 <span class="sd">`sklearn.base.BaseEstimator</span>
 <span class="sd">&lt;https://scikit-learn.org/stable/modules/generated/sklearn.base.BaseEstimator.html&gt;`_:</span>
@@ -712,7 +693,7 @@
 <span class="sd">            pass</span>
 <span class="sd">        def score(self, X, y):</span>
 <span class="sd">            pass</span>
-<span class="sd">            </span>
+
 <span class="sd">&quot;&quot;&quot;</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Union</span><span class="p">,</span> <span class="n">Tuple</span>
@@ -1539,7 +1520,7 @@
         <div class="bottom-of-page">
           <div class="left-details">
             <div class="copyright">
-                Copyright &#169; 2025, Cleanlab Inc.
+                Copyright &#169; 2026, Cleanlab Inc.
             </div>
             Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
             
