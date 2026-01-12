@@ -1,0 +1,1569 @@
+<!doctype html>
+<html class="no-js" lang="en" data-content_root="">
+  <head><meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width,initial-scale=1"/>
+    <meta name="color-scheme" content="light dark">
+        <script async src="https://www.googletagmanager.com/gtag/js?id=G-EV8RVEFX82"></script>
+        <script>
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            
+            gtag('config', 'G-EV8RVEFX82');
+            
+        </script>
+    <link rel="index" title="Index" href="../../../genindex.html" /><link rel="search" title="Search" href="../../../search.html" />
+
+    <link rel="shortcut icon" href="https://raw.githubusercontent.com/cleanlab/assets/a4483476d449f2f05a4c7cde329e72358099cc07/cleanlab/cleanlab_favicon.svg"/><!-- Generated with Sphinx 7.1.2 and Furo 2023.09.10 -->
+        <title>cleanlab.regression.learn - cleanlab</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/styles/furo.css?v=135e06be" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/tabs.css?v=a5c4661c" />
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/katex-math.css?v=91adb8b6" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/styles/furo-extensions.css?v=36a5483c" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/css/custom.css?v=96bccb3e" />
+    
+    
+
+
+<style>
+  body {
+    --color-code-background: #f8f8f8;
+  --color-code-foreground: black;
+  
+  }
+  @media not print {
+    body[data-theme="dark"] {
+      --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+    }
+    @media (prefers-color-scheme: dark) {
+      body:not([data-theme="light"]) {
+        --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+      }
+    }
+  }
+</style></head>
+  <body>
+    
+    <script>
+      document.body.dataset.theme = localStorage.getItem("theme") || "auto";
+    </script>
+    
+
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+  <symbol id="svg-toc" viewBox="0 0 24 24">
+    <title>Contents</title>
+    <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 1024 1024">
+      <path d="M408 442h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8zm-8 204c0 4.4 3.6 8 8 8h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56zm504-486H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zm0 632H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zM115.4 518.9L271.7 642c5.8 4.6 14.4.5 14.4-6.9V388.9c0-7.4-8.5-11.5-14.4-6.9L115.4 505.1a8.74 8.74 0 0 0 0 13.8z"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-menu" viewBox="0 0 24 24">
+    <title>Menu</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-menu">
+      <line x1="3" y1="12" x2="21" y2="12"></line>
+      <line x1="3" y1="6" x2="21" y2="6"></line>
+      <line x1="3" y1="18" x2="21" y2="18"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-arrow-right" viewBox="0 0 24 24">
+    <title>Expand</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-chevron-right">
+      <polyline points="9 18 15 12 9 6"></polyline>
+    </svg>
+  </symbol>
+  <symbol id="svg-sun" viewBox="0 0 24 24">
+    <title>Light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="feather-sun">
+      <circle cx="12" cy="12" r="5"></circle>
+      <line x1="12" y1="1" x2="12" y2="3"></line>
+      <line x1="12" y1="21" x2="12" y2="23"></line>
+      <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+      <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+      <line x1="1" y1="12" x2="3" y2="12"></line>
+      <line x1="21" y1="12" x2="23" y2="12"></line>
+      <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+      <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon" viewBox="0 0 24 24">
+    <title>Dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-moon">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454z" />
+    </svg>
+  </symbol>
+  <symbol id="svg-sun-half" viewBox="0 0 24 24">
+    <title>Auto light/dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-shadow">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+      <circle cx="12" cy="12" r="9" />
+      <path d="M13 12h5" />
+      <path d="M13 15h4" />
+      <path d="M13 18h1" />
+      <path d="M13 9h4" />
+      <path d="M13 6h1" />
+    </svg>
+  </symbol>
+</svg>
+
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation">
+<input type="checkbox" class="sidebar-toggle" name="__toc" id="__toc">
+<label class="overlay sidebar-overlay" for="__navigation">
+  <div class="visually-hidden">Hide navigation sidebar</div>
+</label>
+<label class="overlay toc-overlay" for="__toc">
+  <div class="visually-hidden">Hide table of contents sidebar</div>
+</label>
+
+
+
+<div class="page">
+  <header class="mobile-header">
+    <div class="header-left">
+      <label class="nav-overlay-icon" for="__navigation">
+        <div class="visually-hidden">Toggle site navigation sidebar</div>
+        <i class="icon"><svg><use href="#svg-menu"></use></svg></i>
+      </label>
+    </div>
+    <div class="header-center">
+      <a href="../../../index.html"><div class="brand">cleanlab</div></a>
+    </div>
+    <div class="header-right">
+      <div class="theme-toggle-container theme-toggle-header">
+        <button class="theme-toggle">
+          <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+          <svg class="theme-icon-when-auto"><use href="#svg-sun-half"></use></svg>
+          <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+          <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+        </button>
+      </div>
+      <label class="toc-overlay-icon toc-header-icon no-toc" for="__toc">
+        <div class="visually-hidden">Toggle table of contents sidebar</div>
+        <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+      </label>
+    </div>
+  </header>
+  <aside class="sidebar-drawer">
+    <div class="sidebar-container">
+      
+      <div class="sidebar-sticky"><a style="padding-bottom: 0px;" class="sidebar-brand" href="../../../index.html">
+    
+    <div class="sidebar-logo-container">
+        <img class="sidebar-logo" src="https://raw.githubusercontent.com/cleanlab/assets/master/cleanlab/cleanlab_logo_only.png" alt="Logo" />
+    </div>
+    
+    <span style="margin-bottom:0px" class="sidebar-brand-text">
+        cleanlab
+    </span>
+    
+</a>
+
+<div style="margin-left: 12px; margin-top: 4px;">
+    <a style="margin-top: 6px;" class="github-button" href="https://github.com/cleanlab/cleanlab" data-size="large" data-show-count="true"
+    aria-label="Star cleanlab/cleanlab on GitHub">Star</a>
+</div>
+<form class="sidebar-search-container" method="get" action="../../../search.html" role="search">
+  <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
+  <input type="hidden" name="check_keywords" value="yes">
+  <input type="hidden" name="area" value="default">
+</form>
+<div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
+  <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../index.html">Quickstart</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Tutorials</span></p>
+<ul>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../tutorials/datalab/index.html">Datalab Tutorials</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle navigation of Datalab Tutorials</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../tutorials/datalab/datalab_quickstart.html">Detecting Common Data Issues with Datalab</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../tutorials/datalab/datalab_advanced.html">Advanced Data Auditing with Datalab</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../tutorials/datalab/text.html">Text Data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../tutorials/datalab/tabular.html">Tabular Data (Numeric/Categorical)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../tutorials/datalab/image.html">Image Data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../tutorials/datalab/audio.html">Audio Data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../cleanlab/datalab/guide/issue_type_description.html">Guide to Datalab Issue Types</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../tutorials/datalab/workflows.html">Miscellaneous workflows with Datalab</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorials/improving_ml_performance.html">Improving ML Performance</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../tutorials/clean_learning/index.html">CleanLearning Tutorials</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><div class="visually-hidden">Toggle navigation of CleanLearning Tutorials</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../tutorials/clean_learning/text.html">Text Classification</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../tutorials/clean_learning/tabular.html">Tabular Classification (Numeric/Categorical)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorials/indepth_overview.html">Workflows of Data-Centric AI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorials/dataset_health.html">Analyze Dataset-level Issues</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorials/outliers.html">Outlier Detection</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorials/multiannotator.html">Improving Consensus Labels for Multiannotator Data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorials/multilabel_classification.html">Multi-Label Classification</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorials/regression.html">Noisy Labels in Regression</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorials/token_classification.html">Token Classification (text)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorials/segmentation.html">Image Segmentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorials/object_detection.html">Object Detection</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorials/pred_probs_cross_val.html">Predicted Probabilities via Cross Validation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorials/faq.html">FAQ</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API Reference</span></p>
+<ul>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../cleanlab/datalab/index.html">datalab</a><input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" role="switch" type="checkbox"/><label for="toctree-checkbox-3"><div class="visually-hidden">Toggle navigation of datalab</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../cleanlab/datalab/guide/index.html">Datalab guides</a><input class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" role="switch" type="checkbox"/><label for="toctree-checkbox-4"><div class="visually-hidden">Toggle navigation of Datalab guides</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../cleanlab/datalab/guide/issue_type_description.html">Datalab Issue Types</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../cleanlab/datalab/guide/custom_issue_manager.html">Creating Your Own Issues Manager</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../cleanlab/datalab/datalab.html">datalab</a></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../cleanlab/datalab/internal/index.html">internal</a><input class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" role="switch" type="checkbox"/><label for="toctree-checkbox-5"><div class="visually-hidden">Toggle navigation of internal</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../../../cleanlab/datalab/internal/adapter/index.html">adapter</a><input class="toctree-checkbox" id="toctree-checkbox-6" name="toctree-checkbox-6" role="switch" type="checkbox"/><label for="toctree-checkbox-6"><div class="visually-hidden">Toggle navigation of adapter</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../cleanlab/datalab/internal/adapter/imagelab.html">imagelab</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../cleanlab/datalab/internal/data.html">data</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../cleanlab/datalab/internal/data_issues.html">data_issues</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../cleanlab/datalab/internal/issue_finder.html">issue_finder</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../cleanlab/datalab/internal/factory.html">factory</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../cleanlab/datalab/internal/model_outputs.html">model_outputs</a></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../../../cleanlab/datalab/internal/issue_manager/index.html">issue_manager</a><input class="toctree-checkbox" id="toctree-checkbox-7" name="toctree-checkbox-7" role="switch" type="checkbox"/><label for="toctree-checkbox-7"><div class="visually-hidden">Toggle navigation of issue_manager</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../cleanlab/datalab/internal/issue_manager/issue_manager.html">Base issue_manager module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../cleanlab/datalab/internal/issue_manager/label.html">label</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../cleanlab/datalab/internal/issue_manager/outlier.html">outlier</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../cleanlab/datalab/internal/issue_manager/duplicate.html">duplicate</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../cleanlab/datalab/internal/issue_manager/noniid.html">noniid</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../cleanlab/datalab/internal/issue_manager/imbalance.html">imbalance</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../cleanlab/datalab/internal/issue_manager/underperforming_group.html">underperforming_group</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../cleanlab/datalab/internal/issue_manager/null.html">null</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../cleanlab/datalab/internal/issue_manager/data_valuation.html">data_valuation</a></li>
+<li class="toctree-l4 has-children"><a class="reference internal" href="../../../cleanlab/datalab/internal/issue_manager/regression/index.html">regression</a><input class="toctree-checkbox" id="toctree-checkbox-8" name="toctree-checkbox-8" role="switch" type="checkbox"/><label for="toctree-checkbox-8"><div class="visually-hidden">Toggle navigation of regression</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l5"><a class="reference internal" href="../../../cleanlab/datalab/internal/issue_manager/regression/label.html">label</a></li>
+</ul>
+</li>
+<li class="toctree-l4 has-children"><a class="reference internal" href="../../../cleanlab/datalab/internal/issue_manager/multilabel/index.html">multilabel</a><input class="toctree-checkbox" id="toctree-checkbox-9" name="toctree-checkbox-9" role="switch" type="checkbox"/><label for="toctree-checkbox-9"><div class="visually-hidden">Toggle navigation of multilabel</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l5"><a class="reference internal" href="../../../cleanlab/datalab/internal/issue_manager/multilabel/label.html">label</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../cleanlab/datalab/internal/report.html">report</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../cleanlab/datalab/internal/task.html">task</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../cleanlab/classification.html">classification</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../cleanlab/filter.html">filter</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../cleanlab/rank.html">rank</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../cleanlab/count.html">count</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../cleanlab/dataset.html">dataset</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../cleanlab/outlier.html">outlier</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../cleanlab/multiannotator.html">multiannotator</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../cleanlab/data_valuation.html">data_valuation</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../cleanlab/multilabel_classification/index.html">multilabel_classification</a><input class="toctree-checkbox" id="toctree-checkbox-10" name="toctree-checkbox-10" role="switch" type="checkbox"/><label for="toctree-checkbox-10"><div class="visually-hidden">Toggle navigation of multilabel_classification</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../cleanlab/multilabel_classification/filter.html">filter</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../cleanlab/multilabel_classification/rank.html">rank</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../cleanlab/multilabel_classification/dataset.html">dataset</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../cleanlab/regression/index.html">regression</a><input class="toctree-checkbox" id="toctree-checkbox-11" name="toctree-checkbox-11" role="switch" type="checkbox"/><label for="toctree-checkbox-11"><div class="visually-hidden">Toggle navigation of regression</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../cleanlab/regression/rank.html">regression.rank</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../cleanlab/regression/learn.html">regression.learn</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../cleanlab/token_classification/index.html">token_classification</a><input class="toctree-checkbox" id="toctree-checkbox-12" name="toctree-checkbox-12" role="switch" type="checkbox"/><label for="toctree-checkbox-12"><div class="visually-hidden">Toggle navigation of token_classification</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../cleanlab/token_classification/filter.html">filter</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../cleanlab/token_classification/rank.html">rank</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../cleanlab/token_classification/summary.html">summary</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../cleanlab/segmentation/index.html">segmentation</a><input class="toctree-checkbox" id="toctree-checkbox-13" name="toctree-checkbox-13" role="switch" type="checkbox"/><label for="toctree-checkbox-13"><div class="visually-hidden">Toggle navigation of segmentation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../cleanlab/segmentation/rank.html">rank</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../cleanlab/segmentation/filter.html">filter</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../cleanlab/segmentation/summary.html">summary</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../cleanlab/object_detection/index.html">object_detection</a><input class="toctree-checkbox" id="toctree-checkbox-14" name="toctree-checkbox-14" role="switch" type="checkbox"/><label for="toctree-checkbox-14"><div class="visually-hidden">Toggle navigation of object_detection</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../cleanlab/object_detection/rank.html">rank</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../cleanlab/object_detection/filter.html">filter</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../cleanlab/object_detection/summary.html">summary</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../cleanlab/benchmarking/index.html">benchmarking</a><input class="toctree-checkbox" id="toctree-checkbox-15" name="toctree-checkbox-15" role="switch" type="checkbox"/><label for="toctree-checkbox-15"><div class="visually-hidden">Toggle navigation of benchmarking</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../cleanlab/benchmarking/noise_generation.html">noise_generation</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../cleanlab/models/index.html">models</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../cleanlab/experimental/index.html">experimental</a><input class="toctree-checkbox" id="toctree-checkbox-16" name="toctree-checkbox-16" role="switch" type="checkbox"/><label for="toctree-checkbox-16"><div class="visually-hidden">Toggle navigation of experimental</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../cleanlab/experimental/label_issues_batched.html">label_issues_batched</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../cleanlab/experimental/span_classification.html">span_classification</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../cleanlab/experimental/mnist_pytorch.html">mnist_pytorch</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../cleanlab/experimental/coteaching.html">coteaching</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../cleanlab/experimental/cifar_cnn.html">cifar_cnn</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../cleanlab/internal/index.html">internal</a><input class="toctree-checkbox" id="toctree-checkbox-17" name="toctree-checkbox-17" role="switch" type="checkbox"/><label for="toctree-checkbox-17"><div class="visually-hidden">Toggle navigation of internal</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../cleanlab/internal/util.html">util</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../cleanlab/internal/latent_algebra.html">latent_algebra</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../cleanlab/internal/label_quality_utils.html">label_quality_utils</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../cleanlab/internal/multilabel_utils.html">multilabel_utils</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../cleanlab/internal/multilabel_scorer.html">multilabel_scorer</a></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../cleanlab/internal/neighbor/index.html">neighbor</a><input class="toctree-checkbox" id="toctree-checkbox-18" name="toctree-checkbox-18" role="switch" type="checkbox"/><label for="toctree-checkbox-18"><div class="visually-hidden">Toggle navigation of neighbor</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../cleanlab/internal/neighbor/knn_graph.html">knn_graph</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../cleanlab/internal/neighbor/metric.html">metric</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../cleanlab/internal/neighbor/search.html">search</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../cleanlab/internal/outlier.html">outlier</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../cleanlab/internal/token_classification_utils.html">token_classification_utils</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../cleanlab/internal/validation.html">validation</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Guides</span></p>
+<ul>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../cleanlab/datalab/guide/index.html">Datalab issue types</a><input class="toctree-checkbox" id="toctree-checkbox-19" name="toctree-checkbox-19" role="switch" type="checkbox"/><label for="toctree-checkbox-19"><div class="visually-hidden">Toggle navigation of Datalab issue types</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../cleanlab/datalab/guide/issue_type_description.html">Datalab Issue Types</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../cleanlab/datalab/guide/custom_issue_manager.html">Creating Your Own Issues Manager</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Links</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/cleanlab/cleanlab">GitHub</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://pypi.org/project/cleanlab/">PyPI</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://anaconda.org/conda-forge/cleanlab">Conda</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://cleanlab.ai/blog/">Blog</a></li>
+</ul>
+
+</div>
+
+
+<!-- Start of versioning -->
+
+<div class="sidebar-tree">
+    <p class="caption" role="heading">
+        <span class="caption-text">Versions</span>
+    </p>
+    <ul>
+        <li class="toctree-l1">
+            <a
+                id="version_number"
+                class="reference internal"
+                href="/"
+                >stable</a
+            >
+        </li>
+        <li class="toctree-l1">
+            <a
+                id="commit_hash"
+                class="reference internal"
+                href="/master/"
+                >developer</a
+            >
+        </li>
+        
+        <li class="toctree-l1">
+            <a
+                id="v2.7.1"
+                class="reference internal"
+                href="/v2.7.1/"
+                >v2.7.1</a
+            >
+        </li>
+        
+        <li class="toctree-l1">
+            <a
+                id="v2.7.0"
+                class="reference internal"
+                href="/v2.7.0/"
+                >v2.7.0</a
+            >
+        </li>
+        
+        <li class="toctree-l1">
+            <a
+                id="v2.6.6"
+                class="reference internal"
+                href="/v2.6.6/"
+                >v2.6.6</a
+            >
+        </li>
+        
+        <li class="toctree-l1">
+            <a
+                id="v2.6.5"
+                class="reference internal"
+                href="/v2.6.5/"
+                >v2.6.5</a
+            >
+        </li>
+        
+        <li class="toctree-l1">
+            <a
+                id="v2.6.4"
+                class="reference internal"
+                href="/v2.6.4/"
+                >v2.6.4</a
+            >
+        </li>
+        
+        <li class="toctree-l1">
+            <a
+                id="v2.6.3"
+                class="reference internal"
+                href="/v2.6.3/"
+                >v2.6.3</a
+            >
+        </li>
+        
+        <li class="toctree-l1">
+            <a
+                id="v2.6.2"
+                class="reference internal"
+                href="/v2.6.2/"
+                >v2.6.2</a
+            >
+        </li>
+        
+        <li class="toctree-l1">
+            <a
+                id="v2.6.1"
+                class="reference internal"
+                href="/v2.6.1/"
+                >v2.6.1</a
+            >
+        </li>
+        
+        <li class="toctree-l1">
+            <a
+                id="v2.6.0"
+                class="reference internal"
+                href="/v2.6.0/"
+                >v2.6.0</a
+            >
+        </li>
+        
+        <li class="toctree-l1">
+            <a
+                id="v2.5.0"
+                class="reference internal"
+                href="/v2.5.0/"
+                >v2.5.0</a
+            >
+        </li>
+        
+        <li class="toctree-l1">
+            <a
+                id="v2.4.0"
+                class="reference internal"
+                href="/v2.4.0/"
+                >v2.4.0</a
+            >
+        </li>
+        
+        <li class="toctree-l1">
+            <a
+                id="v2.3.1"
+                class="reference internal"
+                href="/v2.3.1/"
+                >v2.3.1</a
+            >
+        </li>
+        
+        <li class="toctree-l1">
+            <a
+                id="v2.3.0"
+                class="reference internal"
+                href="/v2.3.0/"
+                >v2.3.0</a
+            >
+        </li>
+        
+        <li class="toctree-l1">
+            <a
+                id="v2.2.0"
+                class="reference internal"
+                href="/v2.2.0/"
+                >v2.2.0</a
+            >
+        </li>
+        
+        <li class="toctree-l1">
+            <a
+                id="v2.1.0"
+                class="reference internal"
+                href="/v2.1.0/"
+                >v2.1.0</a
+            >
+        </li>
+        
+        <li class="toctree-l1">
+            <a
+                id="v2.0.0"
+                class="reference internal"
+                href="/v2.0.0/"
+                >v2.0.0</a
+            >
+        </li>
+        
+        <li class="toctree-l1">
+            <a
+                id="v1.0.1"
+                class="reference internal"
+                href="/v1.0.1/"
+                >v1.0.1</a
+            >
+        </li>
+        
+    </ul>
+</div>
+
+<br>
+<br>
+
+<script
+    type="text/javascript"
+    src="/versioning.js"
+></script>
+
+<script type="text/javascript">
+    window.addEventListener("load", () => {
+        const version_number = Version.version_number;
+        const commit_hash = Version.commit_hash;
+
+        document.getElementById("version_number").innerHTML =
+            "stable <code class='docutils literal notranslate'><span class='pre'> (" +
+            version_number +
+            ")</span></code>";
+        document.getElementById("commit_hash").innerHTML =
+            "master <code class='docutils literal notranslate'><span class='pre'> (" +
+            commit_hash.slice(0, 7) +
+            "&hellip;)</span></code>";
+    });
+</script>
+
+<!-- End of versioning -->
+
+</div>
+      </div>
+      
+    </div>
+  </aside>
+  <div class="main">
+    <div class="content">
+      <div class="article-container">
+        <a href="#" class="back-to-top muted-link">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12z"></path>
+          </svg>
+          <span>Back to top</span>
+        </a>
+        <div class="content-icon-container">
+          <div class="theme-toggle-container theme-toggle-content">
+            <button class="theme-toggle">
+              <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+              <svg class="theme-icon-when-auto"><use href="#svg-sun-half"></use></svg>
+              <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+              <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+            </button>
+          </div>
+          <label class="toc-overlay-icon toc-content-icon no-toc" for="__toc">
+            <div class="visually-hidden">Toggle table of contents sidebar</div>
+            <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+          </label>
+        </div>
+        <article role="main">
+          
+
+<noscript>
+    <div class="admonition warning">
+        <p class="admonition-title">Warning</p>
+        <p>
+            Parts of this site uses JavaScript, but your browser does not
+            support it.
+        </p>
+    </div>
+</noscript>
+
+
+
+<!-- Start of Version Warning Banner -->
+
+<p id="doc_ver_warning"></p>
+
+<script type="text/javascript" src="/versioning.js"></script>
+<script type="text/javascript">
+    window.addEventListener("load", () => {
+        const version_number = Version.version_number;
+        const path_arr = window.location.pathname.split("/");
+
+        if (path_arr.includes("master")) {
+            document.getElementById(
+                "doc_ver_warning"
+            ).innerHTML = `<div class="admonition warning">
+            <p class="admonition-title">Warning</p>
+            <p>This version of the documentation corresponds to the master branch of <code class="docutils literal notranslate"><span class="pre">cleanlab</span></code> source code from <a href="https://github.com/cleanlab/cleanlab/">GitHub</a>. To see the documentation for the latest <code class="docutils literal notranslate"><span class="pre">pip</span></code>-installed version, click <a href="/">here</a>.</p>
+            </div>`;
+        } else if (
+            !path_arr.includes(version_number) &&
+            !path_arr.includes("stable")
+        ) {
+            document.getElementById("doc_ver_warning").innerHTML =
+                `<div class="admonition warning">
+            <p class="admonition-title">Warning</p>
+            <p>This documentation is for an old version (<code class="docutils literal notranslate"><span class="pre">v3.0.0</span></code>) of <code class="docutils literal notranslate"><span class="pre">cleanlab</span></code>. To see the documentation for the latest stable version (<code class="docutils literal notranslate"><span class="pre">` +
+                version_number +
+                `</span></code>), click <a href="/">here</a>.</p>
+            </div>`;
+        } else {
+            document.getElementById("doc_ver_warning").remove();
+        }
+    });
+</script>
+
+<!-- End of Version Warning Banner -->
+
+ <h1>Source code for cleanlab.regression.learn</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">cleanlab can be used for learning with noisy data for any dataset and regression model.</span>
+
+<span class="sd">For regression tasks, the :py:class:`regression.learn.CleanLearning &lt;cleanlab.regression.learn.CleanLearning&gt;`</span>
+<span class="sd">class wraps any instance of an sklearn model to allow you to train more robust regression models,</span>
+<span class="sd">or use the model to identify corrupted values in the dataset.</span>
+<span class="sd">The wrapped model must adhere to the `sklearn estimator API</span>
+<span class="sd">&lt;https://scikit-learn.org/stable/developers/develop.html#rolling-your-own-estimator&gt;`_,</span>
+<span class="sd">meaning it must define three functions:</span>
+
+<span class="sd">* ``model.fit(X, y, sample_weight=None)``</span>
+<span class="sd">* ``model.predict(X)``</span>
+<span class="sd">* ``model.score(X, y, sample_weight=None)``</span>
+
+<span class="sd">where ``X`` contains the data (i.e. features, covariates, independant variables) and ``y`` contains the target</span>
+<span class="sd">value (i.e. label, response/dependant variable). The first index of ``X`` and of ``y`` should correspond to the different</span>
+<span class="sd">examples in the dataset, such that ``len(X) = len(y) = N`` (sample-size).</span>
+
+<span class="sd">Your model should be correctly clonable via</span>
+<span class="sd">`sklearn.base.clone &lt;https://scikit-learn.org/stable/modules/generated/sklearn.base.clone.html&gt;`_:</span>
+<span class="sd">cleanlab internally creates multiple instances of the model, and if you e.g. manually wrap a</span>
+<span class="sd">PyTorch model, ensure that every call to the estimator&#39;s ``__init__()`` creates an independent</span>
+<span class="sd">instance of the model (for sklearn compatibility, the weights of neural network models should typically</span>
+<span class="sd">be initialized inside of ``clf.fit()``).</span>
+
+<span class="sd">Example</span>
+<span class="sd">-------</span>
+<span class="sd">&gt;&gt;&gt; from cleanlab.regression.learn import CleanLearning</span>
+<span class="sd">&gt;&gt;&gt; from sklearn.linear_model import LinearRegression</span>
+<span class="sd">&gt;&gt;&gt; cl = CleanLearning(clf=LinearRegression()) # Pass in any model.</span>
+<span class="sd">&gt;&gt;&gt; cl.fit(X, y_with_noise)</span>
+<span class="sd">&gt;&gt;&gt; # Estimate the predictions as if you had trained without label issues.</span>
+<span class="sd">&gt;&gt;&gt; predictions = cl.predict(y)</span>
+
+<span class="sd">If your model is not sklearn-compatible by default, it might be the case that standard packages can adapt</span>
+<span class="sd">the model. For example, you can adapt PyTorch models using `skorch &lt;https://skorch.readthedocs.io/&gt;`_</span>
+<span class="sd">and adapt Keras models using `SciKeras &lt;https://www.adriangb.com/scikeras/&gt;`_.</span>
+
+<span class="sd">If an adapter doesn&#39;t already exist, you can manually wrap your</span>
+<span class="sd">model to be sklearn-compatible. This is made easy by inheriting from</span>
+<span class="sd">`sklearn.base.BaseEstimator</span>
+<span class="sd">&lt;https://scikit-learn.org/stable/modules/generated/sklearn.base.BaseEstimator.html&gt;`_:</span>
+
+<span class="sd">.. code:: python</span>
+
+<span class="sd">    from sklearn.base import BaseEstimator</span>
+
+<span class="sd">    class YourModel(BaseEstimator):</span>
+<span class="sd">        def __init__(self, ):</span>
+<span class="sd">            pass</span>
+<span class="sd">        def fit(self, X, y):</span>
+<span class="sd">            pass</span>
+<span class="sd">        def predict(self, X):</span>
+<span class="sd">            pass</span>
+<span class="sd">        def score(self, X, y):</span>
+<span class="sd">            pass</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Union</span><span class="p">,</span> <span class="n">Tuple</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">inspect</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">warnings</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">math</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">sklearn.base</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.base</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseEstimator</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.model_selection</span><span class="w"> </span><span class="kn">import</span> <span class="n">KFold</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.linear_model</span><span class="w"> </span><span class="kn">import</span> <span class="n">LinearRegression</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.metrics</span><span class="w"> </span><span class="kn">import</span> <span class="n">r2_score</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">cleanlab.typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">LabelLike</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">cleanlab.internal.constants</span><span class="w"> </span><span class="kn">import</span> <span class="n">TINY_VALUE</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">cleanlab.internal.util</span><span class="w"> </span><span class="kn">import</span> <span class="n">train_val_split</span><span class="p">,</span> <span class="n">subset_X_y</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">cleanlab.internal.regression_utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">assert_valid_regression_inputs</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">cleanlab.internal.validation</span><span class="w"> </span><span class="kn">import</span> <span class="n">labels_to_array</span>
+
+
+<div class="viewcode-block" id="CleanLearning"><a class="viewcode-back" href="../../../cleanlab/regression/learn.html#cleanlab.regression.learn.CleanLearning">[docs]</a><span class="k">class</span><span class="w"> </span><span class="nc">CleanLearning</span><span class="p">(</span><span class="n">BaseEstimator</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    CleanLearning = Machine Learning with cleaned data (even when training on messy, error-ridden data).</span>
+
+<span class="sd">    Automated and robust learning with noisy labels using any dataset and any regression model.</span>
+<span class="sd">    For regression tasks, this class trains a ``model`` with error-prone, noisy labels</span>
+<span class="sd">    as if the model had been instead trained on a dataset with perfect labels.</span>
+<span class="sd">    It achieves this by estimating which labels are noisy (you might solely use CleanLearning for this estimation)</span>
+<span class="sd">    and then removing examples estimated to have noisy labels, such that a more robust copy of the same model can be</span>
+<span class="sd">    trained on the remaining clean data.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    model :</span>
+<span class="sd">        Any regression model implementing the `sklearn estimator API &lt;https://scikit-learn.org/stable/developers/develop.html#rolling-your-own-estimator&gt;`_,</span>
+<span class="sd">        defining the following functions:</span>
+
+<span class="sd">        - ``model.fit(X, y)``</span>
+<span class="sd">        - ``model.predict(X)``</span>
+<span class="sd">        - ``model.score(X, y)``</span>
+
+<span class="sd">        Default model used is `sklearn.linear_model.LinearRegression</span>
+<span class="sd">        &lt;https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.LinearRegression.html&gt;`_.</span>
+
+<span class="sd">    cv_n_folds :</span>
+<span class="sd">        This class needs holdout predictions for every data example and if not provided,</span>
+<span class="sd">        uses cross-validation to compute them. This argument sets the number of cross-validation</span>
+<span class="sd">        folds used to compute out-of-sample predictions for each example in ``X``. Default is 5.</span>
+<span class="sd">        Larger values may produce better results, but requires longer to run.</span>
+
+<span class="sd">    n_boot :</span>
+<span class="sd">        Number of bootstrap resampling rounds used to estimate the model&#39;s epistemic uncertainty.</span>
+<span class="sd">        Default is 5. Larger values are expected to produce better results but require longer runtimes.</span>
+<span class="sd">        Set as 0 to skip estimating the epistemic uncertainty and get results faster.</span>
+
+<span class="sd">    include_aleatoric_uncertainty :</span>
+<span class="sd">        Specifies if the aleatoric uncertainty should be estimated during label error detection.</span>
+<span class="sd">        ``True`` by default, which is expected to produce better results but require longer runtimes.</span>
+
+<span class="sd">    verbose :</span>
+<span class="sd">        Controls how much output is printed. Set to ``False`` to suppress print statements. Default `False`.</span>
+
+<span class="sd">    seed :</span>
+<span class="sd">        Set the default state of the random number generator used to split</span>
+<span class="sd">        the data. By default, uses ``np.random`` current random state.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">model</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">BaseEstimator</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="o">*</span><span class="p">,</span>
+        <span class="n">cv_n_folds</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">5</span><span class="p">,</span>
+        <span class="n">n_boot</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">5</span><span class="p">,</span>
+        <span class="n">include_aleatoric_uncertainty</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="n">verbose</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="n">seed</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="k">if</span> <span class="n">model</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="c1"># Use linear regression if no model is provided.</span>
+            <span class="n">model</span> <span class="o">=</span> <span class="n">LinearRegression</span><span class="p">()</span>
+
+        <span class="c1"># Make sure the given regression model has the appropriate methods defined.</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="s2">&quot;fit&quot;</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;The model must define a .fit() method.&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="s2">&quot;predict&quot;</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;The model must define a .predict() method.&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">seed</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="n">seed</span><span class="o">=</span><span class="n">seed</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">n_boot</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;n_boot cannot be a negative value&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">cv_n_folds</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;cv_n_folds must be at least 2&quot;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">:</span> <span class="n">BaseEstimator</span> <span class="o">=</span> <span class="n">model</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">seed</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="n">seed</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cv_n_folds</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">cv_n_folds</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">n_boot</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">n_boot</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">include_aleatoric_uncertainty</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="n">include_aleatoric_uncertainty</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">verbose</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="n">verbose</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">label_issues_df</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">label_issues_mask</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">k</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># frac flagged as issue</span>
+
+<div class="viewcode-block" id="CleanLearning.fit"><a class="viewcode-back" href="../../../cleanlab/regression/learn.html#cleanlab.regression.learn.CleanLearning.fit">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">fit</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">X</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">],</span>
+        <span class="n">y</span><span class="p">:</span> <span class="n">LabelLike</span><span class="p">,</span>
+        <span class="o">*</span><span class="p">,</span>
+        <span class="n">label_issues</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">sample_weight</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">find_label_issues_kwargs</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">dict</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">model_kwargs</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">dict</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">model_final_kwargs</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">dict</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">BaseEstimator</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Train regression ``model`` with error-prone, noisy labels as if the model had been instead trained</span>
+<span class="sd">        on a dataset with the correct labels. ``fit`` achieves this by first training ``model`` via</span>
+<span class="sd">        cross-validation on the noisy data, using the resulting predicted probabilities to identify label issues,</span>
+<span class="sd">        pruning the data with label issues, and finally training ``model`` on the remaining clean data.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        X :</span>
+<span class="sd">            Data features (i.e. covariates, independent variables), typically an array of shape ``(N, ...)``,</span>
+<span class="sd">            where N is the number of examples (sample-size).</span>
+<span class="sd">            Your ``model`` must be able to ``fit()`` and ``predict()`` data of this format.</span>
+
+<span class="sd">        y :</span>
+<span class="sd">            An array of shape ``(N,)`` of noisy labels (i.e. target/response/dependant variable), where some values may be erroneous.</span>
+
+<span class="sd">        label_issues :</span>
+<span class="sd">            Optional already-identified label issues in the dataset (if previously estimated).</span>
+<span class="sd">            Specify this to avoid re-estimating the label issues if already done.</span>
+<span class="sd">            If ``pd.DataFrame``, must be formatted as the one returned by:</span>
+<span class="sd">            :py:meth:`self.find_label_issues &lt;cleanlab.regression.learn.CleanLearning.find_label_issues&gt;` or</span>
+<span class="sd">            :py:meth:`self.get_label_issues &lt;cleanlab.regression.learn.CleanLearning.get_label_issues&gt;`. The DataFrame must</span>
+<span class="sd">            have a column named ``is_label_issue``.</span>
+
+<span class="sd">            If ``np.ndarray``, the input must be a boolean mask of length ``N`` where examples that have label issues</span>
+<span class="sd">            have the value ``True``, and the rest of the examples have the value ``False``.</span>
+
+<span class="sd">        sample_weight :</span>
+<span class="sd">            Optional array of weights with shape ``(N,)`` that are assigned to individual samples. Specifies how to weight the examples in</span>
+<span class="sd">            the loss function while training.</span>
+
+<span class="sd">        find_label_issues_kwargs:</span>
+<span class="sd">            Optional keyword arguments to pass into :py:meth:`self.find_label_issues &lt;cleanlab.regression.learn.CleanLearning.find_label_issues&gt;`.</span>
+
+<span class="sd">        model_kwargs :</span>
+<span class="sd">            Optional keyword arguments to pass into model&#39;s ``fit()`` method.</span>
+
+<span class="sd">        model_final_kwargs :</span>
+<span class="sd">            Optional extra keyword arguments to pass into the final model&#39;s ``fit()`` on the cleaned data,</span>
+<span class="sd">            but not the ``fit()`` in each fold of cross-validation on the noisy data.</span>
+<span class="sd">            The final ``fit()`` will also receive the arguments in `clf_kwargs`, but these may be overwritten</span>
+<span class="sd">            by values in `clf_final_kwargs`. This can be useful for training differently in the final ``fit()``</span>
+<span class="sd">            than during cross-validation.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        self : CleanLearning</span>
+<span class="sd">            Fitted estimator that has all the same methods as any sklearn estimator.</span>
+
+<span class="sd">            After calling ``self.fit()``, this estimator also stores extra attributes such as:</span>
+
+<span class="sd">            - ``self.label_issues_df``: a ``pd.DataFrame`` containing label quality scores, boolean flags</span>
+<span class="sd">                indicating which examples have label issues, and predicted label values for each example.</span>
+<span class="sd">                Accessible via :py:meth:`self.get_label_issues &lt;cleanlab.regression.learn.CleanLearning.get_label_issues&gt;`,</span>
+<span class="sd">                of similar format as the one returned by :py:meth:`self.find_label_issues &lt;cleanlab.regression.learn.CleanLearning.find_label_issues&gt;`.</span>
+<span class="sd">                See documentation of :py:meth:`self.find_label_issues &lt;cleanlab.regression.learn.CleanLearning.find_label_issues&gt;`</span>
+<span class="sd">                for column descriptions.</span>
+<span class="sd">            - ``self.label_issues_mask``: a ``np.ndarray`` boolean mask indicating if a particular</span>
+<span class="sd">                example has been identified to have issues.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">assert_valid_regression_inputs</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">find_label_issues_kwargs</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">find_label_issues_kwargs</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">if</span> <span class="n">model_kwargs</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">model_kwargs</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">if</span> <span class="n">model_final_kwargs</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">model_final_kwargs</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">model_final_kwargs</span> <span class="o">=</span> <span class="p">{</span><span class="o">**</span><span class="n">model_kwargs</span><span class="p">,</span> <span class="o">**</span><span class="n">model_final_kwargs</span><span class="p">}</span>
+
+        <span class="k">if</span> <span class="s2">&quot;sample_weight&quot;</span> <span class="ow">in</span> <span class="n">model_kwargs</span> <span class="ow">or</span> <span class="s2">&quot;sample_weight&quot;</span> <span class="ow">in</span> <span class="n">model_final_kwargs</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="s2">&quot;sample_weight should be provided directly in fit() rather than in model_kwargs or model_final_kwargs&quot;</span>
+            <span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">sample_weight</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">if</span> <span class="s2">&quot;sample_weight&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">inspect</span><span class="o">.</span><span class="n">signature</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">)</span><span class="o">.</span><span class="n">parameters</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                    <span class="s2">&quot;sample_weight must be a supported fit() argument for your model in order to be specified here&quot;</span>
+                <span class="p">)</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">sample_weight</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="n">X</span><span class="p">):</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;sample_weight must be a 1D array that has the same length as y.&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">label_issues</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">label_issues_df</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">verbose</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span>
+                    <span class="s2">&quot;If you already ran self.find_label_issues() and don&#39;t want to recompute, you &quot;</span>
+                    <span class="s2">&quot;should pass the label_issues in as a parameter to this function next time.&quot;</span>
+                <span class="p">)</span>
+
+            <span class="n">label_issues</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">find_label_issues</span><span class="p">(</span>
+                <span class="n">X</span><span class="p">,</span>
+                <span class="n">y</span><span class="p">,</span>
+                <span class="n">model_kwargs</span><span class="o">=</span><span class="n">model_kwargs</span><span class="p">,</span>
+                <span class="o">**</span><span class="n">find_label_issues_kwargs</span><span class="p">,</span>
+            <span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">verbose</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Using provided label_issues instead of finding label issues.&quot;</span><span class="p">)</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">label_issues_df</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="nb">print</span><span class="p">(</span>
+                        <span class="s2">&quot;These will overwrite self.label_issues_df and will be returned by &quot;</span>
+                        <span class="s2">&quot;`self.get_label_issues()`. &quot;</span>
+                    <span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">label_issues_df</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_process_label_issues_arg</span><span class="p">(</span><span class="n">label_issues</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">label_issues_mask</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">label_issues_df</span><span class="p">[</span><span class="s2">&quot;is_label_issue&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()</span>
+
+        <span class="n">X_mask</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">invert</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">label_issues_mask</span><span class="p">)</span>
+        <span class="n">X_cleaned</span><span class="p">,</span> <span class="n">y_cleaned</span> <span class="o">=</span> <span class="n">subset_X_y</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">X_mask</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">verbose</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Pruning </span><span class="si">{</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">label_issues_mask</span><span class="p">)</span><span class="si">}</span><span class="s2"> examples with label issues ...&quot;</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Remaining clean data has </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">y_cleaned</span><span class="p">)</span><span class="si">}</span><span class="s2"> examples.&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">sample_weight</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">model_final_kwargs</span><span class="p">[</span><span class="s2">&quot;sample_weight&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">sample_weight</span><span class="p">[</span><span class="n">X_mask</span><span class="p">]</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">verbose</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Fitting final model on the clean data with custom sample_weight ...&quot;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">verbose</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Fitting final model on the clean data ...&quot;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_cleaned</span><span class="p">,</span> <span class="n">y_cleaned</span><span class="p">,</span> <span class="o">**</span><span class="n">model_final_kwargs</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">verbose</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span>
+                <span class="s2">&quot;Label issues stored in label_issues_df DataFrame accessible via: self.get_label_issues(). &quot;</span>
+                <span class="s2">&quot;Call self.save_space() to delete this potentially large DataFrame attribute.&quot;</span>
+            <span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span></div>
+
+<div class="viewcode-block" id="CleanLearning.predict"><a class="viewcode-back" href="../../../cleanlab/regression/learn.html#cleanlab.regression.learn.CleanLearning.predict">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">predict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Predict class labels using your wrapped model.</span>
+<span class="sd">        Works just like ``model.predict()``.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        X : np.ndarray or DatasetLike</span>
+<span class="sd">            Test data in the same format expected by your wrapped regression model.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        predictions : np.ndarray</span>
+<span class="sd">            Predictions for the test examples.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="CleanLearning.score"><a class="viewcode-back" href="../../../cleanlab/regression/learn.html#cleanlab.regression.learn.CleanLearning.score">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">score</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">X</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">],</span>
+        <span class="n">y</span><span class="p">:</span> <span class="n">LabelLike</span><span class="p">,</span>
+        <span class="n">sample_weight</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Evaluates your wrapped regression model&#39;s score on a test set `X` with target values `y`.</span>
+<span class="sd">        Uses your model&#39;s default scoring function, or r-squared score if your model as no ``&quot;score&quot;`` attribute.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        X :</span>
+<span class="sd">            Test data in the same format expected by your wrapped model.</span>
+
+<span class="sd">        y :</span>
+<span class="sd">            Test labels in the same format as labels previously used in ``fit()``.</span>
+
+<span class="sd">        sample_weight :</span>
+<span class="sd">            Optional array of shape ``(N,)`` or ``(N, 1)`` used to weight each test example when computing the score.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        score : float</span>
+<span class="sd">            Number quantifying the performance of this regression model on the test data.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">,</span> <span class="s2">&quot;score&quot;</span><span class="p">):</span>
+            <span class="k">if</span> <span class="s2">&quot;sample_weight&quot;</span> <span class="ow">in</span> <span class="n">inspect</span><span class="o">.</span><span class="n">signature</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">score</span><span class="p">)</span><span class="o">.</span><span class="n">parameters</span><span class="p">:</span>
+                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">score</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">sample_weight</span><span class="o">=</span><span class="n">sample_weight</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">score</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">r2_score</span><span class="p">(</span>
+                <span class="n">y</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X</span><span class="p">),</span>
+                <span class="n">sample_weight</span><span class="o">=</span><span class="n">sample_weight</span><span class="p">,</span>
+            <span class="p">)</span></div>
+
+<div class="viewcode-block" id="CleanLearning.find_label_issues"><a class="viewcode-back" href="../../../cleanlab/regression/learn.html#cleanlab.regression.learn.CleanLearning.find_label_issues">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">find_label_issues</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">X</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">],</span>
+        <span class="n">y</span><span class="p">:</span> <span class="n">LabelLike</span><span class="p">,</span>
+        <span class="o">*</span><span class="p">,</span>
+        <span class="n">uncertainty</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="nb">float</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">coarse_search_range</span><span class="p">:</span> <span class="nb">list</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.01</span><span class="p">,</span> <span class="mf">0.05</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.15</span><span class="p">,</span> <span class="mf">0.2</span><span class="p">],</span>
+        <span class="n">fine_search_size</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">3</span><span class="p">,</span>
+        <span class="n">save_space</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="n">model_kwargs</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">dict</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Identifies potential label issues (corrupted `y`-values) in the dataset, and estimates how noisy each label is.</span>
+
+<span class="sd">        Note: this method estimates the label issues from scratch. To access previously-estimated label issues from</span>
+<span class="sd">        this :py:class:`CleanLearning &lt;cleanlab.regression.learn.CleanLearning&gt;` instance, use the</span>
+<span class="sd">        :py:meth:`self.get_label_issues &lt;cleanlab.regression.learn.CleanLearning.get_label_issues&gt;` method.</span>
+
+<span class="sd">        This is the method called to find label issues inside</span>
+<span class="sd">        :py:meth:`CleanLearning.fit() &lt;cleanlab.regression.learn.CleanLearning.fit&gt;`</span>
+<span class="sd">        and they share mostly the same parameters.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        X :</span>
+<span class="sd">            Data features (i.e. covariates, independent variables), typically an array of shape ``(N, ...)``,</span>
+<span class="sd">            where N is the number of examples (sample-size).</span>
+<span class="sd">            Your ``model``, must be able to ``fit()`` and ``predict()`` data of this format.</span>
+
+<span class="sd">        y :</span>
+<span class="sd">            An array of shape ``(N,)`` of noisy labels (i.e. target/response/dependant variable), where some values may be erroneous.</span>
+
+<span class="sd">        uncertainty :</span>
+<span class="sd">            Optional estimated uncertainty for each example. Should be passed in as a float (constant uncertainty throughout all examples),</span>
+<span class="sd">            or a numpy array of length ``N`` (estimated uncertainty for each example).</span>
+<span class="sd">            If not provided, this method will estimate the uncertainty as the sum of the epistemic and aleatoric uncertainty.</span>
+
+<span class="sd">        save_space :</span>
+<span class="sd">            If True, then returned ``label_issues_df`` will not be stored as attribute.</span>
+<span class="sd">            This means some other methods like :py:meth:`self.get_label_issues &lt;cleanlab.regression.learn.CleanLearning.get_label_issues&gt;` will no longer work.</span>
+
+<span class="sd">        coarse_search_range :</span>
+<span class="sd">            The coarse search range to find the value of ``k``, which estimates the fraction of data which have label issues.</span>
+<span class="sd">            More values represent a more thorough search (better expected results but longer runtimes).</span>
+
+<span class="sd">        fine_search_size :</span>
+<span class="sd">            Size of fine-grained search grid to find the value of ``k``, which represents our estimate of the fraction of data which have label issues.</span>
+<span class="sd">            A higher number represents a more thorough search (better expected results but longer runtimes).</span>
+
+
+<span class="sd">        For info about the **other parameters**, see the docstring of :py:meth:`CleanLearning.fit()</span>
+<span class="sd">        &lt;cleanlab.regression.learn.CleanLearning.fit&gt;`.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        label_issues_df : pd.DataFrame</span>
+<span class="sd">            DataFrame with info about label issues for each example.</span>
+<span class="sd">            Unless `save_space` argument is specified, same DataFrame is also stored as `self.label_issues_df` attribute accessible via</span>
+<span class="sd">            :py:meth:`get_label_issues&lt;cleanlab.regression.learn.CleanLearning.get_label_issues&gt;`.</span>
+
+<span class="sd">            Each row represents an example from our dataset and the DataFrame may contain the following columns:</span>
+
+<span class="sd">            - *is_label_issue*: boolean mask for the entire dataset where ``True`` represents a label issue and ``False`` represents an example</span>
+<span class="sd">              that is accurately labeled with high confidence.</span>
+<span class="sd">            - *label_quality*: Numeric score that measures the quality of each label (how likely it is to be correct,</span>
+<span class="sd">              with lower scores indicating potentially erroneous labels).</span>
+<span class="sd">            - *given_label*: Values originally given for this example (same as `y` input).</span>
+<span class="sd">            - *predicted_label*: Values predicted by the trained model.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">X</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">assert_valid_regression_inputs</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">model_kwargs</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">model_kwargs</span> <span class="o">=</span> <span class="p">{}</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">verbose</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Identifying label issues ...&quot;</span><span class="p">)</span>
+
+        <span class="c1"># compute initial values to find best k</span>
+        <span class="n">initial_predictions</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_cv_predictions</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">model_kwargs</span><span class="o">=</span><span class="n">model_kwargs</span><span class="p">)</span>
+        <span class="n">initial_residual</span> <span class="o">=</span> <span class="n">initial_predictions</span> <span class="o">-</span> <span class="n">y</span>
+        <span class="n">initial_sorted_index</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argsort</span><span class="p">(</span><span class="nb">abs</span><span class="p">(</span><span class="n">initial_residual</span><span class="p">))</span>
+        <span class="n">initial_r2</span> <span class="o">=</span> <span class="n">r2_score</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">initial_predictions</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">k</span><span class="p">,</span> <span class="n">r2</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_find_best_k</span><span class="p">(</span>
+            <span class="n">X</span><span class="o">=</span><span class="n">X</span><span class="p">,</span>
+            <span class="n">y</span><span class="o">=</span><span class="n">y</span><span class="p">,</span>
+            <span class="n">sorted_index</span><span class="o">=</span><span class="n">initial_sorted_index</span><span class="p">,</span>
+            <span class="n">coarse_search_range</span><span class="o">=</span><span class="n">coarse_search_range</span><span class="p">,</span>
+            <span class="n">fine_search_size</span><span class="o">=</span><span class="n">fine_search_size</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="c1"># check if initial r2 score (ie. not removing anything) is the best</span>
+        <span class="k">if</span> <span class="n">initial_r2</span> <span class="o">&gt;=</span> <span class="n">r2</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">k</span> <span class="o">=</span> <span class="mi">0</span>
+
+        <span class="c1"># get predictions using the best k</span>
+        <span class="n">predictions</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_cv_predictions</span><span class="p">(</span>
+            <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">sorted_index</span><span class="o">=</span><span class="n">initial_sorted_index</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">k</span><span class="p">,</span> <span class="n">model_kwargs</span><span class="o">=</span><span class="n">model_kwargs</span>
+        <span class="p">)</span>
+        <span class="n">residual</span> <span class="o">=</span> <span class="n">predictions</span> <span class="o">-</span> <span class="n">y</span>
+
+        <span class="k">if</span> <span class="n">uncertainty</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">epistemic_uncertainty</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_epistemic_uncertainty</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">predictions</span><span class="o">=</span><span class="n">predictions</span><span class="p">)</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">include_aleatoric_uncertainty</span><span class="p">:</span>
+                <span class="n">aleatoric_uncertainty</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_aleatoric_uncertainty</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">residual</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">aleatoric_uncertainty</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="n">uncertainty</span> <span class="o">=</span> <span class="n">epistemic_uncertainty</span> <span class="o">+</span> <span class="n">aleatoric_uncertainty</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">uncertainty</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">y</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="n">uncertainty</span><span class="p">):</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                    <span class="s2">&quot;If uncertainty is passed in as an array, it must have the same length as y.&quot;</span>
+                <span class="p">)</span>
+
+        <span class="n">residual_adjusted</span> <span class="o">=</span> <span class="nb">abs</span><span class="p">(</span><span class="n">residual</span> <span class="o">/</span> <span class="p">(</span><span class="n">uncertainty</span> <span class="o">+</span> <span class="n">TINY_VALUE</span><span class="p">))</span>
+
+        <span class="c1"># adjust lqs by the median (for more human-readable scores)</span>
+        <span class="n">residual_median</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span>
+            <span class="n">np</span><span class="o">.</span><span class="n">median</span><span class="p">(</span><span class="n">residual_adjusted</span><span class="p">),</span> <span class="n">TINY_VALUE</span>
+        <span class="p">)</span>  <span class="c1"># take the max to prevent median = 0</span>
+        <span class="n">label_quality_scores</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="n">residual_adjusted</span> <span class="o">/</span> <span class="n">residual_median</span><span class="p">)</span>
+
+        <span class="n">label_issues_mask</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">y</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">bool</span><span class="p">)</span>
+        <span class="n">num_issues</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">ceil</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">y</span><span class="p">)</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">k</span><span class="p">)</span>
+        <span class="n">issues_index</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argsort</span><span class="p">(</span><span class="n">label_quality_scores</span><span class="p">)[:</span><span class="n">num_issues</span><span class="p">]</span>
+        <span class="n">label_issues_mask</span><span class="p">[</span><span class="n">issues_index</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
+
+        <span class="c1"># convert predictions to int if input is int</span>
+        <span class="k">if</span> <span class="n">y</span><span class="o">.</span><span class="n">dtype</span> <span class="o">==</span> <span class="nb">int</span><span class="p">:</span>
+            <span class="n">predictions</span> <span class="o">=</span> <span class="n">predictions</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
+
+        <span class="n">label_issues_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
+            <span class="p">{</span>
+                <span class="s2">&quot;is_label_issue&quot;</span><span class="p">:</span> <span class="n">label_issues_mask</span><span class="p">,</span>
+                <span class="s2">&quot;label_quality&quot;</span><span class="p">:</span> <span class="n">label_quality_scores</span><span class="p">,</span>
+                <span class="s2">&quot;given_label&quot;</span><span class="p">:</span> <span class="n">y</span><span class="p">,</span>
+                <span class="s2">&quot;predicted_label&quot;</span><span class="p">:</span> <span class="n">predictions</span><span class="p">,</span>
+            <span class="p">}</span>
+        <span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">verbose</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Identified </span><span class="si">{</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">label_issues_mask</span><span class="p">)</span><span class="si">}</span><span class="s2"> examples with label issues.&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">save_space</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">label_issues_df</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">verbose</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span>
+                    <span class="s2">&quot;Overwriting previously identified label issues stored at self.label_issues_df. &quot;</span>
+                    <span class="s2">&quot;self.get_label_issues() will now return the newly identified label issues. &quot;</span>
+                <span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">label_issues_df</span> <span class="o">=</span> <span class="n">label_issues_df</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">label_issues_mask</span> <span class="o">=</span> <span class="n">label_issues_df</span><span class="p">[</span><span class="s2">&quot;is_label_issue&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">verbose</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Not storing label_issues as attributes since save_space was specified.&quot;</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">label_issues_df</span></div>
+
+<div class="viewcode-block" id="CleanLearning.get_label_issues"><a class="viewcode-back" href="../../../cleanlab/regression/learn.html#cleanlab.regression.learn.CleanLearning.get_label_issues">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">get_label_issues</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Accessor, returns `label_issues_df` attribute if previously computed.</span>
+<span class="sd">        This ``pd.DataFrame`` describes the issues identified for each example (each row corresponds to an example).</span>
+<span class="sd">        For column definitions, see the documentation of</span>
+<span class="sd">        :py:meth:`CleanLearning.find_label_issues&lt;cleanlab.regression.learn.CleanLearning.find_label_issues&gt;`.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        label_issues_df : pd.DataFrame</span>
+<span class="sd">            DataFrame with (precomputed) info about the label issues for each example.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">label_issues_df</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
+                <span class="s2">&quot;Label issues have not yet been computed. Run `self.find_label_issues()` or `self.fit()` first.&quot;</span>
+            <span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">label_issues_df</span></div>
+
+<div class="viewcode-block" id="CleanLearning.get_epistemic_uncertainty"><a class="viewcode-back" href="../../../cleanlab/regression/learn.html#cleanlab.regression.learn.CleanLearning.get_epistemic_uncertainty">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">get_epistemic_uncertainty</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">X</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+        <span class="n">y</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+        <span class="n">predictions</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Compute the epistemic uncertainty of the regression model for each example. This uncertainty is estimated using the bootstrapped</span>
+<span class="sd">        variance of the model predictions.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        X :</span>
+<span class="sd">            Data features (i.e. training inputs for ML), typically an array of shape ``(N, ...)``, where N is the number of examples.</span>
+
+<span class="sd">        y :</span>
+<span class="sd">            An array of shape ``(N,)`` of target values (dependant variables), where some values may be erroneous.</span>
+
+<span class="sd">        predictions :</span>
+<span class="sd">            Model predicted values of y, will be used as an extra bootstrap iteration to calculate the variance.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        _______</span>
+<span class="sd">        epistemic_uncertainty : np.ndarray</span>
+<span class="sd">            The estimated epistemic uncertainty for each example.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">X</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">assert_valid_regression_inputs</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_boot</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>  <span class="c1"># does not estimate epistemic uncertainty</span>
+            <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">y</span><span class="p">))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">bootstrap_predictions</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">y</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_boot</span><span class="p">))</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n_boot</span><span class="p">):</span>
+                <span class="n">bootstrap_predictions</span><span class="p">[:,</span> <span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_cv_predictions</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">cv_n_folds</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+
+            <span class="c1"># add a set of predictions from model that was already trained</span>
+            <span class="k">if</span> <span class="n">predictions</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">_</span><span class="p">,</span> <span class="n">predictions</span> <span class="o">=</span> <span class="n">assert_valid_regression_inputs</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">predictions</span><span class="p">)</span>
+                <span class="n">bootstrap_predictions</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">hstack</span><span class="p">(</span>
+                    <span class="p">[</span><span class="n">bootstrap_predictions</span><span class="p">,</span> <span class="n">predictions</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)]</span>
+                <span class="p">)</span>
+
+            <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">var</span><span class="p">(</span><span class="n">bootstrap_predictions</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="CleanLearning.get_aleatoric_uncertainty"><a class="viewcode-back" href="../../../cleanlab/regression/learn.html#cleanlab.regression.learn.CleanLearning.get_aleatoric_uncertainty">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">get_aleatoric_uncertainty</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">X</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+        <span class="n">residual</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Compute the aleatoric uncertainty of the data. This uncertainty is estimated by predicting the standard deviation</span>
+<span class="sd">        of the regression error.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        X :</span>
+<span class="sd">            Data features (i.e. training inputs for ML), typically an array of shape ``(N, ...)``, where N is the number of examples.</span>
+
+<span class="sd">        residual :</span>
+<span class="sd">            The difference between the given value and the model predicted value of each examples, ie.</span>
+<span class="sd">            `predictions - y`.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        _______</span>
+<span class="sd">        aleatoric_uncertainty : float</span>
+<span class="sd">            The overall estimated aleatoric uncertainty for this dataset.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">X</span><span class="p">,</span> <span class="n">residual</span> <span class="o">=</span> <span class="n">assert_valid_regression_inputs</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">residual</span><span class="p">)</span>
+        <span class="n">residual_predictions</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_cv_predictions</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">residual</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">var</span><span class="p">(</span><span class="n">residual_predictions</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="CleanLearning.save_space"><a class="viewcode-back" href="../../../cleanlab/regression/learn.html#cleanlab.regression.learn.CleanLearning.save_space">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">save_space</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Clears non-sklearn attributes of this estimator to save space (in-place).</span>
+<span class="sd">        This includes the DataFrame attribute that stored label issues which may be large for big datasets.</span>
+<span class="sd">        You may want to call this method before deploying this model (i.e. if you just care about producing predictions).</span>
+<span class="sd">        After calling this method, certain non-prediction-related attributes/functionality will no longer be available</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">label_issues_df</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">verbose</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;self.label_issues_df is already empty&quot;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">label_issues_df</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">label_issues_mask</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">k</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">verbose</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Deleted non-sklearn attributes such as label_issues_df to save space.&quot;</span><span class="p">)</span></div>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_get_cv_predictions</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">X</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+        <span class="n">y</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+        <span class="n">sorted_index</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">k</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+        <span class="o">*</span><span class="p">,</span>
+        <span class="n">cv_n_folds</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">seed</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">model_kwargs</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">dict</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Helper method to get out-of-fold predictions using cross validation.</span>
+<span class="sd">        This method also allows us to filter out the bottom k percent of label errors before training the cross-validation models</span>
+<span class="sd">        (both ``sorted_index`` and ``k`` has to be provided for this).</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        X :</span>
+<span class="sd">            Data features (i.e. training inputs for ML), typically an array of shape ``(N, ...)``, where N is the number of examples.</span>
+
+<span class="sd">        y :</span>
+<span class="sd">            An array of shape ``(N,)`` of target values (dependant variables), where some values may be erroneous.</span>
+
+<span class="sd">        sorted_index :</span>
+<span class="sd">            Index of each example sorted by their residuals in ascending order.</span>
+
+<span class="sd">        k :</span>
+<span class="sd">            The fraction of examples to hold out from the training sets. Usually this is the fraction of examples that are</span>
+<span class="sd">            deemed to contain errors.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># set to default unless specified otherwise</span>
+        <span class="k">if</span> <span class="n">cv_n_folds</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">cv_n_folds</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cv_n_folds</span>
+
+        <span class="k">if</span> <span class="n">model_kwargs</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">model_kwargs</span> <span class="o">=</span> <span class="p">{}</span>
+
+        <span class="k">if</span> <span class="n">k</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">k</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;k must be a value between 0 and 1&quot;</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">k</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">sorted_index</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">sorted_index</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">y</span><span class="p">)))</span>
+            <span class="n">in_sample_idx</span> <span class="o">=</span> <span class="n">sorted_index</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">sorted_index</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="c1"># TODO: better error message</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                    <span class="s2">&quot;You need to pass in the index sorted by prediction quality to use with k&quot;</span>
+                <span class="p">)</span>
+            <span class="n">num_to_drop</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">ceil</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">sorted_index</span><span class="p">)</span> <span class="o">*</span> <span class="n">k</span><span class="p">)</span>
+            <span class="n">in_sample_idx</span> <span class="o">=</span> <span class="n">sorted_index</span><span class="p">[:</span><span class="o">-</span><span class="n">num_to_drop</span><span class="p">]</span>
+            <span class="n">out_of_sample_idx</span> <span class="o">=</span> <span class="n">sorted_index</span><span class="p">[</span><span class="o">-</span><span class="n">num_to_drop</span><span class="p">:]</span>
+
+            <span class="n">X_out_of_sample</span> <span class="o">=</span> <span class="n">X</span><span class="p">[</span><span class="n">out_of_sample_idx</span><span class="p">]</span>
+            <span class="n">out_of_sample_predictions</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="n">out_of_sample_idx</span><span class="p">),</span> <span class="n">cv_n_folds</span><span class="p">])</span>
+
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">in_sample_idx</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">cv_n_folds</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;There are too few examples to conduct </span><span class="si">{</span><span class="n">cv_n_folds</span><span class="si">}</span><span class="s2">-fold cross validation. &quot;</span>
+                <span class="s2">&quot;You can either reduce cv_n_folds for cross validation, or decrease k to exclude less data.&quot;</span>
+            <span class="p">)</span>
+
+        <span class="n">predictions</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">y</span><span class="p">))</span>
+
+        <span class="n">kf</span> <span class="o">=</span> <span class="n">KFold</span><span class="p">(</span><span class="n">n_splits</span><span class="o">=</span><span class="n">cv_n_folds</span><span class="p">,</span> <span class="n">shuffle</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="n">seed</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">k_split</span><span class="p">,</span> <span class="p">(</span><span class="n">cv_train_idx</span><span class="p">,</span> <span class="n">cv_holdout_idx</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">kf</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">in_sample_idx</span><span class="p">)):</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">model_copy</span> <span class="o">=</span> <span class="n">sklearn</span><span class="o">.</span><span class="n">base</span><span class="o">.</span><span class="n">clone</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">)</span>  <span class="c1"># fresh untrained copy of the model</span>
+            <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                    <span class="s2">&quot;`model` must be clonable via: sklearn.base.clone(model). &quot;</span>
+                    <span class="s2">&quot;You can either implement instance method `model.get_params()` to produce a fresh untrained copy of this model, &quot;</span>
+                    <span class="s2">&quot;or you can implement the cross-validation outside of cleanlab &quot;</span>
+                    <span class="s2">&quot;and pass in the obtained `pred_probs` to skip cleanlab&#39;s internal cross-validation&quot;</span>
+                <span class="p">)</span>
+
+            <span class="c1"># map the index to the actual index in the original dataset</span>
+            <span class="n">data_idx_train</span><span class="p">,</span> <span class="n">data_idx_holdout</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="n">in_sample_idx</span><span class="p">[</span><span class="n">cv_train_idx</span><span class="p">],</span>
+                <span class="n">in_sample_idx</span><span class="p">[</span><span class="n">cv_holdout_idx</span><span class="p">],</span>
+            <span class="p">)</span>
+
+            <span class="n">X_train_cv</span><span class="p">,</span> <span class="n">X_holdout_cv</span><span class="p">,</span> <span class="n">y_train_cv</span><span class="p">,</span> <span class="n">y_holdout_cv</span> <span class="o">=</span> <span class="n">train_val_split</span><span class="p">(</span>
+                <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">data_idx_train</span><span class="p">,</span> <span class="n">data_idx_holdout</span>
+            <span class="p">)</span>
+
+            <span class="n">model_copy</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train_cv</span><span class="p">,</span> <span class="n">y_train_cv</span><span class="p">,</span> <span class="o">**</span><span class="n">model_kwargs</span><span class="p">)</span>
+            <span class="n">predictions_cv</span> <span class="o">=</span> <span class="n">model_copy</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_holdout_cv</span><span class="p">)</span>
+
+            <span class="n">predictions</span><span class="p">[</span><span class="n">data_idx_holdout</span><span class="p">]</span> <span class="o">=</span> <span class="n">predictions_cv</span>
+
+            <span class="k">if</span> <span class="n">k</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">out_of_sample_predictions</span><span class="p">[:,</span> <span class="n">k_split</span><span class="p">]</span> <span class="o">=</span> <span class="n">model_copy</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_out_of_sample</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">k</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">out_of_sample_predictions_avg</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">out_of_sample_predictions</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+            <span class="n">predictions</span><span class="p">[</span><span class="n">out_of_sample_idx</span><span class="p">]</span> <span class="o">=</span> <span class="n">out_of_sample_predictions_avg</span>
+
+        <span class="k">return</span> <span class="n">predictions</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_find_best_k</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">X</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+        <span class="n">y</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+        <span class="n">sorted_index</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+        <span class="n">coarse_search_range</span><span class="p">:</span> <span class="nb">list</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.01</span><span class="p">,</span> <span class="mf">0.05</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.15</span><span class="p">,</span> <span class="mf">0.2</span><span class="p">],</span>
+        <span class="n">fine_search_size</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">3</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Helper method that conducts a coarse and fine grained grid search to determine the best value</span>
+<span class="sd">        of k, the fraction of the dataset that contains issues.</span>
+
+<span class="sd">        Returns a tuple containing the the best value of k (ie. the one that has the best r squared score),</span>
+<span class="sd">        and the corrsponding r squared score obtained when dropping k% of the data.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">coarse_search_range</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;coarse_search_range must have at least 1 value of k&quot;</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">coarse_search_range</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">curr_k</span> <span class="o">=</span> <span class="n">coarse_search_range</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">num_examples_kept</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">floor</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">y</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">curr_k</span><span class="p">))</span>
+            <span class="k">if</span> <span class="n">num_examples_kept</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">cv_n_folds</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">&quot;There are too few examples to conduct </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">cv_n_folds</span><span class="si">}</span><span class="s2">-fold cross validation. &quot;</span>
+                    <span class="s2">&quot;You can either reduce self.cv_n_folds for cross validation, or decrease k to exclude less data.&quot;</span>
+                <span class="p">)</span>
+            <span class="n">predictions</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_cv_predictions</span><span class="p">(</span>
+                <span class="n">X</span><span class="o">=</span><span class="n">X</span><span class="p">,</span>
+                <span class="n">y</span><span class="o">=</span><span class="n">y</span><span class="p">,</span>
+                <span class="n">sorted_index</span><span class="o">=</span><span class="n">sorted_index</span><span class="p">,</span>
+                <span class="n">k</span><span class="o">=</span><span class="n">curr_k</span><span class="p">,</span>
+            <span class="p">)</span>
+            <span class="n">best_r2</span> <span class="o">=</span> <span class="n">r2_score</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">predictions</span><span class="p">)</span>
+            <span class="n">best_k</span> <span class="o">=</span> <span class="n">coarse_search_range</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># conduct coarse search</span>
+            <span class="n">coarse_search_range</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">coarse_search_range</span><span class="p">)</span>  <span class="c1"># sort to conduct fine search well</span>
+            <span class="n">r2_coarse</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">full</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">coarse_search_range</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">coarse_search_range</span><span class="p">)):</span>
+                <span class="n">curr_k</span> <span class="o">=</span> <span class="n">coarse_search_range</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+                <span class="n">num_examples_kept</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">floor</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">y</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">curr_k</span><span class="p">))</span>
+                <span class="c1"># check if there are too few examples to do cross val</span>
+                <span class="k">if</span> <span class="n">num_examples_kept</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">cv_n_folds</span><span class="p">:</span>
+                    <span class="n">r2_coarse</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="mf">1e30</span>  <span class="c1"># arbitrary large negative number</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">predictions</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_cv_predictions</span><span class="p">(</span>
+                        <span class="n">X</span><span class="o">=</span><span class="n">X</span><span class="p">,</span>
+                        <span class="n">y</span><span class="o">=</span><span class="n">y</span><span class="p">,</span>
+                        <span class="n">sorted_index</span><span class="o">=</span><span class="n">sorted_index</span><span class="p">,</span>
+                        <span class="n">k</span><span class="o">=</span><span class="n">curr_k</span><span class="p">,</span>
+                    <span class="p">)</span>
+                    <span class="n">r2_coarse</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">r2_score</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">predictions</span><span class="p">)</span>
+
+            <span class="n">max_r2_ind</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">r2_coarse</span><span class="p">)</span>
+
+            <span class="c1"># conduct fine search</span>
+            <span class="k">if</span> <span class="n">fine_search_size</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;fine_search_size must at least 0&quot;</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">fine_search_size</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">best_k</span> <span class="o">=</span> <span class="n">coarse_search_range</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">r2_coarse</span><span class="p">)]</span>
+                <span class="n">best_r2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">r2_coarse</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">fine_search_range</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([])</span>
+                <span class="k">if</span> <span class="n">max_r2_ind</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="n">fine_search_range</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                        <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span>
+                            <span class="n">coarse_search_range</span><span class="p">[</span><span class="n">max_r2_ind</span> <span class="o">-</span> <span class="mi">1</span><span class="p">],</span>
+                            <span class="n">coarse_search_range</span><span class="p">[</span><span class="n">max_r2_ind</span><span class="p">],</span>
+                            <span class="n">fine_search_size</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span>
+                            <span class="n">endpoint</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                        <span class="p">)[</span><span class="mi">1</span><span class="p">:],</span>
+                        <span class="n">fine_search_range</span><span class="p">,</span>
+                    <span class="p">)</span>
+                <span class="k">if</span> <span class="n">max_r2_ind</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="n">coarse_search_range</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">:</span>
+                    <span class="n">fine_search_range</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                        <span class="n">fine_search_range</span><span class="p">,</span>
+                        <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span>
+                            <span class="n">coarse_search_range</span><span class="p">[</span><span class="n">max_r2_ind</span><span class="p">],</span>
+                            <span class="n">coarse_search_range</span><span class="p">[</span><span class="n">max_r2_ind</span> <span class="o">+</span> <span class="mi">1</span><span class="p">],</span>
+                            <span class="n">fine_search_size</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span>
+                            <span class="n">endpoint</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                        <span class="p">)[</span><span class="mi">1</span><span class="p">:],</span>
+                    <span class="p">)</span>
+
+                <span class="n">r2_fine</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">full</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">fine_search_range</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">)</span>
+                <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">fine_search_range</span><span class="p">)):</span>
+                    <span class="n">curr_k</span> <span class="o">=</span> <span class="n">fine_search_range</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+                    <span class="n">num_examples_kept</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">floor</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">y</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">curr_k</span><span class="p">))</span>
+                    <span class="c1"># check if there are too few examples to do cross val</span>
+                    <span class="k">if</span> <span class="n">num_examples_kept</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">cv_n_folds</span><span class="p">:</span>
+                        <span class="n">r2_fine</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="mf">1e30</span>  <span class="c1"># arbitrary large negative number</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="n">predictions</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_cv_predictions</span><span class="p">(</span>
+                            <span class="n">X</span><span class="o">=</span><span class="n">X</span><span class="p">,</span>
+                            <span class="n">y</span><span class="o">=</span><span class="n">y</span><span class="p">,</span>
+                            <span class="n">sorted_index</span><span class="o">=</span><span class="n">sorted_index</span><span class="p">,</span>
+                            <span class="n">k</span><span class="o">=</span><span class="n">curr_k</span><span class="p">,</span>
+                        <span class="p">)</span>
+                        <span class="n">r2_fine</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">r2_score</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">predictions</span><span class="p">)</span>
+
+                <span class="c1"># check the max between coarse and fine search</span>
+                <span class="k">if</span> <span class="nb">max</span><span class="p">(</span><span class="n">r2_coarse</span><span class="p">)</span> <span class="o">&gt;</span> <span class="nb">max</span><span class="p">(</span><span class="n">r2_fine</span><span class="p">):</span>
+                    <span class="n">best_k</span> <span class="o">=</span> <span class="n">coarse_search_range</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">r2_coarse</span><span class="p">)]</span>
+                    <span class="n">best_r2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">r2_coarse</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">best_k</span> <span class="o">=</span> <span class="n">fine_search_range</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">r2_fine</span><span class="p">)]</span>
+                    <span class="n">best_r2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">r2_fine</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">best_k</span><span class="p">,</span> <span class="n">best_r2</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_process_label_issues_arg</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">label_issues</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">],</span>
+        <span class="n">y</span><span class="p">:</span> <span class="n">LabelLike</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Helper method to process the label_issues input into a well-formatted DataFrame.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">y</span> <span class="o">=</span> <span class="n">labels_to_array</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">label_issues</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">):</span>
+            <span class="k">if</span> <span class="s2">&quot;is_label_issue&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">label_issues</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                    <span class="s2">&quot;DataFrame label_issues must contain column: &#39;is_label_issue&#39;. &quot;</span>
+                    <span class="s2">&quot;See CleanLearning.fit() documentation for label_issues column descriptions.&quot;</span>
+                <span class="p">)</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">label_issues</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="n">y</span><span class="p">):</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;label_issues and labels must have same length&quot;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="s2">&quot;given_label&quot;</span> <span class="ow">in</span> <span class="n">label_issues</span><span class="o">.</span><span class="n">columns</span> <span class="ow">and</span> <span class="n">np</span><span class="o">.</span><span class="n">any</span><span class="p">(</span>
+                <span class="n">label_issues</span><span class="p">[</span><span class="s2">&quot;given_label&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()</span> <span class="o">!=</span> <span class="n">y</span>
+            <span class="p">):</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;labels must match label_issues[&#39;given_label&#39;]&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">label_issues</span>
+
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">label_issues</span><span class="p">,</span> <span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)):</span>
+            <span class="k">if</span> <span class="n">label_issues</span><span class="o">.</span><span class="n">dtype</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">np</span><span class="o">.</span><span class="n">dtype</span><span class="p">(</span><span class="s2">&quot;bool&quot;</span><span class="p">):</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;If label_issues is numpy.array, dtype must be &#39;bool&#39;.&quot;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">label_issues</span><span class="o">.</span><span class="n">shape</span> <span class="o">!=</span> <span class="n">y</span><span class="o">.</span><span class="n">shape</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;label_issues must have same shape as labels&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s2">&quot;is_label_issue&quot;</span><span class="p">:</span> <span class="n">label_issues</span><span class="p">,</span> <span class="s2">&quot;given_label&quot;</span><span class="p">:</span> <span class="n">y</span><span class="p">})</span>
+
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="s2">&quot;label_issues must be either pandas.DataFrame, pandas.Series or numpy.ndarray&quot;</span>
+            <span class="p">)</span></div>
+</pre></div> 
+        </article>
+      </div>
+      <footer>
+         
+        <div class="related-pages">
+          
+          
+        </div>
+        <div class="bottom-of-page">
+          <div class="left-details">
+            <div class="copyright">
+                Copyright &#169; 2026, Cleanlab Inc.
+            </div>
+            Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
+            
+            <a href="https://github.com/pradyunsg/furo">Furo</a>
+            
+          </div>
+          <div class="right-details">
+            <div class="icons">
+              <a class="muted-link " href="https://github.com/cleanlab/cleanlab" aria-label="GitHub">
+                <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 16 16">
+                    <path fill-rule="evenodd" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0 0 16 8c0-4.42-3.58-8-8-8z"></path>
+                </svg>
+            </a>
+              
+            </div>
+          </div>
+        </div>
+        
+
+<script type="text/javascript">
+    window.addEventListener("load", () => {
+        let elements = document.getElementsByClassName("left-details");
+
+        elements[0].insertAdjacentHTML(
+            "afterbegin",
+            `<code class="docutils literal notranslate"><span class="pre">cleanlab</span></code> is distributed on <a href="https://pypi.org/project/cleanlab/">PyPI</a> and <a href="https://anaconda.org/conda-forge/cleanlab">conda</a>.`
+        );
+    });
+</script>
+
+
+      </footer>
+    </div>
+    <aside class="toc-drawer no-toc">
+      
+      
+      
+    </aside>
+  </div>
+</div><script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js?v=2b91c5f0"></script>
+    <script src="../../../_static/doctools.js?v=888ff710"></script>
+    <script src="../../../_static/sphinx_highlight.js?v=4825356b"></script>
+    <script src="../../../_static/scripts/furo.js?v=32e29ea5"></script>
+    <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../../../_static/copybutton.js?v=30646c52"></script>
+    <script src="../../../_static/tabs.js?v=3030b3cb"></script>
+    <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@jupyter-widgets/html-manager@^1.0.1/dist/embed-amd.js"></script>
+    
+<script async defer src="https://buttons.github.io/buttons.js"></script>
+</body>
+</html>
