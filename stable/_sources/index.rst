@@ -16,17 +16,30 @@ Quickstart
 
 .. tabs::
 
-   .. tab:: pip
+   .. tab:: uv
 
       .. code-block:: bash
 
-         pip install cleanlab
+         uv pip install cleanlab
 
       To install the package with all optional dependencies:
 
       .. code-block:: bash
 
+         uv pip install "cleanlab[all]"
+
+   .. tab:: pip
+
+      .. code-block:: bash
+
+         pip install cleanlab
+      
+      To install the package with all optional dependencies:
+
+      .. code-block:: bash
+
          pip install "cleanlab[all]"
+
 
    .. tab:: conda
 
@@ -38,13 +51,19 @@ Quickstart
 
       .. code-block:: bash
 
+         uv pip install git+https://github.com/cleanlab/cleanlab.git
+
+      Or with pip:
+
+      .. code-block:: bash
+
          pip install git+https://github.com/cleanlab/cleanlab.git
 
       To install the package with all optional dependencies:
 
       .. code-block:: bash
 
-         pip install "git+https://github.com/cleanlab/cleanlab.git#egg=cleanlab[all]"
+         uv pip install "git+https://github.com/cleanlab/cleanlab.git#egg=cleanlab[all]"
 
 
 2. Check your data for all sorts of issues
@@ -75,7 +94,7 @@ Mislabeled data is a particularly concerning issue plaguing real-world datasets.
     # This works with any sklearn-compatible model - just input data + labels and cleanlab will detect label issues ツ
     label_issues_info = CleanLearning(clf=sklearn_compatible_model).find_label_issues(data, labels)
 
-:py:class:`CleanLearning <cleanlab.classification.CleanLearning>` also works with models from most standard ML frameworks by wrapping the model for scikit-learn compliance, e.g. pytorch (can use `skorch <https://github.com/skorch-dev/skorch>`_ package), tensorflow/keras (can use our :py:class:`KerasWrapperModel <cleanlab.models.keras>`), etc.
+:py:class:`CleanLearning <cleanlab.classification.CleanLearning>` also works with models from most standard ML frameworks by wrapping the model for scikit-learn compliance, e.g. pytorch (can use `skorch <https://github.com/skorch-dev/skorch>`_ package), etc.
 
 :py:meth:`find_label_issues <cleanlab.classification.CleanLearning.find_label_issues>` returns a boolean mask flagging which examples have label issues and a numeric label quality score for each example quantifying our confidence that its label is correct.
 
